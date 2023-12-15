@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "737365859201",
+    "project_id": "crea-chess",
+    "storage_bucket": "crea-chess.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:737365859201:android:472bc07b9ec6e5608d6680",
+        "android_client_info": {
+          "package_name": "com.example.crea_chess"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFqzeuIa-VFeESo0U9oBGVkzjxo6xTDl0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

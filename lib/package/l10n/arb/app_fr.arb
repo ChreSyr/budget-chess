@@ -1,0 +1,84 @@
+{
+  "@@locale": "fr",
+  "accept": "Accepter",
+  "alreadyHaveAccount": "Tu as déjà un compte ?",
+  "avatarChoose": "Choisir un avatar",
+  "back": "Retour",
+  "block": "Bloquer",
+  "blockedUser": "Utilisateur bloqué",
+  "blockedByUser": "Cet utilisateur vous a bloqué",
+  "blockedUserVerbose": "Vous avez bloqué cet utilisateur",
+  "blockThisUser": "Bloquer cet utilisateur ?",
+  "cancel": "Annuler",
+  "chooseColor": "Choisis une couleur",
+  "chooseGoodUsername": "Choisissez un nom que vos amis reconnaîtront !",
+  "continue_": "Continuer",
+  "decline": "Décliner",
+  "deleteAccount": "Supprimer ce compte",
+  "deleteAccountExplanation": "Êtes vous sûr de vouloir supprimer le compte lié à l'addresse {email} ?\nCette action est irréversible.",
+  "@deleteAccountExplanation": {
+    "placeholders": {
+      "email": {}
+    }
+  },
+  "deletedAccount": "Votre compte a été supprimé.",
+  "details": "Détails",
+  "email": "Mail",
+  "errorOccurred": "Une erreur s'est produite.",
+  "formError": "{code, select, other{Erreur inconnue.} empty{Ce champ doit être renseigné.} mailTaken{Cette adresse e-mail est déjà utilisée par un autre compte.} notEmail{Ne semble pas être une adresse e-mail.} notPassword{Trop faible. Un mot de passe doit contenir une minuscule, une majuscule, un chiffre et au moins 8 caractères.} notUsername{Minimum 3 caractères, en alphanumérique\nSymboles acceptés : _ - .\nUn seul symbole à la suite, et uniquement au milieu} invalidCredentials{Le mail et le mot de passe ne correspondent pas. Réessayez ou cliquez sur \"Mot de passe oublié ?\" pour le réinitialiser.} tooManyRequests{Trop de requêtes. Réessayez plus tard.} usernameTaken{Ce nom est déjà pris.}}",
+  "@formError": {
+    "placeholders": {
+      "code": {}
+    }
+  },
+  "friendRemove": "Retirer des amis ?",
+  "friendRemoved": "Retiré des amis",
+  "friendRequest": "Demande en ami",
+  "friendRequestCancel": "Annuler la demande en ami ?",
+  "friendRequestCanceled": "Demande en ami annulée",
+  "friendRequestNew": "Nouvelle demande en ami !",
+  "friendRequestSend": "Demander en ami",
+  "friendRequestSent": "Demande en ami envoyée",
+  "friends": "Amis",
+  "home": "Accueil",
+  "iAcceptConditions": "Je n'ai lu ni les Conditions d'utilisation, ni la Politique de confidentialité.",
+  "needAccount": "Besoin d'un compte ?",
+  "next": "Suivant",
+  "no": "Non",
+  "orContinueWith": "Ou continuer avec",
+  "password": "Mot de passe",
+  "passwordForgot": "Mot de passe oublié ?",
+  "pictureTake": "Prendre une photo",
+  "pictureImport": "Importer une photo",
+  "play": "Jouer",
+  "profile": "Profil",
+  "resetPasswordExplanation": "Voulez-vous réinitialiser votre mot de passe ?\n\nUn mail sera envoté à {email}",
+  "@resetPasswordExplanation": {
+    "placeholders": {
+      "email": {}
+    }
+  },
+  "save": "Enregistrer",
+  "searchUsername": "Rechercher un nom",
+  "sendEmail": "Envoyer un mail",
+  "settings": "Réglages",
+  "signCreateAccount": "Créer un compte",
+  "signin": "Connexion",
+  "signout": "Se déconnecter",
+  "signup": "Inscription",
+  "timeControl": "Cadence",
+  "userUnblock": "Débloquer cet utilisateur ?",
+  "userUnblocked": "Utilisateur débloqué",
+  "verifyEmailExplainLink": "Confirmez votre adresse e-mail en cliquant sur le lien envoyé à {email}, puis revenez à l'application et cliquez sur Continuer.",
+  "@verifyEmailExplainLink": {
+    "placeholders": {
+      "email": {}
+    }
+  },
+  "verifyEmailExplanation": "Un mail vous sera envoyé pour confirmer que vous êtes le propriétaire de cette adresse.",
+  "verifyEmailResendLink": "Renvoyer le lien",
+  "verifyMailbox": "Vérifiez votre boîte de réception !",
+  "welcomeBack": "Bon retour parmi nous !",
+  "welcomeAmongUs": "Bienvenue parmi nous !",
+  "yes": "Oui"
+}

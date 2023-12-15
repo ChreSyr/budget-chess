@@ -1,0 +1,84 @@
+{
+  "@@locale": "en",
+  "accept": "Accept",
+  "alreadyHaveAccount": "Already have an account ?",
+  "avatarChoose": "Choose an avatar",
+  "back": "Back",
+  "block": "Block",
+  "blockedUser": "Blocked user",
+  "blockedByUser": "This user blocked you",
+  "blockedUserVerbose": "You blocked this user",
+  "blockThisUser": "Block this user ?",
+  "cancel": "Cancel",
+  "chooseColor": "Choose a color",
+  "chooseGoodUsername": "Choose a name your friends will recognize !",
+  "continue_": "Continue",
+  "decline": "Decline",
+  "deleteAccount": "Delete this account",
+  "deleteAccountExplanation": "Are you sure you want to delete the account linked to {email} ?\nThis action is irreversible.",
+  "@deleteAccountExplanation": {
+    "placeholders": {
+      "email": {}
+    }
+  },
+  "deletedAccount": "Your account has been deleted.",
+  "details": "Details",
+  "email": "Email",
+  "errorOccurred": "An error has occured.",
+  "formError": "{code, select, other{Unknown error.} empty{This field is required.} mailTaken{The email address is already in use by another account.} notEmail{Doesn't appear to be an email address.} notPassword{Too weak. A password must contain a lowercase letter, an uppercase letter, a number and at least 8 characters.} notUsername{Minimum 3 characters, only alphanumeric\nSymbols accepted : _ - .\nOnly one symbol in a row, and only in the middle} invalidCredentials{Email and password do not match. Try again or click \"Forgot password ?\" to reset it.} tooManyRequests{Too many requests. Try again later.} usernameTaken{This username is already taken}}",
+  "@formError": {
+    "placeholders": {
+      "code": {}
+    }
+  },
+  "friendRemove": "Remove from friends ?",
+  "friendRemoved": "Removed from friends",
+  "friendRequest": "Friend request",
+  "friendRequestCancel": "Cancel the friend request ?",
+  "friendRequestCanceled": "Canceled friend request",
+  "friendRequestNew": "New friend request !",
+  "friendRequestSend": "Send friend request",
+  "friendRequestSent": "Friend request sent",
+  "friends": "Friends",
+  "home": "Home",
+  "iAcceptConditions": "I have not read the Terms of Use or the Privacy Policy.",
+  "needAccount": "Need an account ?",
+  "next": "Next",
+  "no": "No",
+  "orContinueWith": "Or continue with",
+  "password": "Password",
+  "passwordForgot": "Forgot password ?",
+  "pictureTake": "Take a picture",
+  "pictureImport": "Import a picture",
+  "play": "Play",
+  "profile": "Profile",
+  "resetPasswordExplanation": "Do you want to reset your password ?\n\nAn email will be sent to {email}",
+  "@resetPasswordExplanation": {
+    "placeholders": {
+      "email": {}
+    }
+  },
+  "save": "Save",
+  "searchUsername": "Search username",
+  "sendEmail": "Send email",
+  "settings": "Settings",
+  "signCreateAccount": "Create an account",
+  "signin": "Log in",
+  "signout": "Sign out",
+  "signup": "Sign up",
+  "timeControl": "Time control",
+  "userUnblock": "Unblock this user ?",
+  "userUnblocked": "Unblocked user",
+  "verifyEmailExplainLink": "Confirm your email by clicking the link sent to {email}, then return to the app and click Continue.",
+  "@verifyEmailExplainLink": {
+    "placeholders": {
+      "email": {}
+    }
+  },
+  "verifyEmailExplanation": "An email will be sent to you to confirm that you are the owner of this address.",
+  "verifyEmailResendLink": "Resend link",
+  "verifyMailbox": "Check your mailbox !",
+  "welcomeBack": "Welcome back !",
+  "welcomeAmongUs": "Welcome among us !",
+  "yes": "Yes"
+}
