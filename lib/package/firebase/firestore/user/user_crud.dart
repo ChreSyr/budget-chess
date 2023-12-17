@@ -34,7 +34,10 @@ class _UserCRUD extends BaseCRUD<UserModel> {
   Future<void> create({required String? documentId, required UserModel data}) {
     return super.create(
       documentId: documentId,
-      data: data.copyWith(usernameLowercase: data.username?.toLowerCase()),
+      data: data.copyWith(
+        createdAt: DateTime.now(),
+        usernameLowercase: data.username?.toLowerCase(),
+      ),
     );
   }
 

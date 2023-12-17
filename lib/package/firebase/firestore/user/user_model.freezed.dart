@@ -21,7 +21,8 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$UserModel {
   String? get id => throw _privateConstructorUsedError; // same as auth
-  String? get ref => throw _privateConstructorUsedError;
+  String? get ref => throw _privateConstructorUsedError; // TODO : remove ?
+  DateTime? get createdAt => throw _privateConstructorUsedError;
   String? get username => throw _privateConstructorUsedError;
   String? get usernameLowercase => throw _privateConstructorUsedError;
   String? get photo => throw _privateConstructorUsedError;
@@ -41,6 +42,7 @@ abstract class $UserModelCopyWith<$Res> {
   $Res call(
       {String? id,
       String? ref,
+      DateTime? createdAt,
       String? username,
       String? usernameLowercase,
       String? photo,
@@ -62,6 +64,7 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
   $Res call({
     Object? id = freezed,
     Object? ref = freezed,
+    Object? createdAt = freezed,
     Object? username = freezed,
     Object? usernameLowercase = freezed,
     Object? photo = freezed,
@@ -76,6 +79,10 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
           ? _value.ref
           : ref // ignore: cast_nullable_to_non_nullable
               as String?,
+      createdAt: freezed == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       username: freezed == username
           ? _value.username
           : username // ignore: cast_nullable_to_non_nullable
@@ -107,6 +114,7 @@ abstract class _$$UserModelImplCopyWith<$Res>
   $Res call(
       {String? id,
       String? ref,
+      DateTime? createdAt,
       String? username,
       String? usernameLowercase,
       String? photo,
@@ -126,6 +134,7 @@ class __$$UserModelImplCopyWithImpl<$Res>
   $Res call({
     Object? id = freezed,
     Object? ref = freezed,
+    Object? createdAt = freezed,
     Object? username = freezed,
     Object? usernameLowercase = freezed,
     Object? photo = freezed,
@@ -140,6 +149,10 @@ class __$$UserModelImplCopyWithImpl<$Res>
           ? _value.ref
           : ref // ignore: cast_nullable_to_non_nullable
               as String?,
+      createdAt: freezed == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       username: freezed == username
           ? _value.username
           : username // ignore: cast_nullable_to_non_nullable
@@ -166,6 +179,7 @@ class _$UserModelImpl extends _UserModel {
   _$UserModelImpl(
       {this.id,
       this.ref,
+      this.createdAt,
       this.username,
       this.usernameLowercase,
       this.photo,
@@ -180,6 +194,9 @@ class _$UserModelImpl extends _UserModel {
 // same as auth
   @override
   final String? ref;
+// TODO : remove ?
+  @override
+  final DateTime? createdAt;
   @override
   final String? username;
   @override
@@ -191,7 +208,7 @@ class _$UserModelImpl extends _UserModel {
 
   @override
   String toString() {
-    return 'UserModel(id: $id, ref: $ref, username: $username, usernameLowercase: $usernameLowercase, photo: $photo, banner: $banner)';
+    return 'UserModel(id: $id, ref: $ref, createdAt: $createdAt, username: $username, usernameLowercase: $usernameLowercase, photo: $photo, banner: $banner)';
   }
 
   @override
@@ -201,6 +218,8 @@ class _$UserModelImpl extends _UserModel {
             other is _$UserModelImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.ref, ref) || other.ref == ref) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
             (identical(other.username, username) ||
                 other.username == username) &&
             (identical(other.usernameLowercase, usernameLowercase) ||
@@ -211,8 +230,8 @@ class _$UserModelImpl extends _UserModel {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, id, ref, username, usernameLowercase, photo, banner);
+  int get hashCode => Object.hash(runtimeType, id, ref, createdAt, username,
+      usernameLowercase, photo, banner);
 
   @JsonKey(ignore: true)
   @override
@@ -232,6 +251,7 @@ abstract class _UserModel extends UserModel {
   factory _UserModel(
       {final String? id,
       final String? ref,
+      final DateTime? createdAt,
       final String? username,
       final String? usernameLowercase,
       final String? photo,
@@ -245,6 +265,8 @@ abstract class _UserModel extends UserModel {
   String? get id;
   @override // same as auth
   String? get ref;
+  @override // TODO : remove ?
+  DateTime? get createdAt;
   @override
   String? get username;
   @override

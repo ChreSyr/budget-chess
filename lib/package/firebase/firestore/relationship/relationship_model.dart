@@ -19,7 +19,9 @@ enum RelationshipStatus {
 class RelationshipModel with _$RelationshipModel {
   factory RelationshipModel({
     String? id,
-    String? ref,
+    String? ref, // TODO : remove ?
+    DateTime? createdAt, // date of friendship start
+    DateTime? updatedAt, // TODO : when new message, when game update...
     List<String>? users,
     RelationshipStatus? status,
     List<String>? games,

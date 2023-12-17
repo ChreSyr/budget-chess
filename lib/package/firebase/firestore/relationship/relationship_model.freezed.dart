@@ -21,7 +21,9 @@ RelationshipModel _$RelationshipModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$RelationshipModel {
   String? get id => throw _privateConstructorUsedError;
-  String? get ref => throw _privateConstructorUsedError;
+  String? get ref => throw _privateConstructorUsedError; // TODO : remove ?
+  DateTime? get createdAt => throw _privateConstructorUsedError;
+  DateTime? get updatedAt => throw _privateConstructorUsedError;
   List<String>? get users => throw _privateConstructorUsedError;
   RelationshipStatus? get status => throw _privateConstructorUsedError;
   List<String>? get games => throw _privateConstructorUsedError;
@@ -41,6 +43,8 @@ abstract class $RelationshipModelCopyWith<$Res> {
   $Res call(
       {String? id,
       String? ref,
+      DateTime? createdAt,
+      DateTime? updatedAt,
       List<String>? users,
       RelationshipStatus? status,
       List<String>? games});
@@ -61,6 +65,8 @@ class _$RelationshipModelCopyWithImpl<$Res, $Val extends RelationshipModel>
   $Res call({
     Object? id = freezed,
     Object? ref = freezed,
+    Object? createdAt = freezed,
+    Object? updatedAt = freezed,
     Object? users = freezed,
     Object? status = freezed,
     Object? games = freezed,
@@ -74,6 +80,14 @@ class _$RelationshipModelCopyWithImpl<$Res, $Val extends RelationshipModel>
           ? _value.ref
           : ref // ignore: cast_nullable_to_non_nullable
               as String?,
+      createdAt: freezed == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      updatedAt: freezed == updatedAt
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       users: freezed == users
           ? _value.users
           : users // ignore: cast_nullable_to_non_nullable
@@ -101,6 +115,8 @@ abstract class _$$RelationshipModelImplCopyWith<$Res>
   $Res call(
       {String? id,
       String? ref,
+      DateTime? createdAt,
+      DateTime? updatedAt,
       List<String>? users,
       RelationshipStatus? status,
       List<String>? games});
@@ -119,6 +135,8 @@ class __$$RelationshipModelImplCopyWithImpl<$Res>
   $Res call({
     Object? id = freezed,
     Object? ref = freezed,
+    Object? createdAt = freezed,
+    Object? updatedAt = freezed,
     Object? users = freezed,
     Object? status = freezed,
     Object? games = freezed,
@@ -132,6 +150,14 @@ class __$$RelationshipModelImplCopyWithImpl<$Res>
           ? _value.ref
           : ref // ignore: cast_nullable_to_non_nullable
               as String?,
+      createdAt: freezed == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      updatedAt: freezed == updatedAt
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       users: freezed == users
           ? _value._users
           : users // ignore: cast_nullable_to_non_nullable
@@ -154,6 +180,8 @@ class _$RelationshipModelImpl extends _RelationshipModel {
   _$RelationshipModelImpl(
       {this.id,
       this.ref,
+      this.createdAt,
+      this.updatedAt,
       final List<String>? users,
       this.status,
       final List<String>? games})
@@ -168,6 +196,11 @@ class _$RelationshipModelImpl extends _RelationshipModel {
   final String? id;
   @override
   final String? ref;
+// TODO : remove ?
+  @override
+  final DateTime? createdAt;
+  @override
+  final DateTime? updatedAt;
   final List<String>? _users;
   @override
   List<String>? get users {
@@ -192,7 +225,7 @@ class _$RelationshipModelImpl extends _RelationshipModel {
 
   @override
   String toString() {
-    return 'RelationshipModel(id: $id, ref: $ref, users: $users, status: $status, games: $games)';
+    return 'RelationshipModel(id: $id, ref: $ref, createdAt: $createdAt, updatedAt: $updatedAt, users: $users, status: $status, games: $games)';
   }
 
   @override
@@ -202,6 +235,10 @@ class _$RelationshipModelImpl extends _RelationshipModel {
             other is _$RelationshipModelImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.ref, ref) || other.ref == ref) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt) &&
             const DeepCollectionEquality().equals(other._users, _users) &&
             (identical(other.status, status) || other.status == status) &&
             const DeepCollectionEquality().equals(other._games, _games));
@@ -213,6 +250,8 @@ class _$RelationshipModelImpl extends _RelationshipModel {
       runtimeType,
       id,
       ref,
+      createdAt,
+      updatedAt,
       const DeepCollectionEquality().hash(_users),
       status,
       const DeepCollectionEquality().hash(_games));
@@ -236,6 +275,8 @@ abstract class _RelationshipModel extends RelationshipModel {
   factory _RelationshipModel(
       {final String? id,
       final String? ref,
+      final DateTime? createdAt,
+      final DateTime? updatedAt,
       final List<String>? users,
       final RelationshipStatus? status,
       final List<String>? games}) = _$RelationshipModelImpl;
@@ -248,6 +289,10 @@ abstract class _RelationshipModel extends RelationshipModel {
   String? get id;
   @override
   String? get ref;
+  @override // TODO : remove ?
+  DateTime? get createdAt;
+  @override
+  DateTime? get updatedAt;
   @override
   List<String>? get users;
   @override

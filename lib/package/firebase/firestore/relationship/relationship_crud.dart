@@ -116,36 +116,13 @@ class _RelationshipCRUD extends BaseCRUD<RelationshipModel> {
           RelationshipStatus.requestedByLast,
         ].contains(relation.status)) return;
 
-    // if (relation != null) {
-    // if (relation.status != RelationshipStatus.friends) {
     await super.update(
       documentId: relationshipId,
-      data: relation.copyWith(status: RelationshipStatus.friends),
+      data: relation.copyWith(
+        createdAt: DateTime.now(),
+        status: RelationshipStatus.friends,
+      ),
     );
-    // }
-    // } else {
-    //   await super.create(
-    //     documentId: relationshipId,
-    //     data: RelationshipModel(
-    //       users: sortedUsers,
-    //       status: RelationshipStatus.friends,
-    //     ),
-    //   );
-
-    //   final friendRequest1 = await notificationCRUD.read(
-    //     documentId: [user1, user2].join(),
-    //   );
-    //   if (friendRequest1 != null) {
-    //     await notificationCRUD.delete(documentId: friendRequest1.id);
-    //   }
-
-    //   final friendRequest2 = await notificationCRUD.read(
-    //     documentId: [user2, user1].join(),
-    //   );
-    //   if (friendRequest2 != null) {
-    //     await notificationCRUD.delete(documentId: friendRequest2.id);
-    //   }
-    // }
   }
 
   /// Return the relationships waiting for an answer, from or to userId

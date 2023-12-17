@@ -10,7 +10,8 @@ part 'user_model.g.dart';
 class UserModel with _$UserModel {
   factory UserModel({
     String? id, // same as auth
-    String? ref,
+    String? ref, // TODO : remove ?
+    DateTime? createdAt,
     String? username,
     String? usernameLowercase,
     String? photo,
