@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crea_chess/package/firebase/firestore/crud/model_converter.dart';
 
 abstract class BaseCRUD<T> {
-  BaseCRUD(String collectionName, this._converter)
+  BaseCRUD(this.collectionName, this._converter)
       : _collection = FirebaseFirestore.instance
             .collection(collectionName)
             .withConverter<T>(
@@ -13,6 +13,7 @@ abstract class BaseCRUD<T> {
               fromFirestore: _converter.fromFirestore,
             );
 
+  final String collectionName;
   final CollectionReference<T> _collection;
   final ModelConverter<T> _converter;
 
