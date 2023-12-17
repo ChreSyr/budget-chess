@@ -54,7 +54,7 @@ class UserProfile extends StatelessWidget {
                       ),
                     ),
                     CCDivider.xthin,
-                    CCPadding.allMedium(
+                    Flexible(
                       child: BlocBuilder<_TabIndexCubit, int>(
                         builder: (context, index) {
                           return IndexedStack(

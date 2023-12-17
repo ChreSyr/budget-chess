@@ -215,12 +215,9 @@ class _InputState extends State<Input> {
                   constraints: BoxConstraints(
                     minHeight: buttonPadding.bottom + buttonPadding.top + 24,
                   ),
-                  child: Visibility(
-                    visible: _sendButtonVisible,
-                    child: SendButton(
-                      onPressed: _handleSendPressed,
-                      padding: buttonPadding,
-                    ),
+                  child: SendButton(
+                    onPressed: _sendButtonVisible ? _handleSendPressed : null,
+                    padding: buttonPadding,
                   ),
                 ),
               ],

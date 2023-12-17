@@ -49,7 +49,7 @@ class AttachmentButton extends StatelessWidget {
                   ),
                 )
               : InheritedChatTheme.of(context).theme.attachmentButtonIcon ??
-                  const Icon(Icons.upload_file),
+                  const Icon(Icons.add_circle_outline),
           onPressed: isLoading ? null : onPressed,
           padding: padding,
           splashRadius: 24,

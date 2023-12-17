@@ -23,7 +23,13 @@ import 'package:go_router/go_router.dart';
 
 class UserBody extends MainRouteBody {
   const UserBody({this.routeUsernameLowercase, super.key})
-      : super(id: routeId, icon: Icons.person, centered: false, padded: false);
+      : super(
+          id: routeId,
+          icon: Icons.person,
+          centered: false,
+          padded: false,
+          scrolled: false,
+        );
 
   final String? routeUsernameLowercase;
 

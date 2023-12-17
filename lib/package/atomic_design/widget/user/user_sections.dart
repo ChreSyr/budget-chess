@@ -1,5 +1,6 @@
 import 'package:crea_chess/package/atomic_design/dialog/user/email_verification.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/chat.dart';
+import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/friend_preview.Dart';
 import 'package:crea_chess/package/chat/flutter_chat_types/flutter_chat_types.dart'
@@ -74,28 +75,32 @@ class UserSectionFriends extends UserSection {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<Iterable<RelationshipModel>>(
-      stream: relationshipCRUD.friendsOf(userId),
-      builder: (context, snapshot) {
-        final relations = snapshot.data;
-        final List<Widget> friendsPreviews = (relations ?? [])
-            .map(
-              (relationship) => FriendPreview(
-                friendId: (relationship.userIds ?? [])
-                    .where((id) => id != userId)
-                    .first,
-              ),
-            )
-            .toList();
-        if (context.read<UserCubit>().state?.id == userId) {
-          friendsPreviews.add(const FriendPreview(friendId: 'add'));
-        }
-        return Wrap(
-          runSpacing: CCSize.medium,
-          spacing: CCSize.medium,
-          children: friendsPreviews,
-        );
-      },
+    return SingleChildScrollView(
+      child: CCPadding.allMedium(
+        child: StreamBuilder<Iterable<RelationshipModel>>(
+          stream: relationshipCRUD.friendsOf(userId),
+          builder: (context, snapshot) {
+            final relations = snapshot.data;
+            final List<Widget> friendsPreviews = (relations ?? [])
+                .map(
+                  (relationship) => FriendPreview(
+                    friendId: (relationship.userIds ?? [])
+                        .where((id) => id != userId)
+                        .first,
+                  ),
+                )
+                .toList();
+            if (context.read<UserCubit>().state?.id == userId) {
+              friendsPreviews.add(const FriendPreview(friendId: 'add'));
+            }
+            return Wrap(
+              runSpacing: CCSize.medium,
+              spacing: CCSize.medium,
+              children: friendsPreviews,
+            );
+          },
+        ),
+      ),
     );
   }
 }
@@ -110,13 +115,17 @@ class UserSectionDetails extends UserSection {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: const Icon(Icons.email),
-      title: Text(context.read<AuthenticationCubit>().state?.email ?? ''),
-      trailing: isVerified
-          ? null
-          : const Icon(Icons.priority_high, color: Colors.red),
-      onTap: isVerified ? null : () => showEmailVerificationDialog(context),
+    return SingleChildScrollView(
+      child: CCPadding.allMedium(
+        child: ListTile(
+          leading: const Icon(Icons.email),
+          title: Text(context.read<AuthenticationCubit>().state?.email ?? ''),
+          trailing: isVerified
+              ? null
+              : const Icon(Icons.priority_high, color: Colors.red),
+          onTap: isVerified ? null : () => showEmailVerificationDialog(context),
+        ),
+      ),
     );
   }
 }
@@ -336,17 +345,14 @@ class _ChatSectionState extends State<ChatSection> {
             relationshipId: relationshipId,
           ),
           builder: (context, snapshot) {
-            return SizedBox(
-              height: 500,
-              child: Chat(
-                isAttachmentUploading: _isAttachmentUploading,
-                messages: snapshot.data ?? [],
-                onAttachmentPressed: _handleAtachmentPressed,
-                onMessageTap: _handleMessageTap,
-                onPreviewDataFetched: _handlePreviewDataFetched,
-                onSendPressed: _handleSendPressed,
-                user: currentUser,
-              ),
+            return Chat(
+              isAttachmentUploading: _isAttachmentUploading,
+              messages: snapshot.data ?? [],
+              onAttachmentPressed: _handleAtachmentPressed,
+              onMessageTap: _handleMessageTap,
+              onPreviewDataFetched: _handlePreviewDataFetched,
+              onSendPressed: _handleSendPressed,
+              user: currentUser,
             );
           },
         );
