@@ -17,11 +17,9 @@ _$RelationshipModelImpl _$$RelationshipModelImplFromJson(
       updatedAt: json['updatedAt'] == null
           ? null
           : DateTime.parse(json['updatedAt'] as String),
-      users:
-          (json['users'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      userIds:
+          (json['userIds'] as List<dynamic>?)?.map((e) => e as String).toList(),
       status: $enumDecodeNullable(_$RelationshipStatusEnumMap, json['status']),
-      games:
-          (json['games'] as List<dynamic>?)?.map((e) => e as String).toList(),
     );
 
 Map<String, dynamic> _$$RelationshipModelImplToJson(
@@ -31,9 +29,8 @@ Map<String, dynamic> _$$RelationshipModelImplToJson(
       'ref': instance.ref,
       'createdAt': instance.createdAt?.toIso8601String(),
       'updatedAt': instance.updatedAt?.toIso8601String(),
-      'users': instance.users,
+      'userIds': instance.userIds,
       'status': _$RelationshipStatusEnumMap[instance.status],
-      'games': instance.games,
     };
 
 const _$RelationshipStatusEnumMap = {

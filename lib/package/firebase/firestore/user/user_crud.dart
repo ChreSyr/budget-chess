@@ -48,7 +48,7 @@ class _UserCRUD extends BaseCRUD<UserModel> {
 
     final relationships = await relationshipCRUD.readFiltered(
       filter: (collection) =>
-          collection.where('users', arrayContains: documentId),
+          collection.where('userIds', arrayContains: documentId),
     );
     for (final relationship in relationships) {
       await relationshipCRUD.delete(documentId: relationship.id);

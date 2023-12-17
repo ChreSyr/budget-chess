@@ -6,13 +6,16 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'challenge_model.freezed.dart';
 part 'challenge_model.g.dart';
 
+enum ChallengeStatus { open, started, finished }
+
 @freezed
 class ChallengeModel with _$ChallengeModel {
   factory ChallengeModel({
     String? id,
-    String? ref,
-    String? creatorId,
+    String? ref, // TODO : remove ?
     DateTime? createdAt,
+    String? authorId,
+    ChallengeStatus? status,
     int? time, // in seconds
     int? increment, // in seconds
     int? boardWidth,

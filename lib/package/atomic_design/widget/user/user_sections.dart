@@ -51,7 +51,7 @@ class UserSectionFriends extends UserSection {
         final List<Widget> friendsPreviews = (relations ?? [])
             .map(
               (relationship) => FriendPreview(
-                friendId: (relationship.users ?? [])
+                friendId: (relationship.userIds ?? [])
                     .where((id) => id != userId)
                     .first,
               ),

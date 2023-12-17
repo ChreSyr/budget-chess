@@ -77,7 +77,7 @@ class UserBody extends MainRouteBody {
                       final streaming =
                           snapshot.connectionState == ConnectionState.active;
                       final relation = snapshot.data ??
-                          RelationshipModel(users: [userId, authId]);
+                          RelationshipModel(userIds: [userId, authId]);
 
                       return (streaming && userId != authId
                               ? getRelationshipButton(context, relation)
@@ -125,7 +125,7 @@ class UserBody extends MainRouteBody {
     //     }
 
     //     if (auth == null) {
-    //       // Note : if auth is null, cannot see users profiles.
+    //       // Note : if auth is null, cannot see userIds profiles.
     //       // LATER : Keep it ?
     //       return Column(
     //         children: [
@@ -169,7 +169,7 @@ class UserBody extends MainRouteBody {
     //               final streaming =
     //                   snapshot.connectionState == ConnectionState.active;
     //               final relation = snapshot.data ??
-    //                   RelationshipModel(users: [userId, authId]);
+    //                   RelationshipModel(userIds: [userId, authId]);
 
     //               return (streaming && userId != authId
     //                       ? getRelationshipButton(context, relation)
@@ -253,7 +253,7 @@ class AuthVerifier extends StatelessWidget {
         }
 
         if (auth == null) {
-          // Note : if auth is null, cannot see users profiles.
+          // Note : if auth is null, cannot see userIds profiles.
           // LATER : Keep it ?
           return Column(
             children: [

@@ -49,7 +49,7 @@ class _RelationshipCRUD extends BaseCRUD<RelationshipModel> {
         documentId: relationshipId,
         data: RelationshipModel(
           id: relationshipId,
-          users: sortedUsers,
+          userIds: sortedUsers,
           status: newStatus,
         ),
       );
@@ -94,7 +94,7 @@ class _RelationshipCRUD extends BaseCRUD<RelationshipModel> {
   Stream<Iterable<RelationshipModel>> friendsOf(String? userId) {
     return streamFiltered(
       filter: (collection) => collection
-          .where('users', arrayContains: userId)
+          .where('userIds', arrayContains: userId)
           .where('status', isEqualTo: RelationshipStatus.friends.name),
     );
   }
@@ -129,7 +129,7 @@ class _RelationshipCRUD extends BaseCRUD<RelationshipModel> {
   Stream<Iterable<RelationshipModel>> requestsAbout(String userId) {
     return streamFiltered(
       filter: (collection) =>
-          collection.where('users', arrayContains: userId).where(
+          collection.where('userIds', arrayContains: userId).where(
                 Filter.or(
                   Filter(
                     'status',
@@ -165,7 +165,7 @@ class _RelationshipCRUD extends BaseCRUD<RelationshipModel> {
     await super.create(
       documentId: relationshipId,
       data: RelationshipModel(
-        users: sortedUsers,
+        userIds: sortedUsers,
         status: status,
       ),
     );

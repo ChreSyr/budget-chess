@@ -21,9 +21,10 @@ ChallengeModel _$ChallengeModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$ChallengeModel {
   String? get id => throw _privateConstructorUsedError;
-  String? get ref => throw _privateConstructorUsedError;
-  String? get creatorId => throw _privateConstructorUsedError;
+  String? get ref => throw _privateConstructorUsedError; // TODO : remove ?
   DateTime? get createdAt => throw _privateConstructorUsedError;
+  String? get authorId => throw _privateConstructorUsedError;
+  ChallengeStatus? get status => throw _privateConstructorUsedError;
   int? get time => throw _privateConstructorUsedError; // in seconds
   int? get increment => throw _privateConstructorUsedError; // in seconds
   int? get boardWidth => throw _privateConstructorUsedError;
@@ -45,8 +46,9 @@ abstract class $ChallengeModelCopyWith<$Res> {
   $Res call(
       {String? id,
       String? ref,
-      String? creatorId,
       DateTime? createdAt,
+      String? authorId,
+      ChallengeStatus? status,
       int? time,
       int? increment,
       int? boardWidth,
@@ -69,8 +71,9 @@ class _$ChallengeModelCopyWithImpl<$Res, $Val extends ChallengeModel>
   $Res call({
     Object? id = freezed,
     Object? ref = freezed,
-    Object? creatorId = freezed,
     Object? createdAt = freezed,
+    Object? authorId = freezed,
+    Object? status = freezed,
     Object? time = freezed,
     Object? increment = freezed,
     Object? boardWidth = freezed,
@@ -86,14 +89,18 @@ class _$ChallengeModelCopyWithImpl<$Res, $Val extends ChallengeModel>
           ? _value.ref
           : ref // ignore: cast_nullable_to_non_nullable
               as String?,
-      creatorId: freezed == creatorId
-          ? _value.creatorId
-          : creatorId // ignore: cast_nullable_to_non_nullable
-              as String?,
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      authorId: freezed == authorId
+          ? _value.authorId
+          : authorId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      status: freezed == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as ChallengeStatus?,
       time: freezed == time
           ? _value.time
           : time // ignore: cast_nullable_to_non_nullable
@@ -129,8 +136,9 @@ abstract class _$$ChallengeModelImplCopyWith<$Res>
   $Res call(
       {String? id,
       String? ref,
-      String? creatorId,
       DateTime? createdAt,
+      String? authorId,
+      ChallengeStatus? status,
       int? time,
       int? increment,
       int? boardWidth,
@@ -151,8 +159,9 @@ class __$$ChallengeModelImplCopyWithImpl<$Res>
   $Res call({
     Object? id = freezed,
     Object? ref = freezed,
-    Object? creatorId = freezed,
     Object? createdAt = freezed,
+    Object? authorId = freezed,
+    Object? status = freezed,
     Object? time = freezed,
     Object? increment = freezed,
     Object? boardWidth = freezed,
@@ -168,14 +177,18 @@ class __$$ChallengeModelImplCopyWithImpl<$Res>
           ? _value.ref
           : ref // ignore: cast_nullable_to_non_nullable
               as String?,
-      creatorId: freezed == creatorId
-          ? _value.creatorId
-          : creatorId // ignore: cast_nullable_to_non_nullable
-              as String?,
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      authorId: freezed == authorId
+          ? _value.authorId
+          : authorId // ignore: cast_nullable_to_non_nullable
+              as String?,
+      status: freezed == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as ChallengeStatus?,
       time: freezed == time
           ? _value.time
           : time // ignore: cast_nullable_to_non_nullable
@@ -206,8 +219,9 @@ class _$ChallengeModelImpl extends _ChallengeModel {
   _$ChallengeModelImpl(
       {this.id,
       this.ref,
-      this.creatorId,
       this.createdAt,
+      this.authorId,
+      this.status,
       this.time,
       this.increment,
       this.boardWidth,
@@ -222,10 +236,13 @@ class _$ChallengeModelImpl extends _ChallengeModel {
   final String? id;
   @override
   final String? ref;
-  @override
-  final String? creatorId;
+// TODO : remove ?
   @override
   final DateTime? createdAt;
+  @override
+  final String? authorId;
+  @override
+  final ChallengeStatus? status;
   @override
   final int? time;
 // in seconds
@@ -241,7 +258,7 @@ class _$ChallengeModelImpl extends _ChallengeModel {
 
   @override
   String toString() {
-    return 'ChallengeModel(id: $id, ref: $ref, creatorId: $creatorId, createdAt: $createdAt, time: $time, increment: $increment, boardWidth: $boardWidth, boardHeight: $boardHeight, budget: $budget)';
+    return 'ChallengeModel(id: $id, ref: $ref, createdAt: $createdAt, authorId: $authorId, status: $status, time: $time, increment: $increment, boardWidth: $boardWidth, boardHeight: $boardHeight, budget: $budget)';
   }
 
   @override
@@ -251,10 +268,11 @@ class _$ChallengeModelImpl extends _ChallengeModel {
             other is _$ChallengeModelImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.ref, ref) || other.ref == ref) &&
-            (identical(other.creatorId, creatorId) ||
-                other.creatorId == creatorId) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
+            (identical(other.authorId, authorId) ||
+                other.authorId == authorId) &&
+            (identical(other.status, status) || other.status == status) &&
             (identical(other.time, time) || other.time == time) &&
             (identical(other.increment, increment) ||
                 other.increment == increment) &&
@@ -267,8 +285,8 @@ class _$ChallengeModelImpl extends _ChallengeModel {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, ref, creatorId, createdAt,
-      time, increment, boardWidth, boardHeight, budget);
+  int get hashCode => Object.hash(runtimeType, id, ref, createdAt, authorId,
+      status, time, increment, boardWidth, boardHeight, budget);
 
   @JsonKey(ignore: true)
   @override
@@ -289,8 +307,9 @@ abstract class _ChallengeModel extends ChallengeModel {
   factory _ChallengeModel(
       {final String? id,
       final String? ref,
-      final String? creatorId,
       final DateTime? createdAt,
+      final String? authorId,
+      final ChallengeStatus? status,
       final int? time,
       final int? increment,
       final int? boardWidth,
@@ -305,10 +324,12 @@ abstract class _ChallengeModel extends ChallengeModel {
   String? get id;
   @override
   String? get ref;
-  @override
-  String? get creatorId;
-  @override
+  @override // TODO : remove ?
   DateTime? get createdAt;
+  @override
+  String? get authorId;
+  @override
+  ChallengeStatus? get status;
   @override
   int? get time;
   @override // in seconds
