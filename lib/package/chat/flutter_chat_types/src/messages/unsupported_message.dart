@@ -1,5 +1,4 @@
 import 'package:crea_chess/package/chat/flutter_chat_types/src/message.dart';
-import 'package:crea_chess/package/firebase/firestore/user/user_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -13,7 +12,7 @@ part 'unsupported_message.g.dart';
 @immutable
 abstract class UnsupportedMessage extends Message {
   const factory UnsupportedMessage({
-    required UserModel author,
+    required String authorId,
     required String id,
     int? createdAt,
     Map<String, dynamic>? metadata,
@@ -21,14 +20,14 @@ abstract class UnsupportedMessage extends Message {
     Message? repliedMessage,
     String? roomId,
     bool? showStatus,
-    Status? status,
+    MessageStatus? status,
     MessageType? type,
     int? updatedAt,
   }) = _UnsupportedMessage;
 
   /// Creates an unsupported message.
   const UnsupportedMessage._({
-    required super.author,
+    required super.authorId,
     required super.id,
     super.createdAt,
     super.metadata,
@@ -48,7 +47,7 @@ abstract class UnsupportedMessage extends Message {
   /// Equatable props.
   @override
   List<Object?> get props => [
-        author,
+        authorId,
         createdAt,
         id,
         metadata,
@@ -62,7 +61,7 @@ abstract class UnsupportedMessage extends Message {
 
   @override
   Message copyWith({
-    UserModel? author,
+    String? authorId,
     int? createdAt,
     String? id,
     Map<String, dynamic>? metadata,
@@ -70,7 +69,7 @@ abstract class UnsupportedMessage extends Message {
     Message? repliedMessage,
     String? roomId,
     bool? showStatus,
-    Status? status,
+    MessageStatus? status,
     int? updatedAt,
   });
 
@@ -83,7 +82,7 @@ abstract class UnsupportedMessage extends Message {
 /// A utility class to enable better copyWith.
 class _UnsupportedMessage extends UnsupportedMessage {
   const _UnsupportedMessage({
-    required super.author,
+    required super.authorId,
     required super.id,
     super.createdAt,
     super.metadata,
@@ -98,7 +97,7 @@ class _UnsupportedMessage extends UnsupportedMessage {
 
   @override
   Message copyWith({
-    UserModel? author,
+    String? authorId,
     dynamic createdAt = _Unset,
     String? id,
     dynamic metadata = _Unset,
@@ -110,7 +109,7 @@ class _UnsupportedMessage extends UnsupportedMessage {
     dynamic updatedAt = _Unset,
   }) =>
       _UnsupportedMessage(
-        author: author ?? this.author,
+        authorId: authorId ?? this.authorId,
         createdAt: createdAt == _Unset ? this.createdAt : createdAt as int?,
         id: id ?? this.id,
         metadata: metadata == _Unset
@@ -123,7 +122,7 @@ class _UnsupportedMessage extends UnsupportedMessage {
         roomId: roomId == _Unset ? this.roomId : roomId as String?,
         showStatus:
             showStatus == _Unset ? this.showStatus : showStatus as bool?,
-        status: status == _Unset ? this.status : status as Status?,
+        status: status == _Unset ? this.status : status as MessageStatus?,
         updatedAt: updatedAt == _Unset ? this.updatedAt : updatedAt as int?,
       );
 }

@@ -7,7 +7,7 @@ part of 'image_message.dart';
 // **************************************************************************
 
 ImageMessage _$ImageMessageFromJson(Map<String, dynamic> json) => ImageMessage(
-      author: UserModel.fromJson(json['author'] as Map<String, dynamic>),
+      authorId: json['authorId'] as String,
       id: json['id'] as String,
       name: json['name'] as String,
       size: json['size'] as num,
@@ -21,7 +21,7 @@ ImageMessage _$ImageMessageFromJson(Map<String, dynamic> json) => ImageMessage(
           : Message.fromJson(json['repliedMessage'] as Map<String, dynamic>),
       roomId: json['roomId'] as String?,
       showStatus: json['showStatus'] as bool?,
-      status: $enumDecodeNullable(_$StatusEnumMap, json['status']),
+      status: $enumDecodeNullable(_$MessageStatusEnumMap, json['status']),
       type: $enumDecodeNullable(_$MessageTypeEnumMap, json['type']),
       updatedAt: json['updatedAt'] as int?,
       width: (json['width'] as num?)?.toDouble(),
@@ -29,7 +29,7 @@ ImageMessage _$ImageMessageFromJson(Map<String, dynamic> json) => ImageMessage(
 
 Map<String, dynamic> _$ImageMessageToJson(ImageMessage instance) =>
     <String, dynamic>{
-      'author': instance.author,
+      'authorId': instance.authorId,
       'createdAt': instance.createdAt,
       'id': instance.id,
       'metadata': instance.metadata,
@@ -37,7 +37,7 @@ Map<String, dynamic> _$ImageMessageToJson(ImageMessage instance) =>
       'repliedMessage': instance.repliedMessage,
       'roomId': instance.roomId,
       'showStatus': instance.showStatus,
-      'status': _$StatusEnumMap[instance.status],
+      'status': _$MessageStatusEnumMap[instance.status],
       'type': _$MessageTypeEnumMap[instance.type]!,
       'updatedAt': instance.updatedAt,
       'height': instance.height,
@@ -47,12 +47,12 @@ Map<String, dynamic> _$ImageMessageToJson(ImageMessage instance) =>
       'width': instance.width,
     };
 
-const _$StatusEnumMap = {
-  Status.delivered: 'delivered',
-  Status.error: 'error',
-  Status.seen: 'seen',
-  Status.sending: 'sending',
-  Status.sent: 'sent',
+const _$MessageStatusEnumMap = {
+  MessageStatus.delivered: 'delivered',
+  MessageStatus.error: 'error',
+  MessageStatus.seen: 'seen',
+  MessageStatus.sending: 'sending',
+  MessageStatus.sent: 'sent',
 };
 
 const _$MessageTypeEnumMap = {

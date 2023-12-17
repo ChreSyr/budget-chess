@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "737365859201",
-    "project_id": "crea-chess",
-    "storage_bucket": "crea-chess.appspot.com"
+    "project_number": "827585722578",
+    "project_id": "flutter-chat-benchmark",
+    "storage_bucket": "flutter-chat-benchmark.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:737365859201:android:472bc07b9ec6e5608d6680",
+        "mobilesdk_app_id": "1:827585722578:android:cd653ae39c612e19a7950b",
         "android_client_info": {
           "package_name": "com.example.crea_chess"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCFqzeuIa-VFeESo0U9oBGVkzjxo6xTDl0"
+          "current_key": "AIzaSyDACTp3c3PFWPqcJZximes5kZAzvdffiCA"
         }
       ],
       "services": {

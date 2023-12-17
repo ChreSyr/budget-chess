@@ -184,15 +184,17 @@ class Message extends StatelessWidget {
   final Widget Function(types.VideoMessage, {required int messageWidth})?
       videoMessageBuilder;
 
-  Widget _avatarBuilder() => showAvatar
-      ? avatarBuilder?.call(message.author) ??
-          UserAvatar(
-            author: message.author,
-            bubbleRtlAlignment: bubbleRtlAlignment,
-            imageHeaders: imageHeaders,
-            onAvatarTap: onAvatarTap,
-          )
-      : const SizedBox(width: 40);
+  Widget _avatarBuilder() => const SizedBox(width: 40);
+  // TODO ?
+  // Widget _avatarBuilder() => showAvatar
+  //     ? avatarBuilder?.call(message.author) ??
+  //         UserAvatar(
+  //           author: message.author,
+  //           bubbleRtlAlignment: bubbleRtlAlignment,
+  //           imageHeaders: imageHeaders,
+  //           onAvatarTap: onAvatarTap,
+  //         )
+  //     : const SizedBox(width: 40);
 
   Widget _bubbleBuilder(
     BuildContext context,
@@ -282,7 +284,7 @@ class Message extends StatelessWidget {
   Widget build(BuildContext context) {
     final query = MediaQuery.of(context);
     final user = InheritedUser.of(context).user;
-    final currentUserIsAuthor = user.id == message.author.id;
+    final currentUserIsAuthor = user.id == message.authorId;
     final enlargeEmojis =
         emojiEnlargementBehavior != EmojiEnlargementBehavior.never &&
             message is types.TextMessage &&

@@ -21,7 +21,7 @@ class RelationshipModel with _$RelationshipModel {
     String? id,
     String? ref, // TODO : remove ?
     DateTime? createdAt, // date of friendship start
-    DateTime? updatedAt, // TODO : when new message, when game update...
+    DateTime? updatedAt,
     List<String>? userIds,
     RelationshipStatus? status,
   }) = _RelationshipModel;

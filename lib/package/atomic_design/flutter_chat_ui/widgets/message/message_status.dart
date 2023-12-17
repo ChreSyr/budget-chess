@@ -12,13 +12,13 @@ class MessageStatus extends StatelessWidget {
   });
 
   /// Status of the message.
-  final types.Status? status;
+  final types.MessageStatus? status;
 
   @override
   Widget build(BuildContext context) {
     switch (status) {
-      case types.Status.delivered:
-      case types.Status.sent:
+      case types.MessageStatus.delivered:
+      case types.MessageStatus.sent:
         return InheritedChatTheme.of(context).theme.deliveredIcon != null
             ? InheritedChatTheme.of(context).theme.deliveredIcon!
             : Image.asset(
@@ -26,7 +26,7 @@ class MessageStatus extends StatelessWidget {
                 color: InheritedChatTheme.of(context).theme.primaryColor,
                 package: 'flutter_chat_ui',
               );
-      case types.Status.error:
+      case types.MessageStatus.error:
         return InheritedChatTheme.of(context).theme.errorIcon != null
             ? InheritedChatTheme.of(context).theme.errorIcon!
             : Image.asset(
@@ -34,7 +34,7 @@ class MessageStatus extends StatelessWidget {
                 color: InheritedChatTheme.of(context).theme.errorColor,
                 package: 'flutter_chat_ui',
               );
-      case types.Status.seen:
+      case types.MessageStatus.seen:
         return InheritedChatTheme.of(context).theme.seenIcon != null
             ? InheritedChatTheme.of(context).theme.seenIcon!
             : Image.asset(
@@ -42,7 +42,7 @@ class MessageStatus extends StatelessWidget {
                 color: InheritedChatTheme.of(context).theme.primaryColor,
                 package: 'flutter_chat_ui',
               );
-      case types.Status.sending:
+      case types.MessageStatus.sending:
         return InheritedChatTheme.of(context).theme.sendingIcon != null
             ? InheritedChatTheme.of(context).theme.sendingIcon!
             : Center(

@@ -6,7 +6,6 @@ import 'package:crea_chess/package/chat/flutter_chat_types/src/messages/system_m
 import 'package:crea_chess/package/chat/flutter_chat_types/src/messages/text_message.dart';
 import 'package:crea_chess/package/chat/flutter_chat_types/src/messages/unsupported_message.dart';
 import 'package:crea_chess/package/chat/flutter_chat_types/src/messages/video_message.dart';
-import 'package:crea_chess/package/firebase/firestore/user/user_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
@@ -23,14 +22,14 @@ enum MessageType {
 }
 
 /// All possible statuses message can have.
-enum Status { delivered, error, seen, sending, sent }
+enum MessageStatus { delivered, error, seen, sending, sent }
 
 /// An abstract class that contains all variables and methods
 /// every message will have.
 @immutable
 abstract class Message extends Equatable {
   const Message({
-    required this.author,
+    required this.authorId,
     required this.id,
     required this.type,
     this.createdAt,
@@ -72,7 +71,7 @@ abstract class Message extends Equatable {
   }
 
   /// User who sent this message.
-  final UserModel author;
+  final String authorId;
 
   /// Created message timestamp, in ms.
   final int? createdAt;
@@ -95,8 +94,8 @@ abstract class Message extends Equatable {
   /// Show status or not.
   final bool? showStatus;
 
-  /// Message [Status].
-  final Status? status;
+  /// Message [MessageStatus].
+  final MessageStatus? status;
 
   /// [MessageType].
   final MessageType type;
@@ -106,7 +105,7 @@ abstract class Message extends Equatable {
 
   /// Creates a copy of the message with an updated data.
   Message copyWith({
-    UserModel? author,
+    String? authorId,
     int? createdAt,
     String? id,
     Map<String, dynamic>? metadata,
@@ -114,7 +113,7 @@ abstract class Message extends Equatable {
     Message? repliedMessage,
     String? roomId,
     bool? showStatus,
-    Status? status,
+    MessageStatus? status,
     int? updatedAt,
   });
 

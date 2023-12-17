@@ -7,7 +7,7 @@ part of 'file_message.dart';
 // **************************************************************************
 
 FileMessage _$FileMessageFromJson(Map<String, dynamic> json) => FileMessage(
-      author: UserModel.fromJson(json['author'] as Map<String, dynamic>),
+      authorId: json['authorId'] as String,
       id: json['id'] as String,
       name: json['name'] as String,
       size: json['size'] as num,
@@ -22,14 +22,14 @@ FileMessage _$FileMessageFromJson(Map<String, dynamic> json) => FileMessage(
           : Message.fromJson(json['repliedMessage'] as Map<String, dynamic>),
       roomId: json['roomId'] as String?,
       showStatus: json['showStatus'] as bool?,
-      status: $enumDecodeNullable(_$StatusEnumMap, json['status']),
+      status: $enumDecodeNullable(_$MessageStatusEnumMap, json['status']),
       type: $enumDecodeNullable(_$MessageTypeEnumMap, json['type']),
       updatedAt: json['updatedAt'] as int?,
     );
 
 Map<String, dynamic> _$FileMessageToJson(FileMessage instance) =>
     <String, dynamic>{
-      'author': instance.author,
+      'authorId': instance.authorId,
       'createdAt': instance.createdAt,
       'id': instance.id,
       'metadata': instance.metadata,
@@ -37,7 +37,7 @@ Map<String, dynamic> _$FileMessageToJson(FileMessage instance) =>
       'repliedMessage': instance.repliedMessage,
       'roomId': instance.roomId,
       'showStatus': instance.showStatus,
-      'status': _$StatusEnumMap[instance.status],
+      'status': _$MessageStatusEnumMap[instance.status],
       'type': _$MessageTypeEnumMap[instance.type]!,
       'updatedAt': instance.updatedAt,
       'isLoading': instance.isLoading,
@@ -47,12 +47,12 @@ Map<String, dynamic> _$FileMessageToJson(FileMessage instance) =>
       'uri': instance.uri,
     };
 
-const _$StatusEnumMap = {
-  Status.delivered: 'delivered',
-  Status.error: 'error',
-  Status.seen: 'seen',
-  Status.sending: 'sending',
-  Status.sent: 'sent',
+const _$MessageStatusEnumMap = {
+  MessageStatus.delivered: 'delivered',
+  MessageStatus.error: 'error',
+  MessageStatus.seen: 'seen',
+  MessageStatus.sending: 'sending',
+  MessageStatus.sent: 'sent',
 };
 
 const _$MessageTypeEnumMap = {

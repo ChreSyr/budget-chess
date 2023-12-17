@@ -460,7 +460,7 @@ class ChatState extends State<Chat> {
             SystemMessage(message: message.text);
       } else {
         final messageWidth =
-            widget.showUserAvatars && message.author.id != widget.user.id
+            widget.showUserAvatars && message.authorId != widget.user.id
                 ? min(constraints.maxWidth * 0.72, 440).floor()
                 : min(constraints.maxWidth * 0.78, 440).floor();
         final Widget msgWidget = Message(

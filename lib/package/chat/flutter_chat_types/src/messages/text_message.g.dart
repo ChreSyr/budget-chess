@@ -7,7 +7,7 @@ part of 'text_message.dart';
 // **************************************************************************
 
 TextMessage _$TextMessageFromJson(Map<String, dynamic> json) => TextMessage(
-      author: UserModel.fromJson(json['author'] as Map<String, dynamic>),
+      authorId: json['authorId'] as String,
       id: json['id'] as String,
       text: json['text'] as String,
       createdAt: json['createdAt'] as int?,
@@ -21,14 +21,14 @@ TextMessage _$TextMessageFromJson(Map<String, dynamic> json) => TextMessage(
           : Message.fromJson(json['repliedMessage'] as Map<String, dynamic>),
       roomId: json['roomId'] as String?,
       showStatus: json['showStatus'] as bool?,
-      status: $enumDecodeNullable(_$StatusEnumMap, json['status']),
+      status: $enumDecodeNullable(_$MessageStatusEnumMap, json['status']),
       type: $enumDecodeNullable(_$MessageTypeEnumMap, json['type']),
       updatedAt: json['updatedAt'] as int?,
     );
 
 Map<String, dynamic> _$TextMessageToJson(TextMessage instance) =>
     <String, dynamic>{
-      'author': instance.author,
+      'authorId': instance.authorId,
       'createdAt': instance.createdAt,
       'id': instance.id,
       'metadata': instance.metadata,
@@ -36,19 +36,19 @@ Map<String, dynamic> _$TextMessageToJson(TextMessage instance) =>
       'repliedMessage': instance.repliedMessage,
       'roomId': instance.roomId,
       'showStatus': instance.showStatus,
-      'status': _$StatusEnumMap[instance.status],
+      'status': _$MessageStatusEnumMap[instance.status],
       'type': _$MessageTypeEnumMap[instance.type]!,
       'updatedAt': instance.updatedAt,
       'previewData': instance.previewData,
       'text': instance.text,
     };
 
-const _$StatusEnumMap = {
-  Status.delivered: 'delivered',
-  Status.error: 'error',
-  Status.seen: 'seen',
-  Status.sending: 'sending',
-  Status.sent: 'sent',
+const _$MessageStatusEnumMap = {
+  MessageStatus.delivered: 'delivered',
+  MessageStatus.error: 'error',
+  MessageStatus.seen: 'seen',
+  MessageStatus.sending: 'sending',
+  MessageStatus.sent: 'sent',
 };
 
 const _$MessageTypeEnumMap = {

@@ -184,33 +184,33 @@ class _RelationshipCRUD extends BaseCRUD<RelationshipModel> {
   /// room ID. If arbitraty data is provided in the [partialMessage]
   /// does nothing.
   Future<void> sendMessage(
-    UserModel currentUser,
-    String relationshipId,
+    String senderId,
+    String relationshipId, // TODO : receiverId
     dynamic partialMessage,
   ) async {
     types.Message? message;
 
     if (partialMessage is types.PartialCustom) {
       message = types.CustomMessage.fromPartial(
-        author: currentUser,
+        authorId: senderId,
         id: '',
         partialCustom: partialMessage,
       );
     } else if (partialMessage is types.PartialFile) {
       message = types.FileMessage.fromPartial(
-        author: currentUser,
+        authorId: senderId,
         id: '',
         partialFile: partialMessage,
       );
     } else if (partialMessage is types.PartialImage) {
       message = types.ImageMessage.fromPartial(
-        author: currentUser,
+        authorId: senderId,
         id: '',
         partialImage: partialMessage,
       );
     } else if (partialMessage is types.PartialText) {
       message = types.TextMessage.fromPartial(
-        author: currentUser,
+        authorId: senderId,
         id: '',
         partialText: partialMessage,
       );
@@ -218,17 +218,16 @@ class _RelationshipCRUD extends BaseCRUD<RelationshipModel> {
 
     if (message != null) {
       final messageMap = message.toJson()
-        ..removeWhere((key, value) => key == 'author' || key == 'id');
-      messageMap['authorId'] = currentUser.id;
-      messageMap['createdAt'] = FieldValue.serverTimestamp();
-      messageMap['updatedAt'] = FieldValue.serverTimestamp();
+        ..removeWhere((key, value) => key == 'id');
+      messageMap['createdAt'] = DateTime.now();
+      messageMap['updatedAt'] = DateTime.now();
 
       await _messagesCollection(relationshipId).add(messageMap);
 
       // await FirebaseFirestore.instance
       //     .collection(collectionName)
       //     .doc(relationshipId)
-      //     .update({'updatedAt': FieldValue.serverTimestamp()});
+      //     .update({'updatedAt': DateTime.now()});
     }
   }
 

@@ -1,11 +1,10 @@
 import 'package:crea_chess/package/chat/flutter_chat_types/src/message.dart';
-import 'package:crea_chess/package/firebase/firestore/user/user_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
 part 'system_message.g.dart';
 
-final systemUser = UserModel(id: 'system');
+const systemUser = 'system';
 
 /// A class that represents a system message (anything around chat management). Use [metadata] to store anything
 /// you want.
@@ -15,21 +14,21 @@ abstract class SystemMessage extends Message {
   const factory SystemMessage({
     required String id,
     required String text,
-    required UserModel author,
+    required String authorId,
     int? createdAt,
     Map<String, dynamic>? metadata,
     String? remoteId,
     Message? repliedMessage,
     String? roomId,
     bool? showStatus,
-    Status? status,
+    MessageStatus? status,
     MessageType? type,
     int? updatedAt,
   }) = _SystemMessage;
 
   /// Creates a custom message.
   const SystemMessage._({
-    required super.author,
+    required super.authorId,
     required super.id,
     required this.text,
     super.createdAt,
@@ -53,7 +52,7 @@ abstract class SystemMessage extends Message {
   /// Equatable props.
   @override
   List<Object?> get props => [
-        author,
+        authorId,
         createdAt,
         id,
         metadata,
@@ -68,7 +67,7 @@ abstract class SystemMessage extends Message {
 
   @override
   Message copyWith({
-    UserModel? author,
+    String? authorId,
     int? createdAt,
     String? id,
     Map<String, dynamic>? metadata,
@@ -76,7 +75,7 @@ abstract class SystemMessage extends Message {
     Message? repliedMessage,
     String? roomId,
     bool? showStatus,
-    Status? status,
+    MessageStatus? status,
     String? text,
     int? updatedAt,
   });
@@ -92,7 +91,7 @@ class _SystemMessage extends SystemMessage {
   const _SystemMessage({
     required super.id,
     required super.text,
-    required super.author,
+    required super.authorId,
     super.createdAt,
     super.metadata,
     super.remoteId,
@@ -106,7 +105,7 @@ class _SystemMessage extends SystemMessage {
 
   @override
   Message copyWith({
-    UserModel? author,
+    String? authorId,
     dynamic createdAt = _Unset,
     String? id,
     dynamic metadata = _Unset,
@@ -119,7 +118,7 @@ class _SystemMessage extends SystemMessage {
     dynamic updatedAt = _Unset,
   }) =>
       _SystemMessage(
-        author: author ?? this.author,
+        authorId: authorId ?? this.authorId,
         createdAt: createdAt == _Unset ? this.createdAt : createdAt as int?,
         id: id ?? this.id,
         metadata: metadata == _Unset
@@ -132,7 +131,7 @@ class _SystemMessage extends SystemMessage {
         roomId: roomId == _Unset ? this.roomId : roomId as String?,
         showStatus:
             showStatus == _Unset ? this.showStatus : showStatus as bool?,
-        status: status == _Unset ? this.status : status as Status?,
+        status: status == _Unset ? this.status : status as MessageStatus?,
         text: text ?? this.text,
         updatedAt: updatedAt == _Unset ? this.updatedAt : updatedAt as int?,
       );

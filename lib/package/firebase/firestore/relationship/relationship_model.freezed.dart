@@ -24,8 +24,7 @@ mixin _$RelationshipModel {
   String? get ref => throw _privateConstructorUsedError; // TODO : remove ?
   DateTime? get createdAt =>
       throw _privateConstructorUsedError; // date of friendship start
-  DateTime? get updatedAt =>
-      throw _privateConstructorUsedError; // TODO : when new message, when game update...
+  DateTime? get updatedAt => throw _privateConstructorUsedError;
   List<String>? get userIds => throw _privateConstructorUsedError;
   RelationshipStatus? get status => throw _privateConstructorUsedError;
 
@@ -189,9 +188,7 @@ class _$RelationshipModelImpl extends _RelationshipModel {
 // date of friendship start
   @override
   final DateTime? updatedAt;
-// TODO : when new message, when game update...
   final List<String>? _userIds;
-// TODO : when new message, when game update...
   @override
   List<String>? get userIds {
     final value = _userIds;
@@ -265,7 +262,7 @@ abstract class _RelationshipModel extends RelationshipModel {
   DateTime? get createdAt;
   @override // date of friendship start
   DateTime? get updatedAt;
-  @override // TODO : when new message, when game update...
+  @override
   List<String>? get userIds;
   @override
   RelationshipStatus? get status;

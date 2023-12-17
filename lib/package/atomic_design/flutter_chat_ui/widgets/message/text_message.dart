@@ -1,12 +1,11 @@
-import 'package:crea_chess/package/chat/flutter_chat_types/flutter_chat_types.dart'
-    as types;
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/models/emoji_enlargement_behavior.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/models/matchers.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/models/pattern_style.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/util.dart';
-import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/message/user_name.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/state/inherited_chat_theme.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/state/inherited_user.dart';
+import 'package:crea_chess/package/chat/flutter_chat_types/flutter_chat_types.dart'
+    as types;
 import 'package:crea_chess/package/chat/flutter_link_previewer/flutter_link_previewer.dart';
 import 'package:crea_chess/package/firebase/firestore/user/user_model.dart';
 import 'package:flutter/material.dart';
@@ -62,14 +61,14 @@ class TextMessage extends StatelessWidget {
     double width,
     BuildContext context,
   ) {
-    final linkDescriptionTextStyle = user.id == message.author.id
+    final linkDescriptionTextStyle = user.id == message.authorId
         ? InheritedChatTheme.of(context)
             .theme
             .sentMessageLinkDescriptionTextStyle
         : InheritedChatTheme.of(context)
             .theme
             .receivedMessageLinkDescriptionTextStyle;
-    final linkTitleTextStyle = user.id == message.author.id
+    final linkTitleTextStyle = user.id == message.authorId
         ? InheritedChatTheme.of(context).theme.sentMessageLinkTitleTextStyle
         : InheritedChatTheme.of(context)
             .theme
@@ -108,27 +107,28 @@ class TextMessage extends StatelessWidget {
     bool enlargeEmojis,
   ) {
     final theme = InheritedChatTheme.of(context).theme;
-    final bodyLinkTextStyle = user.id == message.author.id
+    final bodyLinkTextStyle = user.id == message.authorId
         ? InheritedChatTheme.of(context).theme.sentMessageBodyLinkTextStyle
         : InheritedChatTheme.of(context).theme.receivedMessageBodyLinkTextStyle;
-    final bodyTextStyle = user.id == message.author.id
+    final bodyTextStyle = user.id == message.authorId
         ? theme.sentMessageBodyTextStyle
         : theme.receivedMessageBodyTextStyle;
-    final boldTextStyle = user.id == message.author.id
+    final boldTextStyle = user.id == message.authorId
         ? theme.sentMessageBodyBoldTextStyle
         : theme.receivedMessageBodyBoldTextStyle;
-    final codeTextStyle = user.id == message.author.id
+    final codeTextStyle = user.id == message.authorId
         ? theme.sentMessageBodyCodeTextStyle
         : theme.receivedMessageBodyCodeTextStyle;
-    final emojiTextStyle = user.id == message.author.id
+    final emojiTextStyle = user.id == message.authorId
         ? theme.sentEmojiMessageTextStyle
         : theme.receivedEmojiMessageTextStyle;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (showName)
-          nameBuilder?.call(message.author) ?? UserName(author: message.author),
+        // TODO ?
+        // if (showName)
+        //   nameBuilder?.call(message.author) ?? UserName(author: message.author),
         if (enlargeEmojis)
           if (options.isTextSelectable)
             SelectableText(message.text, style: emojiTextStyle)

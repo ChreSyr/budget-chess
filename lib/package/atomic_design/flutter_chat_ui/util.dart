@@ -125,8 +125,8 @@ List<Object> calculateChatMessages(
     final messageHasCreatedAt = message.createdAt != null;
     final nextMessage = isLast ? null : messages[i - 1];
     final nextMessageHasCreatedAt = nextMessage?.createdAt != null;
-    final nextMessageSameAuthor = message.author.id == nextMessage?.author.id;
-    final notMyMessage = message.author.id != user.id;
+    final nextMessageSameAuthor = message.authorId == nextMessage?.authorId;
+    final notMyMessage = message.authorId != user.id;
 
     var nextMessageDateThreshold = false;
     var nextMessageDifferentDay = false;
@@ -137,7 +137,7 @@ List<Object> calculateChatMessages(
       final previousMessage = isFirst ? null : messages[i + 1];
 
       final isFirstInGroup = notMyMessage &&
-          ((message.author.id != previousMessage?.author.id) ||
+          ((message.authorId != previousMessage?.authorId) ||
               (messageHasCreatedAt &&
                   previousMessage?.createdAt != null &&
                   message.createdAt! - previousMessage!.createdAt! >

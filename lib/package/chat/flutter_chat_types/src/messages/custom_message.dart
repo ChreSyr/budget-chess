@@ -1,6 +1,5 @@
 import 'package:crea_chess/package/chat/flutter_chat_types/src/message.dart';
 import 'package:crea_chess/package/chat/flutter_chat_types/src/messages/partial_custom.dart';
-import 'package:crea_chess/package/firebase/firestore/user/user_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -12,7 +11,7 @@ part 'custom_message.g.dart';
 @immutable
 abstract class CustomMessage extends Message {
   const factory CustomMessage({
-    required UserModel author,
+    required String authorId,
     required String id,
     int? createdAt,
     Map<String, dynamic>? metadata,
@@ -20,14 +19,14 @@ abstract class CustomMessage extends Message {
     Message? repliedMessage,
     String? roomId,
     bool? showStatus,
-    Status? status,
+    MessageStatus? status,
     MessageType? type,
     int? updatedAt,
   }) = _CustomMessage;
 
   /// Creates a custom message.
   const CustomMessage._({
-    required super.author,
+    required super.authorId,
     required super.id,
     super.createdAt,
     super.metadata,
@@ -46,18 +45,18 @@ abstract class CustomMessage extends Message {
 
   /// Creates a full custom message from a partial one.
   factory CustomMessage.fromPartial({
-    required UserModel author,
+    required String authorId,
     required String id,
     required PartialCustom partialCustom,
     int? createdAt,
     String? remoteId,
     String? roomId,
     bool? showStatus,
-    Status? status,
+    MessageStatus? status,
     int? updatedAt,
   }) =>
       _CustomMessage(
-        author: author,
+        authorId: authorId,
         createdAt: createdAt,
         id: id,
         metadata: partialCustom.metadata,
@@ -73,7 +72,7 @@ abstract class CustomMessage extends Message {
   /// Equatable props.
   @override
   List<Object?> get props => [
-        author,
+        authorId,
         createdAt,
         id,
         metadata,
@@ -87,7 +86,7 @@ abstract class CustomMessage extends Message {
 
   @override
   Message copyWith({
-    UserModel? author,
+    String? authorId,
     int? createdAt,
     String? id,
     Map<String, dynamic>? metadata,
@@ -95,7 +94,7 @@ abstract class CustomMessage extends Message {
     Message? repliedMessage,
     String? roomId,
     bool? showStatus,
-    Status? status,
+    MessageStatus? status,
     int? updatedAt,
   });
 
@@ -108,7 +107,7 @@ abstract class CustomMessage extends Message {
 /// A utility class to enable better copyWith.
 class _CustomMessage extends CustomMessage {
   const _CustomMessage({
-    required super.author,
+    required super.authorId,
     required super.id,
     super.createdAt,
     super.metadata,
@@ -123,7 +122,7 @@ class _CustomMessage extends CustomMessage {
 
   @override
   Message copyWith({
-    UserModel? author,
+    String? authorId,
     dynamic createdAt = _Unset,
     String? id,
     dynamic metadata = _Unset,
@@ -135,7 +134,7 @@ class _CustomMessage extends CustomMessage {
     dynamic updatedAt = _Unset,
   }) =>
       _CustomMessage(
-        author: author ?? this.author,
+        authorId: authorId ?? this.authorId,
         createdAt: createdAt == _Unset ? this.createdAt : createdAt as int?,
         id: id ?? this.id,
         metadata: metadata == _Unset
@@ -148,7 +147,7 @@ class _CustomMessage extends CustomMessage {
         roomId: roomId == _Unset ? this.roomId : roomId as String?,
         showStatus:
             showStatus == _Unset ? this.showStatus : showStatus as bool?,
-        status: status == _Unset ? this.status : status as Status?,
+        status: status == _Unset ? this.status : status as MessageStatus?,
         updatedAt: updatedAt == _Unset ? this.updatedAt : updatedAt as int?,
       );
 }

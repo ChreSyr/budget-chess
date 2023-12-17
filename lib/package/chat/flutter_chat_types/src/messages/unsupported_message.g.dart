@@ -8,7 +8,7 @@ part of 'unsupported_message.dart';
 
 UnsupportedMessage _$UnsupportedMessageFromJson(Map<String, dynamic> json) =>
     UnsupportedMessage(
-      author: UserModel.fromJson(json['author'] as Map<String, dynamic>),
+      authorId: json['authorId'] as String,
       id: json['id'] as String,
       createdAt: json['createdAt'] as int?,
       metadata: json['metadata'] as Map<String, dynamic>?,
@@ -18,14 +18,14 @@ UnsupportedMessage _$UnsupportedMessageFromJson(Map<String, dynamic> json) =>
           : Message.fromJson(json['repliedMessage'] as Map<String, dynamic>),
       roomId: json['roomId'] as String?,
       showStatus: json['showStatus'] as bool?,
-      status: $enumDecodeNullable(_$StatusEnumMap, json['status']),
+      status: $enumDecodeNullable(_$MessageStatusEnumMap, json['status']),
       type: $enumDecodeNullable(_$MessageTypeEnumMap, json['type']),
       updatedAt: json['updatedAt'] as int?,
     );
 
 Map<String, dynamic> _$UnsupportedMessageToJson(UnsupportedMessage instance) =>
     <String, dynamic>{
-      'author': instance.author,
+      'authorId': instance.authorId,
       'createdAt': instance.createdAt,
       'id': instance.id,
       'metadata': instance.metadata,
@@ -33,17 +33,17 @@ Map<String, dynamic> _$UnsupportedMessageToJson(UnsupportedMessage instance) =>
       'repliedMessage': instance.repliedMessage,
       'roomId': instance.roomId,
       'showStatus': instance.showStatus,
-      'status': _$StatusEnumMap[instance.status],
+      'status': _$MessageStatusEnumMap[instance.status],
       'type': _$MessageTypeEnumMap[instance.type]!,
       'updatedAt': instance.updatedAt,
     };
 
-const _$StatusEnumMap = {
-  Status.delivered: 'delivered',
-  Status.error: 'error',
-  Status.seen: 'seen',
-  Status.sending: 'sending',
-  Status.sent: 'sent',
+const _$MessageStatusEnumMap = {
+  MessageStatus.delivered: 'delivered',
+  MessageStatus.error: 'error',
+  MessageStatus.seen: 'seen',
+  MessageStatus.sending: 'sending',
+  MessageStatus.sent: 'sent',
 };
 
 const _$MessageTypeEnumMap = {

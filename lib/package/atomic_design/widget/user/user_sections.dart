@@ -1,9 +1,9 @@
 import 'package:crea_chess/package/atomic_design/dialog/user/email_verification.dart';
-import 'package:crea_chess/package/chat/flutter_chat_types/flutter_chat_types.dart'
-    as types;
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/chat.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/friend_preview.Dart';
+import 'package:crea_chess/package/chat/flutter_chat_types/flutter_chat_types.dart'
+    as types;
 import 'package:crea_chess/package/firebase/authentication/authentication_crud.dart';
 import 'package:crea_chess/package/firebase/firestore/relationship/relationship_crud.dart';
 import 'package:crea_chess/package/firebase/firestore/relationship/relationship_model.dart';
@@ -300,14 +300,11 @@ class _ChatSectionState extends State<ChatSection> {
   }
 
   void _handleSendPressed(types.PartialText message) {
-    final currentUser = context.read<UserCubit>().state;
-    if (currentUser == null) return;
-
     final relationshipId = relationshipCRUD.getId(
       widget.currentUserId,
       widget.otherId,
     );
-    relationshipCRUD.sendMessage(currentUser, relationshipId, message);
+    relationshipCRUD.sendMessage(widget.currentUserId, relationshipId, message);
   }
 
   void _setAttachmentUploading(bool uploading) {

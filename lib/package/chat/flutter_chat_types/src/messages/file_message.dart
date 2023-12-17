@@ -1,6 +1,5 @@
 import 'package:crea_chess/package/chat/flutter_chat_types/src/message.dart';
 import 'package:crea_chess/package/chat/flutter_chat_types/src/messages/partial_file.dart';
-import 'package:crea_chess/package/firebase/firestore/user/user_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -11,7 +10,7 @@ part 'file_message.g.dart';
 @immutable
 abstract class FileMessage extends Message {
   const factory FileMessage({
-    required UserModel author,
+    required String authorId,
     required String id,
     required String name,
     required num size,
@@ -24,14 +23,14 @@ abstract class FileMessage extends Message {
     Message? repliedMessage,
     String? roomId,
     bool? showStatus,
-    Status? status,
+    MessageStatus? status,
     MessageType? type,
     int? updatedAt,
   }) = _FileMessage;
 
   /// Creates a file message.
   const FileMessage._({
-    required super.author,
+    required super.authorId,
     required super.id,
     required this.name,
     required this.size,
@@ -55,7 +54,7 @@ abstract class FileMessage extends Message {
 
   /// Creates a full file message from a partial one.
   factory FileMessage.fromPartial({
-    required UserModel author,
+    required String authorId,
     required String id,
     required PartialFile partialFile,
     int? createdAt,
@@ -63,11 +62,11 @@ abstract class FileMessage extends Message {
     String? remoteId,
     String? roomId,
     bool? showStatus,
-    Status? status,
+    MessageStatus? status,
     int? updatedAt,
   }) =>
       _FileMessage(
-        author: author,
+        authorId: authorId,
         createdAt: createdAt,
         id: id,
         isLoading: isLoading,
@@ -103,7 +102,7 @@ abstract class FileMessage extends Message {
   /// Equatable props.
   @override
   List<Object?> get props => [
-        author,
+        authorId,
         createdAt,
         id,
         isLoading,
@@ -122,7 +121,7 @@ abstract class FileMessage extends Message {
 
   @override
   Message copyWith({
-    UserModel? author,
+    String? authorId,
     int? createdAt,
     String? id,
     bool? isLoading,
@@ -134,7 +133,7 @@ abstract class FileMessage extends Message {
     String? roomId,
     bool? showStatus,
     num? size,
-    Status? status,
+    MessageStatus? status,
     int? updatedAt,
     String? uri,
   });
@@ -147,7 +146,7 @@ abstract class FileMessage extends Message {
 /// A utility class to enable better copyWith.
 class _FileMessage extends FileMessage {
   const _FileMessage({
-    required super.author,
+    required super.authorId,
     required super.id,
     required super.name,
     required super.size,
@@ -167,7 +166,7 @@ class _FileMessage extends FileMessage {
 
   @override
   Message copyWith({
-    UserModel? author,
+    String? authorId,
     dynamic createdAt = _Unset,
     dynamic height = _Unset,
     String? id,
@@ -186,7 +185,7 @@ class _FileMessage extends FileMessage {
     dynamic width = _Unset,
   }) =>
       _FileMessage(
-        author: author ?? this.author,
+        authorId: authorId ?? this.authorId,
         createdAt: createdAt == _Unset ? this.createdAt : createdAt as int?,
         id: id ?? this.id,
         isLoading: isLoading == _Unset ? this.isLoading : isLoading as bool?,
@@ -203,7 +202,7 @@ class _FileMessage extends FileMessage {
         showStatus:
             showStatus == _Unset ? this.showStatus : showStatus as bool?,
         size: size ?? this.size,
-        status: status == _Unset ? this.status : status as Status?,
+        status: status == _Unset ? this.status : status as MessageStatus?,
         updatedAt: updatedAt == _Unset ? this.updatedAt : updatedAt as int?,
         uri: uri ?? this.uri,
       );

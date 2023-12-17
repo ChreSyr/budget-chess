@@ -1,6 +1,5 @@
 import 'package:crea_chess/package/chat/flutter_chat_types/src/message.dart';
 import 'package:crea_chess/package/chat/flutter_chat_types/src/messages/partial_image.dart';
-import 'package:crea_chess/package/firebase/firestore/user/user_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -11,7 +10,7 @@ part 'image_message.g.dart';
 @immutable
 abstract class ImageMessage extends Message {
   const factory ImageMessage({
-    required UserModel author,
+    required String authorId,
     required String id,
     required String name,
     required num size,
@@ -23,7 +22,7 @@ abstract class ImageMessage extends Message {
     Message? repliedMessage,
     String? roomId,
     bool? showStatus,
-    Status? status,
+    MessageStatus? status,
     MessageType? type,
     int? updatedAt,
     double? width,
@@ -31,7 +30,7 @@ abstract class ImageMessage extends Message {
 
   /// Creates an image message.
   const ImageMessage._({
-    required super.author,
+    required super.authorId,
     required super.id,
     required this.name,
     required this.size,
@@ -55,18 +54,18 @@ abstract class ImageMessage extends Message {
 
   /// Creates a full image message from a partial one.
   factory ImageMessage.fromPartial({
-    required UserModel author,
+    required String authorId,
     required String id,
     required PartialImage partialImage,
     int? createdAt,
     String? remoteId,
     String? roomId,
     bool? showStatus,
-    Status? status,
+    MessageStatus? status,
     int? updatedAt,
   }) =>
       _ImageMessage(
-        author: author,
+        authorId: authorId,
         createdAt: createdAt,
         height: partialImage.height,
         id: id,
@@ -102,7 +101,7 @@ abstract class ImageMessage extends Message {
   /// Equatable props.
   @override
   List<Object?> get props => [
-        author,
+        authorId,
         createdAt,
         height,
         id,
@@ -121,7 +120,7 @@ abstract class ImageMessage extends Message {
 
   @override
   Message copyWith({
-    UserModel? author,
+    String? authorId,
     int? createdAt,
     double? height,
     String? id,
@@ -132,7 +131,7 @@ abstract class ImageMessage extends Message {
     String? roomId,
     bool? showStatus,
     num? size,
-    Status? status,
+    MessageStatus? status,
     int? updatedAt,
     String? uri,
     double? width,
@@ -146,7 +145,7 @@ abstract class ImageMessage extends Message {
 /// A utility class to enable better copyWith.
 class _ImageMessage extends ImageMessage {
   const _ImageMessage({
-    required super.author,
+    required super.authorId,
     required super.id,
     required super.name,
     required super.size,
@@ -166,7 +165,7 @@ class _ImageMessage extends ImageMessage {
 
   @override
   Message copyWith({
-    UserModel? author,
+    String? authorId,
     dynamic createdAt = _Unset,
     dynamic height = _Unset,
     String? id,
@@ -183,7 +182,7 @@ class _ImageMessage extends ImageMessage {
     dynamic width = _Unset,
   }) =>
       _ImageMessage(
-        author: author ?? this.author,
+        authorId: authorId ?? this.authorId,
         createdAt: createdAt == _Unset ? this.createdAt : createdAt as int?,
         height: height == _Unset ? this.height : height as double?,
         id: id ?? this.id,
@@ -199,7 +198,7 @@ class _ImageMessage extends ImageMessage {
         showStatus:
             showStatus == _Unset ? this.showStatus : showStatus as bool?,
         size: size ?? this.size,
-        status: status == _Unset ? this.status : status as Status?,
+        status: status == _Unset ? this.status : status as MessageStatus?,
         updatedAt: updatedAt == _Unset ? this.updatedAt : updatedAt as int?,
         uri: uri ?? this.uri,
         width: width == _Unset ? this.width : width as double?,

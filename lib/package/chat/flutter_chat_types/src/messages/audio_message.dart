@@ -1,6 +1,5 @@
 import 'package:crea_chess/package/chat/flutter_chat_types/src/message.dart';
 import 'package:crea_chess/package/chat/flutter_chat_types/src/messages/partial_audio.dart';
-import 'package:crea_chess/package/firebase/firestore/user/user_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
@@ -11,7 +10,7 @@ part 'audio_message.g.dart';
 @immutable
 abstract class AudioMessage extends Message {
   const factory AudioMessage({
-    required UserModel author,
+    required String authorId,
     required Duration duration,
     required String id,
     required String name,
@@ -24,7 +23,7 @@ abstract class AudioMessage extends Message {
     Message? repliedMessage,
     String? roomId,
     bool? showStatus,
-    Status? status,
+    MessageStatus? status,
     MessageType? type,
     int? updatedAt,
     List<double>? waveForm,
@@ -32,7 +31,7 @@ abstract class AudioMessage extends Message {
 
   /// Creates an audio message.
   const AudioMessage._({
-    required super.author,
+    required super.authorId,
     required this.duration,
     required super.id,
     required this.name,
@@ -57,18 +56,18 @@ abstract class AudioMessage extends Message {
 
   /// Creates a full audio message from a partial one.
   factory AudioMessage.fromPartial({
-    required UserModel author,
+    required String authorId,
     required String id,
     required PartialAudio partialAudio,
     int? createdAt,
     String? remoteId,
     String? roomId,
     bool? showStatus,
-    Status? status,
+    MessageStatus? status,
     int? updatedAt,
   }) =>
       _AudioMessage(
-        author: author,
+        authorId: authorId,
         createdAt: createdAt,
         duration: partialAudio.duration,
         id: id,
@@ -108,7 +107,7 @@ abstract class AudioMessage extends Message {
   /// Equatable props.
   @override
   List<Object?> get props => [
-        author,
+        authorId,
         createdAt,
         duration,
         id,
@@ -128,7 +127,7 @@ abstract class AudioMessage extends Message {
 
   @override
   Message copyWith({
-    UserModel? author,
+    String? authorId,
     int? createdAt,
     Duration? duration,
     String? id,
@@ -140,7 +139,7 @@ abstract class AudioMessage extends Message {
     String? roomId,
     bool? showStatus,
     num? size,
-    Status? status,
+    MessageStatus? status,
     int? updatedAt,
     String? uri,
     List<double>? waveForm,
@@ -154,7 +153,7 @@ abstract class AudioMessage extends Message {
 /// A utility class to enable better copyWith.
 class _AudioMessage extends AudioMessage {
   const _AudioMessage({
-    required super.author,
+    required super.authorId,
     required super.duration,
     required super.id,
     required super.name,
@@ -175,7 +174,7 @@ class _AudioMessage extends AudioMessage {
 
   @override
   Message copyWith({
-    UserModel? author,
+    String? authorId,
     dynamic createdAt = _Unset,
     Duration? duration,
     String? id,
@@ -193,7 +192,7 @@ class _AudioMessage extends AudioMessage {
     dynamic waveForm = _Unset,
   }) =>
       _AudioMessage(
-        author: author ?? this.author,
+        authorId: authorId ?? this.authorId,
         createdAt: createdAt == _Unset ? this.createdAt : createdAt as int?,
         duration: duration ?? this.duration,
         id: id ?? this.id,
@@ -210,7 +209,7 @@ class _AudioMessage extends AudioMessage {
         showStatus:
             showStatus == _Unset ? this.showStatus : showStatus as bool?,
         size: size ?? this.size,
-        status: status == _Unset ? this.status : status as Status?,
+        status: status == _Unset ? this.status : status as MessageStatus?,
         updatedAt: updatedAt == _Unset ? this.updatedAt : updatedAt as int?,
         uri: uri ?? this.uri,
         waveForm:

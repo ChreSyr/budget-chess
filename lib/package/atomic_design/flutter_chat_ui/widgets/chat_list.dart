@@ -1,9 +1,9 @@
-import 'package:crea_chess/package/chat/flutter_chat_types/flutter_chat_types.dart'
-    as types;
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/models/bubble_rtl_alignment.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/state/inherited_chat_theme.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/state/inherited_user.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/typing_indicator.dart';
+import 'package:crea_chess/package/chat/flutter_chat_types/flutter_chat_types.dart'
+    as types;
 import 'package:diffutil_dart/diffutil.dart';
 import 'package:flutter/material.dart';
 
@@ -172,7 +172,7 @@ class _ChatListState extends State<ChatList>
         // Compare items to fire only on newly added messages.
         if (oldMessage.id != message.id) {
           // Run only for sent message.
-          if (message.author.id == InheritedUser.of(context).user.id) {
+          if (message.authorId == InheritedUser.of(context).user.id) {
             // Delay to give some time for Flutter to calculate new
             // size after new message was added.
             Future.delayed(const Duration(milliseconds: 100), () {
