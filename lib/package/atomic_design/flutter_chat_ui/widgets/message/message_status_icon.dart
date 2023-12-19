@@ -1,15 +1,12 @@
+import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/state/inherited_chat_theme.dart';
 import 'package:crea_chess/package/chat/flutter_chat_types/flutter_chat_types.dart'
     as types;
-import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/state/inherited_chat_theme.dart';
 import 'package:flutter/material.dart';
 
 /// A class that represents a message status.
-class MessageStatus extends StatelessWidget {
+class MessageStatusIcon extends StatelessWidget {
   /// Creates a message status widget.
-  const MessageStatus({
-    super.key,
-    required this.status,
-  });
+  const MessageStatusIcon({required this.status, super.key});
 
   /// Status of the message.
   final types.MessageStatus? status;
@@ -22,25 +19,22 @@ class MessageStatus extends StatelessWidget {
         return InheritedChatTheme.of(context).theme.deliveredIcon != null
             ? InheritedChatTheme.of(context).theme.deliveredIcon!
             : Image.asset(
-                'assets/icon-delivered.png',
+                'assets/chat/delivered.png',
                 color: InheritedChatTheme.of(context).theme.primaryColor,
-                package: 'flutter_chat_ui',
               );
       case types.MessageStatus.error:
         return InheritedChatTheme.of(context).theme.errorIcon != null
             ? InheritedChatTheme.of(context).theme.errorIcon!
             : Image.asset(
-                'assets/icon-error.png',
+                'assets/chat/error.png',
                 color: InheritedChatTheme.of(context).theme.errorColor,
-                package: 'flutter_chat_ui',
               );
       case types.MessageStatus.seen:
         return InheritedChatTheme.of(context).theme.seenIcon != null
             ? InheritedChatTheme.of(context).theme.seenIcon!
             : Image.asset(
-                'assets/icon-seen.png',
+                'assets/chat/seen.png',
                 color: InheritedChatTheme.of(context).theme.primaryColor,
-                package: 'flutter_chat_ui',
               );
       case types.MessageStatus.sending:
         return InheritedChatTheme.of(context).theme.sendingIcon != null
@@ -58,7 +52,7 @@ class MessageStatus extends StatelessWidget {
                   ),
                 ),
               );
-      default:
+      case null:
         return const SizedBox(width: 8);
     }
   }

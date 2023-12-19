@@ -1,9 +1,8 @@
-import 'package:crea_chess/package/chat/flutter_chat_types/flutter_chat_types.dart'
-    as types;
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/conditional/conditional.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/util.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/state/inherited_chat_theme.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/state/inherited_user.dart';
+import 'package:crea_chess/package/firebase/firestore/relationship/message/message_model.dart';
 import 'package:flutter/material.dart';
 
 /// A class that represents image message widget. Supports different
@@ -11,13 +10,13 @@ import 'package:flutter/material.dart';
 /// if the image is narrow, renders image in form of a file if aspect
 /// ratio is very small or very big.
 class ImageMessage extends StatefulWidget {
-  /// Creates an image message widget based on [types.ImageMessage].
+  /// Creates an image message widget based on [MessageModel].
   const ImageMessage({
+    required this.message,
+    required this.messageWidth,
     super.key,
     this.imageHeaders,
     this.imageProviderBuilder,
-    required this.message,
-    required this.messageWidth,
   });
 
   /// See [Chat.imageHeaders].
@@ -30,8 +29,8 @@ class ImageMessage extends StatefulWidget {
     required Conditional conditional,
   })? imageProviderBuilder;
 
-  /// [types.ImageMessage].
-  final types.ImageMessage message;
+  /// [MessageModel].
+  final MessageModel message;
 
   /// Maximum message width.
   final int messageWidth;
@@ -51,15 +50,18 @@ class _ImageMessageState extends State<ImageMessage> {
     super.initState();
     _image = widget.imageProviderBuilder != null
         ? widget.imageProviderBuilder!(
-            uri: widget.message.uri,
+            uri: widget.message.uri ?? '',
             imageHeaders: widget.imageHeaders,
             conditional: Conditional(),
           )
         : Conditional().getProvider(
-            widget.message.uri,
+            widget.message.uri ?? '',
             headers: widget.imageHeaders,
           );
-    _size = Size(widget.message.width ?? 0, widget.message.height ?? 0);
+    _size = Size(
+      widget.message.mediaWidth ?? 0,
+      widget.message.mediaHeight ?? 0,
+    );
   }
 
   void _getImage() {
@@ -143,7 +145,7 @@ class _ImageMessageState extends State<ImageMessage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      widget.message.name,
+                      widget.message.mediaName ?? '',
                       style: user.id == widget.message.authorId
                           ? InheritedChatTheme.of(context)
                               .theme
@@ -158,7 +160,7 @@ class _ImageMessageState extends State<ImageMessage> {
                         top: 4,
                       ),
                       child: Text(
-                        formatBytes(widget.message.size.truncate()),
+                        formatBytes((widget.message.mediaSize ?? 0).truncate()),
                         style: user.id == widget.message.authorId
                             ? InheritedChatTheme.of(context)
                                 .theme

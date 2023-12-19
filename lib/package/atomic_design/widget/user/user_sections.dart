@@ -2,15 +2,16 @@ import 'package:crea_chess/package/atomic_design/dialog/user/email_verification.
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/chat.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
+import 'package:crea_chess/package/atomic_design/snack_bar.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/friend_preview.Dart';
 import 'package:crea_chess/package/chat/flutter_chat_types/flutter_chat_types.dart'
     as types;
 import 'package:crea_chess/package/firebase/authentication/authentication_crud.dart';
+import 'package:crea_chess/package/firebase/firestore/relationship/message/message_model.dart';
+import 'package:crea_chess/package/firebase/firestore/relationship/message/messsage_crud.dart';
 import 'package:crea_chess/package/firebase/firestore/relationship/relationship_crud.dart';
 import 'package:crea_chess/package/firebase/firestore/relationship/relationship_model.dart';
-import 'package:crea_chess/package/firebase/firestore/user/user_crud.dart';
 import 'package:crea_chess/package/firebase/firestore/user/user_cubit.dart';
-import 'package:crea_chess/package/firebase/firestore/user/user_model.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,6 +35,7 @@ abstract class UserSection extends StatelessWidget {
       ];
     } else {
       return [
+        // TODO : messages only if friends
         UserSectionMessages(currentUserId: current, otherId: other),
         UserSectionFriends(userId: other),
       ];
@@ -262,7 +264,7 @@ class _ChatSectionState extends State<ChatSection> {
     // }
   }
 
-  void _handleMessageTap(BuildContext _, types.Message message) async {
+  void _handleMessageTap(BuildContext _, MessageModel message) async {
     // TODO
     // if (message is types.FileMessage) {
     //   var localPath = message.uri;
@@ -299,7 +301,7 @@ class _ChatSectionState extends State<ChatSection> {
   }
 
   void _handlePreviewDataFetched(
-    types.TextMessage message,
+    MessageModel message,
     types.PreviewData previewData,
   ) {
     // TODO
@@ -308,12 +310,28 @@ class _ChatSectionState extends State<ChatSection> {
     // FirebaseChatCore.instance.updateMessage(updatedMessage, widget.room.id);
   }
 
-  void _handleSendPressed(types.PartialText message) {
+  Future<void> _handleSendPressed(types.PartialText partialMessage) async {
     final relationshipId = relationshipCRUD.getId(
       widget.currentUserId,
       widget.otherId,
     );
-    relationshipCRUD.sendMessage(widget.currentUserId, relationshipId, message);
+    final message = MessageModel.fromPartialText(
+      authorId: widget.currentUserId,
+      id: '',
+      partialText: partialMessage,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    );
+    try {
+      await messageCRUD.create(
+        parentDocumentId: relationshipId,
+        documentId: null,
+        data: message,
+      );
+    } catch (_) {
+      // ignore: use_build_context_synchronously
+      snackBarError(context, context.l10n.errorOccurred);
+    }
   }
 
   void _setAttachmentUploading(bool uploading) {
@@ -332,29 +350,21 @@ class _ChatSectionState extends State<ChatSection> {
       widget.otherId,
     );
 
-    return StreamBuilder<UserModel?>(
-      stream: userCRUD.stream(documentId: widget.otherId),
+    return StreamBuilder<Iterable<MessageModel>>(
+      stream: messageCRUD.streamFiltered(
+        // TODO : package it
+        parentDocumentId: relationshipId,
+        filter: (collection) => collection.orderBy('createdAt'),
+      ),
       builder: (context, snapshot) {
-        final other = snapshot.data;
-        // TODO : better
-        if (other == null || other.id == null) return Container();
-
-        return StreamBuilder<List<types.Message>>(
-          stream: relationshipCRUD.streamMessages(
-            users: [currentUser, other],
-            relationshipId: relationshipId,
-          ),
-          builder: (context, snapshot) {
-            return Chat(
-              isAttachmentUploading: _isAttachmentUploading,
-              messages: snapshot.data ?? [],
-              onAttachmentPressed: _handleAtachmentPressed,
-              onMessageTap: _handleMessageTap,
-              onPreviewDataFetched: _handlePreviewDataFetched,
-              onSendPressed: _handleSendPressed,
-              user: currentUser,
-            );
-          },
+        return Chat(
+          isAttachmentUploading: _isAttachmentUploading,
+          messages: snapshot.data?.toList() ?? [],
+          onAttachmentPressed: _handleAtachmentPressed,
+          onMessageTap: _handleMessageTap,
+          onPreviewDataFetched: _handlePreviewDataFetched,
+          onSendPressed: _handleSendPressed,
+          user: currentUser,
         );
       },
     );

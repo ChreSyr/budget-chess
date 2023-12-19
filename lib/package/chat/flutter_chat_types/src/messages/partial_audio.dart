@@ -1,7 +1,6 @@
+import 'package:crea_chess/package/firebase/firestore/relationship/message/message_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
-
-import '../message.dart';
 
 part 'partial_audio.g.dart';
 
@@ -15,12 +14,12 @@ class PartialAudio {
   /// message from a partial one.
   const PartialAudio({
     required this.duration,
-    this.metadata,
-    this.mimeType,
     required this.name,
-    this.repliedMessage,
     required this.size,
     required this.uri,
+    this.metadata,
+    this.mimeType,
+    this.repliedMessage,
     this.waveForm,
   });
 
@@ -41,7 +40,7 @@ class PartialAudio {
   final String name;
 
   /// Message that is being replied to with the current message.
-  final Message? repliedMessage;
+  final MessageModel? repliedMessage;
 
   /// Size of the audio in bytes.
   final num size;

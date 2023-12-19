@@ -8,5 +8,5 @@ abstract class ModelConverter<T> {
 
   Map<String, dynamic> toFirestore(T data, SetOptions? _);
 
-  T emptyModel();
+  // T emptyModel();
 }

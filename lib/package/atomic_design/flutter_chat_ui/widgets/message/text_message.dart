@@ -7,13 +7,14 @@ import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/state/i
 import 'package:crea_chess/package/chat/flutter_chat_types/flutter_chat_types.dart'
     as types;
 import 'package:crea_chess/package/chat/flutter_link_previewer/flutter_link_previewer.dart';
+import 'package:crea_chess/package/firebase/firestore/relationship/message/message_model.dart';
 import 'package:crea_chess/package/firebase/firestore/user/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parsed_text/flutter_parsed_text.dart';
 
 /// A class that represents text message widget with optional link preview.
 class TextMessage extends StatelessWidget {
-  /// Creates a text message widget from a [types.TextMessage] class.
+  /// Creates a text message widget from a [MessageModel] class.
   const TextMessage({
     required this.emojiEnlargementBehavior,
     required this.hideBackgroundOnEmojiMessages,
@@ -33,15 +34,15 @@ class TextMessage extends StatelessWidget {
   /// See [Message.hideBackgroundOnEmojiMessages].
   final bool hideBackgroundOnEmojiMessages;
 
-  /// [types.TextMessage].
-  final types.TextMessage message;
+  /// [MessageModel].
+  final MessageModel message;
 
   /// This is to allow custom user name builder
   /// By using this we can fetch newest user info based on id.
   final Widget Function(UserModel)? nameBuilder;
 
   /// See [LinkPreview.onPreviewDataFetched].
-  final void Function(types.TextMessage, types.PreviewData)?
+  final void Function(MessageModel, types.PreviewData)?
       onPreviewDataFetched;
 
   /// Customisation options for the [TextMessage].
@@ -88,7 +89,7 @@ class TextMessage extends StatelessWidget {
         vertical: InheritedChatTheme.of(context).theme.messageInsetsVertical,
       ),
       previewData: message.previewData,
-      text: message.text,
+      text: message.text ?? '',
       textWidget: _textWidgetBuilder(user, context, false),
       userAgent: userAgent,
       width: width,
@@ -131,9 +132,9 @@ class TextMessage extends StatelessWidget {
         //   nameBuilder?.call(message.author) ?? UserName(author: message.author),
         if (enlargeEmojis)
           if (options.isTextSelectable)
-            SelectableText(message.text, style: emojiTextStyle)
+            SelectableText(message.text ?? '', style: emojiTextStyle)
           else
-            Text(message.text, style: emojiTextStyle)
+            Text(message.text ?? '', style: emojiTextStyle)
         else
           TextMessageText(
             bodyLinkTextStyle: bodyLinkTextStyle,
@@ -141,7 +142,7 @@ class TextMessage extends StatelessWidget {
             boldTextStyle: boldTextStyle,
             codeTextStyle: codeTextStyle,
             options: options,
-            text: message.text,
+            text: message.text ?? '',
           ),
       ],
     );
@@ -158,7 +159,7 @@ class TextMessage extends StatelessWidget {
 
     if (usePreviewData && onPreviewDataFetched != null) {
       final urlRegexp = RegExp(regexLink, caseSensitive: false);
-      final matches = urlRegexp.allMatches(message.text);
+      final matches = urlRegexp.allMatches(message.text ?? '');
 
       if (matches.isNotEmpty) {
         return _linkPreview(user, width, context);

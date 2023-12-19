@@ -1,7 +1,6 @@
+import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/state/inherited_chat_theme.dart';
+import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/state/inherited_l10n.dart';
 import 'package:flutter/material.dart';
-
-import '../state/inherited_chat_theme.dart';
-import '../state/inherited_l10n.dart';
 
 /// A class that represents attachment button widget.
 class AttachmentButton extends StatelessWidget {
@@ -25,12 +24,7 @@ class AttachmentButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
         margin: InheritedChatTheme.of(context).theme.attachmentButtonMargin ??
-            const EdgeInsetsDirectional.fromSTEB(
-              8,
-              0,
-              0,
-              0,
-            ),
+            const EdgeInsetsDirectional.fromSTEB(8, 0, 0, 0),
         child: IconButton(
           constraints: const BoxConstraints(
             minHeight: 24,
@@ -50,7 +44,7 @@ class AttachmentButton extends StatelessWidget {
                 )
               : InheritedChatTheme.of(context).theme.attachmentButtonIcon ??
                   const Icon(Icons.add_circle_outline),
-          onPressed: isLoading ? null : onPressed,
+          onPressed: null, // TODO : isLoading ? null : onPressed,
           padding: padding,
           splashRadius: 24,
           tooltip:

@@ -1,5 +1,3 @@
-import 'package:crea_chess/package/chat/flutter_chat_types/flutter_chat_types.dart'
-    as types;
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/models/input_clear_mode.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/models/send_button_visibility_mode.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/util.dart';
@@ -8,6 +6,8 @@ import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/input/i
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/input/send_button.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/state/inherited_chat_theme.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/state/inherited_l10n.dart';
+import 'package:crea_chess/package/chat/flutter_chat_types/flutter_chat_types.dart'
+    as types;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

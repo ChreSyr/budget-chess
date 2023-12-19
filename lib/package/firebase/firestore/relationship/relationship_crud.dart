@@ -1,12 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:crea_chess/package/chat/flutter_chat_types/flutter_chat_types.dart'
-    as types;
-import 'package:crea_chess/package/firebase/firestore/crud/base_crud.dart';
+import 'package:crea_chess/package/firebase/firestore/crud/collection_crud.dart';
 import 'package:crea_chess/package/firebase/firestore/crud/model_converter.dart';
 import 'package:crea_chess/package/firebase/firestore/relationship/relationship_model.dart';
-import 'package:crea_chess/package/firebase/firestore/user/user_model.dart';
 
 class _RelationshipModelConverter implements ModelConverter<RelationshipModel> {
+  const _RelationshipModelConverter();
+
   @override
   RelationshipModel fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
@@ -20,14 +19,15 @@ class _RelationshipModelConverter implements ModelConverter<RelationshipModel> {
     return data.toFirestore();
   }
 
-  @override
-  RelationshipModel emptyModel() {
-    return RelationshipModel();
-  }
+  // @override
+  // RelationshipModel emptyModel() {
+  //   return RelationshipModel();
+  // }
 }
 
-class _RelationshipCRUD extends BaseCRUD<RelationshipModel> {
-  _RelationshipCRUD() : super('relationship', _RelationshipModelConverter());
+class _RelationshipCRUD extends CollectionCRUD<RelationshipModel> {
+  _RelationshipCRUD()
+      : super('relationship', const _RelationshipModelConverter());
 
   CollectionReference<Map<String, dynamic>> _messagesCollection(
     String relationshipId,
@@ -178,117 +178,6 @@ class _RelationshipCRUD extends BaseCRUD<RelationshipModel> {
         status: status,
       ),
     );
-  }
-
-  /// Sends a message to the Firestore. Accepts any partial message and a
-  /// room ID. If arbitraty data is provided in the [partialMessage]
-  /// does nothing.
-  Future<void> sendMessage(
-    String senderId,
-    String relationshipId, // TODO : receiverId
-    dynamic partialMessage,
-  ) async {
-    types.Message? message;
-
-    if (partialMessage is types.PartialCustom) {
-      message = types.CustomMessage.fromPartial(
-        authorId: senderId,
-        id: '',
-        partialCustom: partialMessage,
-      );
-    } else if (partialMessage is types.PartialFile) {
-      message = types.FileMessage.fromPartial(
-        authorId: senderId,
-        id: '',
-        partialFile: partialMessage,
-      );
-    } else if (partialMessage is types.PartialImage) {
-      message = types.ImageMessage.fromPartial(
-        authorId: senderId,
-        id: '',
-        partialImage: partialMessage,
-      );
-    } else if (partialMessage is types.PartialText) {
-      message = types.TextMessage.fromPartial(
-        authorId: senderId,
-        id: '',
-        partialText: partialMessage,
-      );
-    }
-
-    if (message != null) {
-      final messageMap = message.toJson()
-        ..removeWhere((key, value) => key == 'id');
-      messageMap['createdAt'] = DateTime.now();
-      messageMap['updatedAt'] = DateTime.now();
-
-      await _messagesCollection(relationshipId).add(messageMap);
-
-      // await FirebaseFirestore.instance
-      //     .collection(collectionName)
-      //     .doc(relationshipId)
-      //     .update({'updatedAt': DateTime.now()});
-    }
-  }
-
-  /// Returns a stream of messages for a relation.
-  Stream<List<types.Message>> streamMessages({
-    required List<UserModel> users, // TODO : rework
-    required String relationshipId,
-    List<Object?>? endAt,
-    List<Object?>? endBefore,
-    int? limit,
-    List<Object?>? startAfter,
-    List<Object?>? startAt,
-  }) {
-    var query = _messagesCollection(relationshipId)
-        .orderBy('createdAt', descending: true);
-
-    if (endAt != null) {
-      query = query.endAt(endAt);
-    }
-
-    if (endBefore != null) {
-      query = query.endBefore(endBefore);
-    }
-
-    if (limit != null) {
-      query = query.limit(limit);
-    }
-
-    if (startAfter != null) {
-      query = query.startAfter(startAfter);
-    }
-
-    if (startAt != null) {
-      query = query.startAt(startAt);
-    }
-
-    return query.snapshots().map(
-          (snapshot) => snapshot.docs.fold<List<types.Message>>(
-            [],
-            (previousValue, doc) {
-              final data = doc.data();
-
-              // TODO : rework
-              final author = users.firstWhere(
-                (user) => user.id == data['authorId'],
-                orElse: () => UserModel(
-                  id: data['authorId'] as String,
-                ),
-              );
-
-              data['author'] = author.toJson();
-              // ignore: avoid_dynamic_calls
-              data['createdAt'] = data['createdAt']?.millisecondsSinceEpoch;
-              data['id'] = doc.id;
-              // ignore: avoid_dynamic_calls
-              data['updatedAt'] = data['updatedAt']?.millisecondsSinceEpoch;
-
-              return [...previousValue, types.Message.fromJson(data)];
-            },
-          ),
-        );
   }
 
   Future<void> unblock({

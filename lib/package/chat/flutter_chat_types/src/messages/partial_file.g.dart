@@ -7,14 +7,15 @@ part of 'partial_file.dart';
 // **************************************************************************
 
 PartialFile _$PartialFileFromJson(Map<String, dynamic> json) => PartialFile(
-      metadata: json['metadata'] as Map<String, dynamic>?,
-      mimeType: json['mimeType'] as String?,
       name: json['name'] as String,
-      repliedMessage: json['repliedMessage'] == null
-          ? null
-          : Message.fromJson(json['repliedMessage'] as Map<String, dynamic>),
       size: json['size'] as num,
       uri: json['uri'] as String,
+      metadata: json['metadata'] as Map<String, dynamic>?,
+      mimeType: json['mimeType'] as String?,
+      repliedMessage: json['repliedMessage'] == null
+          ? null
+          : MessageModel.fromJson(
+              json['repliedMessage'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$PartialFileToJson(PartialFile instance) =>

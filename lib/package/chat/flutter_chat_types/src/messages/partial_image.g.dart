@@ -7,14 +7,15 @@ part of 'partial_image.dart';
 // **************************************************************************
 
 PartialImage _$PartialImageFromJson(Map<String, dynamic> json) => PartialImage(
-      height: (json['height'] as num?)?.toDouble(),
-      metadata: json['metadata'] as Map<String, dynamic>?,
       name: json['name'] as String,
-      repliedMessage: json['repliedMessage'] == null
-          ? null
-          : Message.fromJson(json['repliedMessage'] as Map<String, dynamic>),
       size: json['size'] as num,
       uri: json['uri'] as String,
+      height: (json['height'] as num?)?.toDouble(),
+      metadata: json['metadata'] as Map<String, dynamic>?,
+      repliedMessage: json['repliedMessage'] == null
+          ? null
+          : MessageModel.fromJson(
+              json['repliedMessage'] as Map<String, dynamic>),
       width: (json['width'] as num?)?.toDouble(),
     );
 

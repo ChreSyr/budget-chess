@@ -22,8 +22,12 @@ RelationshipModel _$RelationshipModelFromJson(Map<String, dynamic> json) {
 mixin _$RelationshipModel {
   String? get id => throw _privateConstructorUsedError;
   String? get ref => throw _privateConstructorUsedError; // TODO : remove ?
-  DateTime? get createdAt =>
-      throw _privateConstructorUsedError; // date of friendship start
+  /// Date of friendship start
+  @TimestampToDateTimeConverter()
+  DateTime? get createdAt => throw _privateConstructorUsedError;
+
+  /// Last time a message was sent or a game got updated
+  @TimestampToDateTimeConverter()
   DateTime? get updatedAt => throw _privateConstructorUsedError;
   List<String>? get userIds => throw _privateConstructorUsedError;
   RelationshipStatus? get status => throw _privateConstructorUsedError;
@@ -43,8 +47,8 @@ abstract class $RelationshipModelCopyWith<$Res> {
   $Res call(
       {String? id,
       String? ref,
-      DateTime? createdAt,
-      DateTime? updatedAt,
+      @TimestampToDateTimeConverter() DateTime? createdAt,
+      @TimestampToDateTimeConverter() DateTime? updatedAt,
       List<String>? userIds,
       RelationshipStatus? status});
 }
@@ -109,8 +113,8 @@ abstract class _$$RelationshipModelImplCopyWith<$Res>
   $Res call(
       {String? id,
       String? ref,
-      DateTime? createdAt,
-      DateTime? updatedAt,
+      @TimestampToDateTimeConverter() DateTime? createdAt,
+      @TimestampToDateTimeConverter() DateTime? updatedAt,
       List<String>? userIds,
       RelationshipStatus? status});
 }
@@ -168,8 +172,8 @@ class _$RelationshipModelImpl extends _RelationshipModel {
   _$RelationshipModelImpl(
       {this.id,
       this.ref,
-      this.createdAt,
-      this.updatedAt,
+      @TimestampToDateTimeConverter() this.createdAt,
+      @TimestampToDateTimeConverter() this.updatedAt,
       final List<String>? userIds,
       this.status})
       : _userIds = userIds,
@@ -183,10 +187,14 @@ class _$RelationshipModelImpl extends _RelationshipModel {
   @override
   final String? ref;
 // TODO : remove ?
+  /// Date of friendship start
   @override
+  @TimestampToDateTimeConverter()
   final DateTime? createdAt;
-// date of friendship start
+
+  /// Last time a message was sent or a game got updated
   @override
+  @TimestampToDateTimeConverter()
   final DateTime? updatedAt;
   final List<String>? _userIds;
   @override
@@ -245,8 +253,8 @@ abstract class _RelationshipModel extends RelationshipModel {
   factory _RelationshipModel(
       {final String? id,
       final String? ref,
-      final DateTime? createdAt,
-      final DateTime? updatedAt,
+      @TimestampToDateTimeConverter() final DateTime? createdAt,
+      @TimestampToDateTimeConverter() final DateTime? updatedAt,
       final List<String>? userIds,
       final RelationshipStatus? status}) = _$RelationshipModelImpl;
   _RelationshipModel._() : super._();
@@ -259,8 +267,13 @@ abstract class _RelationshipModel extends RelationshipModel {
   @override
   String? get ref;
   @override // TODO : remove ?
+  /// Date of friendship start
+  @TimestampToDateTimeConverter()
   DateTime? get createdAt;
-  @override // date of friendship start
+  @override
+
+  /// Last time a message was sent or a game got updated
+  @TimestampToDateTimeConverter()
   DateTime? get updatedAt;
   @override
   List<String>? get userIds;

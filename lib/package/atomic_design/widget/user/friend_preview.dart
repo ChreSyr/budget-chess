@@ -16,7 +16,7 @@ class FriendPreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentUserId = context.read<UserCubit>().state?.id;
-    const radius = CCSize.xlarge * 4; // TODO
+    const radius = CCSize.xlarge;
 
     if (friendId == 'add') {
       return SizedBox(

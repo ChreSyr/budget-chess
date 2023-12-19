@@ -1,26 +1,52 @@
 {
   "project_info": {
-    "project_number": "827585722578",
-    "project_id": "flutter-chat-benchmark",
-    "storage_bucket": "flutter-chat-benchmark.appspot.com"
+    "project_number": "737365859201",
+    "firebase_url": "https://crea-chess-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "crea-chess",
+    "storage_bucket": "crea-chess.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:827585722578:android:cd653ae39c612e19a7950b",
+        "mobilesdk_app_id": "1:737365859201:android:472bc07b9ec6e5608d6680",
         "android_client_info": {
           "package_name": "com.example.crea_chess"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "737365859201-ogpt0kp0hct9q6u38jl1h0bkquctnqm2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.crea_chess",
+            "certificate_hash": "b68d75c182433c3aa3b78ced737c720bc308f169"
+          }
+        },
+        {
+          "client_id": "737365859201-spnihhusekc0prr23451hdjaj9a6dltc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyDACTp3c3PFWPqcJZximes5kZAzvdffiCA"
+          "current_key": "AIzaSyCFqzeuIa-VFeESo0U9oBGVkzjxo6xTDl0"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "737365859201-spnihhusekc0prr23451hdjaj9a6dltc.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "737365859201-obb8e3m79cq62om60ekaqjhs36ciu4ub.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.creaChess.RunnerTests"
+              }
+            }
+          ]
         }
       }
     }

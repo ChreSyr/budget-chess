@@ -4,8 +4,8 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crea_chess/package/firebase/firestore/crud/model_converter.dart';
 
-abstract class BaseCRUD<T> {
-  BaseCRUD(this.collectionName, this._converter)
+abstract class CollectionCRUD<T> {
+  CollectionCRUD(this.collectionName, this._converter)
       : _collection = FirebaseFirestore.instance
             .collection(collectionName)
             .withConverter<T>(
@@ -17,7 +17,7 @@ abstract class BaseCRUD<T> {
   final CollectionReference<T> _collection;
   final ModelConverter<T> _converter;
 
-  Future<void> create({required String? documentId, required T data}) async {
+  Future<void> create({required T data, String? documentId}) async {
     await _collection.doc(documentId).set(data);
   }
 
@@ -38,9 +38,9 @@ abstract class BaseCRUD<T> {
   Stream<T?> stream({required String documentId}) {
     final streamController = StreamController<T?>();
 
-    if (documentId.isEmpty) {
-      streamController.add(_converter.emptyModel());
-    } else {
+    if (documentId.isNotEmpty) {
+      // streamController.add(_converter.emptyModel());
+      // } else {
       _collection.doc(documentId).snapshots().listen((snapshot) {
         streamController.add(snapshot.data());
       });

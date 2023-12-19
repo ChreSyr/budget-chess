@@ -11,7 +11,8 @@ PartialCustom _$PartialCustomFromJson(Map<String, dynamic> json) =>
       metadata: json['metadata'] as Map<String, dynamic>?,
       repliedMessage: json['repliedMessage'] == null
           ? null
-          : Message.fromJson(json['repliedMessage'] as Map<String, dynamic>),
+          : MessageModel.fromJson(
+              json['repliedMessage'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$PartialCustomToJson(PartialCustom instance) =>

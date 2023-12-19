@@ -1,7 +1,5 @@
 import 'dart:math';
 
-import 'package:crea_chess/package/chat/flutter_chat_types/flutter_chat_types.dart'
-    as types;
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/chat_l10n.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/chat_theme.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/conditional/conditional.dart';
@@ -15,7 +13,7 @@ import 'package:crea_chess/package/atomic_design/flutter_chat_ui/util.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/chat_list.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/image_gallery.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/input/input.dart';
-import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/message/message.dart';
+import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/message/message_widget.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/message/system_message.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/message/text_message.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/state/inherited_chat_theme.dart';
@@ -23,6 +21,10 @@ import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/state/i
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/state/inherited_user.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/typing_indicator.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/unread_header.dart';
+import 'package:crea_chess/package/chat/flutter_chat_types/flutter_chat_types.dart'
+    as types;
+import 'package:crea_chess/package/chat/flutter_chat_types/src/message.dart';
+import 'package:crea_chess/package/firebase/firestore/relationship/message/message_model.dart';
 import 'package:crea_chess/package/firebase/firestore/user/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -104,21 +106,21 @@ class Chat extends StatefulWidget {
     super.key,
   });
 
-  /// See [Message.audioMessageBuilder].
-  final Widget Function(types.AudioMessage, {required int messageWidth})?
+  // See [Message.audioMessageBuilder].
+  final Widget Function(MessageModel, {required int messageWidth})?
       audioMessageBuilder;
 
-  /// See [Message.avatarBuilder].
+  // See [Message.avatarBuilder].
   final Widget Function(UserModel author)? avatarBuilder;
 
-  /// See [Message.bubbleBuilder].
+  // See [Message.bubbleBuilder].
   final Widget Function(
     Widget child, {
-    required types.Message message,
+    required MessageModel message,
     required bool nextMessageInGroup,
   })? bubbleBuilder;
 
-  /// See [Message.bubbleRtlAlignment].
+  // See [Message.bubbleRtlAlignment].
   final BubbleRtlAlignment? bubbleRtlAlignment;
 
   /// Allows you to replace the default Input widget e.g. if you want to create a channel view. If you're looking for the bottom widget added to the chat list, see [listBottomWidget] instead.
@@ -127,12 +129,12 @@ class Chat extends StatefulWidget {
   /// If [dateFormat], [dateLocale] and/or [timeFormat] is not enough to customize date headers in your case, use this to return an arbitrary string based on a [DateTime] of a particular message. Can be helpful to return "Today" if [DateTime] is today. IMPORTANT: this will replace all default date headers, so you must handle all cases yourself, like for example today, yesterday and before. Or you can just return the same date header for any message.
   final String Function(DateTime)? customDateHeaderText;
 
-  /// See [Message.customMessageBuilder].
-  final Widget Function(types.CustomMessage, {required int messageWidth})?
+  // See [Message.customMessageBuilder].
+  final Widget Function(MessageModel, {required int messageWidth})?
       customMessageBuilder;
 
-  /// See [Message.customStatusBuilder].
-  final Widget Function(types.Message message, {required BuildContext context})?
+  // See [Message.customStatusBuilder].
+  final Widget Function(MessageModel message, {required BuildContext context})?
       customStatusBuilder;
 
   /// Allows you to customize the date format. IMPORTANT: only for the date, do not return time here. See [timeFormat] to customize the time format. [dateLocale] will be ignored if you use this, so if you want a localized date make sure you initialize your [DateFormat] with a locale. See [customDateHeaderText] for more customization.
@@ -158,7 +160,7 @@ class Chat extends StatefulWidget {
   /// Disable automatic image preview on tap.
   final bool? disableImageGallery;
 
-  /// See [Message.emojiEnlargementBehavior].
+  // See [Message.emojiEnlargementBehavior].
   final EmojiEnlargementBehavior emojiEnlargementBehavior;
 
   /// Allows you to change what the user sees when there are no messages.
@@ -166,8 +168,8 @@ class Chat extends StatefulWidget {
   /// in this case.
   final Widget? emptyState;
 
-  /// See [Message.fileMessageBuilder].
-  final Widget Function(types.FileMessage, {required int messageWidth})?
+  // See [Message.fileMessageBuilder].
+  final Widget Function(MessageModel, {required int messageWidth})?
       fileMessageBuilder;
 
   /// Time (in ms) between two messages when we will visually group them.
@@ -175,7 +177,7 @@ class Chat extends StatefulWidget {
   /// is lower than this threshold, they will be visually grouped.
   final int groupMessagesThreshold;
 
-  /// See [Message.hideBackgroundOnEmojiMessages].
+  // See [Message.hideBackgroundOnEmojiMessages].
   final bool hideBackgroundOnEmojiMessages;
 
   /// See [ImageGallery.options].
@@ -184,8 +186,8 @@ class Chat extends StatefulWidget {
   /// Headers passed to all network images used in the chat.
   final Map<String, String>? imageHeaders;
 
-  /// See [Message.imageMessageBuilder].
-  final Widget Function(types.ImageMessage, {required int messageWidth})?
+  // See [Message.imageMessageBuilder].
+  final Widget Function(MessageModel, {required int messageWidth})?
       imageMessageBuilder;
 
   /// This feature allows you to use a custom image provider.
@@ -219,16 +221,16 @@ class Chat extends StatefulWidget {
   /// use [customBottomWidget] instead.
   final Widget? listBottomWidget;
 
-  /// List of [types.Message] to render in the chat widget.
-  final List<types.Message> messages;
+  /// List of [MessageModel] to render in the chat widget.
+  final List<MessageModel> messages;
 
-  /// See [Message.nameBuilder].
+  // See [Message.nameBuilder].
   final Widget Function(UserModel)? nameBuilder;
 
   /// See [Input.onAttachmentPressed].
   final VoidCallback? onAttachmentPressed;
 
-  /// See [Message.onAvatarTap].
+  // See [Message.onAvatarTap].
   final void Function(UserModel)? onAvatarTap;
 
   /// Called when user taps on background.
@@ -240,27 +242,27 @@ class Chat extends StatefulWidget {
   /// See [ChatList.onEndReachedThreshold].
   final double? onEndReachedThreshold;
 
-  /// See [Message.onMessageDoubleTap].
-  final void Function(BuildContext context, types.Message)? onMessageDoubleTap;
+  // See [Message.onMessageDoubleTap].
+  final void Function(BuildContext context, MessageModel)? onMessageDoubleTap;
 
-  /// See [Message.onMessageLongPress].
-  final void Function(BuildContext context, types.Message)? onMessageLongPress;
+  // See [Message.onMessageLongPress].
+  final void Function(BuildContext context, MessageModel)? onMessageLongPress;
 
-  /// See [Message.onMessageStatusLongPress].
-  final void Function(BuildContext context, types.Message)?
+  // See [Message.onMessageStatusLongPress].
+  final void Function(BuildContext context, MessageModel)?
       onMessageStatusLongPress;
 
-  /// See [Message.onMessageStatusTap].
-  final void Function(BuildContext context, types.Message)? onMessageStatusTap;
+  // See [Message.onMessageStatusTap].
+  final void Function(BuildContext context, MessageModel)? onMessageStatusTap;
 
-  /// See [Message.onMessageTap].
-  final void Function(BuildContext context, types.Message)? onMessageTap;
+  // See [Message.onMessageTap].
+  final void Function(BuildContext context, MessageModel)? onMessageTap;
 
-  /// See [Message.onMessageVisibilityChanged].
-  final void Function(types.Message, bool visible)? onMessageVisibilityChanged;
+  // See [Message.onMessageVisibilityChanged].
+  final void Function(MessageModel, bool visible)? onMessageVisibilityChanged;
 
-  /// See [Message.onPreviewDataFetched].
-  final void Function(types.TextMessage, types.PreviewData)?
+  // See [Message.onPreviewDataFetched].
+  final void Function(MessageModel, types.PreviewData)?
       onPreviewDataFetched;
 
   /// See [Input.onSendPressed].
@@ -276,7 +278,7 @@ class Chat extends StatefulWidget {
   /// Controls if and how the chat should scroll to the newest unread message.
   final ScrollToUnreadOptions scrollToUnreadOptions;
 
-  /// See [Message.showUserAvatars].
+  // See [Message.showUserAvatars].
   final bool showUserAvatars;
 
   /// Show user names for received messages. Useful for a group chat. Will be
@@ -284,16 +286,16 @@ class Chat extends StatefulWidget {
   final bool showUserNames;
 
   /// Builds a system message outside of any bubble.
-  final Widget Function(types.SystemMessage)? systemMessageBuilder;
+  final Widget Function(MessageModel)? systemMessageBuilder;
 
-  /// See [Message.textMessageBuilder].
+  // See [Message.textMessageBuilder].
   final Widget Function(
-    types.TextMessage, {
+    MessageModel, {
     required int messageWidth,
     required bool showName,
   })? textMessageBuilder;
 
-  /// See [Message.textMessageOptions].
+  // See [Message.textMessageOptions].
   final TextMessageOptions textMessageOptions;
 
   /// Chat theme. Extend [ChatTheme] class to create your own theme or use
@@ -307,24 +309,24 @@ class Chat extends StatefulWidget {
   /// Used to show typing users with indicator. See [TypingIndicatorOptions].
   final TypingIndicatorOptions typingIndicatorOptions;
 
-  /// See [Message.usePreviewData].
+  // See [Message.usePreviewData].
   final bool usePreviewData;
 
   /// See [InheritedUser.user].
   final UserModel user;
 
-  /// See [Message.userAgent].
+  // See [Message.userAgent].
   final String? userAgent;
 
   /// See [ChatList.useTopSafeAreaInset].
   final bool? useTopSafeAreaInset;
 
-  /// See [Message.videoMessageBuilder].
-  final Widget Function(types.VideoMessage, {required int messageWidth})?
+  // See [Message.videoMessageBuilder].
+  final Widget Function(MessageModel, {required int messageWidth})?
       videoMessageBuilder;
 
-  /// See [Message.slidableMessageBuilder].
-  final Widget Function(types.Message, Widget msgWidget)?
+  // See [Message.slidableMessageBuilder].
+  final Widget Function(MessageModel, Widget msgWidget)?
       slidableMessageBuilder;
 
   @override
@@ -451,19 +453,20 @@ class ChatState extends State<Chat> {
       );
     } else {
       final map = object as Map<String, Object>;
-      final message = map['message']! as types.Message;
+      final message = map['message']! as MessageModel;
 
       final Widget messageWidget;
 
-      if (message is types.SystemMessage) {
+
+      if (message.type == MessageType.system) {
         messageWidget = widget.systemMessageBuilder?.call(message) ??
-            SystemMessage(message: message.text);
+            SystemMessage(message: message.text ?? '');
       } else {
         final messageWidth =
             widget.showUserAvatars && message.authorId != widget.user.id
                 ? min(constraints.maxWidth * 0.72, 440).floor()
                 : min(constraints.maxWidth * 0.78, 440).floor();
-        final Widget msgWidget = Message(
+        final Widget msgWidget = MessageWidget(
           audioMessageBuilder: widget.audioMessageBuilder,
           avatarBuilder: widget.avatarBuilder,
           bubbleBuilder: widget.bubbleBuilder,
@@ -485,7 +488,7 @@ class ChatState extends State<Chat> {
           onMessageStatusLongPress: widget.onMessageStatusLongPress,
           onMessageStatusTap: widget.onMessageStatusTap,
           onMessageTap: (context, tappedMessage) {
-            if (tappedMessage is types.ImageMessage &&
+            if (tappedMessage.type == types.MessageType.image &&
                 widget.disableImageGallery != true) {
               _onImagePressed(tappedMessage);
             }
@@ -528,7 +531,7 @@ class ChatState extends State<Chat> {
     _galleryPageController = null;
   }
 
-  void _onImagePressed(types.ImageMessage message) {
+  void _onImagePressed(MessageModel message) {
     final initialPage = _gallery.indexWhere(
       (element) => element.id == message.id && element.uri == message.uri,
     );
@@ -539,7 +542,7 @@ class ChatState extends State<Chat> {
   }
 
   void _onPreviewDataFetched(
-    types.TextMessage message,
+    MessageModel message,
     types.PreviewData previewData,
   ) {
     widget.onPreviewDataFetched?.call(message, previewData);
@@ -553,8 +556,8 @@ class ChatState extends State<Chat> {
       if (object is UnreadHeaderData) {
         chatMessageAutoScrollIndexById[_unreadHeaderId] = i;
       } else if (object is Map<String, Object>) {
-        final message = object['message']! as types.Message;
-        chatMessageAutoScrollIndexById[message.id] = i;
+        final message = object['message']! as MessageModel;
+        chatMessageAutoScrollIndexById[message.id ?? ''] = i;
       }
       i++;
     }

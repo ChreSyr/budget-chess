@@ -1,8 +1,6 @@
+import 'package:crea_chess/package/firebase/firestore/relationship/message/message_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
-
-import '../message.dart';
-import 'video_message.dart';
 
 part 'partial_video.g.dart';
 
@@ -15,12 +13,12 @@ class PartialVideo {
   /// You can use [VideoMessage.fromPartial] constructor to create a full
   /// message from a partial one.
   const PartialVideo({
-    this.height,
-    this.metadata,
     required this.name,
-    this.repliedMessage,
     required this.size,
     required this.uri,
+    this.height,
+    this.metadata,
+    this.repliedMessage,
     this.width,
   });
 
@@ -38,7 +36,7 @@ class PartialVideo {
   final String name;
 
   /// Message that is being replied to with the current message.
-  final Message? repliedMessage;
+  final MessageModel? repliedMessage;
 
   /// Size of the video in bytes.
   final num size;

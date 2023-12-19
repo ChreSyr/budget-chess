@@ -2,8 +2,7 @@ import 'package:crea_chess/package/atomic_design/flutter_chat_ui/models/bubble_r
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/state/inherited_chat_theme.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/state/inherited_user.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/typing_indicator.dart';
-import 'package:crea_chess/package/chat/flutter_chat_types/flutter_chat_types.dart'
-    as types;
+import 'package:crea_chess/package/firebase/firestore/relationship/message/message_model.dart';
 import 'package:diffutil_dart/diffutil.dart';
 import 'package:flutter/material.dart';
 
@@ -100,8 +99,8 @@ class _ChatListState extends State<ChatList>
       widget.items,
       equalityChecker: (item1, item2) {
         if (item1 is Map<String, Object> && item2 is Map<String, Object>) {
-          final message1 = item1['message']! as types.Message;
-          final message2 = item2['message']! as types.Message;
+          final message1 = item1['message']! as MessageModel;
+          final message2 = item2['message']! as MessageModel;
 
           return message1.id == message2.id;
         } else {
@@ -166,8 +165,8 @@ class _ChatListState extends State<ChatList>
       final item = widget.items[1];
 
       if (oldItem is Map<String, Object> && item is Map<String, Object>) {
-        final oldMessage = oldItem['message']! as types.Message;
-        final message = item['message']! as types.Message;
+        final oldMessage = oldItem['message']! as MessageModel;
+        final message = item['message']! as MessageModel;
 
         // Compare items to fire only on newly added messages.
         if (oldMessage.id != message.id) {
@@ -195,9 +194,9 @@ class _ChatListState extends State<ChatList>
   Key? _valueKeyForItem(Object item) =>
       _mapMessage(item, (message) => ValueKey(message.id));
 
-  T? _mapMessage<T>(Object maybeMessage, T Function(types.Message) f) {
+  T? _mapMessage<T>(Object maybeMessage, T Function(MessageModel) f) {
     if (maybeMessage is Map<String, Object>) {
-      return f(maybeMessage['message'] as types.Message);
+      return f(maybeMessage['message'] as MessageModel);
     }
     return null;
   }

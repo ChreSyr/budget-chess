@@ -1,18 +1,17 @@
-import 'package:crea_chess/package/chat/flutter_chat_types/flutter_chat_types.dart'
-    as types;
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/util.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/state/inherited_chat_theme.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/state/inherited_l10n.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/state/inherited_user.dart';
+import 'package:crea_chess/package/firebase/firestore/relationship/message/message_model.dart';
 import 'package:flutter/material.dart';
 
 /// A class that represents file message widget.
 class FileMessage extends StatelessWidget {
-  /// Creates a file message widget based on a [types.FileMessage].
+  /// Creates a file message widget based on a [MessageModel].
   const FileMessage({required this.message, super.key});
 
-  /// [types.FileMessage].
-  final types.FileMessage message;
+  /// [MessageModel].
+  final MessageModel message;
 
   @override
   Widget build(BuildContext context) {
@@ -43,20 +42,17 @@ class FileMessage extends StatelessWidget {
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  if (message.isLoading ?? false)
-                    Positioned.fill(
-                      child: CircularProgressIndicator(
-                        color: color,
-                        strokeWidth: 2,
-                      ),
-                    ),
-                  InheritedChatTheme.of(context).theme.documentIcon != null
-                      ? InheritedChatTheme.of(context).theme.documentIcon!
-                      : Image.asset(
-                          'assets/icon-document.png',
-                          color: color,
-                          package: 'flutter_chat_ui',
-                        ),
+                  // if (message.isLoading ?? false)
+                  //   Positioned.fill(
+                  //     child: CircularProgressIndicator(
+                  //       color: color,
+                  //       strokeWidth: 2,
+                  //     ),
+                  //   ),
+                  if (InheritedChatTheme.of(context).theme.documentIcon != null)
+                    InheritedChatTheme.of(context).theme.documentIcon!
+                  else
+                    Icon(Icons.description, color: color),
                 ],
               ),
             ),
@@ -69,7 +65,7 @@ class FileMessage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      message.name,
+                      message.mediaName ?? '',
                       style: user.id == message.authorId
                           ? InheritedChatTheme.of(context)
                               .theme
@@ -84,7 +80,7 @@ class FileMessage extends StatelessWidget {
                         top: 4,
                       ),
                       child: Text(
-                        formatBytes(message.size.truncate()),
+                        formatBytes((message.mediaSize ?? 0).truncate()),
                         style: user.id == message.authorId
                             ? InheritedChatTheme.of(context)
                                 .theme

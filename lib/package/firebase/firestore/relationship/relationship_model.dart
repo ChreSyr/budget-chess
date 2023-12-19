@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, invalid_annotation_target
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:crea_chess/package/firebase/firestore/converter/timestamp_to_datetime.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'relationship_model.freezed.dart';
@@ -20,8 +21,11 @@ class RelationshipModel with _$RelationshipModel {
   factory RelationshipModel({
     String? id,
     String? ref, // TODO : remove ?
-    DateTime? createdAt, // date of friendship start
-    DateTime? updatedAt,
+    /// Date of friendship start
+    @TimestampToDateTimeConverter() DateTime? createdAt,
+
+    /// Last time a message was sent or a game got updated
+    @TimestampToDateTimeConverter() DateTime? updatedAt,
     List<String>? userIds,
     RelationshipStatus? status,
   }) = _RelationshipModel;

@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:crea_chess/package/firebase/firestore/crud/base_crud.dart';
+import 'package:crea_chess/package/firebase/firestore/crud/collection_crud.dart';
 import 'package:crea_chess/package/firebase/firestore/crud/model_converter.dart';
 import 'package:crea_chess/package/firebase/firestore/relationship/relationship_crud.dart';
 import 'package:crea_chess/package/firebase/firestore/user/user_cubit.dart';
 import 'package:crea_chess/package/firebase/firestore/user/user_model.dart';
 
 class _UserModelConverter implements ModelConverter<UserModel> {
+  const _UserModelConverter();
+
   @override
   UserModel fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
@@ -19,19 +21,19 @@ class _UserModelConverter implements ModelConverter<UserModel> {
     return data.toFirestore();
   }
 
-  @override
-  UserModel emptyModel() {
-    return UserModel();
-  }
+  // @override
+  // UserModel emptyModel() {
+  //   return UserModel();
+  // }
 }
 
-class _UserCRUD extends BaseCRUD<UserModel> {
-  _UserCRUD() : super('user', _UserModelConverter());
+class _UserCRUD extends CollectionCRUD<UserModel> {
+  _UserCRUD() : super('user', const _UserModelConverter());
 
   final userCubit = UserCubit();
 
   @override
-  Future<void> create({required String? documentId, required UserModel data}) {
+  Future<void> create({required UserModel data, String? documentId}) {
     return super.create(
       documentId: documentId,
       data: data.copyWith(

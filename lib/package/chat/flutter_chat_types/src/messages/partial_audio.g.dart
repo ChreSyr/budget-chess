@@ -8,14 +8,15 @@ part of 'partial_audio.dart';
 
 PartialAudio _$PartialAudioFromJson(Map<String, dynamic> json) => PartialAudio(
       duration: Duration(microseconds: json['duration'] as int),
-      metadata: json['metadata'] as Map<String, dynamic>?,
-      mimeType: json['mimeType'] as String?,
       name: json['name'] as String,
-      repliedMessage: json['repliedMessage'] == null
-          ? null
-          : Message.fromJson(json['repliedMessage'] as Map<String, dynamic>),
       size: json['size'] as num,
       uri: json['uri'] as String,
+      metadata: json['metadata'] as Map<String, dynamic>?,
+      mimeType: json['mimeType'] as String?,
+      repliedMessage: json['repliedMessage'] == null
+          ? null
+          : MessageModel.fromJson(
+              json['repliedMessage'] as Map<String, dynamic>),
       waveForm: (json['waveForm'] as List<dynamic>?)
           ?.map((e) => (e as num).toDouble())
           .toList(),
