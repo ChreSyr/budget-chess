@@ -354,7 +354,10 @@ class _ChatSectionState extends State<ChatSection> {
       stream: messageCRUD.streamFiltered(
         // TODO : package it
         parentDocumentId: relationshipId,
-        filter: (collection) => collection.orderBy('createdAt'),
+        filter: (collection) => collection.orderBy(
+          'createdAt',
+          descending: true,
+        ),
       ),
       builder: (context, snapshot) {
         return Chat(
