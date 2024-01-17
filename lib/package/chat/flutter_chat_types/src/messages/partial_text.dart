@@ -8,8 +8,6 @@ import 'package:meta/meta.dart';
 
 part 'partial_text.g.dart';
 
-// TODO : rework
-
 /// A class that represents partial text message.
 @JsonSerializable()
 @immutable

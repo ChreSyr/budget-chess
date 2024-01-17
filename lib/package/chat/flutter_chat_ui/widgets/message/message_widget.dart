@@ -188,7 +188,6 @@ class MessageWidget extends StatelessWidget {
       videoMessageBuilder;
 
   Widget _avatarBuilder() => const SizedBox(width: 40);
-  // TODO ?
   // Widget _avatarBuilder() => showAvatar
   //     ? avatarBuilder?.call(message.author) ??
   //         UserAvatar(
@@ -278,7 +277,7 @@ class MessageWidget extends StatelessWidget {
         return videoMessageBuilder != null
             ? videoMessageBuilder!(videoMessage, messageWidth: messageWidth)
             : const SizedBox();
-      case types.MessageType.system: // TODO : why ?
+      case types.MessageType.system:
       case types.MessageType.unsupported:
       case null:
         return const SizedBox();

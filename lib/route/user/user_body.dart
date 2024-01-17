@@ -134,7 +134,6 @@ class AuthVerifier extends StatelessWidget {
     return BlocBuilder<AuthenticationCubit, User?>(
       builder: (context, auth) {
         if (auth != null && !auth.isVerified) {
-          // TODO : cubit.set(routeId, notifId, isNotified)
           context
               .read<NavNotifCubit>()
               .add(UserBody.routeId, UserBody.notifEmailNotVerified);
@@ -149,7 +148,7 @@ class AuthVerifier extends StatelessWidget {
           // LATER : Keep it ?
           return Column(
             children: [
-              const Text("Vous n'êtes pas connecté"), // TODO : l10n
+              Text(context.l10n.notConnected),
               CCGap.large,
               FilledButton.icon(
                 onPressed: () => context.push('/sso'),
@@ -182,7 +181,6 @@ class IncompleteProfileNotifier extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<UserCubit, UserModel?>(
       listener: (context, user) {
-        // TODO : maybe in UserCubit ?
         // Notifications management center
         if (user == null) {
           // Here, the email is not verified. Notif is managed by AuthVerifier.

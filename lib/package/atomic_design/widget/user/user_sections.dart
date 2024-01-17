@@ -35,7 +35,6 @@ abstract class UserSection extends StatelessWidget {
       ];
     } else {
       return [
-        // TODO : messages only if friends
         UserSectionMessages(currentUserId: current, otherId: other),
         UserSectionFriends(userId: other),
       ];
@@ -57,7 +56,7 @@ class UserSectionMessages extends UserSection {
 
   @override
   String getTitle(AppLocalizations l10n) {
-    return 'Messages'; // TODO : l10n
+    return l10n.messages;
   }
 
   @override
@@ -193,7 +192,6 @@ class _ChatSectionState extends State<ChatSection> {
   }
 
   Future<void> _handleFileSelection() async {
-    // TODO
     // final result = await FilePicker.platform.pickFiles(
     //   type: FileType.any,
     // );
@@ -225,7 +223,6 @@ class _ChatSectionState extends State<ChatSection> {
   }
 
   Future<void> _handleImageSelection() async {
-    // TODO
     // final result = await ImagePicker().pickImage(
     //   imageQuality: 70,
     //   maxWidth: 1440,
@@ -265,7 +262,6 @@ class _ChatSectionState extends State<ChatSection> {
   }
 
   Future<void> _handleMessageTap(BuildContext _, MessageModel message) async {
-    // TODO
     // if (message is types.FileMessage) {
     //   var localPath = message.uri;
 
@@ -305,7 +301,6 @@ class _ChatSectionState extends State<ChatSection> {
     MessageModel message,
     types.PreviewData previewData,
   ) {
-    // TODO
     // final updatedMessage = message.copyWith(previewData: previewData);
 
     // FirebaseChatCore.instance.updateMessage(updatedMessage, widget.room.id);
@@ -353,7 +348,6 @@ class _ChatSectionState extends State<ChatSection> {
 
     return StreamBuilder<Iterable<MessageModel>>(
       stream: messageCRUD.streamFiltered(
-        // TODO : package it
         parentDocumentId: relationshipId,
         filter: (collection) => collection.orderBy(
           'createdAt',

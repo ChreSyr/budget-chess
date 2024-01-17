@@ -37,7 +37,6 @@ Color getUserAvatarNameColor(UserModel user, List<Color> colors) =>
 
 /// Returns user initials (can have only first letter of firstName/lastName or both).
 String getUserInitials(UserModel user) {
-  // TODO
   var initials = '';
 
   if ((user.username ?? '').isNotEmpty) {

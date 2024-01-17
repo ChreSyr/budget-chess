@@ -16,12 +16,12 @@ class UserCubit extends Cubit<UserModel?> {
 
   void _fromAuth(User? auth) {
     if (auth == null || !auth.isVerified) {
-      cancelUserStreamSubscription();
+      userStreamSubscription?.cancel();
       emit(null);
       return;
     }
 
-    cancelUserStreamSubscription();
+    userStreamSubscription?.cancel();
     userStreamSubscription =
         userCRUD.stream(documentId: auth.uid).listen((user) async {
       if (user == null) {
@@ -52,20 +52,12 @@ class UserCubit extends Cubit<UserModel?> {
     });
   }
 
-  // TODO : replace by userStreamSubscription?.cancel();
-  void cancelUserStreamSubscription() {
-    if (userStreamSubscription != null) {
-      userStreamSubscription!.cancel();
-      userStreamSubscription = null;
-    }
-  }
-
   StreamSubscription<UserModel?>? userStreamSubscription;
   late StreamSubscription<User?> authenticationStreamSubscription;
 
   @override
   Future<void> close() {
-    cancelUserStreamSubscription();
+    userStreamSubscription?.cancel();
     authenticationStreamSubscription.cancel();
     return super.close();
   }

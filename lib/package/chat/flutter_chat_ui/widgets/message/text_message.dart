@@ -128,7 +128,6 @@ class TextMessage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // TODO ?
         // if (showName)
         //   nameBuilder?.call(message.author) ?? UserName(
         //      author: message.author),

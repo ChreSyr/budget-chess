@@ -1,8 +1,6 @@
 import 'package:crea_chess/package/firebase/firestore/user/user_model.dart';
 import 'package:flutter/widgets.dart';
 
-// TODO : replace by context.read<UserCubit>().state
-
 /// Used to make provided [UserModel] class available through the whole package.
 class InheritedUser extends InheritedWidget {
   /// Creates [InheritedWidget] from a provided [UserModel] class.

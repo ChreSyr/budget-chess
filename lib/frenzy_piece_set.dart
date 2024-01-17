@@ -2,7 +2,7 @@ import 'package:chessground/chessground.dart' as cg;
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/widgets.dart';
 
-// TODO: set in iratusground later, by default (frenzyground ?)
+// LATER: set in iratusground, by default (frenzyground ?)
 
 const cg.PieceAssets frenzyPieceSet = IMapConst({
   cg.PieceKind.blackRook: AssetImage('assets/piece_sets/frenzy/bR.png'),

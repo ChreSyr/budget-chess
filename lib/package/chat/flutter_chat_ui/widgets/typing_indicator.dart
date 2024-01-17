@@ -229,7 +229,6 @@ class TypingWidget extends StatelessWidget {
 
   /// Handler for multi user typing text.
   String _multiUserTextBuilder(List<UserModel> author) {
-    // TODO : l10n
     if (author.isEmpty) {
       return '';
     } else if (author.length == 1) {

@@ -41,7 +41,7 @@ class _MessageCRUD extends SubCollectionCRUD<MessageModel> {
   /// does nothing.
   // Future<void> sendMessage(
   //   String senderId,
-  //   String relationshipId, // TODO : receiverId
+  //   String relationshipId,
   //   dynamic partialMessage,
   // ) async {
   //   MessageModel? message;
@@ -131,7 +131,6 @@ class _MessageCRUD extends SubCollectionCRUD<MessageModel> {
             [],
             (previousValue, doc) {
               final data = doc.data();
-              // TODO : MessageModel.createdAt with Timestamp converter
               // ignore: avoid_dynamic_calls
               data['createdAt'] = data['createdAt']?.millisecondsSinceEpoch;
               data['id'] = doc.id;

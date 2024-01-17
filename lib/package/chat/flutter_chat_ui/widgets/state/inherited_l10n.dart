@@ -1,8 +1,6 @@
 import 'package:crea_chess/package/chat/flutter_chat_ui/chat_l10n.dart';
 import 'package:flutter/widgets.dart';
 
-// TODO : remove
-
 /// Used to make provided [ChatL10n] class available through the whole package.
 class InheritedL10n extends InheritedWidget {
   /// Creates [InheritedWidget] from a provided [ChatL10n] class.
