@@ -49,6 +49,12 @@ abstract class CollectionCRUD<T> {
     return streamController.stream;
   }
 
+  Stream<Iterable<T>> streamAll() {
+    return _collection.snapshots().map(
+          (snapshot) => snapshot.docs.map((doc) => doc.data()).toList(),
+        );
+  }
+
   Stream<Iterable<T>> streamFiltered({
     required Query<T> Function(CollectionReference<T>) filter,
   }) {

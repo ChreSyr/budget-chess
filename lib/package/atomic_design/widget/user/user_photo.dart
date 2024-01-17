@@ -1,3 +1,5 @@
+import 'package:crea_chess/package/firebase/firestore/user/user_crud.dart';
+import 'package:crea_chess/package/firebase/firestore/user/user_model.dart';
 import 'package:flutter/material.dart';
 
 const avatarNames = [
@@ -26,14 +28,31 @@ const avatarNames = [
 
 class UserPhoto extends StatelessWidget {
   const UserPhoto({
-    required this.userId,
-    this.photo,
+    required this.photo,
     this.backgroundColor,
     this.radius,
     super.key,
   });
 
-  final String? userId;
+  static Widget fromId({
+    required String userId,
+    Color? backgroundColor,
+    double? radius,
+  }) {
+    return StreamBuilder<UserModel?>(
+      stream: userCRUD.stream(documentId: userId),
+      builder: (context, snapshot) {
+        final user = snapshot.data;
+        if (user == null) return const CircularProgressIndicator();
+        return UserPhoto(
+          photo: user.photo,
+          backgroundColor: backgroundColor,
+          radius: radius,
+        );
+      },
+    );
+  }
+
   final String? photo;
   final Color? backgroundColor;
   final double? radius;

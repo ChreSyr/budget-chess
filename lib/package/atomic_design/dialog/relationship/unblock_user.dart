@@ -24,7 +24,7 @@ void showUnblockUserDialog(
       builder: (context, snapshot) {
         final toBlock = snapshot.data;
         return ListTile(
-          leading: UserPhoto(userId: toUnblockId, photo: toBlock?.photo),
+          leading: UserPhoto(photo: toBlock?.photo),
           title: Text(toBlock?.username ?? ''),
         );
       },

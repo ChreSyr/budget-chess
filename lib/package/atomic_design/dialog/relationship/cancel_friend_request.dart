@@ -24,7 +24,7 @@ void showCancelFriendRequestDialog(
       builder: (context, snapshot) {
         final toBlock = snapshot.data;
         return ListTile(
-          leading: UserPhoto(userId: relatedUserId, photo: toBlock?.photo),
+          leading: UserPhoto(photo: toBlock?.photo),
           title: Text(toBlock?.username ?? ''),
         );
       },

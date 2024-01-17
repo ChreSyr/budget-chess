@@ -26,7 +26,7 @@ void showAnswerFriendRequestDialog(
           builder: (context, snapshot) {
             final friend = snapshot.data;
             return ListTile(
-              leading: UserPhoto(userId: friend?.id, photo: friend?.photo),
+              leading: UserPhoto(photo: friend?.photo),
               title: Text(friend?.username ?? ''),
             );
           },

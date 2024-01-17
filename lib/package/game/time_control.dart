@@ -19,6 +19,9 @@ class TimeControl {
   /// Clock increment in seconds
   final int increment;
 
+  static int defaultTime = 180;
+  static int defaultIncrement = 2;
+
   Map<String, dynamic> toJson() => {
         'time': time,
         'increment': increment,

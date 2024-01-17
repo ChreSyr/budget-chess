@@ -195,7 +195,7 @@ Widget getUserTile(BuildContext context, UserModel user) {
       final trailing = getTrailing();
 
       return ListTile(
-        leading: UserPhoto(userId: userId, photo: user.photo),
+        leading: UserPhoto(photo: user.photo),
         title: Text(user.username ?? ''),
         trailing: trailing,
         onTap: () => context.go('/user/@${user.usernameLowercase}'),

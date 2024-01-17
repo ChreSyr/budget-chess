@@ -50,7 +50,6 @@ class FriendPreview extends StatelessWidget {
             }
           },
           child: UserPhoto(
-            userId: friendId,
             photo: friend.photo,
             radius: radius,
           ),
