@@ -10,7 +10,6 @@ part 'user_model.g.dart';
 class UserModel with _$UserModel {
   factory UserModel({
     String? id, // same as auth
-    String? ref, // TODO : remove ?
     DateTime? createdAt,
     String? username,
     String? usernameLowercase,
@@ -27,14 +26,11 @@ class UserModel with _$UserModel {
   factory UserModel.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> doc,
   ) {
-    return UserModel.fromJson(doc.data() ?? {})
-        .copyWith(id: doc.id, ref: doc.reference.path);
+    return UserModel.fromJson(doc.data() ?? {}).copyWith(id: doc.id);
   }
 
   Map<String, dynamic> toFirestore() {
     return toJson()
-      ..removeWhere((key, value) {
-        return key == 'id' || key == 'ref' || value == null;
-      });
+      ..removeWhere((key, value) => key == 'id' || value == null);
   }
 }

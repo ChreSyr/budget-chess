@@ -10,7 +10,6 @@ _$RelationshipModelImpl _$$RelationshipModelImplFromJson(
         Map<String, dynamic> json) =>
     _$RelationshipModelImpl(
       id: json['id'] as String?,
-      ref: json['ref'] as String?,
       createdAt: const TimestampToDateTimeConverter()
           .fromJson(json['createdAt'] as Timestamp?),
       updatedAt: const TimestampToDateTimeConverter()
@@ -24,7 +23,6 @@ Map<String, dynamic> _$$RelationshipModelImplToJson(
         _$RelationshipModelImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'ref': instance.ref,
       'createdAt':
           const TimestampToDateTimeConverter().toJson(instance.createdAt),
       'updatedAt':

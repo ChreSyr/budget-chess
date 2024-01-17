@@ -21,7 +21,6 @@ ChallengeModel _$ChallengeModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$ChallengeModel {
   String? get id => throw _privateConstructorUsedError;
-  String? get ref => throw _privateConstructorUsedError; // TODO : remove ?
   DateTime? get createdAt => throw _privateConstructorUsedError;
   String? get authorId => throw _privateConstructorUsedError;
   ChallengeStatus? get status => throw _privateConstructorUsedError;
@@ -45,7 +44,6 @@ abstract class $ChallengeModelCopyWith<$Res> {
   @useResult
   $Res call(
       {String? id,
-      String? ref,
       DateTime? createdAt,
       String? authorId,
       ChallengeStatus? status,
@@ -70,7 +68,6 @@ class _$ChallengeModelCopyWithImpl<$Res, $Val extends ChallengeModel>
   @override
   $Res call({
     Object? id = freezed,
-    Object? ref = freezed,
     Object? createdAt = freezed,
     Object? authorId = freezed,
     Object? status = freezed,
@@ -84,10 +81,6 @@ class _$ChallengeModelCopyWithImpl<$Res, $Val extends ChallengeModel>
       id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String?,
-      ref: freezed == ref
-          ? _value.ref
-          : ref // ignore: cast_nullable_to_non_nullable
               as String?,
       createdAt: freezed == createdAt
           ? _value.createdAt
@@ -135,7 +128,6 @@ abstract class _$$ChallengeModelImplCopyWith<$Res>
   @useResult
   $Res call(
       {String? id,
-      String? ref,
       DateTime? createdAt,
       String? authorId,
       ChallengeStatus? status,
@@ -158,7 +150,6 @@ class __$$ChallengeModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = freezed,
-    Object? ref = freezed,
     Object? createdAt = freezed,
     Object? authorId = freezed,
     Object? status = freezed,
@@ -172,10 +163,6 @@ class __$$ChallengeModelImplCopyWithImpl<$Res>
       id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String?,
-      ref: freezed == ref
-          ? _value.ref
-          : ref // ignore: cast_nullable_to_non_nullable
               as String?,
       createdAt: freezed == createdAt
           ? _value.createdAt
@@ -218,7 +205,6 @@ class __$$ChallengeModelImplCopyWithImpl<$Res>
 class _$ChallengeModelImpl extends _ChallengeModel {
   _$ChallengeModelImpl(
       {this.id,
-      this.ref,
       this.createdAt,
       this.authorId,
       this.status,
@@ -234,9 +220,6 @@ class _$ChallengeModelImpl extends _ChallengeModel {
 
   @override
   final String? id;
-  @override
-  final String? ref;
-// TODO : remove ?
   @override
   final DateTime? createdAt;
   @override
@@ -258,7 +241,7 @@ class _$ChallengeModelImpl extends _ChallengeModel {
 
   @override
   String toString() {
-    return 'ChallengeModel(id: $id, ref: $ref, createdAt: $createdAt, authorId: $authorId, status: $status, time: $time, increment: $increment, boardWidth: $boardWidth, boardHeight: $boardHeight, budget: $budget)';
+    return 'ChallengeModel(id: $id, createdAt: $createdAt, authorId: $authorId, status: $status, time: $time, increment: $increment, boardWidth: $boardWidth, boardHeight: $boardHeight, budget: $budget)';
   }
 
   @override
@@ -267,7 +250,6 @@ class _$ChallengeModelImpl extends _ChallengeModel {
         (other.runtimeType == runtimeType &&
             other is _$ChallengeModelImpl &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.ref, ref) || other.ref == ref) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.authorId, authorId) ||
@@ -285,8 +267,8 @@ class _$ChallengeModelImpl extends _ChallengeModel {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, ref, createdAt, authorId,
-      status, time, increment, boardWidth, boardHeight, budget);
+  int get hashCode => Object.hash(runtimeType, id, createdAt, authorId, status,
+      time, increment, boardWidth, boardHeight, budget);
 
   @JsonKey(ignore: true)
   @override
@@ -306,7 +288,6 @@ class _$ChallengeModelImpl extends _ChallengeModel {
 abstract class _ChallengeModel extends ChallengeModel {
   factory _ChallengeModel(
       {final String? id,
-      final String? ref,
       final DateTime? createdAt,
       final String? authorId,
       final ChallengeStatus? status,
@@ -323,8 +304,6 @@ abstract class _ChallengeModel extends ChallengeModel {
   @override
   String? get id;
   @override
-  String? get ref;
-  @override // TODO : remove ?
   DateTime? get createdAt;
   @override
   String? get authorId;

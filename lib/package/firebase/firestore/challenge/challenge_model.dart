@@ -12,7 +12,6 @@ enum ChallengeStatus { open, started, finished }
 class ChallengeModel with _$ChallengeModel {
   factory ChallengeModel({
     String? id,
-    String? ref, // TODO : remove ?
     DateTime? createdAt,
     String? authorId,
     ChallengeStatus? status,
@@ -32,14 +31,11 @@ class ChallengeModel with _$ChallengeModel {
   factory ChallengeModel.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> doc,
   ) {
-    return ChallengeModel.fromJson(doc.data() ?? {})
-        .copyWith(id: doc.id, ref: doc.reference.path);
+    return ChallengeModel.fromJson(doc.data() ?? {}).copyWith(id: doc.id);
   }
 
   Map<String, dynamic> toFirestore() {
     return toJson()
-      ..removeWhere((key, value) {
-        return key == 'id' || key == 'ref' || value == null;
-      });
+      ..removeWhere((key, value) => key == 'id' || value == null);
   }
 }

@@ -20,7 +20,6 @@ enum RelationshipStatus {
 class RelationshipModel with _$RelationshipModel {
   factory RelationshipModel({
     String? id,
-    String? ref, // TODO : remove ?
     /// Date of friendship start
     @TimestampToDateTimeConverter() DateTime? createdAt,
 
@@ -39,15 +38,12 @@ class RelationshipModel with _$RelationshipModel {
   factory RelationshipModel.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> doc,
   ) {
-    return RelationshipModel.fromJson(doc.data() ?? {})
-        .copyWith(id: doc.id, ref: doc.reference.path);
+    return RelationshipModel.fromJson(doc.data() ?? {}).copyWith(id: doc.id);
   }
 
   Map<String, dynamic> toFirestore() {
     return toJson()
-      ..removeWhere((key, value) {
-        return key == 'id' || key == 'ref' || value == null;
-      });
+      ..removeWhere((key, value) => key == 'id' || value == null);
   }
 
   String? get blocker {

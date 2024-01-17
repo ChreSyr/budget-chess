@@ -21,7 +21,7 @@ RelationshipModel _$RelationshipModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$RelationshipModel {
   String? get id => throw _privateConstructorUsedError;
-  String? get ref => throw _privateConstructorUsedError; // TODO : remove ?
+
   /// Date of friendship start
   @TimestampToDateTimeConverter()
   DateTime? get createdAt => throw _privateConstructorUsedError;
@@ -46,7 +46,6 @@ abstract class $RelationshipModelCopyWith<$Res> {
   @useResult
   $Res call(
       {String? id,
-      String? ref,
       @TimestampToDateTimeConverter() DateTime? createdAt,
       @TimestampToDateTimeConverter() DateTime? updatedAt,
       List<String>? userIds,
@@ -67,7 +66,6 @@ class _$RelationshipModelCopyWithImpl<$Res, $Val extends RelationshipModel>
   @override
   $Res call({
     Object? id = freezed,
-    Object? ref = freezed,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
     Object? userIds = freezed,
@@ -77,10 +75,6 @@ class _$RelationshipModelCopyWithImpl<$Res, $Val extends RelationshipModel>
       id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String?,
-      ref: freezed == ref
-          ? _value.ref
-          : ref // ignore: cast_nullable_to_non_nullable
               as String?,
       createdAt: freezed == createdAt
           ? _value.createdAt
@@ -112,7 +106,6 @@ abstract class _$$RelationshipModelImplCopyWith<$Res>
   @useResult
   $Res call(
       {String? id,
-      String? ref,
       @TimestampToDateTimeConverter() DateTime? createdAt,
       @TimestampToDateTimeConverter() DateTime? updatedAt,
       List<String>? userIds,
@@ -131,7 +124,6 @@ class __$$RelationshipModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = freezed,
-    Object? ref = freezed,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
     Object? userIds = freezed,
@@ -141,10 +133,6 @@ class __$$RelationshipModelImplCopyWithImpl<$Res>
       id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String?,
-      ref: freezed == ref
-          ? _value.ref
-          : ref // ignore: cast_nullable_to_non_nullable
               as String?,
       createdAt: freezed == createdAt
           ? _value.createdAt
@@ -171,7 +159,6 @@ class __$$RelationshipModelImplCopyWithImpl<$Res>
 class _$RelationshipModelImpl extends _RelationshipModel {
   _$RelationshipModelImpl(
       {this.id,
-      this.ref,
       @TimestampToDateTimeConverter() this.createdAt,
       @TimestampToDateTimeConverter() this.updatedAt,
       final List<String>? userIds,
@@ -184,9 +171,7 @@ class _$RelationshipModelImpl extends _RelationshipModel {
 
   @override
   final String? id;
-  @override
-  final String? ref;
-// TODO : remove ?
+
   /// Date of friendship start
   @override
   @TimestampToDateTimeConverter()
@@ -211,7 +196,7 @@ class _$RelationshipModelImpl extends _RelationshipModel {
 
   @override
   String toString() {
-    return 'RelationshipModel(id: $id, ref: $ref, createdAt: $createdAt, updatedAt: $updatedAt, userIds: $userIds, status: $status)';
+    return 'RelationshipModel(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, userIds: $userIds, status: $status)';
   }
 
   @override
@@ -220,7 +205,6 @@ class _$RelationshipModelImpl extends _RelationshipModel {
         (other.runtimeType == runtimeType &&
             other is _$RelationshipModelImpl &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.ref, ref) || other.ref == ref) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
@@ -231,7 +215,7 @@ class _$RelationshipModelImpl extends _RelationshipModel {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, ref, createdAt, updatedAt,
+  int get hashCode => Object.hash(runtimeType, id, createdAt, updatedAt,
       const DeepCollectionEquality().hash(_userIds), status);
 
   @JsonKey(ignore: true)
@@ -252,7 +236,6 @@ class _$RelationshipModelImpl extends _RelationshipModel {
 abstract class _RelationshipModel extends RelationshipModel {
   factory _RelationshipModel(
       {final String? id,
-      final String? ref,
       @TimestampToDateTimeConverter() final DateTime? createdAt,
       @TimestampToDateTimeConverter() final DateTime? updatedAt,
       final List<String>? userIds,
@@ -265,8 +248,7 @@ abstract class _RelationshipModel extends RelationshipModel {
   @override
   String? get id;
   @override
-  String? get ref;
-  @override // TODO : remove ?
+
   /// Date of friendship start
   @TimestampToDateTimeConverter()
   DateTime? get createdAt;
