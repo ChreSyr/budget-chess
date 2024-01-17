@@ -29,6 +29,7 @@ mixin _$ChallengeModel {
   int? get boardWidth => throw _privateConstructorUsedError;
   int? get boardHeight => throw _privateConstructorUsedError;
   int? get budget => throw _privateConstructorUsedError;
+  List<String>? get userIds => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -51,7 +52,8 @@ abstract class $ChallengeModelCopyWith<$Res> {
       int? increment,
       int? boardWidth,
       int? boardHeight,
-      int? budget});
+      int? budget,
+      List<String>? userIds});
 }
 
 /// @nodoc
@@ -76,6 +78,7 @@ class _$ChallengeModelCopyWithImpl<$Res, $Val extends ChallengeModel>
     Object? boardWidth = freezed,
     Object? boardHeight = freezed,
     Object? budget = freezed,
+    Object? userIds = freezed,
   }) {
     return _then(_value.copyWith(
       id: freezed == id
@@ -114,6 +117,10 @@ class _$ChallengeModelCopyWithImpl<$Res, $Val extends ChallengeModel>
           ? _value.budget
           : budget // ignore: cast_nullable_to_non_nullable
               as int?,
+      userIds: freezed == userIds
+          ? _value.userIds
+          : userIds // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
     ) as $Val);
   }
 }
@@ -135,7 +142,8 @@ abstract class _$$ChallengeModelImplCopyWith<$Res>
       int? increment,
       int? boardWidth,
       int? boardHeight,
-      int? budget});
+      int? budget,
+      List<String>? userIds});
 }
 
 /// @nodoc
@@ -158,6 +166,7 @@ class __$$ChallengeModelImplCopyWithImpl<$Res>
     Object? boardWidth = freezed,
     Object? boardHeight = freezed,
     Object? budget = freezed,
+    Object? userIds = freezed,
   }) {
     return _then(_$ChallengeModelImpl(
       id: freezed == id
@@ -196,6 +205,10 @@ class __$$ChallengeModelImplCopyWithImpl<$Res>
           ? _value.budget
           : budget // ignore: cast_nullable_to_non_nullable
               as int?,
+      userIds: freezed == userIds
+          ? _value._userIds
+          : userIds // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
     ));
   }
 }
@@ -212,8 +225,10 @@ class _$ChallengeModelImpl extends _ChallengeModel {
       this.increment,
       this.boardWidth,
       this.boardHeight,
-      this.budget})
-      : super._();
+      this.budget,
+      final List<String>? userIds})
+      : _userIds = userIds,
+        super._();
 
   factory _$ChallengeModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$ChallengeModelImplFromJson(json);
@@ -238,10 +253,19 @@ class _$ChallengeModelImpl extends _ChallengeModel {
   final int? boardHeight;
   @override
   final int? budget;
+  final List<String>? _userIds;
+  @override
+  List<String>? get userIds {
+    final value = _userIds;
+    if (value == null) return null;
+    if (_userIds is EqualUnmodifiableListView) return _userIds;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
 
   @override
   String toString() {
-    return 'ChallengeModel(id: $id, createdAt: $createdAt, authorId: $authorId, status: $status, time: $time, increment: $increment, boardWidth: $boardWidth, boardHeight: $boardHeight, budget: $budget)';
+    return 'ChallengeModel(id: $id, createdAt: $createdAt, authorId: $authorId, status: $status, time: $time, increment: $increment, boardWidth: $boardWidth, boardHeight: $boardHeight, budget: $budget, userIds: $userIds)';
   }
 
   @override
@@ -262,13 +286,24 @@ class _$ChallengeModelImpl extends _ChallengeModel {
                 other.boardWidth == boardWidth) &&
             (identical(other.boardHeight, boardHeight) ||
                 other.boardHeight == boardHeight) &&
-            (identical(other.budget, budget) || other.budget == budget));
+            (identical(other.budget, budget) || other.budget == budget) &&
+            const DeepCollectionEquality().equals(other._userIds, _userIds));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, createdAt, authorId, status,
-      time, increment, boardWidth, boardHeight, budget);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      createdAt,
+      authorId,
+      status,
+      time,
+      increment,
+      boardWidth,
+      boardHeight,
+      budget,
+      const DeepCollectionEquality().hash(_userIds));
 
   @JsonKey(ignore: true)
   @override
@@ -295,7 +330,8 @@ abstract class _ChallengeModel extends ChallengeModel {
       final int? increment,
       final int? boardWidth,
       final int? boardHeight,
-      final int? budget}) = _$ChallengeModelImpl;
+      final int? budget,
+      final List<String>? userIds}) = _$ChallengeModelImpl;
   _ChallengeModel._() : super._();
 
   factory _ChallengeModel.fromJson(Map<String, dynamic> json) =
@@ -319,6 +355,8 @@ abstract class _ChallengeModel extends ChallengeModel {
   int? get boardHeight;
   @override
   int? get budget;
+  @override
+  List<String>? get userIds;
   @override
   @JsonKey(ignore: true)
   _$$ChallengeModelImplCopyWith<_$ChallengeModelImpl> get copyWith =>

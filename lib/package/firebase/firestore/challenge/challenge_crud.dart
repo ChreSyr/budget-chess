@@ -19,15 +19,10 @@ class _ChallengeModelConverter implements ModelConverter<ChallengeModel> {
   Map<String, dynamic> toFirestore(ChallengeModel data, SetOptions? _) {
     return data.toFirestore();
   }
-
-  // @override
-  // ChallengeModel emptyModel() {
-  //   return ChallengeModel();
-  // }
 }
 
 class ChallengeCRUD extends CollectionCRUD<ChallengeModel> {
-  ChallengeCRUD() : super('challenges', const _ChallengeModelConverter());
+  ChallengeCRUD() : super('challenge', const _ChallengeModelConverter());
 }
 
 final challengeCRUD = ChallengeCRUD();

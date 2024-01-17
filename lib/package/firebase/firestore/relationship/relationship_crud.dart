@@ -18,22 +18,11 @@ class _RelationshipModelConverter implements ModelConverter<RelationshipModel> {
   Map<String, dynamic> toFirestore(RelationshipModel data, SetOptions? _) {
     return data.toFirestore();
   }
-
-  // @override
-  // RelationshipModel emptyModel() {
-  //   return RelationshipModel();
-  // }
 }
 
 class _RelationshipCRUD extends CollectionCRUD<RelationshipModel> {
   _RelationshipCRUD()
       : super('relationship', const _RelationshipModelConverter());
-
-  // CollectionReference<Map<String, dynamic>> _messagesCollection(
-  //   String relationshipId,
-  // ) =>
-  //     FirebaseFirestore.instance
-  //         .collection('$collectionName/$relationshipId/messages');
 
   Future<void> block({
     required String blockerId,

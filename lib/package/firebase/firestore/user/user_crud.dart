@@ -20,11 +20,6 @@ class _UserModelConverter implements ModelConverter<UserModel> {
   Map<String, dynamic> toFirestore(UserModel data, SetOptions? _) {
     return data.toFirestore();
   }
-
-  // @override
-  // UserModel emptyModel() {
-  //   return UserModel();
-  // }
 }
 
 class _UserCRUD extends CollectionCRUD<UserModel> {

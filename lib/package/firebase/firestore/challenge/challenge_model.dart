@@ -20,6 +20,7 @@ class ChallengeModel with _$ChallengeModel {
     int? boardWidth,
     int? boardHeight,
     int? budget,
+    List<String>? userIds,
   }) = _ChallengeModel;
 
   /// Required for the override getter

@@ -144,22 +144,9 @@ class AuthVerifier extends StatelessWidget {
         }
 
         if (auth == null) {
-          // Note : if auth is null, cannot see userIds profiles.
-          // LATER : Keep it ?
-          return Column(
-            children: [
-              Text(context.l10n.notConnected),
-              CCGap.large,
-              FilledButton.icon(
-                onPressed: () => context.push('/sso'),
-                icon: const Icon(Icons.login),
-                label: Text(context.l10n.signin),
-              ),
-            ],
-          );
+          return const NotConnectedScreen();
         } else if (!auth.isVerified) {
-          // If the email is not confirmed yet
-          // LATER: rethink : authenticated simply with phone ?
+          // If the email is not verified yet
           return UserProfile(
             header: UserHeader.notVerified(authId: auth.uid),
             tabSections: UserSection.getNotVerifiedSections(),
@@ -168,6 +155,25 @@ class AuthVerifier extends StatelessWidget {
           return builder(context, auth.uid);
         }
       },
+    );
+  }
+}
+
+class NotConnectedScreen extends StatelessWidget {
+  const NotConnectedScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(context.l10n.notConnected),
+        CCGap.large,
+        FilledButton.icon(
+          onPressed: () => context.push('/sso'),
+          icon: const Icon(Icons.login),
+          label: Text(context.l10n.signin),
+        ),
+      ],
     );
   }
 }

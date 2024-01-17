@@ -1,3 +1,5 @@
+// TODO : FormStatus
+
 enum CreateChallengeStatus {
   inProgress,
 
@@ -5,5 +7,7 @@ enum CreateChallengeStatus {
   editError,
 
   // create challenge
+  requestWaiting,
+  requestError,
   success,
 }

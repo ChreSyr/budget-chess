@@ -19,6 +19,8 @@ _$ChallengeModelImpl _$$ChallengeModelImplFromJson(Map<String, dynamic> json) =>
       boardWidth: json['boardWidth'] as int?,
       boardHeight: json['boardHeight'] as int?,
       budget: json['budget'] as int?,
+      userIds:
+          (json['userIds'] as List<dynamic>?)?.map((e) => e as String).toList(),
     );
 
 Map<String, dynamic> _$$ChallengeModelImplToJson(
@@ -33,6 +35,7 @@ Map<String, dynamic> _$$ChallengeModelImplToJson(
       'boardWidth': instance.boardWidth,
       'boardHeight': instance.boardHeight,
       'budget': instance.budget,
+      'userIds': instance.userIds,
     };
 
 const _$ChallengeStatusEnumMap = {

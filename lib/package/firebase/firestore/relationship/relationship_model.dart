@@ -22,7 +22,6 @@ class RelationshipModel with _$RelationshipModel {
     String? id,
     /// Date of friendship start
     @TimestampToDateTimeConverter() DateTime? createdAt,
-
     /// Last time a message was sent or a game got updated
     @TimestampToDateTimeConverter() DateTime? updatedAt,
     List<String>? userIds,

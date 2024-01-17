@@ -1,13 +1,16 @@
 import 'package:crea_chess/package/atomic_design/modal/modal_select.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
+import 'package:crea_chess/package/atomic_design/snack_bar.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
-import 'package:crea_chess/package/game/board_size.dart';
+import 'package:crea_chess/package/firebase/authentication/authentication_crud.dart';
 import 'package:crea_chess/package/game/speed.dart';
 import 'package:crea_chess/package/game/time_control.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/route/play/create_challenge/create_challenge_cubit.dart';
 import 'package:crea_chess/route/play/create_challenge/create_challenge_form.dart';
+import 'package:crea_chess/route/play/create_challenge/create_challenge_status.dart';
 import 'package:crea_chess/route/route_body.dart';
+import 'package:crea_chess/route/user/user_body.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -35,7 +38,18 @@ class _CreateChallengeBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final createChallengeCubit = context.read<CreateChallengeCubit>();
-    return BlocBuilder<CreateChallengeCubit, CreateChallengeForm>(
+    final authId = context.read<AuthenticationCubit>().state?.uid;
+    if (authId == null) {
+      return const NotConnectedScreen();
+    }
+
+    return BlocConsumer<CreateChallengeCubit, CreateChallengeForm>(
+      listener: (context, state) {
+        if (state.status == CreateChallengeStatus.editError) {
+          snackBarError(context, context.l10n.errorOccurred);
+          createChallengeCubit.clearStatus();
+        }
+      },
       builder: (context, form) {
         return SizedBox(
           width: CCWidgetSize.large4,
@@ -104,33 +118,34 @@ class _CreateChallengeBody extends StatelessWidget {
               _TitledRow(
                 title: 'Taille du plateau',
                 child: OutlinedButton(
-                  onPressed: () => ModalSelect.show(
-                    context: context,
-                    title: 'Taille du plateau',
-                    choices: [
-                      ModalSelectRowData(
-                        title: 'Petit',
-                        choices: const [
-                          BoardSize(5, 5),
-                          BoardSize(6, 6),
-                          BoardSize(7, 7),
-                        ],
-                      ),
-                      ModalSelectRowData(
-                        title: 'Grand',
-                        choices: const [
-                          BoardSize(8, 8),
-                          BoardSize(9, 9),
-                          BoardSize(10, 10),
-                        ],
-                      ),
-                    ],
-                    selected: form.boardSize.value,
-                    onSelected: (BoardSize choice) {
-                      createChallengeCubit.setBoardSize(choice);
-                      context.pop();
-                    },
-                  ),
+                  onPressed: null,
+                  // () => ModalSelect.show(
+                  //   context: context,
+                  //   title: 'Taille du plateau',
+                  //   choices: [
+                  //     ModalSelectRowData(
+                  //       title: 'Petit',
+                  //       choices: const [
+                  //         BoardSize(5, 5),
+                  //         BoardSize(6, 6),
+                  //         BoardSize(7, 7),
+                  //       ],
+                  //     ),
+                  //     ModalSelectRowData(
+                  //       title: 'Grand',
+                  //       choices: const [
+                  //         BoardSize(8, 8),
+                  //         BoardSize(9, 9),
+                  //         BoardSize(10, 10),
+                  //       ],
+                  //     ),
+                  //   ],
+                  //   selected: form.boardSize.value,
+                  //   onSelected: (BoardSize choice) {
+                  //     createChallengeCubit.setBoardSize(choice);
+                  //     context.pop();
+                  //   },
+                  // ),
                   child: Text(form.boardSize.value.toString()),
                 ),
               ),
@@ -162,7 +177,7 @@ class _CreateChallengeBody extends StatelessWidget {
               ),
               CCGap.large,
               FilledButton(
-                onPressed: () {}, // TODO : challengeCRUD
+                onPressed: () => createChallengeCubit.submit(authorId: authId),
                 child: const Text('Create challenge'), // TODO : l10n
               ),
             ],
