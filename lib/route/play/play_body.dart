@@ -3,6 +3,8 @@ import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/firebase/firestore/challenge/challenge_crud.dart';
 import 'package:crea_chess/package/firebase/firestore/challenge/challenge_model.dart';
+import 'package:crea_chess/package/firebase/firestore/user/user_crud.dart';
+import 'package:crea_chess/package/firebase/firestore/user/user_model.dart';
 import 'package:crea_chess/package/game/time_control.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/route/route_body.dart';
@@ -74,8 +76,25 @@ class ChallengeTile extends StatelessWidget {
       challenge.time ?? TimeControl.defaultTime,
       challenge.increment ?? TimeControl.defaultIncrement,
     );
+    final authorId = challenge.authorId ?? '';
+    if (authorId.isEmpty) {
+      return const ListTile(
+        leading: UserPhoto(photo: ''),
+        title: Text('Corrupted challenge'),
+      );
+    }
     return ListTile(
-      leading: UserPhoto.fromId(userId: challenge.authorId ?? ''),
+      leading: StreamBuilder<UserModel?>(
+        stream: userCRUD.stream(documentId: authorId),
+        builder: (context, snapshot) {
+          final author = snapshot.data;
+          if (author == null) return const UserPhoto(photo: '');
+          return GestureDetector(
+            onTap: () => context.go('/user/@${author.usernameLowercase}'),
+            child: UserPhoto.fromId(userId: authorId),
+          );
+        },
+      ),
       title: Text(
         'Budget : ${challenge.budget}\nTime control : $timeControl',
       ),
