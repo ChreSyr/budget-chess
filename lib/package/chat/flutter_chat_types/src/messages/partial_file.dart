@@ -1,6 +1,6 @@
 // ignore_for_file: comment_references
 
-import 'package:crea_chess/package/firebase/firestore/relationship/message/message_model.dart';
+import 'package:crea_chess/package/chat/message/message_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 

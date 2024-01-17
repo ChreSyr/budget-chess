@@ -1,14 +1,14 @@
 import 'package:crea_chess/package/atomic_design/dialog/user/email_verification.dart';
-import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/chat.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/snack_bar.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/friend_preview.Dart';
 import 'package:crea_chess/package/chat/flutter_chat_types/flutter_chat_types.dart'
     as types;
+import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/chat.dart';
+import 'package:crea_chess/package/chat/message/message_model.dart';
+import 'package:crea_chess/package/chat/message/messsage_crud.dart';
 import 'package:crea_chess/package/firebase/authentication/authentication_crud.dart';
-import 'package:crea_chess/package/firebase/firestore/relationship/message/message_model.dart';
-import 'package:crea_chess/package/firebase/firestore/relationship/message/messsage_crud.dart';
 import 'package:crea_chess/package/firebase/firestore/relationship/relationship_crud.dart';
 import 'package:crea_chess/package/firebase/firestore/relationship/relationship_model.dart';
 import 'package:crea_chess/package/firebase/firestore/user/user_cubit.dart';
@@ -147,7 +147,7 @@ class ChatSection extends StatefulWidget {
 }
 
 class _ChatSectionState extends State<ChatSection> {
-  bool _isAttachmentUploading = false;
+  final bool _isAttachmentUploading = false;
 
   void _handleAtachmentPressed() {
     showModalBottomSheet<void>(
