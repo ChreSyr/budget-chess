@@ -29,11 +29,11 @@ class _RelationshipCRUD extends CollectionCRUD<RelationshipModel> {
   _RelationshipCRUD()
       : super('relationship', const _RelationshipModelConverter());
 
-  CollectionReference<Map<String, dynamic>> _messagesCollection(
-    String relationshipId,
-  ) =>
-      FirebaseFirestore.instance
-          .collection('$collectionName/$relationshipId/messages');
+  // CollectionReference<Map<String, dynamic>> _messagesCollection(
+  //   String relationshipId,
+  // ) =>
+  //     FirebaseFirestore.instance
+  //         .collection('$collectionName/$relationshipId/messages');
 
   Future<void> block({
     required String blockerId,

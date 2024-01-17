@@ -47,14 +47,19 @@ class ChatList extends StatefulWidget {
   /// to the very end of the list (minus [onEndReachedThreshold]).
   final Future<void> Function()? onEndReached;
 
-  /// A representation of how a [ScrollView] should dismiss the on-screen keyboard.
+  /// A representation of how a [ScrollView] should dismiss the on-screen
+  /// keyboard.
   final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
 
-  /// Used for pagination (infinite scroll) together with [onEndReached]. Can be anything from 0 to 1, where 0 is immediate load of the next page as soon as scroll starts, and 1 is load of the next page only if scrolled to the very end of the list. Default value is 0.75, e.g. start loading next page when scrolled through about 3/4 of the available content.
+  /// Used for pagination (infinite scroll) together with [onEndReached].
+  /// Can be anything from 0 to 1, where 0 is immediate load of the next page
+  /// as soon as scroll starts, and 1 is load of the next page only if scrolled
+  /// to the very end of the list. Default value is 0.75, e.g. start loading
+  /// next page when scrolled through about 3/4 of the available content.
   final double? onEndReachedThreshold;
 
-  /// Scroll controller for the main [CustomScrollView]. Also used to auto scroll
-  /// to specific messages.
+  /// Scroll controller for the main [CustomScrollView]. Also used to auto
+  /// scroll to specific messages.
   final ScrollController scrollController;
 
   /// Determines the physics of the scroll view.
@@ -93,7 +98,7 @@ class _ChatListState extends State<ChatList>
     didUpdateWidget(widget);
   }
 
-  void _calculateDiffs(List<Object> oldList) async {
+  Future<void> _calculateDiffs(List<Object> oldList) async {
     final diffResult = calculateListDiff<Object>(
       oldList,
       widget.items,
@@ -196,7 +201,7 @@ class _ChatListState extends State<ChatList>
 
   T? _mapMessage<T>(Object maybeMessage, T Function(MessageModel) f) {
     if (maybeMessage is Map<String, Object>) {
-      return f(maybeMessage['message'] as MessageModel);
+      return f((maybeMessage['message'] ?? MessageModel()) as MessageModel);
     }
     return null;
   }
@@ -229,7 +234,7 @@ class _ChatListState extends State<ChatList>
             });
           }
 
-          if (widget.onEndReached == null || widget.isLastPage == true) {
+          if (widget.onEndReached == null || (widget.isLastPage ?? false)) {
             return false;
           }
 
@@ -238,8 +243,8 @@ class _ChatListState extends State<ChatList>
                   (widget.onEndReachedThreshold ?? 0.75))) {
             if (widget.items.isEmpty || _isNextPageLoading) return false;
 
-            _controller.duration = Duration.zero;
-            _controller.forward();
+            _controller..duration = Duration.zero
+            ..forward();
 
             setState(() {
               _isNextPageLoading = true;
@@ -247,8 +252,8 @@ class _ChatListState extends State<ChatList>
 
             widget.onEndReached!().whenComplete(() {
               if (mounted) {
-                _controller.duration = const Duration(milliseconds: 300);
-                _controller.reverse();
+                _controller..duration = const Duration(milliseconds: 300)
+                ..reverse();
 
                 setState(() {
                   _isNextPageLoading = false;
@@ -276,9 +281,9 @@ class _ChatListState extends State<ChatList>
                         TypingIndicator(
                           bubbleAlignment: widget.bubbleRtlAlignment,
                           options: widget.typingIndicatorOptions!,
-                          showIndicator: (widget.typingIndicatorOptions!
+                          showIndicator: widget.typingIndicatorOptions!
                                   .typingUsers.isNotEmpty &&
-                              !_indicatorOnScrollStatus),
+                              !_indicatorOnScrollStatus,
                         )
                     : const SizedBox.shrink(),
               ),

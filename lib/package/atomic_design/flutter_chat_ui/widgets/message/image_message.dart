@@ -1,3 +1,5 @@
+// ignore_for_file: comment_references
+
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/conditional/conditional.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/util.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/state/inherited_chat_theme.dart';
@@ -109,7 +111,7 @@ class _ImageMessageState extends State<ImageMessage> {
         width: _size.width,
       );
     } else if (_size.aspectRatio < 0.1 || _size.aspectRatio > 10) {
-      return Container(
+      return ColoredBox(
         color: user.id == widget.message.authorId
             ? InheritedChatTheme.of(context).theme.primaryColor
             : InheritedChatTheme.of(context).theme.secondaryColor,

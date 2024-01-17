@@ -1,8 +1,7 @@
+import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/message/system_message.dart';
+import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/typing_indicator.dart';
+import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/unread_header.dart';
 import 'package:flutter/material.dart';
-
-import 'widgets/message/system_message.dart';
-import 'widgets/typing_indicator.dart';
-import 'widgets/unread_header.dart';
 
 // For internal usage only. Use values from theme itself.
 
@@ -70,11 +69,9 @@ abstract class ChatTheme {
     required this.inputSurfaceTintColor,
     required this.inputElevation,
     required this.inputBorderRadius,
-    this.inputContainerDecoration,
     required this.inputMargin,
     required this.inputPadding,
     required this.inputTextColor,
-    this.inputTextCursorColor,
     required this.inputTextDecoration,
     required this.inputTextStyle,
     required this.messageBorderRadius,
@@ -82,9 +79,6 @@ abstract class ChatTheme {
     required this.messageInsetsVertical,
     required this.primaryColor,
     required this.receivedEmojiMessageTextStyle,
-    this.receivedMessageBodyBoldTextStyle,
-    this.receivedMessageBodyCodeTextStyle,
-    this.receivedMessageBodyLinkTextStyle,
     required this.receivedMessageBodyTextStyle,
     required this.receivedMessageCaptionTextStyle,
     required this.receivedMessageDocumentIconColor,
@@ -96,9 +90,6 @@ abstract class ChatTheme {
     required this.sendButtonMargin,
     required this.sendingIcon,
     required this.sentEmojiMessageTextStyle,
-    this.sentMessageBodyBoldTextStyle,
-    this.sentMessageBodyCodeTextStyle,
-    this.sentMessageBodyLinkTextStyle,
     required this.sentMessageBodyTextStyle,
     required this.sentMessageCaptionTextStyle,
     required this.sentMessageDocumentIconColor,
@@ -112,6 +103,14 @@ abstract class ChatTheme {
     required this.userAvatarNameColors,
     required this.userAvatarTextStyle,
     required this.userNameTextStyle,
+    this.inputContainerDecoration,
+    this.inputTextCursorColor,
+    this.receivedMessageBodyBoldTextStyle,
+    this.receivedMessageBodyCodeTextStyle,
+    this.receivedMessageBodyLinkTextStyle,
+    this.sentMessageBodyBoldTextStyle,
+    this.sentMessageBodyCodeTextStyle,
+    this.sentMessageBodyLinkTextStyle,
     this.highlightMessageColor,
   });
 
@@ -209,7 +208,8 @@ abstract class ChatTheme {
   /// of received messages.
   final TextStyle receivedMessageBodyTextStyle;
 
-  /// Caption text style used for displaying secondary info (e.g. file size) on different types of received messages.
+  /// Caption text style used for displaying secondary info (e.g. file size)
+  /// on different types of received messages.
   final TextStyle receivedMessageCaptionTextStyle;
 
   /// Color of the document icon on received messages. Has no effect when
@@ -256,7 +256,8 @@ abstract class ChatTheme {
   /// of sent messages.
   final TextStyle sentMessageBodyTextStyle;
 
-  /// Caption text style used for displaying secondary info (e.g. file size) on different types of sent messages.
+  /// Caption text style used for displaying secondary info (e.g. file size)
+  /// on different types of sent messages.
   final TextStyle sentMessageCaptionTextStyle;
 
   /// Color of the document icon on sent messages. Has no effect when
@@ -295,7 +296,8 @@ abstract class ChatTheme {
   /// image is provided.
   final TextStyle userAvatarTextStyle;
 
-  /// User names text style. Color will be overwritten with [userAvatarNameColors].
+  /// User names text style. Color will be overwritten
+  /// with [userAvatarNameColors].
   final TextStyle userNameTextStyle;
 
   /// Color used as background of message row on highligth.
@@ -437,8 +439,8 @@ class DefaultChatTheme extends ChatTheme {
     ),
     super.typingIndicatorTheme = const TypingIndicatorTheme(
       animatedCirclesColor: neutral1,
-      animatedCircleSize: 5.0,
-      bubbleBorder: BorderRadius.all(Radius.circular(27.0)),
+      animatedCircleSize: 5,
+      bubbleBorder: BorderRadius.all(Radius.circular(27)),
       bubbleColor: neutral7,
       countAvatarColor: primary,
       countTextColor: secondary,
@@ -609,8 +611,8 @@ class DarkChatTheme extends ChatTheme {
     ),
     super.typingIndicatorTheme = const TypingIndicatorTheme(
       animatedCirclesColor: neutral7,
-      animatedCircleSize: 5.0,
-      bubbleBorder: BorderRadius.all(Radius.circular(27.0)),
+      animatedCircleSize: 5,
+      bubbleBorder: BorderRadius.all(Radius.circular(27)),
       bubbleColor: dark,
       countAvatarColor: primary,
       countTextColor: secondary,

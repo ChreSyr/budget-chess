@@ -1,3 +1,5 @@
+// ignore_for_file: comment_references
+
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/conditional/conditional.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/models/bubble_rtl_alignment.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/models/emoji_enlargement_behavior.dart';
@@ -144,6 +146,7 @@ class MessageWidget extends StatelessWidget {
   final void Function(BuildContext context, MessageModel)? onMessageTap;
 
   /// Called when the message's visibility changes.
+  // ignore: avoid_positional_boolean_parameters
   final void Function(MessageModel, bool visible)? onMessageVisibilityChanged;
 
   /// See [TextMessage.onPreviewDataFetched].

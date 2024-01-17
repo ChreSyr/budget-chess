@@ -192,7 +192,7 @@ class _ChatSectionState extends State<ChatSection> {
     );
   }
 
-  void _handleFileSelection() async {
+  Future<void> _handleFileSelection() async {
     // TODO
     // final result = await FilePicker.platform.pickFiles(
     //   type: FileType.any,
@@ -224,7 +224,7 @@ class _ChatSectionState extends State<ChatSection> {
     // }
   }
 
-  void _handleImageSelection() async {
+  Future<void> _handleImageSelection() async {
     // TODO
     // final result = await ImagePicker().pickImage(
     //   imageQuality: 70,
@@ -264,7 +264,7 @@ class _ChatSectionState extends State<ChatSection> {
     // }
   }
 
-  void _handleMessageTap(BuildContext _, MessageModel message) async {
+  Future<void> _handleMessageTap(BuildContext _, MessageModel message) async {
     // TODO
     // if (message is types.FileMessage) {
     //   var localPath = message.uri;
@@ -280,7 +280,8 @@ class _ChatSectionState extends State<ChatSection> {
     //       final client = http.Client();
     //       final request = await client.get(Uri.parse(message.uri));
     //       final bytes = request.bodyBytes;
-    //       final documentsDir = (await getApplicationDocumentsDirectory()).path;
+    //       final documentsDir = (await getApplicationDocumentsDirectory())
+    //              .path;
     //       localPath = '$documentsDir/${message.name}';
 
     //       if (!File(localPath).existsSync()) {
@@ -334,11 +335,11 @@ class _ChatSectionState extends State<ChatSection> {
     }
   }
 
-  void _setAttachmentUploading(bool uploading) {
-    setState(() {
-      _isAttachmentUploading = uploading;
-    });
-  }
+  // void _setAttachmentUploading(bool uploading) {
+  //   setState(() {
+  //     _isAttachmentUploading = uploading;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {

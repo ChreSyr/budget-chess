@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
+// ignore_for_file: comment_references
 
-import '../../models/pattern_style.dart';
+import 'package:crea_chess/package/atomic_design/flutter_chat_ui/models/pattern_style.dart';
+import 'package:flutter/material.dart';
 
 /// Controller for the [TextField] on [Input] widget
 /// To highlighting the matches for pattern.
@@ -16,8 +17,7 @@ class InputTextFieldController extends TextEditingController {
   @override
   TextSpan buildTextSpan({
     required BuildContext context,
-    TextStyle? style,
-    required bool withComposing,
+    required bool withComposing, TextStyle? style,
   }) {
     final children = <TextSpan>[];
 

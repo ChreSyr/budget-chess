@@ -1,3 +1,5 @@
+// ignore_for_file: comment_references
+
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/models/input_clear_mode.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/models/send_button_visibility_mode.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/util.dart';
@@ -286,8 +288,9 @@ class InputOptions {
   /// Custom [TextEditingController]. If not provided, defaults to the
   /// [InputTextFieldController], which extends [TextEditingController] and has
   /// additional fatures like markdown support. If you want to keep additional
-  /// features but still need some methods from the default [TextEditingController],
-  /// you can create your own [InputTextFieldController] (imported from this lib)
+  /// features but still need some methods from the default
+  /// [TextEditingController], you can create your own
+  /// [InputTextFieldController] (imported from this lib)
   /// and pass it here.
   final TextEditingController? textEditingController;
 

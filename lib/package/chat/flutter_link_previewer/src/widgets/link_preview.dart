@@ -95,7 +95,8 @@ class LinkPreview extends StatefulWidget {
   /// data again.
   final PreviewData? previewData;
 
-  /// Request timeout after which the request will be cancelled. Defaults to 5 seconds.
+  /// Request timeout after which the request will be cancelled.
+  /// Defaults to 5 seconds.
   final Duration? requestTimeout;
 
   /// Text used for parsing.
@@ -104,7 +105,8 @@ class LinkPreview extends StatefulWidget {
   /// Style of the provided text.
   final TextStyle? textStyle;
 
-  /// Widget to display above the preview. If null, defaults to a linkified [text].
+  /// Widget to display above the preview. If null, defaults to a linkified
+  /// [text].
   final Widget? textWidget;
 
   /// User agent to send as GET header when requesting link preview url.
@@ -143,7 +145,6 @@ class _LinkPreviewState extends State<LinkPreview>
   }
 
   Widget _animated(Widget child) => SizeTransition(
-        axis: Axis.vertical,
         axisAlignment: -1,
         sizeFactor: _animation,
         child: child,
@@ -196,7 +197,7 @@ class _LinkPreviewState extends State<LinkPreview>
           vertical: 16,
         );
 
-    final shouldAnimate = widget.enableAnimation == true && animate;
+    final shouldAnimate = (widget.enableAnimation ?? false) && animate;
 
     return Container(
       constraints: BoxConstraints(maxWidth: widget.width),
@@ -407,8 +408,8 @@ class _LinkPreviewState extends State<LinkPreview>
       setState(() {
         shouldAnimate = true;
       });
-      _controller.reset();
-      _controller.forward();
+      _controller..reset()
+      ..forward();
     } else if (widget.previewData != null) {
       setState(() {
         shouldAnimate = false;

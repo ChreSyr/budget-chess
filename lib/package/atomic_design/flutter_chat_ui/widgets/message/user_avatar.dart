@@ -1,3 +1,5 @@
+// ignore_for_file: comment_references
+
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/models/bubble_rtl_alignment.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/util.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/widgets/state/inherited_chat_theme.dart';

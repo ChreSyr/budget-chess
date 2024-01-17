@@ -1,3 +1,5 @@
+// ignore_for_file: comment_references
+
 import 'package:crea_chess/package/firebase/firestore/relationship/message/message_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
@@ -27,6 +29,7 @@ class PartialCustom {
   /// Message that is being replied to with the current message.
   final MessageModel? repliedMessage;
 
-  /// Converts a partial custom message to the map representation, encodable to JSON.
+  /// Converts a partial custom message to the map representation, encodable
+  /// to JSON.
   Map<String, dynamic> toJson() => _$PartialCustomToJson(this);
 }

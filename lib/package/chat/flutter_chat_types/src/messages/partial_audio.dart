@@ -1,3 +1,5 @@
+// ignore_for_file: comment_references
+
 import 'package:crea_chess/package/firebase/firestore/relationship/message/message_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
@@ -51,6 +53,7 @@ class PartialAudio {
   /// Wave form represented as a list of decibel levels.
   final List<double>? waveForm;
 
-  /// Converts a partial audio message to the map representation, encodable to JSON.
+  /// Converts a partial audio message to the map representation,
+  /// encodable to JSON.
   Map<String, dynamic> toJson() => _$PartialAudioToJson(this);
 }

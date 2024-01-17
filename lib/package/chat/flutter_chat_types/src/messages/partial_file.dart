@@ -1,3 +1,5 @@
+// ignore_for_file: comment_references
+
 import 'package:crea_chess/package/firebase/firestore/relationship/message/message_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
@@ -43,6 +45,7 @@ class PartialFile {
   /// The file source (either a remote URL or a local resource).
   final String uri;
 
-  /// Converts a partial file message to the map representation, encodable to JSON.
+  /// Converts a partial file message to the map representation,
+  /// encodable to JSON.
   Map<String, dynamic> toJson() => _$PartialFileToJson(this);
 }

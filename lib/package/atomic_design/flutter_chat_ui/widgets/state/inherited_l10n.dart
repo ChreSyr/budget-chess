@@ -1,6 +1,5 @@
+import 'package:crea_chess/package/atomic_design/flutter_chat_ui/chat_l10n.dart';
 import 'package:flutter/widgets.dart';
-
-import '../../chat_l10n.dart';
 
 // TODO : remove
 
@@ -8,9 +7,9 @@ import '../../chat_l10n.dart';
 class InheritedL10n extends InheritedWidget {
   /// Creates [InheritedWidget] from a provided [ChatL10n] class.
   const InheritedL10n({
-    super.key,
     required this.l10n,
     required super.child,
+    super.key,
   });
 
   static InheritedL10n of(BuildContext context) =>

@@ -11,6 +11,7 @@ class PatternStyle {
 
   String get pattern => regExp.pattern;
 
+  // ignore: prefer_constructors_over_static_methods
   static PatternStyle get bold => PatternStyle(
         '*',
         RegExp(r'\*[^\*]+\*'),
@@ -18,6 +19,7 @@ class PatternStyle {
         const TextStyle(fontWeight: FontWeight.bold),
       );
 
+  // ignore: prefer_constructors_over_static_methods
   static PatternStyle get code => PatternStyle(
         '`',
         RegExp('`[^`]+`'),
@@ -29,6 +31,7 @@ class PatternStyle {
         ),
       );
 
+  // ignore: prefer_constructors_over_static_methods
   static PatternStyle get italic => PatternStyle(
         '_',
         RegExp('_[^_]+_'),
@@ -36,6 +39,7 @@ class PatternStyle {
         const TextStyle(fontStyle: FontStyle.italic),
       );
 
+  // ignore: prefer_constructors_over_static_methods
   static PatternStyle get lineThrough => PatternStyle(
         '~',
         RegExp('~[^~]+~'),

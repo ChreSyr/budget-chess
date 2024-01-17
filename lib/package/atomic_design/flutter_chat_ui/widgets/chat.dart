@@ -31,7 +31,8 @@ import 'package:intl/intl.dart';
 import 'package:photo_view/photo_view.dart' show PhotoViewComputedScale;
 import 'package:scroll_to_index/scroll_to_index.dart';
 
-/// Keep track of all the auto scroll indices by their respective message's id to allow animating to them.
+/// Keep track of all the auto scroll indices by their respective message's id
+/// to allow animating to them.
 final Map<String, int> chatMessageAutoScrollIndexById = {};
 
 /// Entry widget, represents the complete chat. If you wrap it in [SafeArea] and
@@ -123,7 +124,9 @@ class Chat extends StatefulWidget {
   // See [Message.bubbleRtlAlignment].
   final BubbleRtlAlignment? bubbleRtlAlignment;
 
-  /// Allows you to replace the default Input widget e.g. if you want to create a channel view. If you're looking for the bottom widget added to the chat list, see [listBottomWidget] instead.
+  /// Allows you to replace the default Input widget e.g. if you want to create
+  /// a channel view. If you're looking for the bottom widget added to the chat
+  /// list, see [listBottomWidget] instead.
   final Widget? customBottomWidget;
 
   /// If [dateFormat], [dateLocale] and/or [timeFormat] is not enough to customize date headers in your case, use this to return an arbitrary string based on a [DateTime] of a particular message. Can be helpful to return "Today" if [DateTime] is today. IMPORTANT: this will replace all default date headers, so you must handle all cases yourself, like for example today, yesterday and before. Or you can just return the same date header for any message.
@@ -137,7 +140,11 @@ class Chat extends StatefulWidget {
   final Widget Function(MessageModel message, {required BuildContext context})?
       customStatusBuilder;
 
-  /// Allows you to customize the date format. IMPORTANT: only for the date, do not return time here. See [timeFormat] to customize the time format. [dateLocale] will be ignored if you use this, so if you want a localized date make sure you initialize your [DateFormat] with a locale. See [customDateHeaderText] for more customization.
+  /// Allows you to customize the date format. IMPORTANT: only for the date, do
+  /// not return time here. See [timeFormat] to customize the time format.
+  /// [dateLocale] will be ignored if you use this, so if you want a localized
+  /// date make sure you initialize your [DateFormat] with a locale.
+  /// See [customDateHeaderText] for more customization.
   final DateFormat? dateFormat;
 
   /// Custom date header builder gives ability to customize date header widget.
@@ -154,7 +161,8 @@ class Chat extends StatefulWidget {
 
   /// Locale will be passed to the `Intl` package. Make sure you initialized
   /// date formatting in your app before passing any locale here, otherwise
-  /// an error will be thrown. Also see [customDateHeaderText], [dateFormat], [timeFormat].
+  /// an error will be thrown. Also see [customDateHeaderText], [dateFormat],
+  /// [timeFormat].
   final String? dateLocale;
 
   /// Disable automatic image preview on tap.
@@ -191,9 +199,11 @@ class Chat extends StatefulWidget {
       imageMessageBuilder;
 
   /// This feature allows you to use a custom image provider.
-  /// This is useful if you want to manage image loading yourself, or if you need to cache images.
-  /// You can also use the `cached_network_image` feature, but when it comes to caching, you might want to decide on a per-message basis.
-  /// Plus, by using this provider, you can choose whether or not to send specific headers based on the URL.
+  /// This is useful if you want to manage image loading yourself, or if you
+  /// need to cache images. You can also use the `cached_network_image` feature,
+  /// but when it comes to caching, you might want to decide on a per-message
+  /// basis. Plus, by using this provider, you can choose whether or not to send
+  /// specific headers based on the URL.
   final ImageProvider Function({
     required String uri,
     required Map<String, String>? imageHeaders,
@@ -259,6 +269,7 @@ class Chat extends StatefulWidget {
   final void Function(BuildContext context, MessageModel)? onMessageTap;
 
   // See [Message.onMessageVisibilityChanged].
+  // ignore: avoid_positional_boolean_parameters
   final void Function(MessageModel, bool visible)? onMessageVisibilityChanged;
 
   // See [Message.onPreviewDataFetched].
@@ -303,7 +314,11 @@ class Chat extends StatefulWidget {
   /// properties, see more here [DefaultChatTheme].
   final ChatTheme theme;
 
-  /// Allows you to customize the time format. IMPORTANT: only for the time, do not return date here. See [dateFormat] to customize the date format. [dateLocale] will be ignored if you use this, so if you want a localized time make sure you initialize your [DateFormat] with a locale. See [customDateHeaderText] for more customization.
+  /// Allows you to customize the time format. IMPORTANT: only for the time, do
+  /// not return date here. See [dateFormat] to customize the date format.
+  /// [dateLocale] will be ignored if you use this, so if you want a localized
+  /// time make sure you initialize your [DateFormat] with a locale.
+  /// See [customDateHeaderText] for more customization.
   final DateFormat? timeFormat;
 
   /// Used to show typing users with indicator. See [TypingIndicatorOptions].
@@ -335,7 +350,8 @@ class Chat extends StatefulWidget {
 
 /// [Chat] widget state.
 class ChatState extends State<Chat> {
-  /// Used to get the correct auto scroll index from [chatMessageAutoScrollIndexById].
+  /// Used to get the correct auto scroll index from
+  /// [chatMessageAutoScrollIndexById].
   static const String _unreadHeaderId = 'unread_header_id';
 
   List<Object> _chatMessages = [];
@@ -367,7 +383,7 @@ class ChatState extends State<Chat> {
   }
 
   /// Scroll to the message with the specified [id].
-  void scrollToMessage(
+  Future<void> scrollToMessage(
     String id, {
     Duration? scrollDuration,
     bool withHighlight = false,
@@ -407,7 +423,8 @@ class ChatState extends State<Chat> {
         ),
       );
 
-  /// Only scroll to first unread if there are messages and it is the first open.
+  /// Only scroll to first unread if there are messages and it is the first
+  /// open.
   void _maybeScrollToFirstUnread() {
     if (widget.scrollToUnreadOptions.scrollOnOpen &&
         _chatMessages.isNotEmpty &&
@@ -422,7 +439,10 @@ class ChatState extends State<Chat> {
     }
   }
 
-  /// We need the index for auto scrolling because it will scroll until it reaches an index higher or equal that what it is scrolling towards. Index will be null for removed messages. Can just set to -1 for auto scroll.
+  /// We need the index for auto scrolling because it will scroll until it
+  /// reaches an index higher or equal that what it is scrolling towards.
+  /// Index will be null for removed messages. Can just set to -1 for auto
+  /// scroll.
   Widget _messageBuilder(
     Object object,
     BoxConstraints constraints,
@@ -548,7 +568,8 @@ class ChatState extends State<Chat> {
     widget.onPreviewDataFetched?.call(message, previewData);
   }
 
-  /// Updates the [chatMessageAutoScrollIndexById] mapping with the latest messages.
+  /// Updates the [chatMessageAutoScrollIndexById] mapping with the latest
+  /// messages.
   void _refreshAutoScrollMapping() {
     chatMessageAutoScrollIndexById.clear();
     var i = 0;

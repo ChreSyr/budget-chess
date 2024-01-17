@@ -1,14 +1,13 @@
+import 'package:crea_chess/package/atomic_design/flutter_chat_ui/chat_theme.dart';
 import 'package:flutter/widgets.dart';
-
-import '../../chat_theme.dart';
 
 /// Used to make provided [ChatTheme] class available through the whole package.
 class InheritedChatTheme extends InheritedWidget {
   /// Creates [InheritedWidget] from a provided [ChatTheme] class.
   const InheritedChatTheme({
-    super.key,
     required this.theme,
     required super.child,
+    super.key,
   });
 
   static InheritedChatTheme of(BuildContext context) =>

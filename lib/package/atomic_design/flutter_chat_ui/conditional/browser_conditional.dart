@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 
 /// Create a [BrowserConditional].
 ///
-/// Used from conditional imports, matches the definition in `conditional_stub.dart`.
+/// Used from conditional imports, matches the definition
+/// in `conditional_stub.dart`.
 BaseConditional createConditional() => BrowserConditional();
 
 /// A conditional for browser.

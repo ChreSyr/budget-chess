@@ -1,3 +1,5 @@
+// ignore_for_file: parameter_assignments
+
 import 'dart:async';
 import 'dart:convert';
 
@@ -113,6 +115,7 @@ Future<Size> _getImageSize(String url) {
     completer.completeError(error, stackTrace);
   }
 
+  // ignore: avoid_positional_boolean_parameters
   void listener(ImageInfo info, bool _) {
     if (!completer.isCompleted) {
       completer.complete(
@@ -194,7 +197,7 @@ Future<PreviewData> getPreviewData(
     final uri = Uri.parse(previewDataUrl);
     final response = await http.get(uri, headers: {
       'User-Agent': userAgent ?? 'WhatsApp/2',
-    }).timeout(requestTimeout ?? const Duration(seconds: 5));
+    },).timeout(requestTimeout ?? const Duration(seconds: 5));
     final document = parser.parse(utf8.decode(response.bodyBytes));
 
     final imageRegexp = RegExp(regexImageContentType);

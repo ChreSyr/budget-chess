@@ -1,3 +1,5 @@
+// ignore_for_file: comment_references
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crea_chess/package/firebase/firestore/crud/model_converter.dart';
 import 'package:crea_chess/package/firebase/firestore/crud/sub_collection_crud.dart';

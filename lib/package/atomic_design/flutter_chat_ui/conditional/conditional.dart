@@ -7,8 +7,9 @@ import 'package:flutter/material.dart';
 abstract class Conditional {
   /// Creates a new platform appropriate conditional.
   ///
-  /// Creates an `IOConditional` if `dart:io` is available and a `BrowserConditional` if
-  /// `dart:html` is available, otherwise it will throw an unsupported error.
+  /// Creates an `IOConditional` if `dart:io` is available and a
+  /// `BrowserConditional` if `dart:html` is available,
+  /// otherwise it will throw an unsupported error.
   factory Conditional() => createConditional();
 
   /// Returns an appropriate platform ImageProvider for specified URI.

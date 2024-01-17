@@ -1,3 +1,5 @@
+// ignore_for_file: comment_references
+
 import 'package:crea_chess/package/firebase/firestore/relationship/message/message_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
@@ -47,6 +49,7 @@ class PartialImage {
   /// Image width in pixels.
   final double? width;
 
-  /// Converts a partial image message to the map representation, encodable to JSON.
+  /// Converts a partial image message to the map representation,
+  /// encodable to JSON.
   Map<String, dynamic> toJson() => _$PartialImageToJson(this);
 }

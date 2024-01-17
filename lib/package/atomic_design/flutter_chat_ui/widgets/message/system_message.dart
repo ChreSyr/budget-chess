@@ -57,7 +57,8 @@ class SystemMessageTheme {
   /// Style to apply to anything that matches a link.
   final TextStyle? linkTextStyle;
 
-  /// Regular style to use for any unmatched text. Also used as basis for the fallback options.
+  /// Regular style to use for any unmatched text. Also used as basis for the
+  /// fallback options.
   final TextStyle textStyle;
 
   /// Style to apply to anything that matches bold markdown.

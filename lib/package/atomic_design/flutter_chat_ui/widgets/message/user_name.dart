@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 class UserName extends StatelessWidget {
   /// Creates user name.
   const UserName({
-    super.key,
     required this.author,
+    super.key,
   });
 
   /// Author to show name from.

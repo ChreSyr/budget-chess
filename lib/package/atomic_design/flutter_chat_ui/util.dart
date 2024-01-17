@@ -1,13 +1,13 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:crea_chess/package/chat/flutter_chat_types/flutter_chat_types.dart'
-    as types;
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/models/date_header.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/models/emoji_enlargement_behavior.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/models/message_spacer.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/models/preview_image.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/models/unread_header_data.dart';
+import 'package:crea_chess/package/chat/flutter_chat_types/flutter_chat_types.dart'
+    as types;
 import 'package:crea_chess/package/firebase/firestore/relationship/message/message_model.dart';
 import 'package:crea_chess/package/firebase/firestore/user/user_model.dart';
 import 'package:flutter/foundation.dart'

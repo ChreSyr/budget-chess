@@ -1,18 +1,19 @@
+// ignore_for_file: comment_references
+
+import 'package:crea_chess/package/atomic_design/flutter_chat_ui/conditional/conditional.dart';
+import 'package:crea_chess/package/atomic_design/flutter_chat_ui/models/preview_image.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
-import '../conditional/conditional.dart';
-import '../models/preview_image.dart';
-
 class ImageGallery extends StatelessWidget {
   const ImageGallery({
+    required this.images,
+    required this.onClosePressed,
+    required this.pageController,
     super.key,
     this.imageHeaders,
     this.imageProviderBuilder,
-    required this.images,
-    required this.onClosePressed,
     this.options = const ImageGalleryOptions(),
-    required this.pageController,
   });
 
   /// See [Chat.imageHeaders].
@@ -50,6 +51,7 @@ class ImageGallery extends StatelessWidget {
       );
 
   @override
+  // ignore: deprecated_member_use
   Widget build(BuildContext context) => WillPopScope(
         onWillPop: () async {
           onClosePressed();

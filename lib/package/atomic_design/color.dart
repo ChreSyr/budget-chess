@@ -19,7 +19,7 @@ class CCColor {
   static Color onInverseSurface(BuildContext context) =>
       Theme.of(context).colorScheme.onInverseSurface;
   
-  static Color transparentGrey = Color.fromARGB(128, 0, 0, 0);
+  static Color transparentGrey = const Color.fromARGB(128, 0, 0, 0);
 }
 
 enum SeedColor {

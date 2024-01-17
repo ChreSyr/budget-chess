@@ -37,7 +37,7 @@ class UrlLinkifier extends Linkifier {
         var loose = false;
         var match = _urlRegex.firstMatch(element.text);
 
-        if (match?.group(1)?.isNotEmpty == true) {
+        if (match?.group(1)?.isNotEmpty ?? false) {
           final looseMatch = _looseUrlRegex.firstMatch(match!.group(1)!);
           if (looseMatch != null) {
             match = looseMatch;
@@ -55,11 +55,11 @@ class UrlLinkifier extends Linkifier {
         } else {
           final text = element.text.replaceFirst(match.group(0)!, '');
 
-          if (match.group(1)?.isNotEmpty == true) {
+          if (match.group(1)?.isNotEmpty ?? false) {
             list.add(TextElement(match.group(1)!));
           }
 
-          if (match.group(2)?.isNotEmpty == true) {
+          if (match.group(2)?.isNotEmpty ?? false) {
             var originalUrl = match.group(2)!;
             String? end;
 

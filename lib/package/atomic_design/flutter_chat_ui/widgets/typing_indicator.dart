@@ -1,3 +1,5 @@
+// ignore_for_file: comment_references
+
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/models/bubble_rtl_alignment.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/models/typing_indicator_mode.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/util.dart';
@@ -46,34 +48,33 @@ class _TypingIndicatorState extends State<TypingIndicator>
 
     _indicatorSpaceAnimation = CurvedAnimation(
       parent: _appearanceController,
-      curve: const Interval(0.0, 1.0, curve: Curves.easeOut),
-      reverseCurve: const Interval(0.0, 1.0, curve: Curves.easeOut),
+      curve: const Interval(0, 1, curve: Curves.easeOut),
+      reverseCurve: const Interval(0, 1, curve: Curves.easeOut),
     ).drive(Tween<double>(
-      begin: 0.0,
-      end: 60.0,
-    ));
+        begin: 0,
+        end: 60,
+      ),
+    );
 
     _animatedCirclesController = AnimationController(
       vsync: this,
-      lowerBound: 0.0,
-      upperBound: 1.0,
       duration: widget.options.animationSpeed,
     )..repeat();
 
     _firstCircleOffsetAnimation = _circleOffset(
       Offset.zero,
-      const Offset(0.0, -0.9),
-      const Interval(0.0, 1.0, curve: Curves.linear),
+      const Offset(0, -0.9),
+      const Interval(0, 1),
     );
     _secondCircleOffsetAnimation = _circleOffset(
       Offset.zero,
-      const Offset(0.0, -0.8),
-      const Interval(0.3, 1.0, curve: Curves.linear),
+      const Offset(0, -0.8),
+      const Interval(0.3, 1),
     );
     _thirdCircleOffsetAnimation = _circleOffset(
       Offset.zero,
-      const Offset(0.0, -0.9),
-      const Interval(0.45, 1.0, curve: Curves.linear),
+      const Offset(0, -0.9),
+      const Interval(0.45, 1),
     );
 
     if (widget.showIndicator) {
@@ -94,21 +95,22 @@ class _TypingIndicatorState extends State<TypingIndicator>
               begin: start,
               end: end,
             ),
-            weight: 50.0,
+            weight: 50,
           ),
           TweenSequenceItem<Offset>(
             tween: Tween<Offset>(
               begin: end,
               end: start,
             ),
-            weight: 50.0,
+            weight: 50,
           ),
         ],
       ).animate(CurvedAnimation(
         parent: _animatedCirclesController,
         curve: animationInterval,
         reverseCurve: animationInterval,
-      ));
+        ),
+      );
 
   @override
   void didUpdateWidget(TypingIndicator oldWidget) {
@@ -142,16 +144,17 @@ class _TypingIndicatorState extends State<TypingIndicator>
               ? MainAxisAlignment.start
               : MainAxisAlignment.end,
           children: <Widget>[
-            widget.bubbleAlignment == BubbleRtlAlignment.left
-                ? Container(
+            if (widget.bubbleAlignment == BubbleRtlAlignment.left)
+              Container(
                     margin: const EdgeInsets.only(right: 12),
                     child: TypingWidget(
                       widget: widget,
                       context: context,
                       mode: widget.options.typingMode,
                     ),
-                  )
-                : const SizedBox(),
+              )
+            else
+              const SizedBox(),
             Container(
               margin: widget.bubbleAlignment == BubbleRtlAlignment.right
                   ? const EdgeInsets.fromLTRB(24, 24, 0, 24)
@@ -167,7 +170,7 @@ class _TypingIndicatorState extends State<TypingIndicator>
                     .bubbleColor,
               ),
               child: Wrap(
-                spacing: 3.0,
+                spacing: 3,
                 children: <Widget>[
                   AnimatedCircles(
                     circlesColor: InheritedChatTheme.of(context)
@@ -351,6 +354,7 @@ class AvatarHandler extends StatelessWidget {
                         .countTextColor,
                   ),
                   textAlign: TextAlign.center,
+                  // ignore: deprecated_member_use
                   textScaleFactor: 0.7,
                 ),
               ),
@@ -392,6 +396,7 @@ class TypingAvatar extends StatelessWidget {
           ? Text(
               initials,
               style: InheritedChatTheme.of(context).theme.userAvatarTextStyle,
+              // ignore: deprecated_member_use
               textScaleFactor: 0.7,
             )
           : null,

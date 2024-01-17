@@ -1,3 +1,5 @@
+// ignore_for_file: comment_references
+
 import 'package:crea_chess/package/chat/flutter_chat_types/src/preview_data.dart'
     show PreviewData;
 import 'package:crea_chess/package/firebase/firestore/relationship/message/message_model.dart';
@@ -39,6 +41,7 @@ class PartialText {
   /// User's message.
   final String text;
 
-  /// Converts a partial text message to the map representation, encodable to JSON.
+  /// Converts a partial text message to the map representation,
+  /// encodable to JSON.
   Map<String, dynamic> toJson() => _$PartialTextToJson(this);
 }

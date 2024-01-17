@@ -1,3 +1,5 @@
+// ignore_for_file: comment_references
+
 /// Used to toggle the visibility behavior of the [SendButton] based on the
 /// [TextField] state inside the [Input] widget.
 enum SendButtonVisibilityMode {

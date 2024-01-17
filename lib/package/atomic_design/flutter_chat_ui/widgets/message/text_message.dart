@@ -1,3 +1,5 @@
+// ignore_for_file: comment_references
+
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/models/emoji_enlargement_behavior.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/models/matchers.dart';
 import 'package:crea_chess/package/atomic_design/flutter_chat_ui/models/pattern_style.dart';
@@ -129,7 +131,8 @@ class TextMessage extends StatelessWidget {
       children: [
         // TODO ?
         // if (showName)
-        //   nameBuilder?.call(message.author) ?? UserName(author: message.author),
+        //   nameBuilder?.call(message.author) ?? UserName(
+        //      author: message.author),
         if (enlargeEmojis)
           if (options.isTextSelectable)
             SelectableText(message.text ?? '', style: emojiTextStyle)
@@ -179,21 +182,22 @@ class TextMessage extends StatelessWidget {
 /// Widget to reuse the markdown capabilities, e.g., for previews.
 class TextMessageText extends StatelessWidget {
   const TextMessageText({
+    required this.bodyTextStyle,
+    required this.text,
     super.key,
     this.bodyLinkTextStyle,
-    required this.bodyTextStyle,
     this.boldTextStyle,
     this.codeTextStyle,
     this.maxLines,
     this.options = const TextMessageOptions(),
     this.overflow = TextOverflow.clip,
-    required this.text,
   });
 
   /// Style to apply to anything that matches a link.
   final TextStyle? bodyLinkTextStyle;
 
-  /// Regular style to use for any unmatched text. Also used as basis for the fallback options.
+  /// Regular style to use for any unmatched text. Also used as basis for the
+  /// fallback options.
   final TextStyle bodyTextStyle;
 
   /// Style to apply to anything that matches bold markdown.
