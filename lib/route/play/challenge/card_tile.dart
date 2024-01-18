@@ -3,8 +3,9 @@ import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:flutter/material.dart';
 
 class CardTile extends StatelessWidget {
-  const CardTile({required this.child, super.key});
+  const CardTile({required this.child, this.onTap, super.key});
 
+  final void Function()? onTap;
   final Widget child;
 
   @override
@@ -17,7 +18,7 @@ class CardTile extends StatelessWidget {
         side: BorderSide(color: CCColor.cardBorder(context)),
       ),
       child: InkWell(
-        onTap: () {},
+        onTap: onTap,
         child: child,
       ),
     );

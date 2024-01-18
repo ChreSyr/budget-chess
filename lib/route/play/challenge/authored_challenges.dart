@@ -18,9 +18,11 @@ class _AuthoredChallengesState extends State<AuthoredChallenges> {
 
   @override
   Widget build(BuildContext context) {
+    void onTap() => setState(() => showChallenges = !showChallenges);
     return Column(
       children: [
         CardTile(
+          onTap: onTap,
           child: Row(
             children: [
               CCGap.medium,
@@ -32,9 +34,7 @@ class _AuthoredChallengesState extends State<AuthoredChallenges> {
                 icon: Icon(
                   showChallenges ? Icons.expand_less : Icons.expand_more,
                 ),
-                onPressed: () => setState(() {
-                  showChallenges = !showChallenges;
-                }),
+                onPressed: onTap,
               ),
             ],
           ),
