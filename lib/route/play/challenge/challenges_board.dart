@@ -1,6 +1,5 @@
 import 'package:crea_chess/package/firebase/firestore/challenge/challenge_crud.dart';
 import 'package:crea_chess/package/firebase/firestore/challenge/challenge_model.dart';
-import 'package:crea_chess/package/game/time_control.dart';
 import 'package:crea_chess/route/play/challenge/challenge_sorter_cubit.dart';
 import 'package:crea_chess/route/play/challenge/challenge_sorter_state.dart';
 import 'package:crea_chess/route/play/challenge/challenge_tile.dart';
@@ -24,10 +23,7 @@ class ChallengesBoard extends StatelessWidget {
                 challenges =
                     challenges.where((c) => c.speed == sorter.speed).toList();
               }
-              challenges.sort(
-                (a, b) => (a.time ?? TimeControl.defaultTime)
-                    .compareTo(b.time ?? TimeControl.defaultTime),
-              );
+              challenges.sort(sorter.compare);
               return Column(
                 children: challenges.map(ChallengeTile.new).toList(),
               );

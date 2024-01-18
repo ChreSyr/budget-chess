@@ -65,4 +65,9 @@ class TimeControl {
 
   @override
   int get hashCode => Object.hash(time, increment);
+
+  int compareTo(TimeControl b) {
+    if (time != b.time) return time.compareTo(b.time);
+    return increment.compareTo(b.increment);
+  }
 }
