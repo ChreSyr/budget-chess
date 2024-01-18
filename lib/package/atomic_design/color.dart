@@ -4,20 +4,34 @@ class CCColor {
   static Color background(BuildContext context) =>
       Theme.of(context).colorScheme.background;
 
-  static Color onBackground(BuildContext context) =>
-      Theme.of(context).colorScheme.onBackground;
+  static Color cardBorder(BuildContext context) =>
+      Theme.of(context).colorScheme.brightness == Brightness.light
+          ? Colors.black
+          : Colors.grey;
 
   static Color error(BuildContext context) =>
       Theme.of(context).colorScheme.error;
 
-  static Color onError(BuildContext context) =>
-      Theme.of(context).colorScheme.onError;
-
   static Color inverseSurface(BuildContext context) =>
       Theme.of(context).colorScheme.inverseSurface;
 
+  static Color onBackground(BuildContext context) =>
+      Theme.of(context).colorScheme.onBackground;
+
+  static Color onError(BuildContext context) =>
+      Theme.of(context).colorScheme.onError;
+
   static Color onInverseSurface(BuildContext context) =>
       Theme.of(context).colorScheme.onInverseSurface;
+
+  static Color onPrimaryContainer(BuildContext context) =>
+      Theme.of(context).colorScheme.onPrimaryContainer;
+
+  static Color primaryContainer(BuildContext context) =>
+      Theme.of(context).colorScheme.primaryContainer;
+
+  static Color surfaceVariant(BuildContext context) =>
+      Theme.of(context).colorScheme.surfaceVariant;
   
   static Color transparentGrey = const Color.fromARGB(128, 0, 0, 0);
 }
