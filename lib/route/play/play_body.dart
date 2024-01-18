@@ -31,21 +31,26 @@ class HomeBody extends MainRouteBody {
   Widget build(BuildContext context) {
     return SizedBox(
       width: CCWidgetSize.large4,
-      child: ListView(
-        shrinkWrap: true,
+      child: Column(
         children: [
-          const ChallengesBoard(),
+          const Expanded(child: ChallengesBoard()),
           CCGap.large,
-          FilledButton(
-            onPressed: () => context.go('/play/chessground'),
-            child: const Text('Play'),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              FilledButton(
+                onPressed: () => context.go('/play/chessground'),
+                child: const Text('Play'),
+              ),
+              CCGap.large,
+              FilledButton.icon(
+                onPressed: () => context.go('/play/create_challenge'),
+                icon: const Icon(Icons.add),
+                label: const Text('Create challenge'),
+              ),
+            ],
           ),
           CCGap.large,
-          FilledButton.icon(
-            onPressed: () => context.go('/play/create_challenge'),
-            icon: const Icon(Icons.add),
-            label: const Text('Create challenge'),
-          ),
         ],
       ),
     );
@@ -57,17 +62,16 @@ class ChallengesBoard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<Iterable<ChallengeModel>>(
-      stream: challengeCRUD.streamAll(),
-      builder: (context, snapshot) {
-        final challenges = snapshot.data;
-        return SizedBox(
-          height: CCWidgetSize.large4,
-          child: challenges == null
+    return SingleChildScrollView(
+      child: StreamBuilder<Iterable<ChallengeModel>>(
+        stream: challengeCRUD.streamAll(),
+        builder: (context, snapshot) {
+          final challenges = snapshot.data;
+          return challenges == null
               ? const Center(child: CircularProgressIndicator())
-              : Column(children: challenges.map(ChallengeTile.new).toList()),
-        );
-      },
+              : Column(children: challenges.map(ChallengeTile.new).toList());
+        },
+      ),
     );
   }
 }
