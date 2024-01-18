@@ -45,9 +45,15 @@ class _CreateChallengeBody extends StatelessWidget {
 
     return BlocConsumer<CreateChallengeCubit, CreateChallengeForm>(
       listener: (context, state) {
-        if (state.status == CreateChallengeStatus.editError) {
-          snackBarError(context, context.l10n.errorOccurred);
-          createChallengeCubit.clearStatus();
+        switch (state.status) {
+          case CreateChallengeStatus.editError:
+          case CreateChallengeStatus.requestError:
+            createChallengeCubit.clearStatus();
+            snackBarError(context, context.l10n.errorOccurred);
+          case CreateChallengeStatus.requestSuccess:
+            createChallengeCubit.clearStatus();
+            context.pop();
+          case _:
         }
       },
       builder: (context, form) {

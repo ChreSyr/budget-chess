@@ -9,5 +9,5 @@ enum CreateChallengeStatus {
   // create challenge
   requestWaiting,
   requestError,
-  success,
+  requestSuccess,
 }

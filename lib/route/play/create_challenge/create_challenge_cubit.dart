@@ -56,6 +56,7 @@ class CreateChallengeCubit extends Cubit<CreateChallengeForm> {
           budget: state.budget.value,
         ),
       );
+      emit(state.copyWith(status: CreateChallengeStatus.requestSuccess));
     } on Exception catch (_) {
       emit(state.copyWith(status: CreateChallengeStatus.requestError));
     }
