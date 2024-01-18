@@ -50,7 +50,8 @@ class ChallengeSorter extends StatelessWidget {
                     initialValue: sorter.speed,
                     valueBuilder: (speed) {
                       return Text(speed?.name.sentenceCase ??
-                          'All speed'); // TODO : l10n
+                          'All speed',
+                      ); // TODO : l10n
                     },
                   ),
                   CCGap.small,
