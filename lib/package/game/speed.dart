@@ -22,5 +22,9 @@ enum Speed {
     }
   }
 
+  static Speed? fromString(String string) {
+    return Speed.values.where((s) => s.name == string).firstOrNull;
+  }
+
   final IconData icon;
 }
