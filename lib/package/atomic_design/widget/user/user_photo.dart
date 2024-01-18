@@ -68,7 +68,7 @@ class UserPhoto extends StatelessWidget {
 }
 
 ImageProvider<Object>? _getPhotoAsset(String? photo) {
-  if (photo == null) {
+  if (photo == null || photo.isEmpty) {
     return null;
   } else if (photo.startsWith('avatar-')) {
     return AssetImage('assets/${photo.replaceAll('-', '/')}.jpg');
