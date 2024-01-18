@@ -10,6 +10,7 @@ part 'challenge_sorter_state.g.dart';
 @freezed
 class ChallengeSorterState with _$ChallengeSorterState {
   factory ChallengeSorterState({
+    // required Iterable<String> friendIds,
     Speed? speed,
     @Default(true) bool budgetAsc,
   }) = _ChallengeSorterState;

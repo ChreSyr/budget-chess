@@ -12,33 +12,66 @@ class ChallengeSorter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ChallengeSorterCubit, ChallengeSorterState>(
-      builder: (context, sorter) {
-        return Row(
-          children: [
-            DropdownSelector<Speed?>(
-              values: const <Speed?>[null, ...Speed.values],
-              onSelected: context.read<ChallengeSorterCubit>().setSpeed,
-              initialValue: sorter.speed,
-              valueBuilder: (speed) {
-                return speed?.name.sentenceCase ?? 'All speed'; // TODO : l10n
-              },
-            ),
-            CCGap.medium,
-            DropdownSelector<bool>(
-              values: const [true, false],
-              onSelected: context.read<ChallengeSorterCubit>().setBudgetAsc,
-              initialValue: sorter.budgetAsc,
-              valueBuilder: (val) {
-                return val
-                    ? 'Budget par ordre croissant'
-                    : 'Budget par ordre décroissant';
-                // TODO : l10n
-              },
-            ),
-          ],
-        );
-      },
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: BlocBuilder<ChallengeSorterCubit, ChallengeSorterState>(
+        builder: (context, sorter) {
+          return Column(
+            children: [
+              Row(
+                children: [
+                  CCGap.small,
+                  // DropdownSelector<String>(
+                  //   values: const <Speed?>[null, ...Speed.values],
+                  //   onSelected: context.read<ChallengeSorterCubit>().setSpeed,
+                  //   initialValue: sorter.speed,
+                  //   valueBuilder: (speed) {
+                  //     return speed?.name.sentenceCase ??
+                  //         'All speed'; // TODO : l10n
+                  //   },
+                  // ),
+                  Text(
+                    'Parties rapides',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  CCGap.small,
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.expand_more),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  CCGap.small,
+                  DropdownSelector<Speed?>(
+                    values: const <Speed?>[null, ...Speed.values],
+                    onSelected: context.read<ChallengeSorterCubit>().setSpeed,
+                    initialValue: sorter.speed,
+                    valueBuilder: (speed) {
+                      return speed?.name.sentenceCase ??
+                          'All speed'; // TODO : l10n
+                    },
+                  ),
+                  CCGap.small,
+                  DropdownSelector<bool>(
+                    values: const [true, false],
+                    onSelected:
+                        context.read<ChallengeSorterCubit>().setBudgetAsc,
+                    initialValue: sorter.budgetAsc,
+                    valueBuilder: (val) {
+                      return val
+                          ? 'Budget par ordre croissant'
+                          : 'Budget par ordre décroissant';
+                      // TODO : l10n
+                    },
+                  ),
+                ],
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 }
