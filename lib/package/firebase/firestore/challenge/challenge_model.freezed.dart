@@ -24,11 +24,11 @@ mixin _$ChallengeModel {
   DateTime? get createdAt => throw _privateConstructorUsedError;
   String? get authorId => throw _privateConstructorUsedError;
   ChallengeStatus? get status => throw _privateConstructorUsedError;
-  int? get time => throw _privateConstructorUsedError; // in seconds
-  int? get increment => throw _privateConstructorUsedError; // in seconds
-  int? get boardWidth => throw _privateConstructorUsedError;
-  int? get boardHeight => throw _privateConstructorUsedError;
-  int? get budget => throw _privateConstructorUsedError;
+  int get time => throw _privateConstructorUsedError; // in seconds
+  int get increment => throw _privateConstructorUsedError; // in seconds
+  int get boardWidth => throw _privateConstructorUsedError;
+  int get boardHeight => throw _privateConstructorUsedError;
+  int get budget => throw _privateConstructorUsedError;
   List<String>? get userIds => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -48,11 +48,11 @@ abstract class $ChallengeModelCopyWith<$Res> {
       DateTime? createdAt,
       String? authorId,
       ChallengeStatus? status,
-      int? time,
-      int? increment,
-      int? boardWidth,
-      int? boardHeight,
-      int? budget,
+      int time,
+      int increment,
+      int boardWidth,
+      int boardHeight,
+      int budget,
       List<String>? userIds});
 }
 
@@ -73,11 +73,11 @@ class _$ChallengeModelCopyWithImpl<$Res, $Val extends ChallengeModel>
     Object? createdAt = freezed,
     Object? authorId = freezed,
     Object? status = freezed,
-    Object? time = freezed,
-    Object? increment = freezed,
-    Object? boardWidth = freezed,
-    Object? boardHeight = freezed,
-    Object? budget = freezed,
+    Object? time = null,
+    Object? increment = null,
+    Object? boardWidth = null,
+    Object? boardHeight = null,
+    Object? budget = null,
     Object? userIds = freezed,
   }) {
     return _then(_value.copyWith(
@@ -97,26 +97,26 @@ class _$ChallengeModelCopyWithImpl<$Res, $Val extends ChallengeModel>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as ChallengeStatus?,
-      time: freezed == time
+      time: null == time
           ? _value.time
           : time // ignore: cast_nullable_to_non_nullable
-              as int?,
-      increment: freezed == increment
+              as int,
+      increment: null == increment
           ? _value.increment
           : increment // ignore: cast_nullable_to_non_nullable
-              as int?,
-      boardWidth: freezed == boardWidth
+              as int,
+      boardWidth: null == boardWidth
           ? _value.boardWidth
           : boardWidth // ignore: cast_nullable_to_non_nullable
-              as int?,
-      boardHeight: freezed == boardHeight
+              as int,
+      boardHeight: null == boardHeight
           ? _value.boardHeight
           : boardHeight // ignore: cast_nullable_to_non_nullable
-              as int?,
-      budget: freezed == budget
+              as int,
+      budget: null == budget
           ? _value.budget
           : budget // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as int,
       userIds: freezed == userIds
           ? _value.userIds
           : userIds // ignore: cast_nullable_to_non_nullable
@@ -138,11 +138,11 @@ abstract class _$$ChallengeModelImplCopyWith<$Res>
       DateTime? createdAt,
       String? authorId,
       ChallengeStatus? status,
-      int? time,
-      int? increment,
-      int? boardWidth,
-      int? boardHeight,
-      int? budget,
+      int time,
+      int increment,
+      int boardWidth,
+      int boardHeight,
+      int budget,
       List<String>? userIds});
 }
 
@@ -161,11 +161,11 @@ class __$$ChallengeModelImplCopyWithImpl<$Res>
     Object? createdAt = freezed,
     Object? authorId = freezed,
     Object? status = freezed,
-    Object? time = freezed,
-    Object? increment = freezed,
-    Object? boardWidth = freezed,
-    Object? boardHeight = freezed,
-    Object? budget = freezed,
+    Object? time = null,
+    Object? increment = null,
+    Object? boardWidth = null,
+    Object? boardHeight = null,
+    Object? budget = null,
     Object? userIds = freezed,
   }) {
     return _then(_$ChallengeModelImpl(
@@ -185,26 +185,26 @@ class __$$ChallengeModelImplCopyWithImpl<$Res>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as ChallengeStatus?,
-      time: freezed == time
+      time: null == time
           ? _value.time
           : time // ignore: cast_nullable_to_non_nullable
-              as int?,
-      increment: freezed == increment
+              as int,
+      increment: null == increment
           ? _value.increment
           : increment // ignore: cast_nullable_to_non_nullable
-              as int?,
-      boardWidth: freezed == boardWidth
+              as int,
+      boardWidth: null == boardWidth
           ? _value.boardWidth
           : boardWidth // ignore: cast_nullable_to_non_nullable
-              as int?,
-      boardHeight: freezed == boardHeight
+              as int,
+      boardHeight: null == boardHeight
           ? _value.boardHeight
           : boardHeight // ignore: cast_nullable_to_non_nullable
-              as int?,
-      budget: freezed == budget
+              as int,
+      budget: null == budget
           ? _value.budget
           : budget // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as int,
       userIds: freezed == userIds
           ? _value._userIds
           : userIds // ignore: cast_nullable_to_non_nullable
@@ -221,11 +221,11 @@ class _$ChallengeModelImpl extends _ChallengeModel {
       this.createdAt,
       this.authorId,
       this.status,
-      this.time,
-      this.increment,
-      this.boardWidth,
-      this.boardHeight,
-      this.budget,
+      this.time = 180,
+      this.increment = 2,
+      this.boardWidth = 8,
+      this.boardHeight = 8,
+      this.budget = 39,
       final List<String>? userIds})
       : _userIds = userIds,
         super._();
@@ -242,17 +242,22 @@ class _$ChallengeModelImpl extends _ChallengeModel {
   @override
   final ChallengeStatus? status;
   @override
-  final int? time;
+  @JsonKey()
+  final int time;
 // in seconds
   @override
-  final int? increment;
+  @JsonKey()
+  final int increment;
 // in seconds
   @override
-  final int? boardWidth;
+  @JsonKey()
+  final int boardWidth;
   @override
-  final int? boardHeight;
+  @JsonKey()
+  final int boardHeight;
   @override
-  final int? budget;
+  @JsonKey()
+  final int budget;
   final List<String>? _userIds;
   @override
   List<String>? get userIds {
@@ -326,11 +331,11 @@ abstract class _ChallengeModel extends ChallengeModel {
       final DateTime? createdAt,
       final String? authorId,
       final ChallengeStatus? status,
-      final int? time,
-      final int? increment,
-      final int? boardWidth,
-      final int? boardHeight,
-      final int? budget,
+      final int time,
+      final int increment,
+      final int boardWidth,
+      final int boardHeight,
+      final int budget,
       final List<String>? userIds}) = _$ChallengeModelImpl;
   _ChallengeModel._() : super._();
 
@@ -346,15 +351,15 @@ abstract class _ChallengeModel extends ChallengeModel {
   @override
   ChallengeStatus? get status;
   @override
-  int? get time;
+  int get time;
   @override // in seconds
-  int? get increment;
+  int get increment;
   @override // in seconds
-  int? get boardWidth;
+  int get boardWidth;
   @override
-  int? get boardHeight;
+  int get boardHeight;
   @override
-  int? get budget;
+  int get budget;
   @override
   List<String>? get userIds;
   @override

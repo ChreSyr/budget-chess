@@ -33,7 +33,6 @@ class ChallengeSorterState with _$ChallengeSorterState {
     // final timeControlCompared = timeControlA.compareTo(timeControlB);
     // if (timeControlCompared != 0) return timeControlCompared;
 
-    // TODO : ChallengeModel.budget default
-    return (budgetAsc ? 1 : -1) * a.budget!.compareTo(b.budget!);
+    return (budgetAsc ? 1 : -1) * a.budget.compareTo(b.budget);
   }
 }

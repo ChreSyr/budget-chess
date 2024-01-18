@@ -17,11 +17,11 @@ class ChallengeModel with _$ChallengeModel {
     DateTime? createdAt,
     String? authorId,
     ChallengeStatus? status,
-    int? time, // in seconds
-    int? increment, // in seconds
-    int? boardWidth,
-    int? boardHeight,
-    int? budget,
+    @Default(180) int time, // in seconds
+    @Default(2) int increment, // in seconds
+    @Default(8) int boardWidth,
+    @Default(8) int boardHeight,
+    @Default(39) int budget,
     List<String>? userIds,
   }) = _ChallengeModel;
 
@@ -41,9 +41,6 @@ class ChallengeModel with _$ChallengeModel {
     return toJson()..removeWhere((key, value) => key == 'id' || value == null);
   }
 
-  TimeControl get timeControl => TimeControl(
-        time ?? TimeControl.defaultTime,
-        increment ?? TimeControl.defaultIncrement,
-      );
+  TimeControl get timeControl => TimeControl(time, increment);
   Speed get speed => timeControl.speed;
 }

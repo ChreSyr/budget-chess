@@ -14,11 +14,11 @@ _$ChallengeModelImpl _$$ChallengeModelImplFromJson(Map<String, dynamic> json) =>
           : DateTime.parse(json['createdAt'] as String),
       authorId: json['authorId'] as String?,
       status: $enumDecodeNullable(_$ChallengeStatusEnumMap, json['status']),
-      time: json['time'] as int?,
-      increment: json['increment'] as int?,
-      boardWidth: json['boardWidth'] as int?,
-      boardHeight: json['boardHeight'] as int?,
-      budget: json['budget'] as int?,
+      time: json['time'] as int? ?? 180,
+      increment: json['increment'] as int? ?? 2,
+      boardWidth: json['boardWidth'] as int? ?? 8,
+      boardHeight: json['boardHeight'] as int? ?? 8,
+      budget: json['budget'] as int? ?? 39,
       userIds:
           (json['userIds'] as List<dynamic>?)?.map((e) => e as String).toList(),
     );
