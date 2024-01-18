@@ -49,8 +49,8 @@ class ChallengeSorter extends StatelessWidget {
                     onSelected: context.read<ChallengeSorterCubit>().setSpeed,
                     initialValue: sorter.speed,
                     valueBuilder: (speed) {
-                      return speed?.name.sentenceCase ??
-                          'All speed'; // TODO : l10n
+                      return Text(speed?.name.sentenceCase ??
+                          'All speed'); // TODO : l10n
                     },
                   ),
                   CCGap.small,
@@ -60,9 +60,10 @@ class ChallengeSorter extends StatelessWidget {
                         context.read<ChallengeSorterCubit>().setBudgetAsc,
                     initialValue: sorter.budgetAsc,
                     valueBuilder: (val) {
-                      return val
+                      return Text(val
                           ? 'Budget par ordre croissant'
-                          : 'Budget par ordre décroissant';
+                            : 'Budget par ordre décroissant',
+                      );
                       // TODO : l10n
                     },
                   ),

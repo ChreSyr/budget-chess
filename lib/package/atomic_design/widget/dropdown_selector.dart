@@ -12,7 +12,7 @@ class DropdownSelector<T> extends StatefulWidget {
   final List<T> values;
   final void Function(T) onSelected;
   final T? initialValue;
-  final String Function(T)? valueBuilder;
+  final Widget Function(T)? valueBuilder;
 
   @override
   State<DropdownSelector<T>> createState() => _DropdownSelectorState();
@@ -20,12 +20,12 @@ class DropdownSelector<T> extends StatefulWidget {
 
 class _DropdownSelectorState<T> extends State<DropdownSelector<T>> {
   late T selectedValue;
-  late final String Function(T) valueBuilder;
+  late final Widget Function(T) valueBuilder;
 
   @override
   void initState() {
     super.initState();
-    valueBuilder = widget.valueBuilder ?? (e) => e.toString();
+    valueBuilder = widget.valueBuilder ?? (e) => Text(e.toString());
     setState(() => selectedValue = widget.initialValue ?? widget.values.first);
   }
 
@@ -38,7 +38,7 @@ class _DropdownSelectorState<T> extends State<DropdownSelector<T>> {
         Widget? _,
       ) =>
           ActionChip(
-        label: Text(valueBuilder(selectedValue)),
+        label: valueBuilder(selectedValue),
         avatar: Icon(
           Icons.arrow_drop_down,
           color: Theme.of(context).colorScheme.onSurface,
@@ -54,7 +54,7 @@ class _DropdownSelectorState<T> extends State<DropdownSelector<T>> {
                 setState(() => selectedValue = e);
                 widget.onSelected(e);
               },
-              child: Text(valueBuilder(e)),
+              child: valueBuilder(e),
             ),
           )
           .toList(),
