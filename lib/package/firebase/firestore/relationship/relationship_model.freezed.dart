@@ -20,8 +20,7 @@ RelationshipModel _$RelationshipModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$RelationshipModel {
-  String? get id => throw _privateConstructorUsedError;
-
+  String? get id => throw _privateConstructorUsedError; // TODO : default to ''
   /// Date of friendship start
   @TimestampToDateTimeConverter()
   DateTime? get createdAt => throw _privateConstructorUsedError;
@@ -29,7 +28,8 @@ mixin _$RelationshipModel {
   /// Last time a message was sent or a game got updated
   @TimestampToDateTimeConverter()
   DateTime? get updatedAt => throw _privateConstructorUsedError;
-  List<String>? get userIds => throw _privateConstructorUsedError;
+  List<String>? get userIds =>
+      throw _privateConstructorUsedError; // TODO : default to []
   RelationshipStatus? get status => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -171,7 +171,7 @@ class _$RelationshipModelImpl extends _RelationshipModel {
 
   @override
   final String? id;
-
+// TODO : default to ''
   /// Date of friendship start
   @override
   @TimestampToDateTimeConverter()
@@ -191,6 +191,7 @@ class _$RelationshipModelImpl extends _RelationshipModel {
     return EqualUnmodifiableListView(value);
   }
 
+// TODO : default to []
   @override
   final RelationshipStatus? status;
 
@@ -247,8 +248,7 @@ abstract class _RelationshipModel extends RelationshipModel {
 
   @override
   String? get id;
-  @override
-
+  @override // TODO : default to ''
   /// Date of friendship start
   @TimestampToDateTimeConverter()
   DateTime? get createdAt;
@@ -259,7 +259,7 @@ abstract class _RelationshipModel extends RelationshipModel {
   DateTime? get updatedAt;
   @override
   List<String>? get userIds;
-  @override
+  @override // TODO : default to []
   RelationshipStatus? get status;
   @override
   @JsonKey(ignore: true)

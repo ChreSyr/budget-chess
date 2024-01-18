@@ -196,14 +196,14 @@ class AuthProviderStatusCubit extends Cubit<AuthProviderStatus> {
 
 class AuthenticationCubit extends Cubit<User?> {
   AuthenticationCubit._() : super(_firebaseAuth.currentUser) {
-    userStreamSubscription = _firebaseAuth.userChanges().listen(emit);
+    _authStream = _firebaseAuth.userChanges().listen(emit);
   }
 
-  late StreamSubscription<User?> userStreamSubscription;
+  late StreamSubscription<User?> _authStream;
 
   @override
   Future<void> close() {
-    userStreamSubscription.cancel();
+    _authStream.cancel();
     return super.close();
   }
 }

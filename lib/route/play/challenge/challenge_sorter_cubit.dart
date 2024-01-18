@@ -17,5 +17,6 @@ class ChallengeSorterCubit extends HydratedCubit<ChallengeSorterState> {
 
   // ignore: avoid_positional_boolean_parameters
   void setBudgetAsc(bool val) => emit(state.copyWith(budgetAsc: val));
+
   void setSpeed(Speed? speed) => emit(state.copyWith(speed: speed));
 }
