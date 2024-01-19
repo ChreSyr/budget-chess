@@ -1,3 +1,4 @@
+import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/firestore/challenge/challenge_model.dart';
 import 'package:crea_chess/route/play/challenge/card_tile.dart';
@@ -21,23 +22,30 @@ class _AuthoredChallengesState extends State<AuthoredChallenges> {
     void onTap() => setState(() => showChallenges = !showChallenges);
     return Column(
       children: [
-        CardTile(
-          onTap: onTap,
-          child: Row(
-            children: [
-              CCGap.medium,
-              Text(
-                // TODO : l10n
-                'Vous avez créé ${widget.myChallenges.length} challenges.',
-              ),
-              const Expanded(child: CCGap.small),
-              IconButton(
-                icon: Icon(
-                  showChallenges ? Icons.expand_less : Icons.expand_more,
+        ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: CCSize.xxlarge),
+          child: CardTile(
+            onTap: onTap,
+            child: Row(
+              children: [
+                CCGap.medium,
+                Icon(
+                  showChallenges ? Icons.arrow_drop_up : Icons.arrow_drop_down,
                 ),
-                onPressed: onTap,
-              ),
-            ],
+                CCGap.small,
+                Text(
+                  // TODO : l10n
+                  'Vous avez créé ${widget.myChallenges.length} challenges.',
+                ),
+                // const Expanded(child: CCGap.small),
+                // IconButton(
+                //   icon: const Icon(Icons.info_outline),
+                //   onPressed: onTap,
+                //   tooltip:
+                //       "Dès qu'un de vos challenges sera accepté, tout les autres seront supprimés",
+                // ),
+              ],
+            ),
           ),
         ),
         if (showChallenges) ...widget.myChallenges.map(ChallengeTile.new),
