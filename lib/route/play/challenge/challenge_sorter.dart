@@ -31,7 +31,7 @@ class ChallengeSorter extends StatelessWidget {
                   //   },
                   // ),
                   Text(
-                    'Parties rapides',
+                    'Parties rapides', // TODO : default-1
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   CCGap.small,

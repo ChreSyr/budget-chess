@@ -27,6 +27,7 @@ class _AuthoredChallengesState extends State<AuthoredChallenges> {
             children: [
               CCGap.medium,
               Text(
+                // TODO : l10n
                 'Vous avez ${widget.myChallenges.length} challenges en attente.',
               ),
               const Expanded(child: CCGap.small),

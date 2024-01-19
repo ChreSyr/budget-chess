@@ -1,11 +1,14 @@
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
+import 'package:crea_chess/package/firebase/authentication/authentication_crud.dart';
+import 'package:crea_chess/package/firebase/firestore/challenge/challenge_crud.dart';
 import 'package:crea_chess/package/firebase/firestore/challenge/challenge_model.dart';
 import 'package:crea_chess/package/firebase/firestore/user/user_crud.dart';
 import 'package:crea_chess/package/firebase/firestore/user/user_model.dart';
 import 'package:crea_chess/route/play/challenge/card_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class ChallengeTile extends StatelessWidget {
@@ -15,12 +18,13 @@ class ChallengeTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authUid = context.read<AuthenticationCubit>().state?.uid;
     final timeControl = challenge.timeControl;
     final authorId = challenge.authorId ?? '';
     if (authorId.isEmpty) {
       return const ListTile(
         leading: UserPhoto(photo: ''),
-        title: Text('Corrupted challenge'),
+        title: Text('Corrupted challenge'), // TODO : l10n
       );
     }
     return CardTile(
@@ -55,8 +59,10 @@ class ChallengeTile extends StatelessWidget {
           Text(timeControl.toString()),
           const Expanded(child: CCGap.small),
           IconButton(
-            icon: const Icon(Icons.check),
-            onPressed: () {},
+            icon: Icon(authUid == authorId ? Icons.close : Icons.check),
+            onPressed: authUid == authorId
+                ? () => challengeCRUD.delete(documentId: challenge.id)
+                : () {},
           ),
         ],
       ),
