@@ -30,6 +30,10 @@ class CCColor {
   static Color primaryContainer(BuildContext context) =>
       Theme.of(context).colorScheme.primaryContainer;
 
+  static Color surfaceTintColor(BuildContext context) =>
+      CardTheme.of(context).surfaceTintColor ??
+      Theme.of(context).colorScheme.error;
+
   static Color surfaceVariant(BuildContext context) =>
       Theme.of(context).colorScheme.surfaceVariant;
   

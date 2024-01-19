@@ -1,3 +1,6 @@
+import 'package:crea_chess/package/atomic_design/border.dart';
+import 'package:crea_chess/package/atomic_design/color.dart';
+import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:flutter/material.dart';
 
 class DropdownSelector<T> extends StatefulWidget {
@@ -50,11 +53,22 @@ class _DropdownSelectorState<T> extends State<DropdownSelector<T>> {
       menuChildren: widget.values
           .map(
             (e) => MenuItemButton(
+              style: const ButtonStyle(visualDensity: VisualDensity.compact),
               onPressed: () {
                 setState(() => selectedValue = e);
                 widget.onSelected(e);
               },
-              child: valueBuilder(e),
+              child: Card(
+                elevation: 0,
+                color: selectedValue == e ? null : Colors.transparent,
+                shape: selectedValue == e
+                    ? RoundedRectangleBorder(
+                        borderRadius: CCBorderRadiusCircular.small,
+                        side: BorderSide(color: CCColor.cardBorder(context)),
+                      )
+                    : null,
+                child: CCPadding.allSmall(child: valueBuilder(e)),
+              ),
             ),
           )
           .toList(),
