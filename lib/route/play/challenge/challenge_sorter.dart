@@ -44,10 +44,10 @@ class ChallengeSorter extends StatelessWidget {
               Row(
                 children: [
                   CCGap.small,
-                  DropdownSelector<Speed?>(
+                  DropdownSelector<Speed?>.multipleChoices(
                     values: const <Speed?>[null, ...Speed.values],
                     onSelected: context.read<ChallengeSorterCubit>().setSpeed,
-                    initialValue: sorter.speed,
+                    initiallySelectedValues: [sorter.speed],
                     valueBuilder: (speed) {
                       return Text(speed?.name.sentenceCase ??
                           'All speed',
@@ -55,11 +55,11 @@ class ChallengeSorter extends StatelessWidget {
                     },
                   ),
                   CCGap.small,
-                  DropdownSelector<bool>(
+                  DropdownSelector<bool>.uniqueChoice(
                     values: const [true, false],
                     onSelected:
                         context.read<ChallengeSorterCubit>().setBudgetAsc,
-                    initialValue: sorter.budgetAsc,
+                    initiallySelectedValue: sorter.budgetAsc,
                     valueBuilder: (val) {
                       return Text(val
                           ? 'Budget par ordre croissant'

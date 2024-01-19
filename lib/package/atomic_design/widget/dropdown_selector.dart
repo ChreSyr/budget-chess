@@ -4,17 +4,49 @@ import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:flutter/material.dart';
 
 class DropdownSelector<T> extends StatefulWidget {
-  DropdownSelector({
+  DropdownSelector._({
+    required this.uniqueChoice,
     required this.values,
     required this.onSelected,
-    this.initialValue,
+    required this.initiallySelectedValues,
     this.valueBuilder,
     super.key,
   }) : assert(values.isNotEmpty, 'DropdownSelector needs selectable values');
 
+  factory DropdownSelector.uniqueChoice({
+    required List<T> values,
+    required void Function(T) onSelected,
+    T? initiallySelectedValue,
+    Widget Function(T)? valueBuilder,
+  }) {
+    return DropdownSelector._(
+      uniqueChoice: true,
+      values: values,
+      onSelected: onSelected,
+      initiallySelectedValues: [initiallySelectedValue ?? values.first],
+      valueBuilder: valueBuilder,
+    );
+  }
+
+  factory DropdownSelector.multipleChoices({
+    required List<T> values,
+    required void Function(T) onSelected,
+    List<T>? initiallySelectedValues,
+    Widget Function(T)? valueBuilder,
+  }) {
+    return DropdownSelector._(
+      uniqueChoice: false,
+      values: values,
+      onSelected: onSelected,
+      initiallySelectedValues: initiallySelectedValues ?? [],
+      valueBuilder: valueBuilder,
+    );
+  }
+
+  final bool uniqueChoice;
   final List<T> values;
   final void Function(T) onSelected;
-  final T? initialValue;
+  final List<T> initiallySelectedValues;
   final Widget Function(T)? valueBuilder;
 
   @override
@@ -22,14 +54,14 @@ class DropdownSelector<T> extends StatefulWidget {
 }
 
 class _DropdownSelectorState<T> extends State<DropdownSelector<T>> {
-  late T selectedValue;
+  late List<T> selectedValues;
   late final Widget Function(T) valueBuilder;
 
   @override
   void initState() {
     super.initState();
     valueBuilder = widget.valueBuilder ?? (e) => Text(e.toString());
-    setState(() => selectedValue = widget.initialValue ?? widget.values.first);
+    setState(() => selectedValues = widget.initiallySelectedValues);
   }
 
   @override
@@ -41,7 +73,7 @@ class _DropdownSelectorState<T> extends State<DropdownSelector<T>> {
         Widget? _,
       ) =>
           ActionChip(
-        label: valueBuilder(selectedValue),
+        label: valueBuilder(selectedValues.first),
         avatar: Icon(
           Icons.arrow_drop_down,
           color: Theme.of(context).colorScheme.onSurface,
@@ -50,28 +82,38 @@ class _DropdownSelectorState<T> extends State<DropdownSelector<T>> {
           controller.isOpen ? controller.close() : controller.open();
         },
       ),
-      menuChildren: widget.values
-          .map(
-            (e) => MenuItemButton(
-              style: const ButtonStyle(visualDensity: VisualDensity.compact),
-              onPressed: () {
-                setState(() => selectedValue = e);
-                widget.onSelected(e);
-              },
-              child: Card(
-                elevation: 0,
-                color: selectedValue == e ? null : Colors.transparent,
-                shape: selectedValue == e
-                    ? RoundedRectangleBorder(
-                        borderRadius: CCBorderRadiusCircular.small,
-                        side: BorderSide(color: CCColor.cardBorder(context)),
-                      )
-                    : null,
-                child: CCPadding.allSmall(child: valueBuilder(e)),
-              ),
+      menuChildren: widget.values.map(
+        (e) {
+          final selected = selectedValues.contains(e);
+          return MenuItemButton(
+            style: const ButtonStyle(visualDensity: VisualDensity.compact),
+            closeOnActivate: widget.uniqueChoice,
+            onPressed: () {
+              setState(
+                () => widget.uniqueChoice
+                    ? selectedValues = [e]
+                    : selectedValues.contains(e)
+                        ? selectedValues.length > 1
+                            ? selectedValues.remove(e)
+                            : null
+                        : selectedValues.add(e),
+              );
+              widget.onSelected(e);
+            },
+            child: Card(
+              elevation: 0,
+              color: selected ? null : Colors.transparent,
+              shape: selected
+                  ? RoundedRectangleBorder(
+                      borderRadius: CCBorderRadiusCircular.small,
+                      side: BorderSide(color: CCColor.cardBorder(context)),
+                    )
+                  : null,
+              child: CCPadding.allSmall(child: valueBuilder(e)),
             ),
-          )
-          .toList(),
+          );
+        },
+      ).toList(),
     );
   }
 }
