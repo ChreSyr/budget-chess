@@ -4,24 +4,23 @@ import 'package:crea_chess/package/firebase/firestore/challenge/challenge_model.
 import 'package:crea_chess/package/game/speed.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'challenge_sorter_state.freezed.dart';
-part 'challenge_sorter_state.g.dart';
+part 'challenge_filter_model.freezed.dart';
+part 'challenge_filter_model.g.dart';
 
 @freezed
-class ChallengeSorterState with _$ChallengeSorterState {
-  factory ChallengeSorterState({
+class ChallengeFilterModel with _$ChallengeFilterModel {
+  factory ChallengeFilterModel({
     @Default({}) Set<Speed> speed,
     @Default(true) bool budgetAsc,
   }) = _ChallengeSorterState;
 
-  factory ChallengeSorterState.fromJson(Map<String, dynamic> json) =>
+  factory ChallengeFilterModel.fromJson(Map<String, dynamic> json) =>
       _$ChallengeSorterStateFromJson(json);
 
   /// Required for the override getter
-  const ChallengeSorterState._();
+  const ChallengeFilterModel._();
 
   int compare(ChallengeModel a, ChallengeModel b) {
-
     final timeControlA = a.timeControl;
     final timeControlB = b.timeControl;
 
@@ -31,7 +30,7 @@ class ChallengeSorterState with _$ChallengeSorterState {
 
     final timeControlCompared = timeControlA.compareTo(timeControlB);
     if (timeControlCompared != 0) return timeControlCompared;
-    
+
     final budgetAscCompared =
         (budgetAsc ? 1 : -1) * a.budget.compareTo(b.budget);
     if (budgetAscCompared != 0) return budgetAscCompared;

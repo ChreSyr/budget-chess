@@ -1,18 +1,18 @@
 import 'package:crea_chess/package/game/speed.dart';
-import 'package:crea_chess/route/play/challenge/challenge_sorter_state.dart';
+import 'package:crea_chess/route/play/challenge/challenge_filter_model.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
-class ChallengeSorterCubit extends HydratedCubit<ChallengeSorterState> {
-  ChallengeSorterCubit()
-      : super(ChallengeSorterState(speed: Speed.values.toSet()));
+class ChallengeFilterCubit extends HydratedCubit<ChallengeFilterModel> {
+  ChallengeFilterCubit()
+      : super(ChallengeFilterModel(speed: Speed.values.toSet()));
 
   @override
-  ChallengeSorterState? fromJson(Map<String, dynamic> json) {
-    return ChallengeSorterState.fromJson(json);
+  ChallengeFilterModel? fromJson(Map<String, dynamic> json) {
+    return ChallengeFilterModel.fromJson(json);
   }
 
   @override
-  Map<String, dynamic>? toJson(ChallengeSorterState state) {
+  Map<String, dynamic>? toJson(ChallengeFilterModel state) {
     return state.toJson();
   }
 

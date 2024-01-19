@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'challenge_sorter_state.dart';
+part of 'challenge_filter_model.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,33 +14,33 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
-ChallengeSorterState _$ChallengeSorterStateFromJson(Map<String, dynamic> json) {
+ChallengeFilterModel _$ChallengeSorterStateFromJson(Map<String, dynamic> json) {
   return _ChallengeSorterState.fromJson(json);
 }
 
 /// @nodoc
-mixin _$ChallengeSorterState {
+mixin _$ChallengeFilterModel {
   Set<Speed> get speed => throw _privateConstructorUsedError;
   bool get budgetAsc => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $ChallengeSorterStateCopyWith<ChallengeSorterState> get copyWith =>
+  $ChallengeSorterStateCopyWith<ChallengeFilterModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ChallengeSorterStateCopyWith<$Res> {
-  factory $ChallengeSorterStateCopyWith(ChallengeSorterState value,
-          $Res Function(ChallengeSorterState) then) =
-      _$ChallengeSorterStateCopyWithImpl<$Res, ChallengeSorterState>;
+  factory $ChallengeSorterStateCopyWith(ChallengeFilterModel value,
+          $Res Function(ChallengeFilterModel) then) =
+      _$ChallengeSorterStateCopyWithImpl<$Res, ChallengeFilterModel>;
   @useResult
   $Res call({Set<Speed> speed, bool budgetAsc});
 }
 
 /// @nodoc
 class _$ChallengeSorterStateCopyWithImpl<$Res,
-        $Val extends ChallengeSorterState>
+        $Val extends ChallengeFilterModel>
     implements $ChallengeSorterStateCopyWith<$Res> {
   _$ChallengeSorterStateCopyWithImpl(this._value, this._then);
 
@@ -132,7 +132,7 @@ class _$ChallengeSorterStateImpl extends _ChallengeSorterState {
 
   @override
   String toString() {
-    return 'ChallengeSorterState(speed: $speed, budgetAsc: $budgetAsc)';
+    return 'ChallengeFilterModel(speed: $speed, budgetAsc: $budgetAsc)';
   }
 
   @override
@@ -166,7 +166,7 @@ class _$ChallengeSorterStateImpl extends _ChallengeSorterState {
   }
 }
 
-abstract class _ChallengeSorterState extends ChallengeSorterState {
+abstract class _ChallengeSorterState extends ChallengeFilterModel {
   factory _ChallengeSorterState(
       {final Set<Speed> speed,
       final bool budgetAsc}) = _$ChallengeSorterStateImpl;

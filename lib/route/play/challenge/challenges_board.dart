@@ -4,8 +4,8 @@ import 'package:crea_chess/package/firebase/firestore/challenge/challenge_model.
 import 'package:crea_chess/package/firebase/firestore/relationship/cubit/friendships_cubit.dart';
 import 'package:crea_chess/package/firebase/firestore/relationship/relationship_model.dart';
 import 'package:crea_chess/route/play/challenge/authored_challenges.dart';
-import 'package:crea_chess/route/play/challenge/challenge_sorter_cubit.dart';
-import 'package:crea_chess/route/play/challenge/challenge_sorter_state.dart';
+import 'package:crea_chess/route/play/challenge/challenge_filter_cubit.dart';
+import 'package:crea_chess/route/play/challenge/challenge_filter_model.dart';
 import 'package:crea_chess/route/play/challenge/challenge_tile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -25,8 +25,8 @@ class ChallengesBoard extends StatelessWidget {
               // friendIds uses the state of FriendshipCubit,
               // so we need to place a BlocBuilder above
               final friendIds = context.read<FriendshipCubit>().friendIds;
-              return BlocBuilder<ChallengeSorterCubit, ChallengeSorterState>(
-                builder: (context, sorter) {
+              return BlocBuilder<ChallengeFilterCubit, ChallengeFilterModel>(
+                builder: (context, filter) {
                   return StreamBuilder<Iterable<ChallengeModel>>(
                     stream: challengeCRUD.streamAll(),
                     builder: (context, snapshot) {
@@ -41,16 +41,16 @@ class ChallengesBoard extends StatelessWidget {
                         if (c.authorId == auth?.uid) {
                           myChallenges.add(c);
                         } else if (friendIds.contains(c.authorId)) {
-                          if (sorter.speed.contains(c.speed)) {
+                          if (filter.speed.contains(c.speed)) {
                             friendChallenges.add(c);
                           }
-                        } else if (sorter.speed.contains(c.speed)) {
+                        } else if (filter.speed.contains(c.speed)) {
                           otherChallenges.add(c);
                         }
                       }
-                      myChallenges.sort(sorter.compare);
-                      friendChallenges.sort(sorter.compare);
-                      otherChallenges.sort(sorter.compare);
+                      myChallenges.sort(filter.compare);
+                      friendChallenges.sort(filter.compare);
+                      otherChallenges.sort(filter.compare);
                       return Column(
                         children: [
                           if (myChallenges.isNotEmpty) ...[
