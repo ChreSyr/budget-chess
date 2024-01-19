@@ -28,7 +28,7 @@ class _AuthoredChallengesState extends State<AuthoredChallenges> {
               CCGap.medium,
               Text(
                 // TODO : l10n
-                'Vous avez ${widget.myChallenges.length} challenges en attente.',
+                'Vous avez créé ${widget.myChallenges.length} challenges.',
               ),
               const Expanded(child: CCGap.small),
               IconButton(
@@ -41,6 +41,21 @@ class _AuthoredChallengesState extends State<AuthoredChallenges> {
           ),
         ),
         if (showChallenges) ...widget.myChallenges.map(ChallengeTile.new),
+        if (showChallenges && widget.myChallenges.length > 1) ...[
+          CCGap.small,
+          const Row(
+            children: [
+              Icon(Icons.info_outline),
+              CCGap.small,
+              Expanded(
+                child: Text(
+                  "Dès qu'un de vos challenges sera accepté, tout les autres seront supprimés",
+                ),
+              ),
+            ],
+          ),
+          CCGap.xsmall,
+        ],
       ],
     );
   }
