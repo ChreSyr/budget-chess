@@ -34,7 +34,7 @@ class ChallengeFilterCubit extends HydratedCubit<ChallengeFilterModel?> {
     _updateFilter(state!.copyWith(budgetAsc: val));
   }
 
-  void selectFilter(ChallengeFilterModel filter) => emit(filter);
+  void selectFilter(ChallengeFilterModel? filter) => emit(filter);
 
   void toggleSpeed(Speed speed) {
     if (state == null) return;
@@ -44,6 +44,7 @@ class ChallengeFilterCubit extends HydratedCubit<ChallengeFilterModel?> {
     } else {
       speeds.add(speed);
     }
+    if (speeds.isEmpty) return;
     _updateFilter(state!.copyWith(speed: speeds));
   }
 }

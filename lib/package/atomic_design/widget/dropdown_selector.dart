@@ -139,6 +139,7 @@ class DropdownSelector<T> extends StatelessWidget {
     required this.selectedValues,
     this.valueBuilder,
     this.previewBuilder,
+    this.showArrow = true,
     super.key,
   }) : assert(values.isNotEmpty, 'DropdownSelector needs selectable values');
 
@@ -148,6 +149,7 @@ class DropdownSelector<T> extends StatelessWidget {
     T? selectedValue,
     Widget Function(T)? valueBuilder,
     Widget Function(T)? previewBuilder,
+    bool showArrow = true,
   }) {
     return DropdownSelector._(
       uniqueChoice: true,
@@ -157,6 +159,7 @@ class DropdownSelector<T> extends StatelessWidget {
       valueBuilder: valueBuilder,
       previewBuilder:
           previewBuilder == null ? null : (v) => previewBuilder(v.first),
+      showArrow: showArrow,
     );
   }
 
@@ -166,6 +169,7 @@ class DropdownSelector<T> extends StatelessWidget {
     List<T>? selectedValues,
     Widget Function(T)? valueBuilder,
     Widget Function(List<T>)? previewBuilder,
+    bool showArrow = true,
   }) {
     return DropdownSelector._(
       uniqueChoice: false,
@@ -174,6 +178,7 @@ class DropdownSelector<T> extends StatelessWidget {
       selectedValues: selectedValues ?? [],
       valueBuilder: valueBuilder,
       previewBuilder: previewBuilder,
+      showArrow: showArrow,
     );
   }
 
@@ -183,6 +188,7 @@ class DropdownSelector<T> extends StatelessWidget {
   final List<T> selectedValues;
   final Widget Function(T)? valueBuilder;
   final Widget Function(List<T>)? previewBuilder;
+  final bool showArrow;
 
   @override
   Widget build(BuildContext context) {
@@ -197,10 +203,12 @@ class DropdownSelector<T> extends StatelessWidget {
       ) =>
           ActionChip(
         label: previewBuilderSafe(selectedValues),
-        avatar: Icon(
+        avatar: showArrow
+            ? Icon(
           Icons.arrow_drop_down,
           color: Theme.of(context).colorScheme.onSurface,
-        ),
+              )
+            : null,
         onPressed: () {
           controller.isOpen ? controller.close() : controller.open();
         },

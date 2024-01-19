@@ -13,26 +13,18 @@ class ChallengeSorter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      child: BlocConsumer<ChallengeFilterCubit, ChallengeFilterModel?>(
-        listener: (context, filter) {
-          if (filter == null) {
-            final allFilters = context.read<ChallengeFiltersCubit>().state;
-            if (allFilters.isEmpty) return;
-            context.read<ChallengeFilterCubit>().selectFilter(allFilters.first);
-          }
-        },
-        builder: (context, filter) {
-          return Row(
-            children: [
-              CCGap.small,
-              const FilterSelector(),
+    return BlocBuilder<ChallengeFilterCubit, ChallengeFilterModel?>(
+      builder: (context, filter) {
+        return Row(
+          children: [
+            CCGap.small,
+            const FilterSelector(),
+            if (filter != null) ...[
               CCGap.small,
               DropdownSelector<bool>.uniqueChoice(
                 values: const [true, false],
                 onSelected: context.read<ChallengeFilterCubit>().setBudgetAsc,
-                selectedValue: filter?.budgetAsc,
+                selectedValue: filter.budgetAsc,
                 valueBuilder: (val) {
                   return Text(
                     val ? 'Par ordre croissant' : 'Par ordre décroissant',
@@ -45,12 +37,13 @@ class ChallengeSorter extends StatelessWidget {
                     child: const Icon(Icons.filter_list),
                   );
                 },
+                showArrow: false,
               ),
               CCGap.small,
               DropdownSelector<Speed>.multipleChoices(
                 values: Speed.values,
                 onSelected: context.read<ChallengeFilterCubit>().toggleSpeed,
-                selectedValues: filter?.speed.toList(),
+                selectedValues: filter.speed.toList(),
                 valueBuilder: (speed) {
                   return Row(
                     children: [
@@ -67,11 +60,12 @@ class ChallengeSorter extends StatelessWidget {
                       .map((s) => Icon(s.icon))
                       .toList(),
                 ),
+                showArrow: false,
               ),
-            ],
-          );
-        },
-      ),
+            ]
+          ],
+        );
+      },
     );
   }
 }
@@ -85,15 +79,40 @@ class FilterSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ChallengeFiltersCubit, Iterable<ChallengeFilterModel>>(
       builder: (context, allFilters) {
+        final authId = context.read<AuthenticationCubit>().state?.uid;
+        if (authId == null) {
+          allFilters = [ChallengeFilterModel()];
+        } else {
+          if (allFilters.isEmpty) {
+            challengeFilterCRUD.create(
+              parentDocumentId: authId,
+              documentId: '1',
+              data: ChallengeFilterModel(speed: {Speed.bullet, Speed.blitz}),
+            );
+          }
+          if (allFilters.length < 2) {
+            challengeFilterCRUD.create(
+              parentDocumentId: authId,
+              documentId: '2',
+              data: ChallengeFilterModel(speed: {Speed.blitz, Speed.rapid}),
+            );
+          }
+          if (allFilters.length < 3) {
+            challengeFilterCRUD.create(
+              parentDocumentId: authId,
+              documentId: '3',
+              data: ChallengeFilterModel(speed: {Speed.classical}),
+            );
+          }
+        }
         return BlocBuilder<ChallengeFilterCubit, ChallengeFilterModel?>(
           builder: (context, filter) {
-            return DropdownSelector<ChallengeFilterModel>.uniqueChoice(
-              values: allFilters.isEmpty
-                  ? [ChallengeFilterModel()]
-                  : allFilters.toList(),
+            return DropdownSelector<ChallengeFilterModel?>.uniqueChoice(
+              values: [null, ...allFilters],
               onSelected: context.read<ChallengeFilterCubit>().selectFilter,
               selectedValue: filter,
               valueBuilder: (filter) {
+                if (filter == null) return const Icon(Icons.filter_alt_off);
                 return Row(
                   children: [
                     Transform.flip(
@@ -107,9 +126,9 @@ class FilterSelector extends StatelessWidget {
                   ],
                 );
               },
-              previewBuilder: (filter) {
-                return Text(filter.name ?? '0'); // TODO : l10n
-              },
+              previewBuilder: (filter) => Icon(
+                filter == null ? Icons.filter_alt_off : Icons.filter_alt,
+              ),
             );
           },
         );
