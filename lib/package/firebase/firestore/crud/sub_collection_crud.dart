@@ -56,8 +56,6 @@ abstract class SubCollectionCRUD<T> {
     final streamController = StreamController<T?>();
 
     if (documentId.isNotEmpty) {
-      // streamController.add(_converter.emptyModel());
-      // } else {
       _collection(parentDocumentId)
           .doc(documentId)
           .snapshots()
@@ -67,6 +65,12 @@ abstract class SubCollectionCRUD<T> {
     }
 
     return streamController.stream;
+  }
+
+  Stream<Iterable<T>> streamAll({required String parentDocumentId}) {
+    return _collection(parentDocumentId).snapshots().map(
+          (snapshot) => snapshot.docs.map((doc) => doc.data()),
+        );
   }
 
   Stream<Iterable<T>> streamFiltered({

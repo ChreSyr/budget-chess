@@ -20,7 +20,7 @@ class ChallengesBoard extends StatelessWidget {
               // friendIds uses the state of FriendshipCubit,
               // so we need to place a BlocBuilder above
               final friendIds = context.read<FriendshipCubit>().friendIds;
-              return BlocBuilder<ChallengeFilterCubit, ChallengeFilterModel>(
+              return BlocBuilder<ChallengeFilterCubit, ChallengeFilterModel?>(
                 builder: (context, filter) {
                   return StreamBuilder<Iterable<ChallengeModel>>(
                     stream: challengeCRUD.streamAll(),
@@ -36,16 +36,20 @@ class ChallengesBoard extends StatelessWidget {
                         if (c.authorId == auth?.uid) {
                           myChallenges.add(c);
                         } else if (friendIds.contains(c.authorId)) {
-                          if (filter.speed.contains(c.speed)) {
+                          if (filter == null ||
+                              filter.speed.contains(c.speed)) {
                             friendChallenges.add(c);
                           }
-                        } else if (filter.speed.contains(c.speed)) {
+                        } else if (filter == null ||
+                            filter.speed.contains(c.speed)) {
                           otherChallenges.add(c);
                         }
                       }
+                      if (filter != null) {
                       myChallenges.sort(filter.compare);
                       friendChallenges.sort(filter.compare);
                       otherChallenges.sort(filter.compare);
+                      }
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

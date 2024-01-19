@@ -95,53 +95,53 @@ class _MessageCRUD extends SubCollectionCRUD<MessageModel> {
   // }
 
   /// Returns a stream of messages for a relation.
-  Stream<List<MessageModel>> streamAll({
-    required String relationshipId,
-    List<Object?>? endAt,
-    List<Object?>? endBefore,
-    int? limit,
-    List<Object?>? startAfter,
-    List<Object?>? startAt,
-  }) {
-    var query =
-        _collection(relationshipId).orderBy('createdAt', descending: true);
+  // Stream<List<MessageModel>> streamAllJson({
+  //   required String relationshipId,
+  //   List<Object?>? endAt,
+  //   List<Object?>? endBefore,
+  //   int? limit,
+  //   List<Object?>? startAfter,
+  //   List<Object?>? startAt,
+  // }) {
+  //   var query =
+  //       _collection(relationshipId).orderBy('createdAt', descending: true);
 
-    if (endAt != null) {
-      query = query.endAt(endAt);
-    }
+  //   if (endAt != null) {
+  //     query = query.endAt(endAt);
+  //   }
 
-    if (endBefore != null) {
-      query = query.endBefore(endBefore);
-    }
+  //   if (endBefore != null) {
+  //     query = query.endBefore(endBefore);
+  //   }
 
-    if (limit != null) {
-      query = query.limit(limit);
-    }
+  //   if (limit != null) {
+  //     query = query.limit(limit);
+  //   }
 
-    if (startAfter != null) {
-      query = query.startAfter(startAfter);
-    }
+  //   if (startAfter != null) {
+  //     query = query.startAfter(startAfter);
+  //   }
 
-    if (startAt != null) {
-      query = query.startAt(startAt);
-    }
+  //   if (startAt != null) {
+  //     query = query.startAt(startAt);
+  //   }
 
-    return query.snapshots().map(
-          (snapshot) => snapshot.docs.fold<List<MessageModel>>(
-            [],
-            (previousValue, doc) {
-              final data = doc.data();
-              // ignore: avoid_dynamic_calls
-              data['createdAt'] = data['createdAt']?.millisecondsSinceEpoch;
-              data['id'] = doc.id;
-              // ignore: avoid_dynamic_calls
-              data['updatedAt'] = data['updatedAt']?.millisecondsSinceEpoch;
+  //   return query.snapshots().map(
+  //         (snapshot) => snapshot.docs.fold<List<MessageModel>>(
+  //           [],
+  //           (previousValue, doc) {
+  //             final data = doc.data();
+  //             // ignore: avoid_dynamic_calls
+  //             data['createdAt'] = data['createdAt']?.millisecondsSinceEpoch;
+  //             data['id'] = doc.id;
+  //             // ignore: avoid_dynamic_calls
+  //             data['updatedAt'] = data['updatedAt']?.millisecondsSinceEpoch;
 
-              return [...previousValue, MessageModel.fromJson(data)];
-            },
-          ),
-        );
-  }
+  //             return [...previousValue, MessageModel.fromJson(data)];
+  //           },
+  //         ),
+  //       );
+  // }
 
   Future<void> updated(String relationshipId) async {
     await _collection(relationshipId)

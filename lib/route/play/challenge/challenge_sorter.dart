@@ -15,78 +15,105 @@ class ChallengeSorter extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       clipBehavior: Clip.antiAlias,
-      child: BlocBuilder<ChallengeFilterCubit, ChallengeFilterModel>(
+      child: BlocConsumer<ChallengeFilterCubit, ChallengeFilterModel?>(
+        listener: (context, filter) {
+          if (filter == null) {
+            final allFilters = context.read<ChallengeFiltersCubit>().state;
+            if (allFilters.isEmpty) return;
+            context.read<ChallengeFilterCubit>().selectFilter(allFilters.first);
+          }
+        },
         builder: (context, filter) {
-          return Column(
+          return Row(
             children: [
-              Row(
-                children: [
-                  CCGap.small,
-                  // DropdownSelector<String>(
-                  //   values: const <Speed?>[null, ...Speed.values],
-                  //   onSelected: context.read<ChallengeFilterCubit>().setSpeed,
-                  //   initialValue: filter.speed,
-                  //   valueBuilder: (speed) {
-                  //     return speed?.name.sentenceCase ??
-                  //         'All speed'; // TODO : l10n
-                  //   },
-                  // ),
-                  Text(
-                    'Parties rapides', // TODO : default-1
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  CCGap.small,
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.expand_more),
-                  ),
-                ],
+              CCGap.small,
+              const FilterSelector(),
+              CCGap.small,
+              DropdownSelector<bool>.uniqueChoice(
+                values: const [true, false],
+                onSelected: context.read<ChallengeFilterCubit>().setBudgetAsc,
+                selectedValue: filter?.budgetAsc,
+                valueBuilder: (val) {
+                  return Text(
+                    val ? 'Par ordre croissant' : 'Par ordre décroissant',
+                  );
+                  // TODO : l10n
+                },
+                previewBuilder: (val) {
+                  return Transform.flip(
+                    flipY: !val,
+                    child: const Icon(Icons.filter_list),
+                  );
+                },
               ),
-              Row(
-                children: [
-                  CCGap.small,
-                  DropdownSelector<Speed>.multipleChoices(
-                    values: Speed.values,
-                    onSelected:
-                        context.read<ChallengeFilterCubit>().toggleSpeed,
-                    initiallySelectedValues: filter.speed.toList(),
-                    valueBuilder: (speed) {
-                      return Row(
-                        children: [
-                          Icon(speed.icon),
-                          CCPadding.allXxsmall(
-                            child: Text(speed.name.sentenceCase),
-                          ),
-                        ],
-                      );
-                    },
-                    previewBuilder: (e) => Row(
-                      children: e
-                          .sorted((a, b) => a.compareTo(b))
-                          .map((s) => Icon(s.icon))
-                          .toList(),
-                    ),
-                  ),
-                  CCGap.small,
-                  DropdownSelector<bool>.uniqueChoice(
-                    values: const [true, false],
-                    onSelected:
-                        context.read<ChallengeFilterCubit>().setBudgetAsc,
-                    initiallySelectedValue: filter.budgetAsc,
-                    valueBuilder: (val) {
-                      return Text(val
-                          ? 'Budget par ordre croissant'
-                            : 'Budget par ordre décroissant',
-                      );
-                      // TODO : l10n
-                    },
-                  ),
-                ],
+              CCGap.small,
+              DropdownSelector<Speed>.multipleChoices(
+                values: Speed.values,
+                onSelected: context.read<ChallengeFilterCubit>().toggleSpeed,
+                selectedValues: filter?.speed.toList(),
+                valueBuilder: (speed) {
+                  return Row(
+                    children: [
+                      Icon(speed.icon),
+                      CCPadding.allXxsmall(
+                        child: Text(speed.name.sentenceCase),
+                      ),
+                    ],
+                  );
+                },
+                previewBuilder: (e) => Row(
+                  children: e
+                      .sorted((a, b) => a.compareTo(b))
+                      .map((s) => Icon(s.icon))
+                      .toList(),
+                ),
               ),
             ],
           );
         },
       ),
+    );
+  }
+}
+
+class FilterSelector extends StatelessWidget {
+  const FilterSelector({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ChallengeFiltersCubit, Iterable<ChallengeFilterModel>>(
+      builder: (context, allFilters) {
+        return BlocBuilder<ChallengeFilterCubit, ChallengeFilterModel?>(
+          builder: (context, filter) {
+            return DropdownSelector<ChallengeFilterModel>.uniqueChoice(
+              values: allFilters.isEmpty
+                  ? [ChallengeFilterModel()]
+                  : allFilters.toList(),
+              onSelected: context.read<ChallengeFilterCubit>().selectFilter,
+              selectedValue: filter,
+              valueBuilder: (filter) {
+                return Row(
+                  children: [
+                    Transform.flip(
+                      flipY: !filter.budgetAsc,
+                      child: const Icon(Icons.filter_list),
+                    ),
+                    CCGap.medium,
+                    ...filter.speed
+                        .sorted((a, b) => a.compareTo(b))
+                        .map((e) => Icon(e.icon)),
+                  ],
+                );
+              },
+              previewBuilder: (filter) {
+                return Text(filter.name ?? '0'); // TODO : l10n
+              },
+            );
+          },
+        );
+      },
     );
   }
 }

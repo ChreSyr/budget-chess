@@ -25,8 +25,15 @@ class HomeBody extends MainRouteBody {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ChallengeFilterCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => ChallengeFiltersCubit(),
+        ),
+        BlocProvider(
+          create: (context) => ChallengeFilterCubit(),
+        ),
+      ],
       child: SizedBox(
         width: CCWidgetSize.large4,
         child: Column(

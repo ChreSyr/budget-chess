@@ -24,8 +24,8 @@ class _ChallengeFilterModelConverter
 class _ChallengeFilterCRUD extends SubCollectionCRUD<ChallengeFilterModel> {
   _ChallengeFilterCRUD()
       : super(
-          relationshipCRUD.collectionName,
-          'message',
+          userCRUD.collectionName,
+          'challengeFilter',
           _ChallengeFilterModelConverter(),
         );
 }

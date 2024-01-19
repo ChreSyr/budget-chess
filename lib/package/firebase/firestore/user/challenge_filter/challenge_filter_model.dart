@@ -11,8 +11,11 @@ part 'challenge_filter_model.g.dart';
 @freezed
 class ChallengeFilterModel with _$ChallengeFilterModel {
   factory ChallengeFilterModel({
+    String? userId,
     String? id,
-    @Default({}) Set<Speed> speed,
+    String? name,
+    @Default({Speed.bullet, Speed.blitz, Speed.rapid, Speed.classical})
+    Set<Speed> speed,
     @Default(true) bool budgetAsc,
   }) = _ChallengeSorterState;
 
@@ -25,11 +28,15 @@ class ChallengeFilterModel with _$ChallengeFilterModel {
   factory ChallengeFilterModel.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> doc,
   ) {
-    return ChallengeFilterModel.fromJson(doc.data() ?? {}).copyWith(id: doc.id);
+    return ChallengeFilterModel.fromJson(doc.data() ?? {})
+        .copyWith(userId: doc.reference.parent.parent?.id, id: doc.id);
   }
 
   Map<String, dynamic> toFirestore() {
-    return toJson()..removeWhere((key, value) => key == 'id' || value == null);
+    return toJson()
+      ..removeWhere(
+        (key, value) => key == 'id' || key == 'userId' || value == null,
+      );
   }
 
   int compare(ChallengeModel a, ChallengeModel b) {
