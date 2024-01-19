@@ -1,6 +1,4 @@
-import 'package:crea_chess/package/firebase/authentication/authentication_crud.dart';
-import 'package:crea_chess/package/firebase/firestore/relationship/cubit/friendships_cubit.dart';
-import 'package:crea_chess/package/firebase/firestore/user/user_crud.dart';
+import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/package/preferences/preferences_cubit.dart';
 import 'package:crea_chess/package/preferences/preferences_state.dart';

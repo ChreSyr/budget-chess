@@ -1,5 +1,4 @@
-import 'package:crea_chess/package/firebase/firestore/user/user_crud.dart';
-import 'package:crea_chess/package/firebase/firestore/user/user_model.dart';
+import 'package:crea_chess/package/firebase/export.dart';
 import 'package:flutter/material.dart';
 
 const avatarNames = [

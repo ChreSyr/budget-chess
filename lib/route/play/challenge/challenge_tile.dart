@@ -1,11 +1,7 @@
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
-import 'package:crea_chess/package/firebase/authentication/authentication_crud.dart';
-import 'package:crea_chess/package/firebase/firestore/challenge/challenge_crud.dart';
-import 'package:crea_chess/package/firebase/firestore/challenge/challenge_model.dart';
-import 'package:crea_chess/package/firebase/firestore/user/user_crud.dart';
-import 'package:crea_chess/package/firebase/firestore/user/user_model.dart';
+import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/route/play/challenge/card_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

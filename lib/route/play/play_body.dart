@@ -1,8 +1,8 @@
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
+import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/route/play/challenge/challenge_sorter.dart';
-import 'package:crea_chess/route/play/challenge/challenge_filter_cubit.dart';
 import 'package:crea_chess/route/play/challenge/challenges_board.dart';
 import 'package:crea_chess/route/route_body.dart';
 import 'package:flutter/material.dart';

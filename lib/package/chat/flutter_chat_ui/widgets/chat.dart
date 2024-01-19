@@ -25,7 +25,7 @@ import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/state/inherited_
 import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/typing_indicator.dart';
 import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/unread_header.dart';
 import 'package:crea_chess/package/chat/message/message_model.dart';
-import 'package:crea_chess/package/firebase/firestore/user/user_model.dart';
+import 'package:crea_chess/package/firebase/export.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:photo_view/photo_view.dart' show PhotoViewComputedScale;

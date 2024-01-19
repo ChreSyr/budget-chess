@@ -2,7 +2,7 @@ import 'package:crea_chess/package/atomic_design/field/input_decoration.dart';
 import 'package:crea_chess/package/atomic_design/snack_bar.dart';
 import 'package:crea_chess/package/atomic_design/widget/body_template.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
-import 'package:crea_chess/package/firebase/firestore/user/user_cubit.dart';
+import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/route/route_body.dart';
 import 'package:crea_chess/route/user/modify_username/modify_username_cubit.dart';

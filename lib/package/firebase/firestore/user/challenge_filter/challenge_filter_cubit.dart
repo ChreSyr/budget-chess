@@ -1,5 +1,5 @@
+import 'package:crea_chess/package/firebase/firestore/user/challenge_filter/challenge_filter_model.dart';
 import 'package:crea_chess/package/game/speed.dart';
-import 'package:crea_chess/route/play/challenge/challenge_filter_model.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 class ChallengeFilterCubit extends HydratedCubit<ChallengeFilterModel> {

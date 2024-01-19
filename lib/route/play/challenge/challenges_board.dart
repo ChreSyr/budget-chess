@@ -1,12 +1,6 @@
 import 'package:crea_chess/package/atomic_design/padding.dart';
-import 'package:crea_chess/package/firebase/authentication/authentication_crud.dart';
-import 'package:crea_chess/package/firebase/firestore/challenge/challenge_crud.dart';
-import 'package:crea_chess/package/firebase/firestore/challenge/challenge_model.dart';
-import 'package:crea_chess/package/firebase/firestore/relationship/cubit/friendships_cubit.dart';
-import 'package:crea_chess/package/firebase/firestore/relationship/relationship_model.dart';
+import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/route/play/challenge/authored_challenges.dart';
-import 'package:crea_chess/route/play/challenge/challenge_filter_cubit.dart';
-import 'package:crea_chess/route/play/challenge/challenge_filter_model.dart';
 import 'package:crea_chess/route/play/challenge/challenge_tile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

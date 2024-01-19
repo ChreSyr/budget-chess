@@ -14,7 +14,7 @@ import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/message/user_ava
 import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/state/inherited_chat_theme.dart';
 import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/state/inherited_user.dart';
 import 'package:crea_chess/package/chat/message/message_model.dart';
-import 'package:crea_chess/package/firebase/firestore/user/user_model.dart';
+import 'package:crea_chess/package/firebase/export.dart';
 import 'package:flutter/material.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 

@@ -3,12 +3,7 @@ import 'package:crea_chess/package/atomic_design/widget/user/relationship_button
 import 'package:crea_chess/package/atomic_design/widget/user/user_header.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_profile.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_sections.dart';
-import 'package:crea_chess/package/firebase/authentication/authentication_crud.dart';
-import 'package:crea_chess/package/firebase/firestore/relationship/relationship_crud.dart';
-import 'package:crea_chess/package/firebase/firestore/relationship/relationship_model.dart';
-import 'package:crea_chess/package/firebase/firestore/user/user_crud.dart';
-import 'package:crea_chess/package/firebase/firestore/user/user_cubit.dart';
-import 'package:crea_chess/package/firebase/firestore/user/user_model.dart';
+import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/route/nav_notif_cubit.dart';
 import 'package:crea_chess/route/route_body.dart';

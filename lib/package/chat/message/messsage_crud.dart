@@ -2,9 +2,9 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crea_chess/package/chat/message/message_model.dart';
+import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/firebase/firestore/crud/model_converter.dart';
 import 'package:crea_chess/package/firebase/firestore/crud/sub_collection_crud.dart';
-import 'package:crea_chess/package/firebase/firestore/relationship/relationship_crud.dart';
 
 class _MessageModelConverter implements ModelConverter<MessageModel> {
   @override

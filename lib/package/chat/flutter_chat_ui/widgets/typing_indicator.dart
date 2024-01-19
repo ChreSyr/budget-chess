@@ -4,7 +4,7 @@ import 'package:crea_chess/package/chat/flutter_chat_ui/models/bubble_rtl_alignm
 import 'package:crea_chess/package/chat/flutter_chat_ui/models/typing_indicator_mode.dart';
 import 'package:crea_chess/package/chat/flutter_chat_ui/util.dart';
 import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/state/inherited_chat_theme.dart';
-import 'package:crea_chess/package/firebase/firestore/user/user_model.dart';
+import 'package:crea_chess/package/firebase/export.dart';
 import 'package:flutter/material.dart';
 
 class TypingIndicator extends StatefulWidget {

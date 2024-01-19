@@ -8,10 +8,7 @@ import 'package:crea_chess/package/chat/flutter_chat_types/flutter_chat_types.da
 import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/chat.dart';
 import 'package:crea_chess/package/chat/message/message_model.dart';
 import 'package:crea_chess/package/chat/message/messsage_crud.dart';
-import 'package:crea_chess/package/firebase/authentication/authentication_crud.dart';
-import 'package:crea_chess/package/firebase/firestore/relationship/relationship_crud.dart';
-import 'package:crea_chess/package/firebase/firestore/relationship/relationship_model.dart';
-import 'package:crea_chess/package/firebase/firestore/user/user_cubit.dart';
+import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

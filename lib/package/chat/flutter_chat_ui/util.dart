@@ -9,7 +9,7 @@ import 'package:crea_chess/package/chat/flutter_chat_ui/models/message_spacer.da
 import 'package:crea_chess/package/chat/flutter_chat_ui/models/preview_image.dart';
 import 'package:crea_chess/package/chat/flutter_chat_ui/models/unread_header_data.dart';
 import 'package:crea_chess/package/chat/message/message_model.dart';
-import 'package:crea_chess/package/firebase/firestore/user/user_model.dart';
+import 'package:crea_chess/package/firebase/export.dart';
 import 'package:flutter/foundation.dart'
     show TargetPlatform, defaultTargetPlatform, kIsWeb;
 import 'package:intl/intl.dart';

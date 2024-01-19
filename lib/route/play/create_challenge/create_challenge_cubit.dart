@@ -1,5 +1,4 @@
-import 'package:crea_chess/package/firebase/firestore/challenge/challenge_crud.dart';
-import 'package:crea_chess/package/firebase/firestore/challenge/challenge_model.dart';
+import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/form/input/input_int.dart';
 import 'package:crea_chess/package/form/input/input_select.dart';
 import 'package:crea_chess/package/game/board_size.dart';

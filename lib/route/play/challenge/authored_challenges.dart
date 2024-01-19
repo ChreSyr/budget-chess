@@ -1,6 +1,6 @@
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
-import 'package:crea_chess/package/firebase/firestore/challenge/challenge_model.dart';
+import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/route/play/challenge/card_tile.dart';
 import 'package:crea_chess/route/play/challenge/challenge_tile.dart';
 import 'package:flutter/material.dart';

@@ -6,11 +6,7 @@ import 'package:crea_chess/package/atomic_design/dialog/relationship/unblock_use
 import 'package:crea_chess/package/atomic_design/snack_bar.dart';
 import 'package:crea_chess/package/atomic_design/widget/simple_badge.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
-import 'package:crea_chess/package/firebase/firestore/relationship/relationship_crud.dart';
-import 'package:crea_chess/package/firebase/firestore/relationship/relationship_model.dart';
-import 'package:crea_chess/package/firebase/firestore/user/user_crud.dart';
-import 'package:crea_chess/package/firebase/firestore/user/user_cubit.dart';
-import 'package:crea_chess/package/firebase/firestore/user/user_model.dart';
+import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

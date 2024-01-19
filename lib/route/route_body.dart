@@ -1,11 +1,7 @@
 import 'package:crea_chess/package/atomic_design/dialog/relationship/answer_friend_request.dart';
 import 'package:crea_chess/package/atomic_design/dialog/user/delete_account.dart';
 import 'package:crea_chess/package/atomic_design/widget/simple_badge.dart';
-import 'package:crea_chess/package/firebase/authentication/authentication_crud.dart';
-import 'package:crea_chess/package/firebase/firestore/relationship/relationship_crud.dart';
-import 'package:crea_chess/package/firebase/firestore/relationship/relationship_model.dart';
-import 'package:crea_chess/package/firebase/firestore/user/user_cubit.dart';
-import 'package:crea_chess/package/firebase/firestore/user/user_model.dart';
+import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
