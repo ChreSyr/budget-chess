@@ -1,3 +1,5 @@
+import 'package:collection/collection.dart';
+import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/widget/dropdown_selector.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/game/speed.dart';
@@ -5,6 +7,7 @@ import 'package:crea_chess/route/play/challenge/challenge_filter_cubit.dart';
 import 'package:crea_chess/route/play/challenge/challenge_filter_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:recase/recase.dart';
 
 class ChallengeSorter extends StatelessWidget {
   const ChallengeSorter({super.key});
@@ -49,8 +52,21 @@ class ChallengeSorter extends StatelessWidget {
                         context.read<ChallengeFilterCubit>().toggleSpeed,
                     initiallySelectedValues: filter.speed.toList(),
                     valueBuilder: (speed) {
-                      return Icon(speed.icon);
+                      return Row(
+                        children: [
+                          Icon(speed.icon),
+                          CCPadding.allXxsmall(
+                            child: Text(speed.name.sentenceCase),
+                          ),
+                        ],
+                      );
                     },
+                    previewBuilder: (e) => Row(
+                      children: e
+                          .sorted((a, b) => a.compareTo(b))
+                          .map((s) => Icon(s.icon))
+                          .toList(),
+                    ),
                   ),
                   CCGap.small,
                   DropdownSelector<bool>.uniqueChoice(

@@ -1,3 +1,4 @@
+import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/firebase/authentication/authentication_crud.dart';
 import 'package:crea_chess/package/firebase/firestore/challenge/challenge_crud.dart';
 import 'package:crea_chess/package/firebase/firestore/challenge/challenge_model.dart';
@@ -52,15 +53,22 @@ class ChallengesBoard extends StatelessWidget {
                       friendChallenges.sort(filter.compare);
                       otherChallenges.sort(filter.compare);
                       return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           if (myChallenges.isNotEmpty) ...[
                             AuthoredChallenges(myChallenges: myChallenges),
                             const Divider(),
                           ],
                           if (friendChallenges.isNotEmpty) ...[
+                            CCPadding.allSmall(
+                              child: const Text('Challenges de vos amis :'),
+                            ),
                             ...friendChallenges.map(ChallengeTile.new),
                             const Divider(),
                           ],
+                          CCPadding.allSmall(
+                            child: const Text("Challenges d'étrangers :"),
+                          ),
                           ...otherChallenges.map(ChallengeTile.new),
                         ],
                       );
