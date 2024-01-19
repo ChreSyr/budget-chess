@@ -49,9 +49,7 @@ class ChallengeSorter extends StatelessWidget {
                     onSelected: context.read<ChallengeSorterCubit>().setSpeed,
                     initiallySelectedValues: [sorter.speed],
                     valueBuilder: (speed) {
-                      return Text(speed?.name.sentenceCase ??
-                          'All speed',
-                      ); // TODO : l10n
+                      return Icon(speed?.icon);
                     },
                   ),
                   CCGap.small,

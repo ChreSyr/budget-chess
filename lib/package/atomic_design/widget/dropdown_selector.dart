@@ -10,6 +10,7 @@ class DropdownSelector<T> extends StatefulWidget {
     required this.onSelected,
     required this.initiallySelectedValues,
     this.valueBuilder,
+    this.previewBuilder,
     super.key,
   }) : assert(values.isNotEmpty, 'DropdownSelector needs selectable values');
 
@@ -33,6 +34,7 @@ class DropdownSelector<T> extends StatefulWidget {
     required void Function(T) onSelected,
     List<T>? initiallySelectedValues,
     Widget Function(T)? valueBuilder,
+    Widget Function(List<T>)? previewBuilder,
   }) {
     return DropdownSelector._(
       uniqueChoice: false,
@@ -40,6 +42,7 @@ class DropdownSelector<T> extends StatefulWidget {
       onSelected: onSelected,
       initiallySelectedValues: initiallySelectedValues ?? [],
       valueBuilder: valueBuilder,
+      previewBuilder: previewBuilder,
     );
   }
 
@@ -48,6 +51,7 @@ class DropdownSelector<T> extends StatefulWidget {
   final void Function(T) onSelected;
   final List<T> initiallySelectedValues;
   final Widget Function(T)? valueBuilder;
+  final Widget Function(List<T>)? previewBuilder;
 
   @override
   State<DropdownSelector<T>> createState() => _DropdownSelectorState();
@@ -56,11 +60,14 @@ class DropdownSelector<T> extends StatefulWidget {
 class _DropdownSelectorState<T> extends State<DropdownSelector<T>> {
   late List<T> selectedValues;
   late final Widget Function(T) valueBuilder;
+  late final Widget Function(List<T>) previewBuilder;
 
   @override
   void initState() {
     super.initState();
     valueBuilder = widget.valueBuilder ?? (e) => Text(e.toString());
+    previewBuilder = widget.previewBuilder ??
+        (e) => Row(children: e.map(valueBuilder).toList());
     setState(() => selectedValues = widget.initiallySelectedValues);
   }
 
@@ -73,7 +80,7 @@ class _DropdownSelectorState<T> extends State<DropdownSelector<T>> {
         Widget? _,
       ) =>
           ActionChip(
-        label: valueBuilder(selectedValues.first),
+        label: previewBuilder(selectedValues),
         avatar: Icon(
           Icons.arrow_drop_down,
           color: Theme.of(context).colorScheme.onSurface,
