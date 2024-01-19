@@ -9,14 +9,17 @@ part of 'challenge_sorter_state.dart';
 _$ChallengeSorterStateImpl _$$ChallengeSorterStateImplFromJson(
         Map<String, dynamic> json) =>
     _$ChallengeSorterStateImpl(
-      speed: $enumDecodeNullable(_$SpeedEnumMap, json['speed']),
+      speed: (json['speed'] as List<dynamic>?)
+              ?.map((e) => $enumDecode(_$SpeedEnumMap, e))
+              .toSet() ??
+          const {},
       budgetAsc: json['budgetAsc'] as bool? ?? true,
     );
 
 Map<String, dynamic> _$$ChallengeSorterStateImplToJson(
         _$ChallengeSorterStateImpl instance) =>
     <String, dynamic>{
-      'speed': _$SpeedEnumMap[instance.speed],
+      'speed': instance.speed.map((e) => _$SpeedEnumMap[e]!).toList(),
       'budgetAsc': instance.budgetAsc,
     };
 

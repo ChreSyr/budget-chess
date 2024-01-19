@@ -92,10 +92,13 @@ class _DropdownSelectorState<T> extends State<DropdownSelector<T>> {
       menuChildren: widget.values.map(
         (e) {
           final selected = selectedValues.contains(e);
+          final top1 = selected && selectedValues.length == 1;
           return MenuItemButton(
             style: const ButtonStyle(visualDensity: VisualDensity.compact),
-            closeOnActivate: widget.uniqueChoice,
+            closeOnActivate: widget.uniqueChoice && !top1,
             onPressed: () {
+              // Can't unselect the only selected value
+              if (top1) return;
               setState(
                 () => widget.uniqueChoice
                     ? selectedValues = [e]

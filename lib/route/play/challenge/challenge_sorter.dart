@@ -5,7 +5,6 @@ import 'package:crea_chess/route/play/challenge/challenge_sorter_cubit.dart';
 import 'package:crea_chess/route/play/challenge/challenge_sorter_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:recase/recase.dart';
 
 class ChallengeSorter extends StatelessWidget {
   const ChallengeSorter({super.key});
@@ -44,12 +43,13 @@ class ChallengeSorter extends StatelessWidget {
               Row(
                 children: [
                   CCGap.small,
-                  DropdownSelector<Speed?>.multipleChoices(
-                    values: const <Speed?>[null, ...Speed.values],
-                    onSelected: context.read<ChallengeSorterCubit>().setSpeed,
-                    initiallySelectedValues: [sorter.speed],
+                  DropdownSelector<Speed>.multipleChoices(
+                    values: Speed.values,
+                    onSelected:
+                        context.read<ChallengeSorterCubit>().toggleSpeed,
+                    initiallySelectedValues: sorter.speed.toList(),
                     valueBuilder: (speed) {
-                      return Icon(speed?.icon);
+                      return Icon(speed.icon);
                     },
                   ),
                   CCGap.small,

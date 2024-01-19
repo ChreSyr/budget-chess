@@ -20,7 +20,7 @@ ChallengeSorterState _$ChallengeSorterStateFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$ChallengeSorterState {
-  Speed? get speed => throw _privateConstructorUsedError;
+  Set<Speed> get speed => throw _privateConstructorUsedError;
   bool get budgetAsc => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -35,7 +35,7 @@ abstract class $ChallengeSorterStateCopyWith<$Res> {
           $Res Function(ChallengeSorterState) then) =
       _$ChallengeSorterStateCopyWithImpl<$Res, ChallengeSorterState>;
   @useResult
-  $Res call({Speed? speed, bool budgetAsc});
+  $Res call({Set<Speed> speed, bool budgetAsc});
 }
 
 /// @nodoc
@@ -52,14 +52,14 @@ class _$ChallengeSorterStateCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? speed = freezed,
+    Object? speed = null,
     Object? budgetAsc = null,
   }) {
     return _then(_value.copyWith(
-      speed: freezed == speed
+      speed: null == speed
           ? _value.speed
           : speed // ignore: cast_nullable_to_non_nullable
-              as Speed?,
+              as Set<Speed>,
       budgetAsc: null == budgetAsc
           ? _value.budgetAsc
           : budgetAsc // ignore: cast_nullable_to_non_nullable
@@ -76,7 +76,7 @@ abstract class _$$ChallengeSorterStateImplCopyWith<$Res>
       __$$ChallengeSorterStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({Speed? speed, bool budgetAsc});
+  $Res call({Set<Speed> speed, bool budgetAsc});
 }
 
 /// @nodoc
@@ -90,14 +90,14 @@ class __$$ChallengeSorterStateImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? speed = freezed,
+    Object? speed = null,
     Object? budgetAsc = null,
   }) {
     return _then(_$ChallengeSorterStateImpl(
-      speed: freezed == speed
-          ? _value.speed
+      speed: null == speed
+          ? _value._speed
           : speed // ignore: cast_nullable_to_non_nullable
-              as Speed?,
+              as Set<Speed>,
       budgetAsc: null == budgetAsc
           ? _value.budgetAsc
           : budgetAsc // ignore: cast_nullable_to_non_nullable
@@ -109,13 +109,23 @@ class __$$ChallengeSorterStateImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$ChallengeSorterStateImpl extends _ChallengeSorterState {
-  _$ChallengeSorterStateImpl({this.speed, this.budgetAsc = true}) : super._();
+  _$ChallengeSorterStateImpl(
+      {final Set<Speed> speed = const {}, this.budgetAsc = true})
+      : _speed = speed,
+        super._();
 
   factory _$ChallengeSorterStateImpl.fromJson(Map<String, dynamic> json) =>
       _$$ChallengeSorterStateImplFromJson(json);
 
+  final Set<Speed> _speed;
   @override
-  final Speed? speed;
+  @JsonKey()
+  Set<Speed> get speed {
+    if (_speed is EqualUnmodifiableSetView) return _speed;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableSetView(_speed);
+  }
+
   @override
   @JsonKey()
   final bool budgetAsc;
@@ -130,14 +140,15 @@ class _$ChallengeSorterStateImpl extends _ChallengeSorterState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ChallengeSorterStateImpl &&
-            (identical(other.speed, speed) || other.speed == speed) &&
+            const DeepCollectionEquality().equals(other._speed, _speed) &&
             (identical(other.budgetAsc, budgetAsc) ||
                 other.budgetAsc == budgetAsc));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, speed, budgetAsc);
+  int get hashCode => Object.hash(
+      runtimeType, const DeepCollectionEquality().hash(_speed), budgetAsc);
 
   @JsonKey(ignore: true)
   @override
@@ -156,15 +167,16 @@ class _$ChallengeSorterStateImpl extends _ChallengeSorterState {
 }
 
 abstract class _ChallengeSorterState extends ChallengeSorterState {
-  factory _ChallengeSorterState({final Speed? speed, final bool budgetAsc}) =
-      _$ChallengeSorterStateImpl;
+  factory _ChallengeSorterState(
+      {final Set<Speed> speed,
+      final bool budgetAsc}) = _$ChallengeSorterStateImpl;
   _ChallengeSorterState._() : super._();
 
   factory _ChallengeSorterState.fromJson(Map<String, dynamic> json) =
       _$ChallengeSorterStateImpl.fromJson;
 
   @override
-  Speed? get speed;
+  Set<Speed> get speed;
   @override
   bool get budgetAsc;
   @override
