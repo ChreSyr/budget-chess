@@ -14,8 +14,10 @@ _$RelationshipModelImpl _$$RelationshipModelImplFromJson(
           .fromJson(json['createdAt'] as Timestamp?),
       updatedAt: const TimestampToDateTimeConverter()
           .fromJson(json['updatedAt'] as Timestamp?),
-      userIds:
-          (json['userIds'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      userIds: (json['userIds'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
       status: $enumDecodeNullable(_$RelationshipStatusEnumMap, json['status']),
     );
 

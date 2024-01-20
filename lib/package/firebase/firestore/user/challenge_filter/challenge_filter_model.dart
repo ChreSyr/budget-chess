@@ -44,27 +44,19 @@ class ChallengeFilterModel with _$ChallengeFilterModel {
   static const String _local = 'local';
 
   static ChallengeFilterModel sorter = ChallengeFilterModel(
-    userId: ChallengeFilterModel._local,
-    id: ChallengeFilterModel._local,
     speeds: Speed.values.toSet(),
     rules: Rules.values.toSet(),
   );
 
   static ChallengeFilterModel default1 = ChallengeFilterModel(
-    userId: ChallengeFilterModel._local,
-    id: ChallengeFilterModel._local,
     speeds: {Speed.bullet, Speed.blitz},
   );
 
   static ChallengeFilterModel default2 = ChallengeFilterModel(
-    userId: ChallengeFilterModel._local,
-    id: ChallengeFilterModel._local,
     speeds: {Speed.blitz, Speed.rapid},
   );
 
   static ChallengeFilterModel default3 = ChallengeFilterModel(
-    userId: ChallengeFilterModel._local,
-    id: ChallengeFilterModel._local,
     speeds: {Speed.classical},
   );
 

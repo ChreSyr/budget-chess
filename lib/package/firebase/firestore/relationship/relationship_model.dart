@@ -24,7 +24,7 @@ class RelationshipModel with _$RelationshipModel {
     @TimestampToDateTimeConverter() DateTime? createdAt,
     /// Last time a message was sent or a game got updated
     @TimestampToDateTimeConverter() DateTime? updatedAt,
-    List<String>? userIds, // TODO : default to []
+    @Default([]) List<String> userIds,
     RelationshipStatus? status,
   }) = _RelationshipModel;
 
@@ -48,47 +48,47 @@ class RelationshipModel with _$RelationshipModel {
   // ---
 
   String? get blocker {
-    if (userIds == null || userIds!.isEmpty) return null;
+    if (userIds.isEmpty) return null;
     if (status == RelationshipStatus.blockedByFirst) {
-      return userIds!.first;
+      return userIds.first;
     } else if (status == RelationshipStatus.blockedByLast) {
-      return userIds!.last;
+      return userIds.last;
     } else {
       return null;
     }
   }
 
   String? get requester {
-    if (userIds == null || userIds!.isEmpty) return null;
+    if (userIds.isEmpty) return null;
     if (status == RelationshipStatus.requestedByFirst) {
-      return userIds!.first;
+      return userIds.first;
     } else if (status == RelationshipStatus.requestedByLast) {
-      return userIds!.last;
+      return userIds.last;
     } else {
       return null;
     }
   }
 
   bool isBlockedBy(String userId) {
-    if (userIds == null || userIds!.isEmpty) return false;
+    if (userIds.isEmpty) return false;
     return status == RelationshipStatus.blockedByFirst &&
-            userId == userIds!.first ||
-        status == RelationshipStatus.blockedByLast && userId == userIds!.last;
+            userId == userIds.first ||
+        status == RelationshipStatus.blockedByLast && userId == userIds.last;
   }
 
   bool isRequestedBy(String userId) {
-    if (userIds == null || userIds!.isEmpty) return false;
+    if (userIds.isEmpty) return false;
     return status == RelationshipStatus.requestedByFirst &&
-            userId == userIds!.first ||
-        status == RelationshipStatus.requestedByLast && userId == userIds!.last;
+            userId == userIds.first ||
+        status == RelationshipStatus.requestedByLast && userId == userIds.last;
   }
 
   String? otherUser(String user1) {
-    if (userIds == null || userIds!.isEmpty) return null;
-    if (user1 == userIds!.first) {
-      return userIds!.last;
-    } else if (user1 == userIds!.last) {
-      return userIds!.first;
+    if (userIds.isEmpty) return null;
+    if (user1 == userIds.first) {
+      return userIds.last;
+    } else if (user1 == userIds.last) {
+      return userIds.first;
     } else {
       return null;
     }

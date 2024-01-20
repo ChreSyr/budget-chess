@@ -84,7 +84,8 @@ class UserSectionFriends extends UserSection {
             const radius = CCSize.xlarge;
             final friendsPreviews = (relations ?? []).map(
               (relationship) {
-                final friendId = (relationship.userIds ?? [])
+                final friendId =
+                    relationship.userIds
                     .where((id) => id != userId)
                     .first;
                 return UserPhoto.fromId(

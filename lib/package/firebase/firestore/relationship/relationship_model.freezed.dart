@@ -29,8 +29,7 @@ mixin _$RelationshipModel {
   /// Last time a message was sent or a game got updated
   @TimestampToDateTimeConverter()
   DateTime? get updatedAt => throw _privateConstructorUsedError;
-  List<String>? get userIds =>
-      throw _privateConstructorUsedError; // TODO : default to []
+  List<String> get userIds => throw _privateConstructorUsedError;
   RelationshipStatus? get status => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -49,7 +48,7 @@ abstract class $RelationshipModelCopyWith<$Res> {
       {String id,
       @TimestampToDateTimeConverter() DateTime? createdAt,
       @TimestampToDateTimeConverter() DateTime? updatedAt,
-      List<String>? userIds,
+      List<String> userIds,
       RelationshipStatus? status});
 }
 
@@ -69,7 +68,7 @@ class _$RelationshipModelCopyWithImpl<$Res, $Val extends RelationshipModel>
     Object? id = null,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
-    Object? userIds = freezed,
+    Object? userIds = null,
     Object? status = freezed,
   }) {
     return _then(_value.copyWith(
@@ -85,10 +84,10 @@ class _$RelationshipModelCopyWithImpl<$Res, $Val extends RelationshipModel>
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
-      userIds: freezed == userIds
+      userIds: null == userIds
           ? _value.userIds
           : userIds // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
+              as List<String>,
       status: freezed == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
@@ -109,7 +108,7 @@ abstract class _$$RelationshipModelImplCopyWith<$Res>
       {String id,
       @TimestampToDateTimeConverter() DateTime? createdAt,
       @TimestampToDateTimeConverter() DateTime? updatedAt,
-      List<String>? userIds,
+      List<String> userIds,
       RelationshipStatus? status});
 }
 
@@ -127,7 +126,7 @@ class __$$RelationshipModelImplCopyWithImpl<$Res>
     Object? id = null,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
-    Object? userIds = freezed,
+    Object? userIds = null,
     Object? status = freezed,
   }) {
     return _then(_$RelationshipModelImpl(
@@ -143,10 +142,10 @@ class __$$RelationshipModelImplCopyWithImpl<$Res>
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
-      userIds: freezed == userIds
+      userIds: null == userIds
           ? _value._userIds
           : userIds // ignore: cast_nullable_to_non_nullable
-              as List<String>?,
+              as List<String>,
       status: freezed == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
@@ -162,7 +161,7 @@ class _$RelationshipModelImpl extends _RelationshipModel {
       {required this.id,
       @TimestampToDateTimeConverter() this.createdAt,
       @TimestampToDateTimeConverter() this.updatedAt,
-      final List<String>? userIds,
+      final List<String> userIds = const [],
       this.status})
       : _userIds = userIds,
         super._();
@@ -182,17 +181,15 @@ class _$RelationshipModelImpl extends _RelationshipModel {
   @override
   @TimestampToDateTimeConverter()
   final DateTime? updatedAt;
-  final List<String>? _userIds;
+  final List<String> _userIds;
   @override
-  List<String>? get userIds {
-    final value = _userIds;
-    if (value == null) return null;
+  @JsonKey()
+  List<String> get userIds {
     if (_userIds is EqualUnmodifiableListView) return _userIds;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
+    return EqualUnmodifiableListView(_userIds);
   }
 
-// TODO : default to []
   @override
   final RelationshipStatus? status;
 
@@ -240,7 +237,7 @@ abstract class _RelationshipModel extends RelationshipModel {
       {required final String id,
       @TimestampToDateTimeConverter() final DateTime? createdAt,
       @TimestampToDateTimeConverter() final DateTime? updatedAt,
-      final List<String>? userIds,
+      final List<String> userIds,
       final RelationshipStatus? status}) = _$RelationshipModelImpl;
   _RelationshipModel._() : super._();
 
@@ -260,8 +257,8 @@ abstract class _RelationshipModel extends RelationshipModel {
   @TimestampToDateTimeConverter()
   DateTime? get updatedAt;
   @override
-  List<String>? get userIds;
-  @override // TODO : default to []
+  List<String> get userIds;
+  @override
   RelationshipStatus? get status;
   @override
   @JsonKey(ignore: true)
