@@ -17,12 +17,7 @@ class ChallengeTile extends StatelessWidget {
     final authUid = context.read<AuthenticationCubit>().state?.uid;
     final timeControl = challenge.timeControl;
     final authorId = challenge.authorId ?? '';
-    if (authorId.isEmpty) {
-      return const ListTile(
-        leading: UserPhoto(photo: ''),
-        title: Text('Corrupted challenge'), // TODO : l10n
-      );
-    }
+    if (authorId.isEmpty) return Container(); // corrupted challenge
     return CardTile(
       child: Row(
         children: [

@@ -2,6 +2,7 @@ import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/export.dart';
+import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/route/play/challenge/challenge_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -31,9 +32,8 @@ class MyChallenges extends StatelessWidget {
             CCGap.small,
             if (myChallenges.isNotEmpty) ...[
               CCGap.small,
-              const Text(
-                // TODO : l10n
-                'Waiting for an opponent...',
+              Text(
+                context.l10n.waitingOpponent,
                 textAlign: TextAlign.center,
               ),
               CCGap.small,
@@ -41,17 +41,12 @@ class MyChallenges extends StatelessWidget {
             ],
             if (myChallenges.length > 1) ...[
               CCGap.medium,
-              const Row(
+              Row(
                 children: [
-                  Icon(Icons.info_outline),
+                  const Icon(Icons.info_outline),
                   CCGap.small,
-                  Expanded(
-                    child: Text(
-                      // TODO : l10n
-                      // TODO : tips
-                      "Dès qu'un de vos challenges sera accepté, tout les autres seront supprimés",
-                    ),
-                  ),
+                  // TODO : tips
+                  Expanded(child: Text(context.l10n.tipChallengesRemoved)),
                 ],
               ),
             ],
@@ -59,7 +54,7 @@ class MyChallenges extends StatelessWidget {
             FilledButton.icon(
               onPressed: () => context.go('/play/create_challenge'),
               icon: const Icon(Icons.add),
-              label: const Text('Create challenge'),
+              label: Text(context.l10n.challengeCreate),
             ),
             CCGap.large,
           ],

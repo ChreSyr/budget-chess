@@ -26,7 +26,7 @@ class HomeBody extends MainRouteBody {
     return [
       FilledButton(
         onPressed: () => context.go('/play/chessground'),
-        child: const Text('Play'),
+        child: const Text('Play'), // TODO : remove
       ),
       ...super.getActions(context),
     ];

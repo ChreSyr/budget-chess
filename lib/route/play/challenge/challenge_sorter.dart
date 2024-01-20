@@ -39,6 +39,7 @@ class ChallengeSorter extends StatelessWidget {
                         return Row(
                           children: [
                             const Icon(Icons.attach_money),
+                            // TODO : Rules.explain(l10n)
                             CCPadding.allXxsmall(
                               child: const Text('Budget Chess'),
                             ),

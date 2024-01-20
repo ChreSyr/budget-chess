@@ -107,7 +107,7 @@ abstract class MainRouteBody extends RouteBody {
                             MenuItemButton(
                               leadingIcon: const Icon(Icons.done_all),
                               onPressed: () {},
-                              child: const Text('Aucune notification'),
+                              child: Text(context.l10n.notificationsEmpty),
                             ),
                           ]
                         : requestsTo

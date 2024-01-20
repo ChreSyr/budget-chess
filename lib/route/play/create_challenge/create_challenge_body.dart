@@ -19,9 +19,7 @@ class CreateChallengeBody extends RouteBody {
   const CreateChallengeBody({super.key});
 
   @override
-  String getTitle(AppLocalizations l10n) {
-    return 'Create challenge'; // TODO : l10n
-  }
+  String getTitle(AppLocalizations l10n) => l10n.challengeCreate;
 
   @override
   Widget build(BuildContext context) {
@@ -67,10 +65,10 @@ class _CreateChallengeBody extends StatelessWidget {
                 child: OutlinedButton.icon(
                   onPressed: () => ModalSelect.show(
                     context: context,
-                    title: 'Taille du plateau', // TODO: l10n
+                    title: context.l10n.boardSize,
                     choices: [
                       ModalSelectRowData(
-                        title: 'Bullet', // TODO: l10n ?
+                        title: 'Bullet',
                         titleIcon: Icon(Speed.bullet.icon),
                         choices: const [
                           TimeControl(0, 1),
@@ -184,7 +182,7 @@ class _CreateChallengeBody extends StatelessWidget {
               CCGap.large,
               FilledButton(
                 onPressed: () => createChallengeCubit.submit(authorId: authId),
-                child: const Text('Create challenge'), // TODO : l10n
+                child: Text(context.l10n.challengeCreate),
               ),
             ],
           ),

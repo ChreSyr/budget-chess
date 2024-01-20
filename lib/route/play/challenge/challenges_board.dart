@@ -1,6 +1,7 @@
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/export.dart';
+import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/route/play/challenge/challenge_sorter.dart';
 import 'package:crea_chess/route/play/challenge/challenge_tile.dart';
 import 'package:crea_chess/route/play/challenge/my_challenges.dart';
@@ -69,18 +70,17 @@ class ChallengesBoard extends StatelessWidget {
                                   const Divider(),
                                   if (friendChallenges.isNotEmpty) ...[
                                     CCPadding.allSmall(
-                                      child: const Text(
-                                        // TODO : l10n
-                                        'Challenges de vos amis :',
+                                      child: Text(
+                                        context.l10n.challengesFromFriends,
                                       ),
                                     ),
                                     ...friendChallenges.map(ChallengeTile.new),
                                     const Divider(),
                                   ],
                                   CCPadding.allSmall(
-                                    child:
-                                        // TODO : l10n
-                                        const Text("Challenges d'étrangers :"),
+                                    child: Text(
+                                      context.l10n.challengesFromStrangers,
+                                    ),
                                   ),
                                   ...otherChallenges.map(ChallengeTile.new),
                                 ],
