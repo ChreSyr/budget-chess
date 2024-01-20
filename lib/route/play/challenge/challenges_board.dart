@@ -1,6 +1,8 @@
 import 'package:crea_chess/package/atomic_design/padding.dart';
+import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/route/play/challenge/authored_challenges.dart';
+import 'package:crea_chess/route/play/challenge/challenge_sorter.dart';
 import 'package:crea_chess/route/play/challenge/challenge_tile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -57,6 +59,10 @@ class ChallengesBoard extends StatelessWidget {
                             AuthoredChallenges(myChallenges: myChallenges),
                             const Divider(),
                           ],
+                          CCGap.small,
+                          const ChallengeSorter(),
+                          CCGap.small,
+                          const Divider(),
                           if (friendChallenges.isNotEmpty) ...[
                             CCPadding.allSmall(
                               child: const Text('Challenges de vos amis :'),
