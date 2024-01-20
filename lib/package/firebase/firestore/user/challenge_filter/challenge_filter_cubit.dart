@@ -1,5 +1,6 @@
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/game/speed.dart';
+import 'package:dartchess_webok/dartchess_webok.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 class ChallengeFilterCubit extends HydratedCubit<ChallengeFilterModel?> {
@@ -28,23 +29,29 @@ class ChallengeFilterCubit extends HydratedCubit<ChallengeFilterModel?> {
     }
   }
 
-  // ignore: avoid_positional_boolean_parameters
-  void setBudgetAsc(bool val) {
-    if (state == null) return;
-    _updateFilter(state!.copyWith(budgetAsc: val));
-  }
-
   void selectFilter(ChallengeFilterModel? filter) => emit(filter);
+
+  void toggleRule(Rules rule) {
+    if (state == null) return;
+    final rules = Set<Rules>.from(state!.rules);
+    if (rules.contains(rule)) {
+      rules.remove(rule);
+    } else {
+      rules.add(rule);
+    }
+    if (rules.isEmpty) return;
+    _updateFilter(state!.copyWith(rules: rules));
+  }
 
   void toggleSpeed(Speed speed) {
     if (state == null) return;
-    final speeds = Set<Speed>.from(state!.speed);
+    final speeds = Set<Speed>.from(state!.speeds);
     if (speeds.contains(speed)) {
       speeds.remove(speed);
     } else {
       speeds.add(speed);
     }
     if (speeds.isEmpty) return;
-    _updateFilter(state!.copyWith(speed: speeds));
+    _updateFilter(state!.copyWith(speeds: speeds));
   }
 }

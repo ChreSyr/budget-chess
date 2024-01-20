@@ -37,11 +37,11 @@ class ChallengesBoard extends StatelessWidget {
                           myChallenges.add(c);
                         } else if (friendIds.contains(c.authorId)) {
                           if (filter == null ||
-                              filter.speed.contains(c.speed)) {
+                              filter.speeds.contains(c.speed)) {
                             friendChallenges.add(c);
                           }
                         } else if (filter == null ||
-                            filter.speed.contains(c.speed)) {
+                            filter.speeds.contains(c.speed)) {
                           otherChallenges.add(c);
                         }
                       }

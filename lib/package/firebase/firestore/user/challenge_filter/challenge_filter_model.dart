@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crea_chess/package/firebase/firestore/challenge/challenge_model.dart';
 import 'package:crea_chess/package/game/speed.dart';
+import 'package:dartchess_webok/dartchess_webok.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'challenge_filter_model.freezed.dart';
@@ -13,10 +14,9 @@ class ChallengeFilterModel with _$ChallengeFilterModel {
   factory ChallengeFilterModel({
     String? userId,
     String? id,
-    String? name,
     @Default({Speed.bullet, Speed.blitz, Speed.rapid, Speed.classical})
-    Set<Speed> speed,
-    @Default(true) bool budgetAsc,
+    Set<Speed> speeds,
+    @Default({Rules.chess}) Set<Rules> rules,
   }) = _ChallengeSorterState;
 
   /// Required for the override getter
@@ -49,10 +49,6 @@ class ChallengeFilterModel with _$ChallengeFilterModel {
 
     final timeControlCompared = timeControlA.compareTo(timeControlB);
     if (timeControlCompared != 0) return timeControlCompared;
-
-    final budgetAscCompared =
-        (budgetAsc ? 1 : -1) * a.budget.compareTo(b.budget);
-    if (budgetAscCompared != 0) return budgetAscCompared;
 
     return 0;
   }

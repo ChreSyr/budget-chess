@@ -22,9 +22,8 @@ ChallengeFilterModel _$ChallengeFilterModelFromJson(Map<String, dynamic> json) {
 mixin _$ChallengeFilterModel {
   String? get userId => throw _privateConstructorUsedError;
   String? get id => throw _privateConstructorUsedError;
-  String? get name => throw _privateConstructorUsedError;
-  Set<Speed> get speed => throw _privateConstructorUsedError;
-  bool get budgetAsc => throw _privateConstructorUsedError;
+  Set<Speed> get speeds => throw _privateConstructorUsedError;
+  Set<Rules> get rules => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -38,12 +37,7 @@ abstract class $ChallengeFilterModelCopyWith<$Res> {
           $Res Function(ChallengeFilterModel) then) =
       _$ChallengeFilterModelCopyWithImpl<$Res, ChallengeFilterModel>;
   @useResult
-  $Res call(
-      {String? userId,
-      String? id,
-      String? name,
-      Set<Speed> speed,
-      bool budgetAsc});
+  $Res call({String? userId, String? id, Set<Speed> speeds, Set<Rules> rules});
 }
 
 /// @nodoc
@@ -62,9 +56,8 @@ class _$ChallengeFilterModelCopyWithImpl<$Res,
   $Res call({
     Object? userId = freezed,
     Object? id = freezed,
-    Object? name = freezed,
-    Object? speed = null,
-    Object? budgetAsc = null,
+    Object? speeds = null,
+    Object? rules = null,
   }) {
     return _then(_value.copyWith(
       userId: freezed == userId
@@ -75,18 +68,14 @@ class _$ChallengeFilterModelCopyWithImpl<$Res,
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String?,
-      name: freezed == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String?,
-      speed: null == speed
-          ? _value.speed
-          : speed // ignore: cast_nullable_to_non_nullable
+      speeds: null == speeds
+          ? _value.speeds
+          : speeds // ignore: cast_nullable_to_non_nullable
               as Set<Speed>,
-      budgetAsc: null == budgetAsc
-          ? _value.budgetAsc
-          : budgetAsc // ignore: cast_nullable_to_non_nullable
-              as bool,
+      rules: null == rules
+          ? _value.rules
+          : rules // ignore: cast_nullable_to_non_nullable
+              as Set<Rules>,
     ) as $Val);
   }
 }
@@ -99,12 +88,7 @@ abstract class _$$ChallengeSorterStateImplCopyWith<$Res>
       __$$ChallengeSorterStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String? userId,
-      String? id,
-      String? name,
-      Set<Speed> speed,
-      bool budgetAsc});
+  $Res call({String? userId, String? id, Set<Speed> speeds, Set<Rules> rules});
 }
 
 /// @nodoc
@@ -120,9 +104,8 @@ class __$$ChallengeSorterStateImplCopyWithImpl<$Res>
   $Res call({
     Object? userId = freezed,
     Object? id = freezed,
-    Object? name = freezed,
-    Object? speed = null,
-    Object? budgetAsc = null,
+    Object? speeds = null,
+    Object? rules = null,
   }) {
     return _then(_$ChallengeSorterStateImpl(
       userId: freezed == userId
@@ -133,18 +116,14 @@ class __$$ChallengeSorterStateImplCopyWithImpl<$Res>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String?,
-      name: freezed == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String?,
-      speed: null == speed
-          ? _value._speed
-          : speed // ignore: cast_nullable_to_non_nullable
+      speeds: null == speeds
+          ? _value._speeds
+          : speeds // ignore: cast_nullable_to_non_nullable
               as Set<Speed>,
-      budgetAsc: null == budgetAsc
-          ? _value.budgetAsc
-          : budgetAsc // ignore: cast_nullable_to_non_nullable
-              as bool,
+      rules: null == rules
+          ? _value._rules
+          : rules // ignore: cast_nullable_to_non_nullable
+              as Set<Rules>,
     ));
   }
 }
@@ -155,15 +134,15 @@ class _$ChallengeSorterStateImpl extends _ChallengeSorterState {
   _$ChallengeSorterStateImpl(
       {this.userId,
       this.id,
-      this.name,
-      final Set<Speed> speed = const {
+      final Set<Speed> speeds = const {
         Speed.bullet,
         Speed.blitz,
         Speed.rapid,
         Speed.classical
       },
-      this.budgetAsc = true})
-      : _speed = speed,
+      final Set<Rules> rules = const {Rules.chess}})
+      : _speeds = speeds,
+        _rules = rules,
         super._();
 
   factory _$ChallengeSorterStateImpl.fromJson(Map<String, dynamic> json) =>
@@ -173,24 +152,27 @@ class _$ChallengeSorterStateImpl extends _ChallengeSorterState {
   final String? userId;
   @override
   final String? id;
-  @override
-  final String? name;
-  final Set<Speed> _speed;
+  final Set<Speed> _speeds;
   @override
   @JsonKey()
-  Set<Speed> get speed {
-    if (_speed is EqualUnmodifiableSetView) return _speed;
+  Set<Speed> get speeds {
+    if (_speeds is EqualUnmodifiableSetView) return _speeds;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableSetView(_speed);
+    return EqualUnmodifiableSetView(_speeds);
+  }
+
+  final Set<Rules> _rules;
+  @override
+  @JsonKey()
+  Set<Rules> get rules {
+    if (_rules is EqualUnmodifiableSetView) return _rules;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableSetView(_rules);
   }
 
   @override
-  @JsonKey()
-  final bool budgetAsc;
-
-  @override
   String toString() {
-    return 'ChallengeFilterModel(userId: $userId, id: $id, name: $name, speed: $speed, budgetAsc: $budgetAsc)';
+    return 'ChallengeFilterModel(userId: $userId, id: $id, speeds: $speeds, rules: $rules)';
   }
 
   @override
@@ -200,16 +182,18 @@ class _$ChallengeSorterStateImpl extends _ChallengeSorterState {
             other is _$ChallengeSorterStateImpl &&
             (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.name, name) || other.name == name) &&
-            const DeepCollectionEquality().equals(other._speed, _speed) &&
-            (identical(other.budgetAsc, budgetAsc) ||
-                other.budgetAsc == budgetAsc));
+            const DeepCollectionEquality().equals(other._speeds, _speeds) &&
+            const DeepCollectionEquality().equals(other._rules, _rules));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, userId, id, name,
-      const DeepCollectionEquality().hash(_speed), budgetAsc);
+  int get hashCode => Object.hash(
+      runtimeType,
+      userId,
+      id,
+      const DeepCollectionEquality().hash(_speeds),
+      const DeepCollectionEquality().hash(_rules));
 
   @JsonKey(ignore: true)
   @override
@@ -231,9 +215,8 @@ abstract class _ChallengeSorterState extends ChallengeFilterModel {
   factory _ChallengeSorterState(
       {final String? userId,
       final String? id,
-      final String? name,
-      final Set<Speed> speed,
-      final bool budgetAsc}) = _$ChallengeSorterStateImpl;
+      final Set<Speed> speeds,
+      final Set<Rules> rules}) = _$ChallengeSorterStateImpl;
   _ChallengeSorterState._() : super._();
 
   factory _ChallengeSorterState.fromJson(Map<String, dynamic> json) =
@@ -244,11 +227,9 @@ abstract class _ChallengeSorterState extends ChallengeFilterModel {
   @override
   String? get id;
   @override
-  String? get name;
+  Set<Speed> get speeds;
   @override
-  Set<Speed> get speed;
-  @override
-  bool get budgetAsc;
+  Set<Rules> get rules;
   @override
   @JsonKey(ignore: true)
   _$$ChallengeSorterStateImplCopyWith<_$ChallengeSorterStateImpl>

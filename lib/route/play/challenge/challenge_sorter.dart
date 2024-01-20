@@ -4,6 +4,7 @@ import 'package:crea_chess/package/atomic_design/widget/dropdown_selector.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/game/speed.dart';
+import 'package:dartchess_webok/dartchess_webok.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:recase/recase.dart';
@@ -21,29 +22,31 @@ class ChallengeSorter extends StatelessWidget {
             const FilterSelector(),
             if (filter != null) ...[
               CCGap.small,
-              DropdownSelector<bool>.uniqueChoice(
-                values: const [true, false],
-                onSelected: context.read<ChallengeFilterCubit>().setBudgetAsc,
-                selectedValue: filter.budgetAsc,
+              DropdownSelector<Rules>.multipleChoices(
+                values: Rules.values,
+                onSelected: context.read<ChallengeFilterCubit>().toggleRule,
+                selectedValues: filter.rules.toList(),
                 valueBuilder: (val) {
-                  return Text(
-                    val ? 'Par ordre croissant' : 'Par ordre décroissant',
-                  );
-                  // TODO : l10n
+                  switch (val) {
+                    case Rules.chess:
+                      return Row(
+                        children: [
+                          const Icon(Icons.attach_money),
+                          CCPadding.allXxsmall(
+                            child: const Text('Budget Chess'),
+                          ),
+                        ],
+                      );
+                  }
                 },
-                previewBuilder: (val) {
-                  return Transform.flip(
-                    flipY: !val,
-                    child: const Icon(Icons.filter_list),
-                  );
-                },
+                previewBuilder: getRulesPreview,
                 showArrow: false,
               ),
               CCGap.small,
               DropdownSelector<Speed>.multipleChoices(
                 values: Speed.values,
                 onSelected: context.read<ChallengeFilterCubit>().toggleSpeed,
-                selectedValues: filter.speed.toList(),
+                selectedValues: filter.speeds.toList(),
                 valueBuilder: (speed) {
                   return Row(
                     children: [
@@ -54,12 +57,7 @@ class ChallengeSorter extends StatelessWidget {
                     ],
                   );
                 },
-                previewBuilder: (e) => Row(
-                  children: e
-                      .sorted((a, b) => a.compareTo(b))
-                      .map((s) => Icon(s.icon))
-                      .toList(),
-                ),
+                previewBuilder: getSpeedsPreview,
                 showArrow: false,
               ),
             ]
@@ -69,6 +67,21 @@ class ChallengeSorter extends StatelessWidget {
     );
   }
 }
+
+Widget getRulesPreview(Iterable<Rules> val) => Row(
+      // LATER : sort rules with compareTo
+      children: val.map((e) {
+        switch (e) {
+          case Rules.chess:
+            return const Icon(Icons.attach_money);
+        }
+      }).toList(),
+    );
+
+Widget getSpeedsPreview(Iterable<Speed> e) => Row(
+      children:
+          e.sorted((a, b) => a.compareTo(b)).map((s) => Icon(s.icon)).toList(),
+    );
 
 class FilterSelector extends StatelessWidget {
   const FilterSelector({
@@ -87,21 +100,21 @@ class FilterSelector extends StatelessWidget {
             challengeFilterCRUD.create(
               parentDocumentId: authId,
               documentId: '1',
-              data: ChallengeFilterModel(speed: {Speed.bullet, Speed.blitz}),
+              data: ChallengeFilterModel(speeds: {Speed.bullet, Speed.blitz}),
             );
           }
           if (allFilters.length < 2) {
             challengeFilterCRUD.create(
               parentDocumentId: authId,
               documentId: '2',
-              data: ChallengeFilterModel(speed: {Speed.blitz, Speed.rapid}),
+              data: ChallengeFilterModel(speeds: {Speed.blitz, Speed.rapid}),
             );
           }
           if (allFilters.length < 3) {
             challengeFilterCRUD.create(
               parentDocumentId: authId,
               documentId: '3',
-              data: ChallengeFilterModel(speed: {Speed.classical}),
+              data: ChallengeFilterModel(speeds: {Speed.classical}),
             );
           }
         }
@@ -115,14 +128,9 @@ class FilterSelector extends StatelessWidget {
                 if (filter == null) return const Icon(Icons.filter_alt_off);
                 return Row(
                   children: [
-                    Transform.flip(
-                      flipY: !filter.budgetAsc,
-                      child: const Icon(Icons.filter_list),
-                    ),
+                    getRulesPreview(filter.rules),
                     CCGap.medium,
-                    ...filter.speed
-                        .sorted((a, b) => a.compareTo(b))
-                        .map((e) => Icon(e.icon)),
+                    getSpeedsPreview(filter.speeds),
                   ],
                 );
               },
