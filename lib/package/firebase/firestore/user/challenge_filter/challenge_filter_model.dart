@@ -32,6 +32,11 @@ class ChallengeFilterModel with _$ChallengeFilterModel {
         .copyWith(userId: doc.reference.parent.parent?.id, id: doc.id);
   }
 
+  static ChallengeFilterModel sorter = ChallengeFilterModel(
+    speeds: Speed.values.toSet(),
+    rules: Rules.values.toSet(),
+  );
+
   static ChallengeFilterModel default1 =
       ChallengeFilterModel(speeds: {Speed.bullet, Speed.blitz});
 

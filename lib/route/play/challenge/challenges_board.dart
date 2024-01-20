@@ -51,11 +51,10 @@ class ChallengesBoard extends StatelessWidget {
                         otherChallenges.add(c);
                       }
                     }
-                    if (filter != null) {
-                      myChallenges.sort(filter.compare);
-                      friendChallenges.sort(filter.compare);
-                      otherChallenges.sort(filter.compare);
-                    }
+                    final sorter = filter ?? ChallengeFilterModel.sorter;
+                    myChallenges.sort(sorter.compare);
+                    friendChallenges.sort(sorter.compare);
+                    otherChallenges.sort(sorter.compare);
                     return Column(
                       children: [
                         Expanded(
