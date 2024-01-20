@@ -32,6 +32,15 @@ class ChallengeFilterModel with _$ChallengeFilterModel {
         .copyWith(userId: doc.reference.parent.parent?.id, id: doc.id);
   }
 
+  static ChallengeFilterModel default1 =
+      ChallengeFilterModel(speeds: {Speed.bullet, Speed.blitz});
+
+  static ChallengeFilterModel default2 =
+      ChallengeFilterModel(speeds: {Speed.blitz, Speed.rapid});
+
+  static ChallengeFilterModel default3 =
+      ChallengeFilterModel(speeds: {Speed.classical});
+
   Map<String, dynamic> toFirestore() {
     return toJson()
       ..removeWhere(

@@ -102,27 +102,31 @@ class FilterSelector extends StatelessWidget {
       builder: (context, allFilters) {
         final authId = context.read<AuthenticationCubit>().state?.uid;
         if (authId == null) {
-          allFilters = [ChallengeFilterModel()];
+          allFilters = [
+            ChallengeFilterModel.default1,
+            ChallengeFilterModel.default2,
+            ChallengeFilterModel.default3,
+          ];
         } else {
           if (allFilters.isEmpty) {
             challengeFilterCRUD.create(
               parentDocumentId: authId,
               documentId: '1',
-              data: ChallengeFilterModel(speeds: {Speed.bullet, Speed.blitz}),
+              data: ChallengeFilterModel.default1,
             );
           }
           if (allFilters.length < 2) {
             challengeFilterCRUD.create(
               parentDocumentId: authId,
               documentId: '2',
-              data: ChallengeFilterModel(speeds: {Speed.blitz, Speed.rapid}),
+              data: ChallengeFilterModel.default2,
             );
           }
           if (allFilters.length < 3) {
             challengeFilterCRUD.create(
               parentDocumentId: authId,
               documentId: '3',
-              data: ChallengeFilterModel(speeds: {Speed.classical}),
+              data: ChallengeFilterModel.default3,
             );
           }
         }
