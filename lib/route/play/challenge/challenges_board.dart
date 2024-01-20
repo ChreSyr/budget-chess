@@ -28,7 +28,7 @@ class ChallengesBoard extends StatelessWidget {
                   builder: (context, snapshot) {
                     final allChallenges = snapshot.data?.toList();
                     if (allChallenges == null) {
-                      return const CircularProgressIndicator();
+                      return Container();
                     }
                     final myChallenges = <ChallengeModel>[];
                     final friendChallenges = <ChallengeModel>[];
