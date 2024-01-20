@@ -15,12 +15,18 @@ class ChallengesBoard extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AuthenticationCubit, User?>(
       builder: (context, auth) {
-        // TODO : FriendshipCubit or Stream friendsOf ?
-        return BlocBuilder<FriendshipCubit, Iterable<RelationshipModel>>(
-          builder: (context, _) {
+        final authUid = auth?.uid;
+        return StreamBuilder<Iterable<RelationshipModel>>(
+          stream: relationshipCRUD.friendsOf(authUid),
+          builder: (context, snapshot) {
             // friendIds uses the state of FriendshipCubit,
             // so we need to place a BlocBuilder above
-            final friendIds = context.read<FriendshipCubit>().friendIds;
+            final friendships = snapshot.data;
+            final friendIds = (authUid == null || friendships == null)
+                ? <String>[]
+                : friendships
+                    .map((friendship) => friendship.otherUser(authUid))
+                    .whereType<String>();
             return BlocBuilder<ChallengeFilterCubit, ChallengeFilterModel?>(
               builder: (context, filter) {
                 return StreamBuilder<Iterable<ChallengeModel>>(
@@ -34,7 +40,7 @@ class ChallengesBoard extends StatelessWidget {
                     final friendChallenges = <ChallengeModel>[];
                     final otherChallenges = <ChallengeModel>[];
                     for (final c in allChallenges) {
-                      if (c.authorId == auth?.uid) {
+                      if (c.authorId == authUid) {
                         myChallenges.add(c);
                       } else if (friendIds.contains(c.authorId)) {
                         if (filter == null || filter.speeds.contains(c.speed)) {
