@@ -17,13 +17,13 @@ class ChallengeFilterCubit extends HydratedCubit<ChallengeFilterModel?> {
   }
 
   Future<void> _updateFilter(ChallengeFilterModel filter) async {
-    if (filter.userId == null) {
+    if (filter.isLocal) {
       return emit(filter);
     }
     try {
       await challengeFilterCRUD.update(
-        parentDocumentId: filter.userId ?? '',
-        documentId: filter.id ?? '',
+        parentDocumentId: filter.userId,
+        documentId: filter.id,
         data: filter,
       );
       emit(filter);

@@ -9,7 +9,7 @@ part of 'relationship_model.dart';
 _$RelationshipModelImpl _$$RelationshipModelImplFromJson(
         Map<String, dynamic> json) =>
     _$RelationshipModelImpl(
-      id: json['id'] as String?,
+      id: json['id'] as String? ?? '',
       createdAt: const TimestampToDateTimeConverter()
           .fromJson(json['createdAt'] as Timestamp?),
       updatedAt: const TimestampToDateTimeConverter()

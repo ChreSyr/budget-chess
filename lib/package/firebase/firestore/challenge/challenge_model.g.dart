@@ -8,19 +8,22 @@ part of 'challenge_model.dart';
 
 _$ChallengeModelImpl _$$ChallengeModelImplFromJson(Map<String, dynamic> json) =>
     _$ChallengeModelImpl(
-      id: json['id'] as String?,
+      id: json['id'] as String? ?? '',
       createdAt: json['createdAt'] == null
           ? null
           : DateTime.parse(json['createdAt'] as String),
       authorId: json['authorId'] as String?,
-      status: $enumDecodeNullable(_$ChallengeStatusEnumMap, json['status']),
+      status: $enumDecodeNullable(_$ChallengeStatusEnumMap, json['status']) ??
+          ChallengeStatus.finished,
       time: json['time'] as int? ?? 180,
       increment: json['increment'] as int? ?? 2,
       boardWidth: json['boardWidth'] as int? ?? 8,
       boardHeight: json['boardHeight'] as int? ?? 8,
       budget: json['budget'] as int? ?? 39,
-      userIds:
-          (json['userIds'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      userIds: (json['userIds'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$$ChallengeModelImplToJson(
@@ -29,7 +32,7 @@ Map<String, dynamic> _$$ChallengeModelImplToJson(
       'id': instance.id,
       'createdAt': instance.createdAt?.toIso8601String(),
       'authorId': instance.authorId,
-      'status': _$ChallengeStatusEnumMap[instance.status],
+      'status': _$ChallengeStatusEnumMap[instance.status]!,
       'time': instance.time,
       'increment': instance.increment,
       'boardWidth': instance.boardWidth,

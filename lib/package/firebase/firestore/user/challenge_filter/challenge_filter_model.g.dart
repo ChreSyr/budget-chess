@@ -9,8 +9,8 @@ part of 'challenge_filter_model.dart';
 _$ChallengeSorterStateImpl _$$ChallengeSorterStateImplFromJson(
         Map<String, dynamic> json) =>
     _$ChallengeSorterStateImpl(
-      userId: json['userId'] as String?,
-      id: json['id'] as String?,
+      userId: json['userId'] as String? ?? ChallengeFilterModel._local,
+      id: json['id'] as String? ?? ChallengeFilterModel._local,
       speeds: (json['speeds'] as List<dynamic>?)
               ?.map((e) => $enumDecode(_$SpeedEnumMap, e))
               .toSet() ??

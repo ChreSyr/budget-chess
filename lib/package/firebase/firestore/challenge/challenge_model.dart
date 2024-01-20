@@ -13,16 +13,16 @@ enum ChallengeStatus { open, started, finished }
 @freezed
 class ChallengeModel with _$ChallengeModel {
   factory ChallengeModel({
-    String? id,
+    @Default('') String id,
     DateTime? createdAt,
     String? authorId,
-    ChallengeStatus? status,
+    @Default(ChallengeStatus.finished) ChallengeStatus status,
     @Default(180) int time, // in seconds
     @Default(2) int increment, // in seconds
     @Default(8) int boardWidth,
     @Default(8) int boardHeight,
     @Default(39) int budget,
-    List<String>? userIds,
+    @Default([]) List<String> userIds,
   }) = _ChallengeModel;
 
   /// Required for the override getter

@@ -20,7 +20,7 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$UserModel {
-  String? get id => throw _privateConstructorUsedError; // same as auth
+  String get id => throw _privateConstructorUsedError; // same as auth
   DateTime? get createdAt => throw _privateConstructorUsedError;
   String? get username => throw _privateConstructorUsedError;
   String? get usernameLowercase => throw _privateConstructorUsedError;
@@ -39,7 +39,7 @@ abstract class $UserModelCopyWith<$Res> {
       _$UserModelCopyWithImpl<$Res, UserModel>;
   @useResult
   $Res call(
-      {String? id,
+      {String id,
       DateTime? createdAt,
       String? username,
       String? usernameLowercase,
@@ -60,7 +60,7 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = freezed,
+    Object? id = null,
     Object? createdAt = freezed,
     Object? username = freezed,
     Object? usernameLowercase = freezed,
@@ -68,10 +68,10 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
     Object? banner = freezed,
   }) {
     return _then(_value.copyWith(
-      id: freezed == id
+      id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -105,7 +105,7 @@ abstract class _$$UserModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String? id,
+      {String id,
       DateTime? createdAt,
       String? username,
       String? usernameLowercase,
@@ -124,7 +124,7 @@ class __$$UserModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = freezed,
+    Object? id = null,
     Object? createdAt = freezed,
     Object? username = freezed,
     Object? usernameLowercase = freezed,
@@ -132,10 +132,10 @@ class __$$UserModelImplCopyWithImpl<$Res>
     Object? banner = freezed,
   }) {
     return _then(_$UserModelImpl(
-      id: freezed == id
+      id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -164,7 +164,7 @@ class __$$UserModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$UserModelImpl extends _UserModel {
   _$UserModelImpl(
-      {this.id,
+      {this.id = '',
       this.createdAt,
       this.username,
       this.usernameLowercase,
@@ -176,7 +176,8 @@ class _$UserModelImpl extends _UserModel {
       _$$UserModelImplFromJson(json);
 
   @override
-  final String? id;
+  @JsonKey()
+  final String id;
 // same as auth
   @override
   final DateTime? createdAt;
@@ -231,7 +232,7 @@ class _$UserModelImpl extends _UserModel {
 
 abstract class _UserModel extends UserModel {
   factory _UserModel(
-      {final String? id,
+      {final String id,
       final DateTime? createdAt,
       final String? username,
       final String? usernameLowercase,
@@ -243,7 +244,7 @@ abstract class _UserModel extends UserModel {
       _$UserModelImpl.fromJson;
 
   @override
-  String? get id;
+  String get id;
   @override // same as auth
   DateTime? get createdAt;
   @override

@@ -12,8 +12,8 @@ part 'challenge_filter_model.g.dart';
 @freezed
 class ChallengeFilterModel with _$ChallengeFilterModel {
   factory ChallengeFilterModel({
-    String? userId,
-    String? id,
+    @Default(ChallengeFilterModel._local) String userId,
+    @Default(ChallengeFilterModel._local) String id,
     @Default({Speed.bullet, Speed.blitz, Speed.rapid, Speed.classical})
     Set<Speed> speeds,
     @Default({Rules.chess}) Set<Rules> rules,
@@ -29,28 +29,8 @@ class ChallengeFilterModel with _$ChallengeFilterModel {
     DocumentSnapshot<Map<String, dynamic>> doc,
   ) {
     return ChallengeFilterModel.fromJson(doc.data() ?? {})
-        .copyWith(userId: doc.reference.parent.parent?.id, id: doc.id);
+        .copyWith(userId: doc.reference.parent.parent?.id ?? '', id: doc.id);
   }
-
-  static ChallengeFilterModel sorter = ChallengeFilterModel(
-    speeds: Speed.values.toSet(),
-    rules: Rules.values.toSet(),
-  );
-
-  static ChallengeFilterModel default1 =
-      ChallengeFilterModel(speeds: {Speed.bullet, Speed.blitz});
-
-  static ChallengeFilterModel default2 =
-      ChallengeFilterModel(speeds: {Speed.blitz, Speed.rapid});
-
-  static ChallengeFilterModel default3 =
-      ChallengeFilterModel(speeds: {Speed.classical});
-
-  static List<ChallengeFilterModel> defaults = [
-    ChallengeFilterModel.default1,
-    ChallengeFilterModel.default2,
-    ChallengeFilterModel.default3,
-  ];
 
   Map<String, dynamic> toFirestore() {
     return toJson()
@@ -58,6 +38,43 @@ class ChallengeFilterModel with _$ChallengeFilterModel {
         (key, value) => key == 'id' || key == 'userId' || value == null,
       );
   }
+
+  static const String _local = 'local';
+
+  static ChallengeFilterModel sorter = ChallengeFilterModel(
+    userId: ChallengeFilterModel._local,
+    id: ChallengeFilterModel._local,
+    speeds: Speed.values.toSet(),
+    rules: Rules.values.toSet(),
+  );
+
+  static ChallengeFilterModel default1 = ChallengeFilterModel(
+    userId: ChallengeFilterModel._local,
+    id: ChallengeFilterModel._local,
+    speeds: {Speed.bullet, Speed.blitz},
+  );
+
+  static ChallengeFilterModel default2 = ChallengeFilterModel(
+    userId: ChallengeFilterModel._local,
+    id: ChallengeFilterModel._local,
+    speeds: {Speed.blitz, Speed.rapid},
+  );
+
+  static ChallengeFilterModel default3 = ChallengeFilterModel(
+    userId: ChallengeFilterModel._local,
+    id: ChallengeFilterModel._local,
+    speeds: {Speed.classical},
+  );
+
+  static List<ChallengeFilterModel> defaults = [
+    ChallengeFilterModel.default1,
+    ChallengeFilterModel.default2,
+    ChallengeFilterModel.default3,
+  ];
+
+  bool get isLocal =>
+      userId == ChallengeFilterModel._local ||
+      id == ChallengeFilterModel._local;
 
   int compare(ChallengeModel a, ChallengeModel b) {
     final timeControlA = a.timeControl;

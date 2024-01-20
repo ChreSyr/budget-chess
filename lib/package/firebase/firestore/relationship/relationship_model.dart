@@ -19,7 +19,7 @@ enum RelationshipStatus {
 @freezed
 class RelationshipModel with _$RelationshipModel {
   factory RelationshipModel({
-    String? id, // TODO : default to ''
+    @Default('') String id,
     /// Date of friendship start
     @TimestampToDateTimeConverter() DateTime? createdAt,
     /// Last time a message was sent or a game got updated

@@ -45,6 +45,7 @@ class CreateChallengeCubit extends Cubit<CreateChallengeForm> {
     try {
       challengeCRUD.create(
         data: ChallengeModel(
+          id: '', // will not be stored in firebase
           createdAt: DateTime.now(),
           authorId: authorId,
           status: ChallengeStatus.open,

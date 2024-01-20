@@ -128,7 +128,6 @@ Widget getUserTile(BuildContext context, UserModel user) {
   final currentUserId = context.read<UserCubit>().state?.id;
   if (currentUserId == null) return Container(); // should never happen
   final userId = user.id;
-  if (userId == null) return Container(); // should never happen
   final relationshipId = relationshipCRUD.getId(currentUserId, userId);
 
   return StreamBuilder<RelationshipModel?>(

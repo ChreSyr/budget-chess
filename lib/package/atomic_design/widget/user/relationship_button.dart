@@ -9,8 +9,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 Widget? getRelationshipButton(
   BuildContext context,
-  RelationshipModel relation,
+  RelationshipModel? relation,
 ) {
+  if (relation == null) return null;
   final currentUserId = context.read<UserCubit>().state?.id;
   if (currentUserId == null) return null; // should never happen
   final userId = relation.otherUser(currentUserId);

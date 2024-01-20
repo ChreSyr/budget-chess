@@ -163,6 +163,7 @@ class _RelationshipCRUD extends CollectionCRUD<RelationshipModel> {
     await super.create(
       documentId: relationshipId,
       data: RelationshipModel(
+        id: '', // will not be stored in firebase
         userIds: sortedUsers,
         status: status,
       ),

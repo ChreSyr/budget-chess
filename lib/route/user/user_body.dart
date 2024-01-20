@@ -52,15 +52,14 @@ class UserBody extends MainRouteBody {
 
                   final relationshipWidget = StreamBuilder<RelationshipModel?>(
                     stream: relationshipCRUD.stream(
-                    documentId: relationshipCRUD.getId(authUid, user.id ?? ''),
+                    documentId: relationshipCRUD.getId(authUid, user.id),
                     ),
                     builder: (context, snapshot) {
                       final streaming =
                           snapshot.connectionState == ConnectionState.active;
-                      final relation = snapshot.data ??
-                        RelationshipModel(userIds: [user.id ?? '', authUid]);
+                    final relation = snapshot.data;
 
-                    return (streaming && (user.id ?? '') != authUid
+                    return (streaming && (user.id) != authUid
                               ? getRelationshipButton(context, relation)
                               : null) ??
                           Container();
@@ -69,14 +68,14 @@ class UserBody extends MainRouteBody {
 
                   return UserProfile(
                     header: UserHeader(
-                    userId: user.id ?? '',
+                    userId: user.id,
                       banner: user.banner,
                       photo: user.photo,
                       username: user.username,
                       editable: false,
                     ),
                     relationshipWidget: relationshipWidget,
-                  tabSections: UserSection.getSections(authUid, user.id ?? ''),
+                  tabSections: UserSection.getSections(authUid, user.id),
                   );
               }
 
@@ -249,9 +248,6 @@ class UserStreamBuilder extends StatelessWidget {
               ErrorBody(
                 exception: Exception('User not found'),
               );
-        }
-        if (user.id == null) {
-          return ErrorBody(exception: Exception('User id is empty'));
         }
 
         return builder(context, user);

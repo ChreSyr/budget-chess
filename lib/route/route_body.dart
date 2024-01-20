@@ -77,13 +77,13 @@ abstract class MainRouteBody extends RouteBody {
         children: [
           BlocBuilder<UserCubit, UserModel?>(
             builder: (context, user) {
-              if (user == null || user.id == null) return Container();
+              if (user == null) return Container();
               return StreamBuilder<Iterable<RelationshipModel>>(
-                stream: relationshipCRUD.requestsAbout(user.id!),
+                stream: relationshipCRUD.requestsAbout(user.id),
                 builder: (context, snapshot) {
                   final requests = snapshot.data ?? [];
                   final requestsTo =
-                      requests.where((e) => !e.isRequestedBy(user.id!));
+                      requests.where((e) => !e.isRequestedBy(user.id));
                   return MenuAnchor(
                     builder: (
                       BuildContext context,

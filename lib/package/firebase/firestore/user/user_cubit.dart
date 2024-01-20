@@ -63,31 +63,31 @@ class UserCubit extends Cubit<UserModel?> {
   }
 
   Future<void> setBanner({required String banner}) async {
-    if (state == null || state!.id == null) return;
+    if (state == null) return;
     if (banner == state!.banner) return;
 
     await userCRUD.update(
-      documentId: state!.id!,
+      documentId: state!.id,
       data: state!.copyWith(banner: banner),
     );
   }
 
   Future<void> setPhoto({required String photo}) async {
-    if (state == null || state!.id == null) return;
+    if (state == null) return;
     if (photo == state!.photo) return;
 
     await userCRUD.update(
-      documentId: state!.id!,
+      documentId: state!.id,
       data: state!.copyWith(photo: photo),
     );
   }
 
   Future<void> setUsername({required String username}) async {
-    if (state == null || state!.id == null) return;
+    if (state == null) return;
     if (username == state!.username) return;
 
     await userCRUD.update(
-      documentId: state!.id!,
+      documentId: state!.id,
       data: state!.copyWith(
         username: username,
         usernameLowercase: username.toLowerCase(),

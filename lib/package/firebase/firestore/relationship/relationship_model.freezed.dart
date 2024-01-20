@@ -20,7 +20,8 @@ RelationshipModel _$RelationshipModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$RelationshipModel {
-  String? get id => throw _privateConstructorUsedError; // TODO : default to ''
+  String get id => throw _privateConstructorUsedError;
+
   /// Date of friendship start
   @TimestampToDateTimeConverter()
   DateTime? get createdAt => throw _privateConstructorUsedError;
@@ -45,7 +46,7 @@ abstract class $RelationshipModelCopyWith<$Res> {
       _$RelationshipModelCopyWithImpl<$Res, RelationshipModel>;
   @useResult
   $Res call(
-      {String? id,
+      {String id,
       @TimestampToDateTimeConverter() DateTime? createdAt,
       @TimestampToDateTimeConverter() DateTime? updatedAt,
       List<String>? userIds,
@@ -65,17 +66,17 @@ class _$RelationshipModelCopyWithImpl<$Res, $Val extends RelationshipModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = freezed,
+    Object? id = null,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
     Object? userIds = freezed,
     Object? status = freezed,
   }) {
     return _then(_value.copyWith(
-      id: freezed == id
+      id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -105,7 +106,7 @@ abstract class _$$RelationshipModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String? id,
+      {String id,
       @TimestampToDateTimeConverter() DateTime? createdAt,
       @TimestampToDateTimeConverter() DateTime? updatedAt,
       List<String>? userIds,
@@ -123,17 +124,17 @@ class __$$RelationshipModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = freezed,
+    Object? id = null,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
     Object? userIds = freezed,
     Object? status = freezed,
   }) {
     return _then(_$RelationshipModelImpl(
-      id: freezed == id
+      id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -158,7 +159,7 @@ class __$$RelationshipModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$RelationshipModelImpl extends _RelationshipModel {
   _$RelationshipModelImpl(
-      {this.id,
+      {this.id = '',
       @TimestampToDateTimeConverter() this.createdAt,
       @TimestampToDateTimeConverter() this.updatedAt,
       final List<String>? userIds,
@@ -170,8 +171,9 @@ class _$RelationshipModelImpl extends _RelationshipModel {
       _$$RelationshipModelImplFromJson(json);
 
   @override
-  final String? id;
-// TODO : default to ''
+  @JsonKey()
+  final String id;
+
   /// Date of friendship start
   @override
   @TimestampToDateTimeConverter()
@@ -236,7 +238,7 @@ class _$RelationshipModelImpl extends _RelationshipModel {
 
 abstract class _RelationshipModel extends RelationshipModel {
   factory _RelationshipModel(
-      {final String? id,
+      {final String id,
       @TimestampToDateTimeConverter() final DateTime? createdAt,
       @TimestampToDateTimeConverter() final DateTime? updatedAt,
       final List<String>? userIds,
@@ -247,8 +249,9 @@ abstract class _RelationshipModel extends RelationshipModel {
       _$RelationshipModelImpl.fromJson;
 
   @override
-  String? get id;
-  @override // TODO : default to ''
+  String get id;
+  @override
+
   /// Date of friendship start
   @TimestampToDateTimeConverter()
   DateTime? get createdAt;

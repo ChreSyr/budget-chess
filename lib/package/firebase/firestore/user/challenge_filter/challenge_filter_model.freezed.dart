@@ -20,8 +20,8 @@ ChallengeFilterModel _$ChallengeFilterModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$ChallengeFilterModel {
-  String? get userId => throw _privateConstructorUsedError;
-  String? get id => throw _privateConstructorUsedError;
+  String get userId => throw _privateConstructorUsedError;
+  String get id => throw _privateConstructorUsedError;
   Set<Speed> get speeds => throw _privateConstructorUsedError;
   Set<Rules> get rules => throw _privateConstructorUsedError;
 
@@ -37,7 +37,7 @@ abstract class $ChallengeFilterModelCopyWith<$Res> {
           $Res Function(ChallengeFilterModel) then) =
       _$ChallengeFilterModelCopyWithImpl<$Res, ChallengeFilterModel>;
   @useResult
-  $Res call({String? userId, String? id, Set<Speed> speeds, Set<Rules> rules});
+  $Res call({String userId, String id, Set<Speed> speeds, Set<Rules> rules});
 }
 
 /// @nodoc
@@ -54,20 +54,20 @@ class _$ChallengeFilterModelCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? userId = freezed,
-    Object? id = freezed,
+    Object? userId = null,
+    Object? id = null,
     Object? speeds = null,
     Object? rules = null,
   }) {
     return _then(_value.copyWith(
-      userId: freezed == userId
+      userId: null == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      id: freezed == id
+              as String,
+      id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       speeds: null == speeds
           ? _value.speeds
           : speeds // ignore: cast_nullable_to_non_nullable
@@ -88,7 +88,7 @@ abstract class _$$ChallengeSorterStateImplCopyWith<$Res>
       __$$ChallengeSorterStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String? userId, String? id, Set<Speed> speeds, Set<Rules> rules});
+  $Res call({String userId, String id, Set<Speed> speeds, Set<Rules> rules});
 }
 
 /// @nodoc
@@ -102,20 +102,20 @@ class __$$ChallengeSorterStateImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? userId = freezed,
-    Object? id = freezed,
+    Object? userId = null,
+    Object? id = null,
     Object? speeds = null,
     Object? rules = null,
   }) {
     return _then(_$ChallengeSorterStateImpl(
-      userId: freezed == userId
+      userId: null == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      id: freezed == id
+              as String,
+      id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       speeds: null == speeds
           ? _value._speeds
           : speeds // ignore: cast_nullable_to_non_nullable
@@ -132,8 +132,8 @@ class __$$ChallengeSorterStateImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ChallengeSorterStateImpl extends _ChallengeSorterState {
   _$ChallengeSorterStateImpl(
-      {this.userId,
-      this.id,
+      {this.userId = ChallengeFilterModel._local,
+      this.id = ChallengeFilterModel._local,
       final Set<Speed> speeds = const {
         Speed.bullet,
         Speed.blitz,
@@ -149,9 +149,11 @@ class _$ChallengeSorterStateImpl extends _ChallengeSorterState {
       _$$ChallengeSorterStateImplFromJson(json);
 
   @override
-  final String? userId;
+  @JsonKey()
+  final String userId;
   @override
-  final String? id;
+  @JsonKey()
+  final String id;
   final Set<Speed> _speeds;
   @override
   @JsonKey()
@@ -213,8 +215,8 @@ class _$ChallengeSorterStateImpl extends _ChallengeSorterState {
 
 abstract class _ChallengeSorterState extends ChallengeFilterModel {
   factory _ChallengeSorterState(
-      {final String? userId,
-      final String? id,
+      {final String userId,
+      final String id,
       final Set<Speed> speeds,
       final Set<Rules> rules}) = _$ChallengeSorterStateImpl;
   _ChallengeSorterState._() : super._();
@@ -223,9 +225,9 @@ abstract class _ChallengeSorterState extends ChallengeFilterModel {
       _$ChallengeSorterStateImpl.fromJson;
 
   @override
-  String? get userId;
+  String get userId;
   @override
-  String? get id;
+  String get id;
   @override
   Set<Speed> get speeds;
   @override
