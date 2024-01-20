@@ -19,7 +19,7 @@ enum RelationshipStatus {
 @freezed
 class RelationshipModel with _$RelationshipModel {
   factory RelationshipModel({
-    @Default('') String id,
+    required String id,
     /// Date of friendship start
     @TimestampToDateTimeConverter() DateTime? createdAt,
     /// Last time a message was sent or a game got updated
@@ -37,13 +37,15 @@ class RelationshipModel with _$RelationshipModel {
   factory RelationshipModel.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> doc,
   ) {
-    return RelationshipModel.fromJson(doc.data() ?? {}).copyWith(id: doc.id);
+    final json = doc.data() ?? {};
+    json['id'] = doc.id;
+    return RelationshipModel.fromJson(json);
   }
 
-  Map<String, dynamic> toFirestore() {
-    return toJson()
-      ..removeWhere((key, value) => key == 'id' || value == null);
-  }
+  Map<String, dynamic> toFirestore() =>
+      toJson()..removeWhere((key, value) => key == 'id' || value == null);
+
+  // ---
 
   String? get blocker {
     if (userIds == null || userIds!.isEmpty) return null;

@@ -3,30 +3,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crea_chess/package/chat/message/message_model.dart';
 import 'package:crea_chess/package/firebase/export.dart';
-import 'package:crea_chess/package/firebase/firestore/crud/model_converter.dart';
 import 'package:crea_chess/package/firebase/firestore/crud/sub_collection_crud.dart';
-
-class _MessageModelConverter implements ModelConverter<MessageModel> {
-  @override
-  MessageModel fromFirestore(
-    DocumentSnapshot<Map<String, dynamic>> snapshot,
-    SnapshotOptions? _,
-  ) {
-    return MessageModel.fromFirestore(snapshot);
-  }
-
-  @override
-  Map<String, dynamic> toFirestore(MessageModel data, SetOptions? _) {
-    return data.toFirestore();
-  }
-}
 
 class _MessageCRUD extends SubCollectionCRUD<MessageModel> {
   _MessageCRUD()
       : super(
-          relationshipCRUD.collectionName,
-          'message',
-          _MessageModelConverter(),
+          parentCollectionName: relationshipCRUD.collectionName,
+          collectionName: 'message',
+          toFirestore: (
+            MessageModel data,
+            SetOptions? _,
+          ) =>
+              data.toFirestore(),
+          fromFirestore: (
+            DocumentSnapshot<Map<String, dynamic>> snapshot,
+            SnapshotOptions? _,
+          ) =>
+              MessageModel.fromFirestore(snapshot),
         );
 
   CollectionReference<Map<String, dynamic>> _collection(

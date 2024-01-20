@@ -159,7 +159,7 @@ class __$$RelationshipModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$RelationshipModelImpl extends _RelationshipModel {
   _$RelationshipModelImpl(
-      {this.id = '',
+      {required this.id,
       @TimestampToDateTimeConverter() this.createdAt,
       @TimestampToDateTimeConverter() this.updatedAt,
       final List<String>? userIds,
@@ -171,7 +171,6 @@ class _$RelationshipModelImpl extends _RelationshipModel {
       _$$RelationshipModelImplFromJson(json);
 
   @override
-  @JsonKey()
   final String id;
 
   /// Date of friendship start
@@ -238,7 +237,7 @@ class _$RelationshipModelImpl extends _RelationshipModel {
 
 abstract class _RelationshipModel extends RelationshipModel {
   factory _RelationshipModel(
-      {final String id,
+      {required final String id,
       @TimestampToDateTimeConverter() final DateTime? createdAt,
       @TimestampToDateTimeConverter() final DateTime? updatedAt,
       final List<String>? userIds,

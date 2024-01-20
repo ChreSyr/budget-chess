@@ -1,29 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crea_chess/package/firebase/firestore/crud/collection_crud.dart';
-import 'package:crea_chess/package/firebase/firestore/crud/model_converter.dart';
 import 'package:crea_chess/package/firebase/firestore/relationship/relationship_crud.dart';
 import 'package:crea_chess/package/firebase/firestore/user/user_cubit.dart';
 import 'package:crea_chess/package/firebase/firestore/user/user_model.dart';
 
-class _UserModelConverter implements ModelConverter<UserModel> {
-  const _UserModelConverter();
-
-  @override
-  UserModel fromFirestore(
-    DocumentSnapshot<Map<String, dynamic>> snapshot,
-    SnapshotOptions? _,
-  ) {
-    return UserModel.fromFirestore(snapshot);
-  }
-
-  @override
-  Map<String, dynamic> toFirestore(UserModel data, SetOptions? _) {
-    return data.toFirestore();
-  }
-}
-
 class _UserCRUD extends CollectionCRUD<UserModel> {
-  _UserCRUD() : super('user', const _UserModelConverter());
+  _UserCRUD()
+      : super(
+          collectionName: 'user',
+          toFirestore: (
+            UserModel data,
+            SetOptions? _,
+          ) =>
+              data.toFirestore(),
+          fromFirestore: (
+            DocumentSnapshot<Map<String, dynamic>> snapshot,
+            SnapshotOptions? _,
+          ) =>
+              UserModel.fromFirestore(snapshot),
+        );
 
   final userCubit = UserCubit();
 

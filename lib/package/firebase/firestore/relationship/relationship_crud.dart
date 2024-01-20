@@ -1,28 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crea_chess/package/firebase/firestore/crud/collection_crud.dart';
-import 'package:crea_chess/package/firebase/firestore/crud/model_converter.dart';
 import 'package:crea_chess/package/firebase/firestore/relationship/relationship_model.dart';
-
-class _RelationshipModelConverter implements ModelConverter<RelationshipModel> {
-  const _RelationshipModelConverter();
-
-  @override
-  RelationshipModel fromFirestore(
-    DocumentSnapshot<Map<String, dynamic>> snapshot,
-    SnapshotOptions? _,
-  ) {
-    return RelationshipModel.fromFirestore(snapshot);
-  }
-
-  @override
-  Map<String, dynamic> toFirestore(RelationshipModel data, SetOptions? _) {
-    return data.toFirestore();
-  }
-}
 
 class _RelationshipCRUD extends CollectionCRUD<RelationshipModel> {
   _RelationshipCRUD()
-      : super('relationship', const _RelationshipModelConverter());
+      : super(
+          collectionName: 'relationship',
+          toFirestore: (
+            RelationshipModel data,
+            SetOptions? _,
+          ) =>
+              data.toFirestore(),
+          fromFirestore: (
+            DocumentSnapshot<Map<String, dynamic>> snapshot,
+            SnapshotOptions? _,
+          ) =>
+              RelationshipModel.fromFirestore(snapshot),
+        );
 
   Future<void> block({
     required String blockerId,

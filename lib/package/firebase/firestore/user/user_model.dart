@@ -9,7 +9,7 @@ part 'user_model.g.dart';
 @freezed
 class UserModel with _$UserModel {
   factory UserModel({
-    @Default('') String id, // same as auth
+    required String id, // same as auth
     DateTime? createdAt,
     String? username,
     String? usernameLowercase,
@@ -26,11 +26,13 @@ class UserModel with _$UserModel {
   factory UserModel.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> doc,
   ) {
-    return UserModel.fromJson(doc.data() ?? {}).copyWith(id: doc.id);
+    final json = doc.data() ?? {};
+    json['id'] = doc.id;
+    return UserModel.fromJson(json);
   }
 
-  Map<String, dynamic> toFirestore() {
-    return toJson()
-      ..removeWhere((key, value) => key == 'id' || value == null);
-  }
+  Map<String, dynamic> toFirestore() =>
+      toJson()..removeWhere((key, value) => key == 'id' || value == null);
+
+  // ---
 }

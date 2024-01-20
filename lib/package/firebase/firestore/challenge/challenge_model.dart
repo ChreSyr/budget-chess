@@ -13,7 +13,7 @@ enum ChallengeStatus { open, started, finished }
 @freezed
 class ChallengeModel with _$ChallengeModel {
   factory ChallengeModel({
-    @Default('') String id,
+    required String id,
     DateTime? createdAt,
     String? authorId,
     @Default(ChallengeStatus.finished) ChallengeStatus status,
@@ -30,16 +30,19 @@ class ChallengeModel with _$ChallengeModel {
 
   factory ChallengeModel.fromJson(Map<String, dynamic> json) =>
       _$ChallengeModelFromJson(json);
-
+  
   factory ChallengeModel.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> doc,
   ) {
-    return ChallengeModel.fromJson(doc.data() ?? {}).copyWith(id: doc.id);
+    final json = doc.data() ?? {};
+    json['id'] = doc.id;
+    return ChallengeModel.fromJson(json);
   }
 
-  Map<String, dynamic> toFirestore() {
-    return toJson()..removeWhere((key, value) => key == 'id' || value == null);
-  }
+  Map<String, dynamic> toFirestore() =>
+      toJson()..removeWhere((key, value) => key == 'id' || value == null);
+
+  // ---
 
   TimeControl get timeControl => TimeControl(time, increment);
   Speed get speed => timeControl.speed;

@@ -28,16 +28,18 @@ class ChallengeFilterModel with _$ChallengeFilterModel {
   factory ChallengeFilterModel.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> doc,
   ) {
-    return ChallengeFilterModel.fromJson(doc.data() ?? {})
-        .copyWith(userId: doc.reference.parent.parent?.id ?? '', id: doc.id);
+    final json = doc.data() ?? {};
+    json['userId'] = doc.reference.parent.parent?.id ?? '';
+    json['id'] = doc.id;
+    return ChallengeFilterModel.fromJson(json);
   }
 
-  Map<String, dynamic> toFirestore() {
-    return toJson()
-      ..removeWhere(
-        (key, value) => key == 'id' || key == 'userId' || value == null,
-      );
-  }
+  Map<String, dynamic> toFirestore() => toJson()
+    ..removeWhere(
+      (key, value) => key == 'id' || key == 'userId' || value == null,
+    );
+
+  // ---
 
   static const String _local = 'local';
 

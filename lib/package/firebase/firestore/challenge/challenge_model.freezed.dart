@@ -217,7 +217,7 @@ class __$$ChallengeModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ChallengeModelImpl extends _ChallengeModel {
   _$ChallengeModelImpl(
-      {this.id = '',
+      {required this.id,
       this.createdAt,
       this.authorId,
       this.status = ChallengeStatus.finished,
@@ -234,7 +234,6 @@ class _$ChallengeModelImpl extends _ChallengeModel {
       _$$ChallengeModelImplFromJson(json);
 
   @override
-  @JsonKey()
   final String id;
   @override
   final DateTime? createdAt;
@@ -328,7 +327,7 @@ class _$ChallengeModelImpl extends _ChallengeModel {
 
 abstract class _ChallengeModel extends ChallengeModel {
   factory _ChallengeModel(
-      {final String id,
+      {required final String id,
       final DateTime? createdAt,
       final String? authorId,
       final ChallengeStatus status,

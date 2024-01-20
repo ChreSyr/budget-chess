@@ -164,7 +164,7 @@ class __$$UserModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$UserModelImpl extends _UserModel {
   _$UserModelImpl(
-      {this.id = '',
+      {required this.id,
       this.createdAt,
       this.username,
       this.usernameLowercase,
@@ -176,7 +176,6 @@ class _$UserModelImpl extends _UserModel {
       _$$UserModelImplFromJson(json);
 
   @override
-  @JsonKey()
   final String id;
 // same as auth
   @override
@@ -232,7 +231,7 @@ class _$UserModelImpl extends _UserModel {
 
 abstract class _UserModel extends UserModel {
   factory _UserModel(
-      {final String id,
+      {required final String id,
       final DateTime? createdAt,
       final String? username,
       final String? usernameLowercase,

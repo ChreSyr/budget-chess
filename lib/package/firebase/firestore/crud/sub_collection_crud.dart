@@ -2,25 +2,29 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:crea_chess/package/firebase/firestore/crud/model_converter.dart';
 
 abstract class SubCollectionCRUD<T> {
-  const SubCollectionCRUD(
-    this.parentCollectionName,
-    this.collectionName,
-    this._converter,
-  );
+  const SubCollectionCRUD({
+    required this.parentCollectionName,
+    required this.collectionName,
+    required this.toFirestore,
+    required this.fromFirestore,
+  });
 
   final String parentCollectionName;
   final String collectionName;
-  final ModelConverter<T> _converter;
+  final Map<String, Object?> Function(T, SetOptions?) toFirestore;
+  final T Function(
+    DocumentSnapshot<Map<String, dynamic>>,
+    SnapshotOptions?,
+  ) fromFirestore;
 
   CollectionReference<T> _collection(String parentDocumentId) =>
       FirebaseFirestore.instance
           .collection('$parentCollectionName/$parentDocumentId/$collectionName')
           .withConverter<T>(
-            toFirestore: _converter.toFirestore,
-            fromFirestore: _converter.fromFirestore,
+            toFirestore: toFirestore,
+            fromFirestore: fromFirestore,
           );
 
   Future<void> create({
@@ -89,7 +93,7 @@ abstract class SubCollectionCRUD<T> {
   }) async {
     await _collection(parentDocumentId)
         .doc(documentId)
-        .update(_converter.toFirestore(data, null));
+        .update(toFirestore(data, null));
   }
 
   Future<void> delete({
