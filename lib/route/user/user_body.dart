@@ -159,16 +159,19 @@ class NotConnectedScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(context.l10n.notConnected),
-        CCGap.large,
-        FilledButton.icon(
-          onPressed: () => context.push('/sso'),
-          icon: const Icon(Icons.login),
-          label: Text(context.l10n.signin),
-        ),
-      ],
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(context.l10n.notConnected),
+          CCGap.large,
+          FilledButton.icon(
+            onPressed: () => context.push('/sso'),
+            icon: const Icon(Icons.login),
+            label: Text(context.l10n.signin),
+          ),
+        ],
+      ),
     );
   }
 }
