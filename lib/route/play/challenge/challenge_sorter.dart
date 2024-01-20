@@ -101,13 +101,7 @@ class FilterSelector extends StatelessWidget {
     return BlocBuilder<ChallengeFiltersCubit, Iterable<ChallengeFilterModel>>(
       builder: (context, allFilters) {
         final authId = context.read<AuthenticationCubit>().state?.uid;
-        if (authId == null) {
-          allFilters = [
-            ChallengeFilterModel.default1,
-            ChallengeFilterModel.default2,
-            ChallengeFilterModel.default3,
-          ];
-        } else {
+        if (authId != null) {
           if (allFilters.isEmpty) {
             challengeFilterCRUD.create(
               parentDocumentId: authId,

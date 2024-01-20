@@ -17,6 +17,9 @@ class ChallengeFilterCubit extends HydratedCubit<ChallengeFilterModel?> {
   }
 
   Future<void> _updateFilter(ChallengeFilterModel filter) async {
+    if (filter.userId == null) {
+      return emit(filter);
+    }
     try {
       await challengeFilterCRUD.update(
         parentDocumentId: filter.userId ?? '',

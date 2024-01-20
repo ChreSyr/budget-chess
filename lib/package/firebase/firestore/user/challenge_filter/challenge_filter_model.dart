@@ -46,6 +46,12 @@ class ChallengeFilterModel with _$ChallengeFilterModel {
   static ChallengeFilterModel default3 =
       ChallengeFilterModel(speeds: {Speed.classical});
 
+  static List<ChallengeFilterModel> defaults = [
+    ChallengeFilterModel.default1,
+    ChallengeFilterModel.default2,
+    ChallengeFilterModel.default3,
+  ];
+
   Map<String, dynamic> toFirestore() {
     return toJson()
       ..removeWhere(
