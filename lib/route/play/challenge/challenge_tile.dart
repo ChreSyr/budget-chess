@@ -35,7 +35,10 @@ class ChallengeTile extends StatelessWidget {
                 final author = snapshot.data;
                 if (author == null) return const UserPhoto(photo: '');
                 return GestureDetector(
-                  onTap: () => context.go('/user/@${author.usernameLowercase}'),
+                  // push allows to stay in the Play page instead of
+                  // switching to Profile page
+                  onTap: () =>
+                      context.push('/user/@${author.usernameLowercase}'),
                   child: UserPhoto.fromId(userId: authorId),
                 );
               },
