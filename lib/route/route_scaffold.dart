@@ -33,7 +33,7 @@ class RouteScaffold extends StatelessWidget {
       body: padd(
         body,
         centered: body.centered,
-        padded: body.centered,
+        padded: body.padded,
         scrolled: body.scrolled,
       ),
     );

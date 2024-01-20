@@ -1,5 +1,3 @@
-import 'package:crea_chess/package/atomic_design/size.dart';
-import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/route/play/challenge/challenges_board.dart';
@@ -14,12 +12,24 @@ class HomeBody extends MainRouteBody {
       : super(
           id: 'home',
           icon: Icons.play_arrow,
+          padded: false,
           scrolled: false,
         );
 
   @override
   String getTitle(AppLocalizations l10n) {
     return l10n.play;
+  }
+
+  @override
+  List<Widget> getActions(BuildContext context) {
+    return [
+      FilledButton(
+        onPressed: () => context.go('/play/chessground'),
+        child: const Text('Play'),
+      ),
+      ...super.getActions(context),
+    ];
   }
 
   @override
@@ -33,31 +43,7 @@ class HomeBody extends MainRouteBody {
           create: (context) => ChallengeFilterCubit(),
         ),
       ],
-      child: SizedBox(
-        width: CCWidgetSize.large4,
-        child: Column(
-          children: [
-            const Expanded(child: ChallengesBoard()),
-            CCGap.large,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                FilledButton(
-                  onPressed: () => context.go('/play/chessground'),
-                  child: const Text('Play'),
-                ),
-                CCGap.large,
-                FilledButton.icon(
-                  onPressed: () => context.go('/play/create_challenge'),
-                  icon: const Icon(Icons.add),
-                  label: const Text('Create challenge'),
-                ),
-              ],
-            ),
-            CCGap.large,
-          ],
-        ),
-      ),
+      child: const ChallengesBoard(),
     );
   }
 }
