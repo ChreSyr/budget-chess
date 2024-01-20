@@ -27,22 +27,10 @@ class ChallengeTile extends StatelessWidget {
       child: Row(
         children: [
           CCGap.small,
-          SizedBox(
-            width: CCSize.xlarge,
-            child: StreamBuilder<UserModel?>(
-              stream: userCRUD.stream(documentId: authorId),
-              builder: (context, snapshot) {
-                final author = snapshot.data;
-                if (author == null) return const UserPhoto(photo: '');
-                return GestureDetector(
-                  // push allows to stay in the Play page instead of
-                  // switching to Profile page
-                  onTap: () =>
-                      context.push('/user/@${author.usernameLowercase}'),
-                  child: UserPhoto.fromId(userId: authorId),
-                );
-              },
-            ),
+          UserPhoto.fromId(
+            userId: authorId,
+            radius: CCSize.medium,
+            onTap: () => context.push('/user/@$authorId'),
           ),
           CCGap.small,
           const SizedBox(height: CCSize.large, child: VerticalDivider()),

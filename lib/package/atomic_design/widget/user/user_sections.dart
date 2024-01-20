@@ -2,7 +2,7 @@ import 'package:crea_chess/package/atomic_design/dialog/user/email_verification.
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/snack_bar.dart';
-import 'package:crea_chess/package/atomic_design/widget/user/friend_preview.Dart';
+import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/chat/flutter_chat_types/flutter_chat_types.dart'
     as types;
 import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/chat.dart';
@@ -10,8 +10,10 @@ import 'package:crea_chess/package/chat/message/message_model.dart';
 import 'package:crea_chess/package/chat/message/messsage_crud.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
+import 'package:crea_chess/route/user/search_friend/search_friend_body.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 // LATER: if other is not a friend, can only see friends in common
 
@@ -79,17 +81,38 @@ class UserSectionFriends extends UserSection {
           stream: relationshipCRUD.friendsOf(userId),
           builder: (context, snapshot) {
             final relations = snapshot.data;
-            final List<Widget> friendsPreviews = (relations ?? [])
-                .map(
-                  (relationship) => FriendPreview(
-                    friendId: (relationship.userIds ?? [])
-                        .where((id) => id != userId)
-                        .first,
-                  ),
-                )
-                .toList();
+            const radius = CCSize.xlarge;
+            final friendsPreviews = (relations ?? []).map(
+              (relationship) {
+                final friendId = (relationship.userIds ?? [])
+                    .where((id) => id != userId)
+                    .first;
+                return UserPhoto.fromId(
+                  userId: friendId,
+                  radius: radius,
+                  onTap: () {
+                    if (friendId == userId) {
+                      while (context.canPop()) {
+                        context.pop();
+                      }
+                    } else {
+                      context.push('/user/@$friendId');
+                    }
+                  },
+                );
+              },
+            ).toList();
             if (context.read<UserCubit>().state?.id == userId) {
-              friendsPreviews.add(const FriendPreview(friendId: 'add'));
+              friendsPreviews.add(
+                SizedBox(
+                  height: radius * 2,
+                  width: radius * 2,
+                  child: IconButton.outlined(
+                    onPressed: () => searchFriend(context),
+                    icon: const Icon(Icons.person_add),
+                  ),
+                ),
+              );
             }
             return Wrap(
               runSpacing: CCSize.medium,

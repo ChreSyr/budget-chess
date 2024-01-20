@@ -52,13 +52,13 @@ class _UserCRUD extends CollectionCRUD<UserModel> {
     }
   }
 
-  Stream<Iterable<UserModel>> streamUsername(String username) {
+  Stream<UserModel?> streamUsername(String username) {
     return streamFiltered(
       filter: (collection) => collection.where(
         'usernameLowercase',
         isEqualTo: username.toLowerCase(),
       ),
-    );
+    ).asyncMap((list) => list.firstOrNull);
   }
 
   Future<bool> usernameIsTaken(String username) async {

@@ -37,17 +37,23 @@ class UserPhoto extends StatelessWidget {
     required String userId,
     Color? backgroundColor,
     double? radius,
+    void Function()? onTap,
   }) {
     return StreamBuilder<UserModel?>(
       stream: userCRUD.stream(documentId: userId),
       builder: (context, snapshot) {
         final user = snapshot.data;
-        if (user == null) return const CircularProgressIndicator();
-        return UserPhoto(
-          photo: user.photo,
+        final photo = UserPhoto(
+          photo: user?.photo,
           backgroundColor: backgroundColor,
           radius: radius,
         );
+        return onTap == null
+            ? photo
+            : GestureDetector(
+                onTap: onTap,
+                child: photo,
+              );
       },
     );
   }

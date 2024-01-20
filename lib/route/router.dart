@@ -80,11 +80,10 @@ final router = GoRouter(
                       const RouteScaffold(body: ModifyUsernameBody()),
                 ),
                 GoRoute(
-                  path: '@:username',
+                  path: '@:usernameOrId',
                   builder: (context, state) => RouteScaffold(
                     body: UserBody(
-                      routeUsernameLowercase:
-                          state.pathParameters['username']?.toLowerCase() ?? '',
+                      usernameOrId: state.pathParameters['usernameOrId'],
                     ),
                   ),
                 ),

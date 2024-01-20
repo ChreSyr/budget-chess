@@ -17,7 +17,7 @@ import 'package:go_router/go_router.dart';
 // LATER: App Check
 
 class UserBody extends MainRouteBody {
-  const UserBody({this.routeUsernameLowercase, super.key})
+  const UserBody({this.usernameOrId, super.key})
       : super(
           id: routeId,
           icon: Icons.person,
@@ -26,7 +26,8 @@ class UserBody extends MainRouteBody {
           scrolled: false,
         );
 
-  final String? routeUsernameLowercase;
+  /// Can be a user id or usernameLowercase
+  final String? usernameOrId;
 
   @override
   String getTitle(AppLocalizations l10n) => l10n.profile;
@@ -39,48 +40,27 @@ class UserBody extends MainRouteBody {
   @override
   Widget build(BuildContext context) {
     return AuthVerifier(
-      builder: (context, authId) {
+      builder: (context, authUid) {
         return IncompleteProfileNotifier(
           builder: (context, currentUser) {
             // creating the user, may never happen, or very very shortly
             if (currentUser == null) return const CircularProgressIndicator();
 
-            if (routeUsernameLowercase != null &&
-                routeUsernameLowercase != currentUser.usernameLowercase) {
-              return StreamBuilder<Iterable<UserModel>>(
-                stream: userCRUD.streamUsername(routeUsernameLowercase!),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return ErrorBody(
-                      exception: Exception('An error occurred'),
-                    );
-                  }
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const LinearProgressIndicator();
-                  }
-
-                  final user = snapshot.data?.firstOrNull;
-                  if (user == null) {
-                    return ErrorBody(
-                      exception: Exception('Username not found'),
-                    );
-                  }
-                  if (user.id == null) {
-                    return ErrorBody(exception: Exception('User id is empty'));
-                  }
-                  final userId = user.id!;
+            if (usernameOrId != null &&
+                usernameOrId != currentUser.usernameLowercase) {
+              Widget builder(BuildContext context, UserModel user) {
 
                   final relationshipWidget = StreamBuilder<RelationshipModel?>(
                     stream: relationshipCRUD.stream(
-                      documentId: relationshipCRUD.getId(authId, userId),
+                    documentId: relationshipCRUD.getId(authUid, user.id ?? ''),
                     ),
                     builder: (context, snapshot) {
                       final streaming =
                           snapshot.connectionState == ConnectionState.active;
                       final relation = snapshot.data ??
-                          RelationshipModel(userIds: [userId, authId]);
+                        RelationshipModel(userIds: [user.id ?? '', authUid]);
 
-                      return (streaming && userId != authId
+                    return (streaming && (user.id ?? '') != authUid
                               ? getRelationshipButton(context, relation)
                               : null) ??
                           Container();
@@ -89,28 +69,37 @@ class UserBody extends MainRouteBody {
 
                   return UserProfile(
                     header: UserHeader(
-                      userId: userId,
+                    userId: user.id ?? '',
                       banner: user.banner,
                       photo: user.photo,
                       username: user.username,
                       editable: false,
                     ),
                     relationshipWidget: relationshipWidget,
-                    tabSections: UserSection.getSections(authId, userId),
+                  tabSections: UserSection.getSections(authUid, user.id ?? ''),
                   );
-                },
+              }
+
+              return UserStreamBuilder(
+                userId: usernameOrId!,
+                notFound: UserStreamBuilder(
+                  userId: usernameOrId!,
+                  idIsUsername: true,
+                  builder: builder,
+                ),
+                builder: builder,
               );
             }
 
             return UserProfile(
               header: UserHeader(
-                userId: authId,
+                userId: authUid,
                 banner: currentUser.banner,
                 photo: currentUser.photo,
                 username: currentUser.username,
                 editable: true,
               ),
-              tabSections: UserSection.getSections(authId, authId),
+              tabSections: UserSection.getSections(authUid, authUid),
             );
           },
         );
@@ -119,6 +108,9 @@ class UserBody extends MainRouteBody {
   }
 }
 
+/// Check if the the user is connected and if its email is verified.
+///
+/// The builder function is called when the email is verified.
 class AuthVerifier extends StatelessWidget {
   const AuthVerifier({required this.builder, super.key});
 
@@ -217,6 +209,53 @@ class IncompleteProfileNotifier extends StatelessWidget {
         }
       },
       builder: builder,
+    );
+  }
+}
+
+class UserStreamBuilder extends StatelessWidget {
+  const UserStreamBuilder({
+    required this.userId,
+    required this.builder,
+    this.idIsUsername = false,
+    this.notFound,
+    super.key,
+  });
+
+  final String userId;
+  final bool idIsUsername;
+  final Widget Function(BuildContext, UserModel) builder;
+  final Widget? notFound;
+
+  @override
+  Widget build(BuildContext context) {
+    if (idIsUsername) {}
+
+    return StreamBuilder<UserModel?>(
+      stream: idIsUsername
+          ? userCRUD.streamUsername(userId)
+          : userCRUD.stream(documentId: userId),
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return ErrorBody(exception: Exception('An error occurred'));
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const LinearProgressIndicator();
+        }
+
+        final user = snapshot.data;
+        if (user == null) {
+          return notFound ??
+              ErrorBody(
+                exception: Exception('User not found'),
+              );
+        }
+        if (user.id == null) {
+          return ErrorBody(exception: Exception('User id is empty'));
+        }
+
+        return builder(context, user);
+      },
     );
   }
 }
