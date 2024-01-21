@@ -23,7 +23,7 @@ mixin _$ChallengeFilterModel {
   String get userId => throw _privateConstructorUsedError;
   String get id => throw _privateConstructorUsedError;
   Set<Speed> get speeds => throw _privateConstructorUsedError;
-  Set<Rules> get rules => throw _privateConstructorUsedError;
+  Set<Rule> get rules => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -37,7 +37,7 @@ abstract class $ChallengeFilterModelCopyWith<$Res> {
           $Res Function(ChallengeFilterModel) then) =
       _$ChallengeFilterModelCopyWithImpl<$Res, ChallengeFilterModel>;
   @useResult
-  $Res call({String userId, String id, Set<Speed> speeds, Set<Rules> rules});
+  $Res call({String userId, String id, Set<Speed> speeds, Set<Rule> rules});
 }
 
 /// @nodoc
@@ -75,7 +75,7 @@ class _$ChallengeFilterModelCopyWithImpl<$Res,
       rules: null == rules
           ? _value.rules
           : rules // ignore: cast_nullable_to_non_nullable
-              as Set<Rules>,
+              as Set<Rule>,
     ) as $Val);
   }
 }
@@ -88,7 +88,7 @@ abstract class _$$ChallengeSorterStateImplCopyWith<$Res>
       __$$ChallengeSorterStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String userId, String id, Set<Speed> speeds, Set<Rules> rules});
+  $Res call({String userId, String id, Set<Speed> speeds, Set<Rule> rules});
 }
 
 /// @nodoc
@@ -123,7 +123,7 @@ class __$$ChallengeSorterStateImplCopyWithImpl<$Res>
       rules: null == rules
           ? _value._rules
           : rules // ignore: cast_nullable_to_non_nullable
-              as Set<Rules>,
+              as Set<Rule>,
     ));
   }
 }
@@ -140,7 +140,7 @@ class _$ChallengeSorterStateImpl extends _ChallengeSorterState {
         Speed.rapid,
         Speed.classical
       },
-      final Set<Rules> rules = const {Rules.chess}})
+      final Set<Rule> rules = const {Rule.chess}})
       : _speeds = speeds,
         _rules = rules,
         super._();
@@ -163,10 +163,10 @@ class _$ChallengeSorterStateImpl extends _ChallengeSorterState {
     return EqualUnmodifiableSetView(_speeds);
   }
 
-  final Set<Rules> _rules;
+  final Set<Rule> _rules;
   @override
   @JsonKey()
-  Set<Rules> get rules {
+  Set<Rule> get rules {
     if (_rules is EqualUnmodifiableSetView) return _rules;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableSetView(_rules);
@@ -218,7 +218,7 @@ abstract class _ChallengeSorterState extends ChallengeFilterModel {
       {final String userId,
       final String id,
       final Set<Speed> speeds,
-      final Set<Rules> rules}) = _$ChallengeSorterStateImpl;
+      final Set<Rule> rules}) = _$ChallengeSorterStateImpl;
   _ChallengeSorterState._() : super._();
 
   factory _ChallengeSorterState.fromJson(Map<String, dynamic> json) =
@@ -231,7 +231,7 @@ abstract class _ChallengeSorterState extends ChallengeFilterModel {
   @override
   Set<Speed> get speeds;
   @override
-  Set<Rules> get rules;
+  Set<Rule> get rules;
   @override
   @JsonKey(ignore: true)
   _$$ChallengeSorterStateImplCopyWith<_$ChallengeSorterStateImpl>

@@ -16,9 +16,9 @@ _$ChallengeSorterStateImpl _$$ChallengeSorterStateImplFromJson(
               .toSet() ??
           const {Speed.bullet, Speed.blitz, Speed.rapid, Speed.classical},
       rules: (json['rules'] as List<dynamic>?)
-              ?.map((e) => $enumDecode(_$RulesEnumMap, e))
+              ?.map((e) => $enumDecode(_$RuleEnumMap, e))
               .toSet() ??
-          const {Rules.chess},
+          const {Rule.chess},
     );
 
 Map<String, dynamic> _$$ChallengeSorterStateImplToJson(
@@ -27,7 +27,7 @@ Map<String, dynamic> _$$ChallengeSorterStateImplToJson(
       'userId': instance.userId,
       'id': instance.id,
       'speeds': instance.speeds.map((e) => _$SpeedEnumMap[e]!).toList(),
-      'rules': instance.rules.map((e) => _$RulesEnumMap[e]!).toList(),
+      'rules': instance.rules.map((e) => _$RuleEnumMap[e]!).toList(),
     };
 
 const _$SpeedEnumMap = {
@@ -37,6 +37,13 @@ const _$SpeedEnumMap = {
   Speed.classical: 'classical',
 };
 
-const _$RulesEnumMap = {
-  Rules.chess: 'chess',
+const _$RuleEnumMap = {
+  Rule.chess: 'chess',
+  Rule.antichess: 'antichess',
+  Rule.kingofthehill: 'kingofthehill',
+  Rule.threecheck: 'threecheck',
+  Rule.atomic: 'atomic',
+  Rule.horde: 'horde',
+  Rule.racingKings: 'racingKings',
+  Rule.crazyhouse: 'crazyhouse',
 };

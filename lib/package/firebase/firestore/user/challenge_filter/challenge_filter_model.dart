@@ -16,7 +16,7 @@ class ChallengeFilterModel with _$ChallengeFilterModel {
     @Default(ChallengeFilterModel._local) String id,
     @Default({Speed.bullet, Speed.blitz, Speed.rapid, Speed.classical})
     Set<Speed> speeds,
-    @Default({Rules.chess}) Set<Rules> rules,
+    @Default({Rule.chess}) Set<Rule> rules,
   }) = _ChallengeSorterState;
 
   /// Required for the override getter
@@ -45,7 +45,7 @@ class ChallengeFilterModel with _$ChallengeFilterModel {
 
   static ChallengeFilterModel sorter = ChallengeFilterModel(
     speeds: Speed.values.toSet(),
-    rules: Rules.values.toSet(),
+    rules: Rule.values.toSet(),
   );
 
   static ChallengeFilterModel default1 = ChallengeFilterModel(

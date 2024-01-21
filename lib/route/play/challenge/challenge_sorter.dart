@@ -4,6 +4,7 @@ import 'package:crea_chess/package/atomic_design/widget/dropdown_selector.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/game/speed.dart';
+import 'package:crea_chess/package/lichess/rule.dart';
 import 'package:dartchess_webok/dartchess_webok.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -29,23 +30,20 @@ class ChallengeSorter extends StatelessWidget {
               const FilterSelector(),
               if (filter != null) ...[
                 CCGap.small,
-                DropdownSelector<Rules>.multipleChoices(
-                  values: Rules.values,
+                DropdownSelector<Rule>.multipleChoices(
+                  values: Rule.values,
                   onSelected: context.read<ChallengeFilterCubit>().toggleRule,
                   selectedValues: filter.rules.toList(),
                   valueBuilder: (val) {
-                    switch (val) {
-                      case Rules.chess:
-                        return Row(
-                          children: [
-                            const Icon(Icons.attach_money),
-                            // TODO : Rules.explain(l10n)
-                            CCPadding.allXxsmall(
-                              child: const Text('Budget Chess'),
-                            ),
-                          ],
-                        );
-                    }
+                    return Row(
+                      children: [
+                        val.icon,
+                        CCPadding.allXxsmall(
+                          // TODO : Rules.explain(l10n)
+                          child: Text(val.name.sentenceCase),
+                        ),
+                      ],
+                    );
                   },
                   previewBuilder: getRulesPreview,
                   showArrow: false,
@@ -77,14 +75,9 @@ class ChallengeSorter extends StatelessWidget {
   }
 }
 
-Widget getRulesPreview(Iterable<Rules> val) => Row(
+Widget getRulesPreview(Iterable<Rule> val) => Row(
       // LATER : sort rules with compareTo
-      children: val.map((e) {
-        switch (e) {
-          case Rules.chess:
-            return const Icon(Icons.attach_money);
-        }
-      }).toList(),
+      children: val.map((e) => e.icon).toList(),
     );
 
 Widget getSpeedsPreview(Iterable<Speed> e) => Row(

@@ -34,9 +34,9 @@ class ChallengeFilterCubit extends HydratedCubit<ChallengeFilterModel?> {
 
   void selectFilter(ChallengeFilterModel? filter) => emit(filter);
 
-  void toggleRule(Rules rule) {
+  void toggleRule(Rule rule) {
     if (state == null) return;
-    final rules = Set<Rules>.from(state!.rules);
+    final rules = Set<Rule>.from(state!.rules);
     if (rules.contains(rule)) {
       rules.remove(rule);
     } else {
