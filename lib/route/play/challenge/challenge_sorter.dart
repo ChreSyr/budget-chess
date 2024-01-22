@@ -165,6 +165,7 @@ class FilterSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final filterCubit = context.read<ChallengeFilterCubit>();
     return BlocBuilder<ChallengeFiltersCubit, Iterable<ChallengeFilterModel>>(
       builder: (context, allFilters) {
         final authId = context.read<AuthenticationCubit>().state?.uid;
@@ -195,7 +196,7 @@ class FilterSelector extends StatelessWidget {
           builder: (context, filter) {
             return SelectChip<ChallengeFilterModel?>.uniqueChoice(
               values: [null, ...allFilters],
-              onSelected: context.read<ChallengeFilterCubit>().selectFilter,
+              onSelected: filterCubit.selectFilter,
               selectedValue: filter,
               valueBuilder: (filter) {
                 if (filter == null) return const Icon(Icons.filter_alt_off);
@@ -210,6 +211,22 @@ class FilterSelector extends StatelessWidget {
               previewBuilder: (filter) => Icon(
                 filter == null ? Icons.filter_alt_off : Icons.filter_alt,
               ),
+              bottomChildren: (authId == null || filter == null)
+                  ? null
+                  : [
+                      MenuItemButton(
+                        onPressed: () {
+                          challengeFilterCRUD.delete(
+                            parentDocumentId: authId,
+                            documentId: filter.id,
+                          );
+                          filterCubit.selectFilter(null);
+                        },
+                        closeOnActivate: false,
+                        // TODO : l10n
+                        child: const Text('Supprimer ce filtre'),
+                      ),
+                    ],
             );
           },
         );

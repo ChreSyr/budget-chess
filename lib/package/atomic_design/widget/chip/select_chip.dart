@@ -140,6 +140,7 @@ class SelectChip<T> extends StatelessWidget {
     this.valueBuilder,
     this.previewBuilder,
     this.showArrow = true,
+    this.bottomChildren,
     super.key,
   }) : assert(values.isNotEmpty, 'SelectChip needs selectable values');
 
@@ -150,6 +151,7 @@ class SelectChip<T> extends StatelessWidget {
     Widget Function(T)? valueBuilder,
     Widget Function(T)? previewBuilder,
     bool showArrow = true,
+    List<MenuItemButton>? bottomChildren,
   }) {
     return SelectChip._(
       uniqueChoice: true,
@@ -160,6 +162,7 @@ class SelectChip<T> extends StatelessWidget {
       previewBuilder:
           previewBuilder == null ? null : (v) => previewBuilder(v.first),
       showArrow: showArrow,
+      bottomChildren: bottomChildren,
     );
   }
 
@@ -170,6 +173,7 @@ class SelectChip<T> extends StatelessWidget {
     Widget Function(T)? valueBuilder,
     Widget Function(List<T>)? previewBuilder,
     bool showArrow = true,
+    List<MenuItemButton>? bottomChildren,
   }) {
     return SelectChip._(
       uniqueChoice: false,
@@ -179,6 +183,7 @@ class SelectChip<T> extends StatelessWidget {
       valueBuilder: valueBuilder,
       previewBuilder: previewBuilder,
       showArrow: showArrow,
+      bottomChildren: bottomChildren,
     );
   }
 
@@ -189,6 +194,7 @@ class SelectChip<T> extends StatelessWidget {
   final Widget Function(T)? valueBuilder;
   final Widget Function(List<T>)? previewBuilder;
   final bool showArrow;
+  final List<MenuItemButton>? bottomChildren;
 
   @override
   Widget build(BuildContext context) {
@@ -234,7 +240,8 @@ class SelectChip<T> extends StatelessWidget {
             ),
           );
         },
-      ).toList(),
+          ).toList() +
+          (bottomChildren ?? []),
     );
   }
 }
