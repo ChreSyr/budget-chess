@@ -12,18 +12,16 @@ _$ChallengeModelImpl _$$ChallengeModelImplFromJson(Map<String, dynamic> json) =>
       createdAt: json['createdAt'] == null
           ? null
           : DateTime.parse(json['createdAt'] as String),
+      acceptedAt: json['acceptedAt'] == null
+          ? null
+          : DateTime.parse(json['acceptedAt'] as String),
       authorId: json['authorId'] as String?,
-      status: $enumDecodeNullable(_$ChallengeStatusEnumMap, json['status']) ??
-          ChallengeStatus.finished,
+      rule: $enumDecodeNullable(_$RuleEnumMap, json['rule']) ?? Rule.chess,
       time: json['time'] as int? ?? 180,
       increment: json['increment'] as int? ?? 2,
       boardWidth: json['boardWidth'] as int? ?? 8,
       boardHeight: json['boardHeight'] as int? ?? 8,
       budget: json['budget'] as int? ?? 39,
-      userIds: (json['userIds'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          const [],
     );
 
 Map<String, dynamic> _$$ChallengeModelImplToJson(
@@ -31,18 +29,23 @@ Map<String, dynamic> _$$ChallengeModelImplToJson(
     <String, dynamic>{
       'id': instance.id,
       'createdAt': instance.createdAt?.toIso8601String(),
+      'acceptedAt': instance.acceptedAt?.toIso8601String(),
       'authorId': instance.authorId,
-      'status': _$ChallengeStatusEnumMap[instance.status]!,
+      'rule': _$RuleEnumMap[instance.rule]!,
       'time': instance.time,
       'increment': instance.increment,
       'boardWidth': instance.boardWidth,
       'boardHeight': instance.boardHeight,
       'budget': instance.budget,
-      'userIds': instance.userIds,
     };
 
-const _$ChallengeStatusEnumMap = {
-  ChallengeStatus.open: 'open',
-  ChallengeStatus.started: 'started',
-  ChallengeStatus.finished: 'finished',
+const _$RuleEnumMap = {
+  Rule.chess: 'chess',
+  Rule.antichess: 'antichess',
+  Rule.kingofthehill: 'kingofthehill',
+  Rule.threecheck: 'threecheck',
+  Rule.atomic: 'atomic',
+  Rule.horde: 'horde',
+  Rule.racingKings: 'racingKings',
+  Rule.crazyhouse: 'crazyhouse',
 };

@@ -5,6 +5,7 @@ import 'package:crea_chess/package/game/board_size.dart';
 import 'package:crea_chess/package/game/time_control.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/route/play/create_challenge/create_challenge_status.dart';
+import 'package:dartchess_webok/dartchess_webok.dart';
 import 'package:formz/formz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -13,6 +14,7 @@ part 'create_challenge_form.freezed.dart';
 @freezed
 class CreateChallengeForm with FormzMixin, _$CreateChallengeForm {
   factory CreateChallengeForm({
+    required InputSelect<Rule> rule,
     required InputSelect<TimeControl> timeControl,
     required InputInt budget,
     required InputSelect<BoardSize> boardSize,
@@ -24,6 +26,7 @@ class CreateChallengeForm with FormzMixin, _$CreateChallengeForm {
 
   @override
   List<FormzInput<dynamic, dynamic>> get inputs => [
+        rule,
         timeControl,
         budget,
         boardSize,

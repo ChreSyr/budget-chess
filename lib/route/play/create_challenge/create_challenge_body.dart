@@ -1,16 +1,19 @@
 import 'package:crea_chess/package/atomic_design/modal/modal_select.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/snack_bar.dart';
+import 'package:crea_chess/package/atomic_design/text_style.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/authentication/authentication_crud.dart';
 import 'package:crea_chess/package/game/speed.dart';
 import 'package:crea_chess/package/game/time_control.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
+import 'package:crea_chess/package/lichess/rule.dart';
 import 'package:crea_chess/route/play/create_challenge/create_challenge_cubit.dart';
 import 'package:crea_chess/route/play/create_challenge/create_challenge_form.dart';
 import 'package:crea_chess/route/play/create_challenge/create_challenge_status.dart';
 import 'package:crea_chess/route/route_body.dart';
 import 'package:crea_chess/route/user/user_body.dart';
+import 'package:dartchess_webok/dartchess_webok.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -41,6 +44,18 @@ class _CreateChallengeBody extends StatelessWidget {
       return const NotConnectedScreen();
     }
 
+    Widget ruleBuilder(Rule e) => Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            e.icon,
+            CCGap.small,
+            Text(
+              e.explain(context.l10n),
+              style: CCTextStyle.bold,
+            ),
+          ],
+        );
+
     return BlocConsumer<CreateChallengeCubit, CreateChallengeForm>(
       listener: (context, state) {
         switch (state.status) {
@@ -60,6 +75,36 @@ class _CreateChallengeBody extends StatelessWidget {
           child: ListView(
             shrinkWrap: true,
             children: [
+              _TitledRow(
+                title: 'Rules', // TODO : l10n
+                child: OutlinedButton(
+                  onPressed: () => ModalSelect.show(
+                    context: context,
+                    title: context.l10n.boardSize,
+                    choices: [
+                      ModalSelectRowData(
+                        title: 'Standard', // TODO : l10n
+                        choices: const [
+                          Rule.chess,
+                        ],
+                        choiceBuilder: ruleBuilder,
+                      ),
+                      ModalSelectRowData(
+                        title: 'Variants',
+                        choices: Rule.values.toList()..remove(Rule.chess),
+                        choiceBuilder: ruleBuilder,
+                      ),
+                    ],
+                    selected: form.rule.value,
+                    onSelected: (Rule rule) {
+                      createChallengeCubit.setRule(rule);
+                      context.pop();
+                    },
+                  ),
+                  child: ruleBuilder(form.rule.value),
+                ),
+              ),
+              CCGap.large,
               _TitledRow(
                 title: context.l10n.timeControl,
                 child: OutlinedButton.icon(
@@ -207,7 +252,7 @@ class _TitledRow extends StatelessWidget {
           child: CCGap.medium,
         ),
         SizedBox(
-          width: CCWidgetSize.large,
+          width: CCWidgetSize.xxxlarge,
           child: child,
         ),
       ],

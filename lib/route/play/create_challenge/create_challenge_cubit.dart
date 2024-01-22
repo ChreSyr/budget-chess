@@ -5,12 +5,14 @@ import 'package:crea_chess/package/game/board_size.dart';
 import 'package:crea_chess/package/game/time_control.dart';
 import 'package:crea_chess/route/play/create_challenge/create_challenge_form.dart';
 import 'package:crea_chess/route/play/create_challenge/create_challenge_status.dart';
+import 'package:dartchess_webok/dartchess_webok.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CreateChallengeCubit extends Cubit<CreateChallengeForm> {
   CreateChallengeCubit()
       : super(
           CreateChallengeForm(
+            rule: const InputSelect<Rule>.dirty(value: Rule.chess),
             timeControl: const InputSelect<TimeControl>.dirty(
               value: TimeControl(180, 2),
             ),
@@ -22,6 +24,10 @@ class CreateChallengeCubit extends Cubit<CreateChallengeForm> {
 
   void clearStatus() =>
       emit(state.copyWith(status: CreateChallengeStatus.inProgress));
+
+  void setRule(Rule rule) {
+    emit(state.copyWith(rule: state.rule.copyWith(value: rule)));
+  }
 
   void setTimeControl(TimeControl value) {
     emit(state.copyWith(timeControl: state.timeControl.copyWith(value: value)));
@@ -48,7 +54,7 @@ class CreateChallengeCubit extends Cubit<CreateChallengeForm> {
           id: '', // will not be stored in firebase
           createdAt: DateTime.now(),
           authorId: authorId,
-          status: ChallengeStatus.open,
+          rule: state.rule.value,
           time: state.timeControl.value.time,
           increment: state.timeControl.value.increment,
           boardHeight: state.boardSize.value.height.toInt(),

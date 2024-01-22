@@ -3,26 +3,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crea_chess/package/game/speed.dart';
 import 'package:crea_chess/package/game/time_control.dart';
+import 'package:dartchess_webok/dartchess_webok.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'challenge_model.freezed.dart';
 part 'challenge_model.g.dart';
 
-enum ChallengeStatus { open, started, finished }
-
 @freezed
 class ChallengeModel with _$ChallengeModel {
-  factory ChallengeModel({
+  const factory ChallengeModel({
     required String id,
     DateTime? createdAt,
+    DateTime? acceptedAt,
     String? authorId,
-    @Default(ChallengeStatus.finished) ChallengeStatus status,
+    @Default(Rule.chess) Rule rule,
     @Default(180) int time, // in seconds
     @Default(2) int increment, // in seconds
     @Default(8) int boardWidth,
     @Default(8) int boardHeight,
     @Default(39) int budget,
-    @Default([]) List<String> userIds,
   }) = _ChallengeModel;
 
   /// Required for the override getter

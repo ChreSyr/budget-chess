@@ -1,6 +1,8 @@
+import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/package/lichess/lichess_icons.dart';
 import 'package:dartchess_webok/dartchess_webok.dart';
 import 'package:flutter/material.dart';
+import 'package:recase/recase.dart';
 
 extension RuleExt on Rule {
   Widget get icon {
@@ -26,4 +28,7 @@ extension RuleExt on Rule {
         return const Icon(LichessIcons.h_square);
     }
   }
+
+  // TODO : l10n
+  String explain(AppLocalizations l10n) => name.sentenceCase;
 }

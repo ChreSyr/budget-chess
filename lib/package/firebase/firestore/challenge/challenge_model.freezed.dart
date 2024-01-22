@@ -22,14 +22,14 @@ ChallengeModel _$ChallengeModelFromJson(Map<String, dynamic> json) {
 mixin _$ChallengeModel {
   String get id => throw _privateConstructorUsedError;
   DateTime? get createdAt => throw _privateConstructorUsedError;
+  DateTime? get acceptedAt => throw _privateConstructorUsedError;
   String? get authorId => throw _privateConstructorUsedError;
-  ChallengeStatus get status => throw _privateConstructorUsedError;
+  Rule get rule => throw _privateConstructorUsedError;
   int get time => throw _privateConstructorUsedError; // in seconds
   int get increment => throw _privateConstructorUsedError; // in seconds
   int get boardWidth => throw _privateConstructorUsedError;
   int get boardHeight => throw _privateConstructorUsedError;
   int get budget => throw _privateConstructorUsedError;
-  List<String> get userIds => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -46,14 +46,14 @@ abstract class $ChallengeModelCopyWith<$Res> {
   $Res call(
       {String id,
       DateTime? createdAt,
+      DateTime? acceptedAt,
       String? authorId,
-      ChallengeStatus status,
+      Rule rule,
       int time,
       int increment,
       int boardWidth,
       int boardHeight,
-      int budget,
-      List<String> userIds});
+      int budget});
 }
 
 /// @nodoc
@@ -71,14 +71,14 @@ class _$ChallengeModelCopyWithImpl<$Res, $Val extends ChallengeModel>
   $Res call({
     Object? id = null,
     Object? createdAt = freezed,
+    Object? acceptedAt = freezed,
     Object? authorId = freezed,
-    Object? status = null,
+    Object? rule = null,
     Object? time = null,
     Object? increment = null,
     Object? boardWidth = null,
     Object? boardHeight = null,
     Object? budget = null,
-    Object? userIds = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -89,14 +89,18 @@ class _$ChallengeModelCopyWithImpl<$Res, $Val extends ChallengeModel>
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      acceptedAt: freezed == acceptedAt
+          ? _value.acceptedAt
+          : acceptedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       authorId: freezed == authorId
           ? _value.authorId
           : authorId // ignore: cast_nullable_to_non_nullable
               as String?,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as ChallengeStatus,
+      rule: null == rule
+          ? _value.rule
+          : rule // ignore: cast_nullable_to_non_nullable
+              as Rule,
       time: null == time
           ? _value.time
           : time // ignore: cast_nullable_to_non_nullable
@@ -117,10 +121,6 @@ class _$ChallengeModelCopyWithImpl<$Res, $Val extends ChallengeModel>
           ? _value.budget
           : budget // ignore: cast_nullable_to_non_nullable
               as int,
-      userIds: null == userIds
-          ? _value.userIds
-          : userIds // ignore: cast_nullable_to_non_nullable
-              as List<String>,
     ) as $Val);
   }
 }
@@ -136,14 +136,14 @@ abstract class _$$ChallengeModelImplCopyWith<$Res>
   $Res call(
       {String id,
       DateTime? createdAt,
+      DateTime? acceptedAt,
       String? authorId,
-      ChallengeStatus status,
+      Rule rule,
       int time,
       int increment,
       int boardWidth,
       int boardHeight,
-      int budget,
-      List<String> userIds});
+      int budget});
 }
 
 /// @nodoc
@@ -159,14 +159,14 @@ class __$$ChallengeModelImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? createdAt = freezed,
+    Object? acceptedAt = freezed,
     Object? authorId = freezed,
-    Object? status = null,
+    Object? rule = null,
     Object? time = null,
     Object? increment = null,
     Object? boardWidth = null,
     Object? boardHeight = null,
     Object? budget = null,
-    Object? userIds = null,
   }) {
     return _then(_$ChallengeModelImpl(
       id: null == id
@@ -177,14 +177,18 @@ class __$$ChallengeModelImplCopyWithImpl<$Res>
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      acceptedAt: freezed == acceptedAt
+          ? _value.acceptedAt
+          : acceptedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       authorId: freezed == authorId
           ? _value.authorId
           : authorId // ignore: cast_nullable_to_non_nullable
               as String?,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as ChallengeStatus,
+      rule: null == rule
+          ? _value.rule
+          : rule // ignore: cast_nullable_to_non_nullable
+              as Rule,
       time: null == time
           ? _value.time
           : time // ignore: cast_nullable_to_non_nullable
@@ -205,10 +209,6 @@ class __$$ChallengeModelImplCopyWithImpl<$Res>
           ? _value.budget
           : budget // ignore: cast_nullable_to_non_nullable
               as int,
-      userIds: null == userIds
-          ? _value._userIds
-          : userIds // ignore: cast_nullable_to_non_nullable
-              as List<String>,
     ));
   }
 }
@@ -216,19 +216,18 @@ class __$$ChallengeModelImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$ChallengeModelImpl extends _ChallengeModel {
-  _$ChallengeModelImpl(
+  const _$ChallengeModelImpl(
       {required this.id,
       this.createdAt,
+      this.acceptedAt,
       this.authorId,
-      this.status = ChallengeStatus.finished,
+      this.rule = Rule.chess,
       this.time = 180,
       this.increment = 2,
       this.boardWidth = 8,
       this.boardHeight = 8,
-      this.budget = 39,
-      final List<String> userIds = const []})
-      : _userIds = userIds,
-        super._();
+      this.budget = 39})
+      : super._();
 
   factory _$ChallengeModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$ChallengeModelImplFromJson(json);
@@ -238,10 +237,12 @@ class _$ChallengeModelImpl extends _ChallengeModel {
   @override
   final DateTime? createdAt;
   @override
+  final DateTime? acceptedAt;
+  @override
   final String? authorId;
   @override
   @JsonKey()
-  final ChallengeStatus status;
+  final Rule rule;
   @override
   @JsonKey()
   final int time;
@@ -259,18 +260,10 @@ class _$ChallengeModelImpl extends _ChallengeModel {
   @override
   @JsonKey()
   final int budget;
-  final List<String> _userIds;
-  @override
-  @JsonKey()
-  List<String> get userIds {
-    if (_userIds is EqualUnmodifiableListView) return _userIds;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_userIds);
-  }
 
   @override
   String toString() {
-    return 'ChallengeModel(id: $id, createdAt: $createdAt, authorId: $authorId, status: $status, time: $time, increment: $increment, boardWidth: $boardWidth, boardHeight: $boardHeight, budget: $budget, userIds: $userIds)';
+    return 'ChallengeModel(id: $id, createdAt: $createdAt, acceptedAt: $acceptedAt, authorId: $authorId, rule: $rule, time: $time, increment: $increment, boardWidth: $boardWidth, boardHeight: $boardHeight, budget: $budget)';
   }
 
   @override
@@ -281,9 +274,11 @@ class _$ChallengeModelImpl extends _ChallengeModel {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
+            (identical(other.acceptedAt, acceptedAt) ||
+                other.acceptedAt == acceptedAt) &&
             (identical(other.authorId, authorId) ||
                 other.authorId == authorId) &&
-            (identical(other.status, status) || other.status == status) &&
+            (identical(other.rule, rule) || other.rule == rule) &&
             (identical(other.time, time) || other.time == time) &&
             (identical(other.increment, increment) ||
                 other.increment == increment) &&
@@ -291,24 +286,13 @@ class _$ChallengeModelImpl extends _ChallengeModel {
                 other.boardWidth == boardWidth) &&
             (identical(other.boardHeight, boardHeight) ||
                 other.boardHeight == boardHeight) &&
-            (identical(other.budget, budget) || other.budget == budget) &&
-            const DeepCollectionEquality().equals(other._userIds, _userIds));
+            (identical(other.budget, budget) || other.budget == budget));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      createdAt,
-      authorId,
-      status,
-      time,
-      increment,
-      boardWidth,
-      boardHeight,
-      budget,
-      const DeepCollectionEquality().hash(_userIds));
+  int get hashCode => Object.hash(runtimeType, id, createdAt, acceptedAt,
+      authorId, rule, time, increment, boardWidth, boardHeight, budget);
 
   @JsonKey(ignore: true)
   @override
@@ -326,18 +310,18 @@ class _$ChallengeModelImpl extends _ChallengeModel {
 }
 
 abstract class _ChallengeModel extends ChallengeModel {
-  factory _ChallengeModel(
+  const factory _ChallengeModel(
       {required final String id,
       final DateTime? createdAt,
+      final DateTime? acceptedAt,
       final String? authorId,
-      final ChallengeStatus status,
+      final Rule rule,
       final int time,
       final int increment,
       final int boardWidth,
       final int boardHeight,
-      final int budget,
-      final List<String> userIds}) = _$ChallengeModelImpl;
-  _ChallengeModel._() : super._();
+      final int budget}) = _$ChallengeModelImpl;
+  const _ChallengeModel._() : super._();
 
   factory _ChallengeModel.fromJson(Map<String, dynamic> json) =
       _$ChallengeModelImpl.fromJson;
@@ -347,9 +331,11 @@ abstract class _ChallengeModel extends ChallengeModel {
   @override
   DateTime? get createdAt;
   @override
+  DateTime? get acceptedAt;
+  @override
   String? get authorId;
   @override
-  ChallengeStatus get status;
+  Rule get rule;
   @override
   int get time;
   @override // in seconds
@@ -360,8 +346,6 @@ abstract class _ChallengeModel extends ChallengeModel {
   int get boardHeight;
   @override
   int get budget;
-  @override
-  List<String> get userIds;
   @override
   @JsonKey(ignore: true)
   _$$ChallengeModelImplCopyWith<_$ChallengeModelImpl> get copyWith =>

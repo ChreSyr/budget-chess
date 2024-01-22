@@ -16,6 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$CreateChallengeForm {
+  InputSelect<Rule> get rule => throw _privateConstructorUsedError;
   InputSelect<TimeControl> get timeControl =>
       throw _privateConstructorUsedError;
   InputInt get budget => throw _privateConstructorUsedError;
@@ -34,7 +35,8 @@ abstract class $CreateChallengeFormCopyWith<$Res> {
       _$CreateChallengeFormCopyWithImpl<$Res, CreateChallengeForm>;
   @useResult
   $Res call(
-      {InputSelect<TimeControl> timeControl,
+      {InputSelect<Rule> rule,
+      InputSelect<TimeControl> timeControl,
       InputInt budget,
       InputSelect<BoardSize> boardSize,
       CreateChallengeStatus status});
@@ -53,12 +55,17 @@ class _$CreateChallengeFormCopyWithImpl<$Res, $Val extends CreateChallengeForm>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? rule = null,
     Object? timeControl = null,
     Object? budget = null,
     Object? boardSize = null,
     Object? status = null,
   }) {
     return _then(_value.copyWith(
+      rule: null == rule
+          ? _value.rule
+          : rule // ignore: cast_nullable_to_non_nullable
+              as InputSelect<Rule>,
       timeControl: null == timeControl
           ? _value.timeControl
           : timeControl // ignore: cast_nullable_to_non_nullable
@@ -88,7 +95,8 @@ abstract class _$$CreateChallengeFormImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {InputSelect<TimeControl> timeControl,
+      {InputSelect<Rule> rule,
+      InputSelect<TimeControl> timeControl,
       InputInt budget,
       InputSelect<BoardSize> boardSize,
       CreateChallengeStatus status});
@@ -105,12 +113,17 @@ class __$$CreateChallengeFormImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? rule = null,
     Object? timeControl = null,
     Object? budget = null,
     Object? boardSize = null,
     Object? status = null,
   }) {
     return _then(_$CreateChallengeFormImpl(
+      rule: null == rule
+          ? _value.rule
+          : rule // ignore: cast_nullable_to_non_nullable
+              as InputSelect<Rule>,
       timeControl: null == timeControl
           ? _value.timeControl
           : timeControl // ignore: cast_nullable_to_non_nullable
@@ -135,12 +148,15 @@ class __$$CreateChallengeFormImplCopyWithImpl<$Res>
 
 class _$CreateChallengeFormImpl extends _CreateChallengeForm {
   _$CreateChallengeFormImpl(
-      {required this.timeControl,
+      {required this.rule,
+      required this.timeControl,
       required this.budget,
       required this.boardSize,
       required this.status})
       : super._();
 
+  @override
+  final InputSelect<Rule> rule;
   @override
   final InputSelect<TimeControl> timeControl;
   @override
@@ -152,7 +168,7 @@ class _$CreateChallengeFormImpl extends _CreateChallengeForm {
 
   @override
   String toString() {
-    return 'CreateChallengeForm(timeControl: $timeControl, budget: $budget, boardSize: $boardSize, status: $status)';
+    return 'CreateChallengeForm(rule: $rule, timeControl: $timeControl, budget: $budget, boardSize: $boardSize, status: $status)';
   }
 
   @override
@@ -160,6 +176,7 @@ class _$CreateChallengeFormImpl extends _CreateChallengeForm {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$CreateChallengeFormImpl &&
+            (identical(other.rule, rule) || other.rule == rule) &&
             (identical(other.timeControl, timeControl) ||
                 other.timeControl == timeControl) &&
             (identical(other.budget, budget) || other.budget == budget) &&
@@ -170,7 +187,7 @@ class _$CreateChallengeFormImpl extends _CreateChallengeForm {
 
   @override
   int get hashCode =>
-      Object.hash(runtimeType, timeControl, budget, boardSize, status);
+      Object.hash(runtimeType, rule, timeControl, budget, boardSize, status);
 
   @JsonKey(ignore: true)
   @override
@@ -182,12 +199,15 @@ class _$CreateChallengeFormImpl extends _CreateChallengeForm {
 
 abstract class _CreateChallengeForm extends CreateChallengeForm {
   factory _CreateChallengeForm(
-      {required final InputSelect<TimeControl> timeControl,
+      {required final InputSelect<Rule> rule,
+      required final InputSelect<TimeControl> timeControl,
       required final InputInt budget,
       required final InputSelect<BoardSize> boardSize,
       required final CreateChallengeStatus status}) = _$CreateChallengeFormImpl;
   _CreateChallengeForm._() : super._();
 
+  @override
+  InputSelect<Rule> get rule;
   @override
   InputSelect<TimeControl> get timeControl;
   @override
