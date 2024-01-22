@@ -70,6 +70,10 @@ class ChallengeFilterModel with _$ChallengeFilterModel {
       userId == ChallengeFilterModel._local ||
       id == ChallengeFilterModel._local;
 
+  bool accept(ChallengeModel challenge) {
+    return rules.contains(challenge.rule) && speeds.contains(challenge.speed);
+  }
+
   int compare(ChallengeModel a, ChallengeModel b) {
     final timeControlA = a.timeControl;
     final timeControlB = b.timeControl;

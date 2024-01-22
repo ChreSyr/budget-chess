@@ -2,6 +2,7 @@ import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/firebase/export.dart';
+import 'package:crea_chess/package/lichess/rule.dart';
 import 'package:crea_chess/route/play/challenge/card_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,6 +28,10 @@ class ChallengeTile extends StatelessWidget {
             radius: CCSize.medium,
             onTap: () => context.push('/user/@$authorId'),
           ),
+          CCGap.small,
+          const SizedBox(height: CCSize.large, child: VerticalDivider()),
+          CCGap.xsmall,
+          challenge.rule.icon,
           CCGap.small,
           const SizedBox(height: CCSize.large, child: VerticalDivider()),
           CCGap.xsmall,
