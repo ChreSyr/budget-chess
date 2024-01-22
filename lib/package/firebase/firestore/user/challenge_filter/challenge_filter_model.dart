@@ -57,7 +57,7 @@ class ChallengeFilterModel with _$ChallengeFilterModel {
   );
 
   static ChallengeFilterModel default3 = ChallengeFilterModel(
-    speeds: {Speed.classical},
+    speeds: {},
   );
 
   static List<ChallengeFilterModel> defaults = [
@@ -71,7 +71,8 @@ class ChallengeFilterModel with _$ChallengeFilterModel {
       id == ChallengeFilterModel._local;
 
   bool accept(ChallengeModel challenge) {
-    return rules.contains(challenge.rule) && speeds.contains(challenge.speed);
+    return (rules.isEmpty || rules.contains(challenge.rule)) &&
+        (speeds.isEmpty || speeds.contains(challenge.speed));
   }
 
   int compare(ChallengeModel a, ChallengeModel b) {

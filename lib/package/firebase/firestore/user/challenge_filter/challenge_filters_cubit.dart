@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,6 +20,18 @@ class ChallengeFiltersCubit extends Cubit<Iterable<ChallengeFilterModel>> {
     }
     _filtersStream =
         challengeFilterCRUD.streamAll(parentDocumentId: auth.uid).listen(emit);
+  }
+
+  String get nextFilterId {
+    var maxId = 0;
+    for (final filter in state) {
+      try {
+        maxId = max(int.parse(filter.id), maxId);
+      } catch (_) {
+        continue;
+      }
+    }
+    return (maxId + 1).toString();
   }
 
   @override

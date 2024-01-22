@@ -3,8 +3,8 @@ import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:flutter/material.dart';
 
-// class DropdownSelector<T> extends StatefulWidget {
-//   DropdownSelector._({
+// class SelectChip<T> extends StatefulWidget {
+//   SelectChip._({
 //     required this.uniqueChoice,
 //     required this.values,
 //     required this.onSelected,
@@ -12,16 +12,16 @@ import 'package:flutter/material.dart';
 //     this.valueBuilder,
 //     this.previewBuilder,
 //     super.key,
-//   }) : assert(values.isNotEmpty, 'DropdownSelector needs selectable values');
+//   }) : assert(values.isNotEmpty, 'SelectChip needs selectable values');
 
-//   factory DropdownSelector.uniqueChoice({
+//   factory SelectChip.uniqueChoice({
 //     required List<T> values,
 //     required void Function(T) onSelected,
 //     T? initiallySelectedValue,
 //     Widget Function(T)? valueBuilder,
 //     Widget Function(T)? previewBuilder,
 //   }) {
-//     return DropdownSelector._(
+//     return SelectChip._(
 //       uniqueChoice: true,
 //       values: values,
 //       onSelected: onSelected,
@@ -32,14 +32,14 @@ import 'package:flutter/material.dart';
 //     );
 //   }
 
-//   factory DropdownSelector.multipleChoices({
+//   factory SelectChip.multipleChoices({
 //     required List<T> values,
 //     required void Function(T) onSelected,
 //     List<T>? initiallySelectedValues,
 //     Widget Function(T)? valueBuilder,
 //     Widget Function(List<T>)? previewBuilder,
 //   }) {
-//     return DropdownSelector._(
+//     return SelectChip._(
 //       uniqueChoice: false,
 //       values: values,
 //       onSelected: onSelected,
@@ -57,10 +57,10 @@ import 'package:flutter/material.dart';
 //   final Widget Function(List<T>)? previewBuilder;
 
 //   @override
-//   State<DropdownSelector<T>> createState() => _DropdownSelectorState();
+//   State<SelectChip<T>> createState() => _DropdownSelectorState();
 // }
 
-// class _DropdownSelectorState<T> extends State<DropdownSelector<T>> {
+// class _DropdownSelectorState<T> extends State<SelectChip<T>> {
 //   late List<T> selectedValues;
 //   late final Widget Function(T) valueBuilder;
 //   late final Widget Function(List<T>) previewBuilder;
@@ -131,8 +131,8 @@ import 'package:flutter/material.dart';
 //   }
 // }
 
-class DropdownSelector<T> extends StatelessWidget {
-  DropdownSelector._({
+class SelectChip<T> extends StatelessWidget {
+  SelectChip._({
     required this.uniqueChoice,
     required this.values,
     required this.onSelected,
@@ -141,9 +141,9 @@ class DropdownSelector<T> extends StatelessWidget {
     this.previewBuilder,
     this.showArrow = true,
     super.key,
-  }) : assert(values.isNotEmpty, 'DropdownSelector needs selectable values');
+  }) : assert(values.isNotEmpty, 'SelectChip needs selectable values');
 
-  factory DropdownSelector.uniqueChoice({
+  factory SelectChip.uniqueChoice({
     required List<T> values,
     required void Function(T) onSelected,
     T? selectedValue,
@@ -151,7 +151,7 @@ class DropdownSelector<T> extends StatelessWidget {
     Widget Function(T)? previewBuilder,
     bool showArrow = true,
   }) {
-    return DropdownSelector._(
+    return SelectChip._(
       uniqueChoice: true,
       values: values,
       onSelected: onSelected,
@@ -163,7 +163,7 @@ class DropdownSelector<T> extends StatelessWidget {
     );
   }
 
-  factory DropdownSelector.multipleChoices({
+  factory SelectChip.multipleChoices({
     required List<T> values,
     required void Function(T) onSelected,
     List<T>? selectedValues,
@@ -171,7 +171,7 @@ class DropdownSelector<T> extends StatelessWidget {
     Widget Function(List<T>)? previewBuilder,
     bool showArrow = true,
   }) {
-    return DropdownSelector._(
+    return SelectChip._(
       uniqueChoice: false,
       values: values,
       onSelected: onSelected,

@@ -32,6 +32,16 @@ class ChallengeFilterCubit extends HydratedCubit<ChallengeFilterModel?> {
     }
   }
 
+  Future<void> createFilter(ChallengeFilterModel filter) async {
+    if (filter.isLocal) return;
+    await challengeFilterCRUD.create(
+      parentDocumentId: filter.userId,
+      documentId: filter.id,
+      data: filter,
+    );
+    emit(filter);
+  }
+
   void selectFilter(ChallengeFilterModel? filter) => emit(filter);
 
   void toggleRule(Rule rule) {

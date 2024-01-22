@@ -1,9 +1,11 @@
 import 'package:collection/collection.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
-import 'package:crea_chess/package/atomic_design/widget/dropdown_selector.dart';
+import 'package:crea_chess/package/atomic_design/widget/chip/menu_chip.dart';
+import 'package:crea_chess/package/atomic_design/widget/chip/select_chip.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/game/speed.dart';
+import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/package/lichess/rule.dart';
 import 'package:dartchess_webok/dartchess_webok.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,14 +18,71 @@ class ChallengeSorter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AuthenticationCubit, User?>(
+    final filterCubit = context.read<ChallengeFilterCubit>();
+    return BlocConsumer<AuthenticationCubit, User?>(
       listener: (context, auth) {
-        if (auth == null) {
-          context.read<ChallengeFilterCubit>().selectFilter(null);
-        }
+        if (auth == null) filterCubit.selectFilter(null);
       },
-      child: BlocBuilder<ChallengeFilterCubit, ChallengeFilterModel?>(
+      builder: (context, auth) =>
+          BlocBuilder<ChallengeFilterCubit, ChallengeFilterModel?>(
         builder: (context, filter) {
+          final addRuleFilter = filter?.rules.isEmpty ?? true
+              ? MenuItemButton(
+                  onPressed: () {
+                    if (filter != null) {
+                      filterCubit.toggleRule(Rule.chess);
+                    } else if (auth == null) {
+                      filterCubit.selectFilter(
+                        ChallengeFilterModel(
+                          rules: {Rule.chess},
+                          speeds: {},
+                        ),
+                      );
+                    } else {
+                      filterCubit.createFilter(
+                        ChallengeFilterModel(
+                          userId: auth.uid,
+                          id: context
+                              .read<ChallengeFiltersCubit>()
+                              .nextFilterId,
+                          rules: {Rule.chess},
+                          speeds: {},
+                        ),
+                      );
+                    }
+                  },
+                  child: const Text('Filtrer par règle'),
+                )
+              : null;
+          final addSpeedFilter = filter?.speeds.isEmpty ?? true
+              ? MenuItemButton(
+                  onPressed: () {
+                    if (filter != null) {
+                      filterCubit.toggleSpeed(Speed.blitz);
+                    } else if (auth == null) {
+                      filterCubit.selectFilter(
+                        ChallengeFilterModel(
+                          rules: {},
+                          speeds: {Speed.blitz},
+                        ),
+                      );
+                    } else {
+                      filterCubit.createFilter(
+                        ChallengeFilterModel(
+                          userId: auth.uid,
+                          id: context
+                              .read<ChallengeFiltersCubit>()
+                              .nextFilterId,
+                          rules: {},
+                          speeds: {Speed.blitz},
+                        ),
+                      );
+                    }
+                  },
+                  child: const Text('Filtrer par cadence'),
+                )
+              : null;
+          final options = [addRuleFilter, addSpeedFilter].whereType<Widget>();
           return SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             clipBehavior: Clip.none,
@@ -32,43 +91,52 @@ class ChallengeSorter extends StatelessWidget {
                 CCGap.small,
                 const FilterSelector(),
                 if (filter != null) ...[
+                  if (addRuleFilter == null) ...[
+                    CCGap.small,
+                    SelectChip<Rule>.multipleChoices(
+                      values: Rule.values,
+                      onSelected: filterCubit.toggleRule,
+                      selectedValues: filter.rules.toList(),
+                      valueBuilder: (val) {
+                        return Row(
+                          children: [
+                            val.icon,
+                            CCPadding.allXxsmall(
+                              child: Text(val.explain(context.l10n)),
+                            ),
+                          ],
+                        );
+                      },
+                      previewBuilder: getRulesPreview,
+                      showArrow: false,
+                    ),
+                  ],
+                  if (addSpeedFilter == null) ...[
+                    CCGap.small,
+                    SelectChip<Speed>.multipleChoices(
+                      values: Speed.values,
+                      onSelected: filterCubit.toggleSpeed,
+                      selectedValues: filter.speeds.toList(),
+                      valueBuilder: (speed) {
+                        return Row(
+                          children: [
+                            Icon(speed.icon),
+                            CCPadding.allXxsmall(
+                              child: Text(speed.name.sentenceCase),
+                            ),
+                          ],
+                        );
+                      },
+                      previewBuilder: getSpeedsPreview,
+                      showArrow: false,
+                    ),
+                  ],
+                ],
+                if (options.isNotEmpty) ...[
                   CCGap.small,
-                  DropdownSelector<Rule>.multipleChoices(
-                    values: Rule.values,
-                    onSelected: context.read<ChallengeFilterCubit>().toggleRule,
-                    selectedValues: filter.rules.toList(),
-                    valueBuilder: (val) {
-                      return Row(
-                        children: [
-                          val.icon,
-                          CCPadding.allXxsmall(
-                            // TODO : Rules.explain(l10n)
-                            child: Text(val.name.sentenceCase),
-                          ),
-                        ],
-                      );
-                    },
-                    previewBuilder: getRulesPreview,
-                    showArrow: false,
-                  ),
-                  CCGap.small,
-                  DropdownSelector<Speed>.multipleChoices(
-                    values: Speed.values,
-                    onSelected:
-                        context.read<ChallengeFilterCubit>().toggleSpeed,
-                    selectedValues: filter.speeds.toList(),
-                    valueBuilder: (speed) {
-                      return Row(
-                        children: [
-                          Icon(speed.icon),
-                          CCPadding.allXxsmall(
-                            child: Text(speed.name.sentenceCase),
-                          ),
-                        ],
-                      );
-                    },
-                    previewBuilder: getSpeedsPreview,
-                    showArrow: false,
+                  MenuChip(
+                    label: const Icon(Icons.add),
+                    menuChildren: options.toList(),
                   ),
                 ],
               ],
@@ -125,7 +193,7 @@ class FilterSelector extends StatelessWidget {
         }
         return BlocBuilder<ChallengeFilterCubit, ChallengeFilterModel?>(
           builder: (context, filter) {
-            return DropdownSelector<ChallengeFilterModel?>.uniqueChoice(
+            return SelectChip<ChallengeFilterModel?>.uniqueChoice(
               values: [null, ...allFilters],
               onSelected: context.read<ChallengeFilterCubit>().selectFilter,
               selectedValue: filter,
