@@ -16,17 +16,25 @@ class ChallengeFilterCubit extends HydratedCubit<ChallengeFilterModel?> {
     return state?.toJson();
   }
 
-  Future<void> _updateFilter(ChallengeFilterModel filter) async {
+  void _updateFilter(ChallengeFilterModel filter) {
     if (filter.isLocal) {
       return emit(filter);
     }
     try {
-      await challengeFilterCRUD.update(
+      if (filter.isEmpty) {
+        challengeFilterCRUD.delete(
+          parentDocumentId: filter.userId,
+          documentId: filter.id,
+        );
+        emit(null);
+      } else {
+        challengeFilterCRUD.update(
         parentDocumentId: filter.userId,
         documentId: filter.id,
         data: filter,
       );
       emit(filter);
+      }
     } catch (_) {
       return;
     }

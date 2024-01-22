@@ -66,6 +66,8 @@ class ChallengeFilterModel with _$ChallengeFilterModel {
     ChallengeFilterModel.default3,
   ];
 
+  bool get isEmpty => rules.isEmpty && speeds.isEmpty;
+
   bool get isLocal =>
       userId == ChallengeFilterModel._local ||
       id == ChallengeFilterModel._local;
