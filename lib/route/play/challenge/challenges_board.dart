@@ -60,6 +60,7 @@ class ChallengesBoard extends StatelessWidget {
                         Expanded(
                           child: CCPadding.horizontalLarge(
                             child: SingleChildScrollView(
+                              clipBehavior: Clip.none,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [

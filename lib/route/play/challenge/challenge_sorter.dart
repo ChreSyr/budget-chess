@@ -24,50 +24,55 @@ class ChallengeSorter extends StatelessWidget {
       },
       child: BlocBuilder<ChallengeFilterCubit, ChallengeFilterModel?>(
         builder: (context, filter) {
-          return Row(
-            children: [
-              CCGap.small,
-              const FilterSelector(),
-              if (filter != null) ...[
+          return SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            clipBehavior: Clip.none,
+            child: Row(
+              children: [
                 CCGap.small,
-                DropdownSelector<Rule>.multipleChoices(
-                  values: Rule.values,
-                  onSelected: context.read<ChallengeFilterCubit>().toggleRule,
-                  selectedValues: filter.rules.toList(),
-                  valueBuilder: (val) {
-                    return Row(
-                      children: [
-                        val.icon,
-                        CCPadding.allXxsmall(
-                          // TODO : Rules.explain(l10n)
-                          child: Text(val.name.sentenceCase),
-                        ),
-                      ],
-                    );
-                  },
-                  previewBuilder: getRulesPreview,
-                  showArrow: false,
-                ),
-                CCGap.small,
-                DropdownSelector<Speed>.multipleChoices(
-                  values: Speed.values,
-                  onSelected: context.read<ChallengeFilterCubit>().toggleSpeed,
-                  selectedValues: filter.speeds.toList(),
-                  valueBuilder: (speed) {
-                    return Row(
-                      children: [
-                        Icon(speed.icon),
-                        CCPadding.allXxsmall(
-                          child: Text(speed.name.sentenceCase),
-                        ),
-                      ],
-                    );
-                  },
-                  previewBuilder: getSpeedsPreview,
-                  showArrow: false,
-                ),
+                const FilterSelector(),
+                if (filter != null) ...[
+                  CCGap.small,
+                  DropdownSelector<Rule>.multipleChoices(
+                    values: Rule.values,
+                    onSelected: context.read<ChallengeFilterCubit>().toggleRule,
+                    selectedValues: filter.rules.toList(),
+                    valueBuilder: (val) {
+                      return Row(
+                        children: [
+                          val.icon,
+                          CCPadding.allXxsmall(
+                            // TODO : Rules.explain(l10n)
+                            child: Text(val.name.sentenceCase),
+                          ),
+                        ],
+                      );
+                    },
+                    previewBuilder: getRulesPreview,
+                    showArrow: false,
+                  ),
+                  CCGap.small,
+                  DropdownSelector<Speed>.multipleChoices(
+                    values: Speed.values,
+                    onSelected:
+                        context.read<ChallengeFilterCubit>().toggleSpeed,
+                    selectedValues: filter.speeds.toList(),
+                    valueBuilder: (speed) {
+                      return Row(
+                        children: [
+                          Icon(speed.icon),
+                          CCPadding.allXxsmall(
+                            child: Text(speed.name.sentenceCase),
+                          ),
+                        ],
+                      );
+                    },
+                    previewBuilder: getSpeedsPreview,
+                    showArrow: false,
+                  ),
+                ],
               ],
-            ],
+            ),
           );
         },
       ),
