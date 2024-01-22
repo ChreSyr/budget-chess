@@ -52,7 +52,6 @@ class ChallengeFilterCubit extends HydratedCubit<ChallengeFilterModel?> {
     } else {
       rules.add(rule);
     }
-    if (rules.isEmpty) return;
     _updateFilter(state!.copyWith(rules: rules));
   }
 
@@ -64,7 +63,6 @@ class ChallengeFilterCubit extends HydratedCubit<ChallengeFilterModel?> {
     } else {
       speeds.add(speed);
     }
-    if (speeds.isEmpty) return;
     _updateFilter(state!.copyWith(speeds: speeds));
   }
 }
