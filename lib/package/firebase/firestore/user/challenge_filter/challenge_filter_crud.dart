@@ -18,6 +18,25 @@ class _ChallengeFilterCRUD extends SubCollectionCRUD<ChallengeFilterModel> {
           ) =>
               ChallengeFilterModel.fromFirestore(snapshot),
         );
+
+  void onAccountCreation(String authUid) {
+    challengeFilterCRUD
+      ..create(
+        parentDocumentId: authUid,
+        documentId: '1',
+        data: ChallengeFilterModel.default1,
+      )
+      ..create(
+        parentDocumentId: authUid,
+        documentId: '2',
+        data: ChallengeFilterModel.default2,
+      )
+      ..create(
+        parentDocumentId: authUid,
+        documentId: '3',
+        data: ChallengeFilterModel.default3,
+      );
+  }
 }
 
 final challengeFilterCRUD = _ChallengeFilterCRUD();

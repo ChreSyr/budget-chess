@@ -61,11 +61,7 @@ class SignupCubit extends Cubit<SignupForm> {
         email: state.email.value,
         password: state.password.value,
       );
-      emit(
-        state.copyWith(
-          status: SignupStatus.signupSuccess,
-        ),
-      );
+      emit(state.copyWith(status: SignupStatus.signupSuccess));
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
         emit(state.copyWith(status: SignupStatus.mailTaken));

@@ -169,29 +169,6 @@ class FilterSelector extends StatelessWidget {
     return BlocBuilder<ChallengeFiltersCubit, Iterable<ChallengeFilterModel>>(
       builder: (context, allFilters) {
         final authId = context.read<AuthenticationCubit>().state?.uid;
-        if (authId != null) {
-          if (allFilters.isEmpty) {
-            challengeFilterCRUD.create(
-              parentDocumentId: authId,
-              documentId: '1',
-              data: ChallengeFilterModel.default1,
-            );
-          }
-          if (allFilters.length < 2) {
-            challengeFilterCRUD.create(
-              parentDocumentId: authId,
-              documentId: '2',
-              data: ChallengeFilterModel.default2,
-            );
-          }
-          if (allFilters.length < 3) {
-            challengeFilterCRUD.create(
-              parentDocumentId: authId,
-              documentId: '3',
-              data: ChallengeFilterModel.default3,
-            );
-          }
-        }
         return BlocBuilder<ChallengeFilterCubit, ChallengeFilterModel?>(
           builder: (context, filter) {
             return SelectChip<ChallengeFilterModel?>.uniqueChoice(

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:crea_chess/package/firebase/authentication/authentication_crud.dart';
+import 'package:crea_chess/package/firebase/firestore/user/challenge_filter/challenge_filter_crud.dart';
 import 'package:crea_chess/package/firebase/firestore/user/user_crud.dart';
 import 'package:crea_chess/package/firebase/firestore/user/user_model.dart';
 import 'package:diacritic/diacritic.dart';
@@ -10,19 +11,19 @@ import 'package:regexpattern/regexpattern.dart';
 
 class UserCubit extends Cubit<UserModel?> {
   UserCubit() : super(null) {
-    authenticationStreamSubscription =
+    _authStream =
         FirebaseAuth.instance.userChanges().listen(_fromAuth);
   }
 
   void _fromAuth(User? auth) {
     if (auth == null || !auth.isVerified) {
-      userStreamSubscription?.cancel();
+      _userStream?.cancel();
       emit(null);
       return;
     }
 
-    userStreamSubscription?.cancel();
-    userStreamSubscription =
+    _userStream?.cancel();
+    _userStream =
         userCRUD.stream(documentId: auth.uid).listen((user) async {
       if (user == null) {
         // Create user
@@ -45,6 +46,9 @@ class UserCubit extends Cubit<UserModel?> {
             photo: auth.photoURL,
           ),
         );
+        
+        challengeFilterCRUD.onAccountCreation(auth.uid);
+            
         return;
       }
 
@@ -52,13 +56,13 @@ class UserCubit extends Cubit<UserModel?> {
     });
   }
 
-  StreamSubscription<UserModel?>? userStreamSubscription;
-  late StreamSubscription<User?> authenticationStreamSubscription;
+  StreamSubscription<UserModel?>? _userStream;
+  late StreamSubscription<User?> _authStream;
 
   @override
   Future<void> close() {
-    userStreamSubscription?.cancel();
-    authenticationStreamSubscription.cancel();
+    _userStream?.cancel();
+    _authStream.cancel();
     return super.close();
   }
 
