@@ -6,13 +6,13 @@ import 'package:crea_chess/package/firebase/firestore/user/user_crud.dart';
 import 'package:crea_chess/package/firebase/firestore/user/user_model.dart';
 import 'package:diacritic/diacritic.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:regexpattern/regexpattern.dart';
 
 class UserCubit extends Cubit<UserModel?> {
   UserCubit() : super(null) {
-    _authStream =
-        FirebaseAuth.instance.userChanges().listen(_fromAuth);
+    _authStream = FirebaseAuth.instance.userChanges().listen(_fromAuth);
   }
 
   void _fromAuth(User? auth) {
@@ -23,9 +23,8 @@ class UserCubit extends Cubit<UserModel?> {
     }
 
     _userStream?.cancel();
-    _userStream =
-        userCRUD.stream(documentId: auth.uid).listen((user) async {
-      if (user == null) {
+    _userStream = userCRUD.stream(documentId: auth.uid).listen((user) async {
+      if (user == null && auth.displayName != accountBeingDeleted) {
         // Create user
         var username = auth.displayName ?? auth.uid;
         username = removeDiacritics(username.replaceAll(' ', '_'));
@@ -38,17 +37,23 @@ class UserCubit extends Cubit<UserModel?> {
           }
         }
 
-        await userCRUD.create(
-          documentId: auth.uid,
-          data: UserModel(
-            id: auth.uid,
-            username: username,
-            photo: auth.photoURL,
-          ),
-        );
-        
-        challengeFilterCRUD.onAccountCreation(auth.uid);
-            
+        try {
+          await userCRUD.create(
+            documentId: auth.uid,
+            data: UserModel(
+              id: auth.uid,
+              createdAt: DateTime.now(),
+              username: username,
+              photo: auth.photoURL,
+            ),
+          );
+
+          challengeFilterCRUD.onAccountCreation(auth.uid);
+          
+        } catch (e) {
+          debugPrint(e.toString());
+        }
+
         return;
       }
 

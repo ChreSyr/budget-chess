@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -19,18 +20,39 @@ final _googleAuthProvider = GoogleAuthProvider();
 final _facebookAuth = FacebookLogin(debug: true);
 final _facebookAuthProvider = FacebookAuthProvider();
 
+const accountBeingDeleted = '#---account-being-deleted---#';
+
 class _AuthenticationCRUD {
   final authenticationCubit = AuthenticationCubit._();
   final authProviderStatusCubit = AuthProviderStatusCubit();
 
   /// Permanently delete account. Reauthentication may be required.
   Future<void> deleteUserAccount({String? userId}) async {
+
     final user = _firebaseAuth.currentUser;
     if (user == null) return;
 
     try {
+      /// This prevents the UserCubit to create a new UserModel in Firestore
+      /// after the current UserModel will be deleted
+      await user.updateDisplayName(accountBeingDeleted);
+
+      // Delete user in firestore. Will also delete its relationships
+      await userCRUD.delete(documentId: user.uid);
+
+      // Delete user photo in firebase storage
+      final photoRef = FirebaseStorage.instance.getUserPhotoRef(user.uid);
+      try {
+        await photoRef.delete();
+      } on FirebaseException catch (e) {
+        if (e.code != 'object-not-found') rethrow;
+      }
+    } catch (_) {}
+
+    try {
       await user.delete();
     } on FirebaseAuthException catch (e) {
+      debugPrint(e.toString());
       if (e.code == 'requires-recent-login') {
         final userInfo = user.providerData.first;
 
@@ -52,16 +74,7 @@ class _AuthenticationCRUD {
       }
     }
 
-    // Delete user in firestore. Also delete its relationships
-    await userCRUD.delete(documentId: user.uid);
-
-    // Delete user photo in firebase storage
-    final photoRef = FirebaseStorage.instance.getUserPhotoRef(user.uid);
-    try {
-      await photoRef.delete();
-    } on FirebaseException catch (e) {
-      if (e.code != 'object-not-found') rethrow;
-    }
+    await signOut();
   }
 
   /// Reload the user, to check if something changed.

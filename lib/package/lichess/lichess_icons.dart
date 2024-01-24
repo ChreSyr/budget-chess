@@ -25,7 +25,8 @@
 ///         License:   SIL (https://github.com/FortAwesome/Font-Awesome/blob/master/LICENSE.txt)
 ///         Homepage:  http://fortawesome.github.com/Font-Awesome/
 ///
-// ignore_for_file: constant_identifier_names
+library;
+// ignore_for_file: constant_identifier_names, avoid_redundant_argument_values
 
 import 'package:flutter/widgets.dart';
 

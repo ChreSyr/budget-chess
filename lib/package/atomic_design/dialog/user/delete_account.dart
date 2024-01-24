@@ -22,15 +22,15 @@ Future<AlertDialog?> showDeleteAccountDialog(BuildContext context, User user) {
           ),
           FilledButton(
             child: Text(context.l10n.deleteAccount),
-            onPressed: () {
+            onPressed: () async {
               try {
-                authenticationCRUD.deleteUserAccount(userId: user.uid);
+                await authenticationCRUD.deleteUserAccount(userId: user.uid);
+                // ignore: use_build_context_synchronously
                 snackBarNotify(context, context.l10n.deletedAccount);
-                // pop menu
+                // ignore: use_build_context_synchronously
                 context.pop();
-                // sigout
-                authenticationCRUD.signOut();
               } catch (_) {
+                // ignore: use_build_context_synchronously
                 snackBarError(context, context.l10n.errorOccurred);
               }
             },

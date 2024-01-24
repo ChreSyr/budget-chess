@@ -43,8 +43,8 @@ class UserBody extends MainRouteBody {
       builder: (context, authUid) {
         return IncompleteProfileNotifier(
           builder: (context, currentUser) {
-            // creating the user, may never happen, or very very shortly
-            if (currentUser == null) return const CircularProgressIndicator();
+            // creating or deleting the user
+            if (currentUser == null) return const LinearProgressIndicator();
 
             if (usernameOrId != null &&
                 usernameOrId != currentUser.usernameLowercase) {
