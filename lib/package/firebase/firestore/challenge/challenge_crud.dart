@@ -18,6 +18,16 @@ class ChallengeCRUD extends CollectionCRUD<ChallengeModel> {
           ) =>
               ChallengeModel.fromFirestore(snapshot),
         );
+        
+  /// Delete the relationships of this user
+  Future<void> onAccountDeletion({required String? userId}) async {
+    final challenges = await readFiltered(
+      filter: (collection) => collection.where('authorId', isEqualTo: userId),
+    );
+    for (final challenge in challenges) {
+      await delete(documentId: challenge.id);
+    }
+  }
 }
 
 final challengeCRUD = ChallengeCRUD();

@@ -117,6 +117,17 @@ class _RelationshipCRUD extends CollectionCRUD<RelationshipModel> {
     );
   }
 
+  /// Delete the relationships of this user
+  Future<void> onAccountDeletion({required String? userId}) async {
+    final relationships = await readFiltered(
+      filter: (collection) =>
+          collection.where('userIds', arrayContains: userId),
+    );
+    for (final relationship in relationships) {
+      await delete(documentId: relationship.id);
+    }
+  }
+
   /// Return the relationships waiting for an answer, from or to userId
   Stream<Iterable<RelationshipModel>> requestsAbout(String userId) {
     return streamFiltered(

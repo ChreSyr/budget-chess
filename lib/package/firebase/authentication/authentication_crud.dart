@@ -28,7 +28,6 @@ class _AuthenticationCRUD {
 
   /// Permanently delete account. Reauthentication may be required.
   Future<void> deleteUserAccount({String? userId}) async {
-
     final user = _firebaseAuth.currentUser;
     if (user == null) return;
 
@@ -37,8 +36,14 @@ class _AuthenticationCRUD {
       /// after the current UserModel will be deleted
       await user.updateDisplayName(accountBeingDeleted);
 
-      // Delete user in firestore. Will also delete its relationships
+      // Delete user.
       await userCRUD.delete(documentId: user.uid);
+
+      // Delete relationships of user.
+      await relationshipCRUD.onAccountDeletion(userId: user.uid);
+
+      // Delete challenges created by user.
+      await challengeCRUD.onAccountDeletion(userId: user.uid);
 
       // Delete user photo in firebase storage
       final photoRef = FirebaseStorage.instance.getUserPhotoRef(user.uid);

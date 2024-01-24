@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crea_chess/package/firebase/firestore/crud/collection_crud.dart';
-import 'package:crea_chess/package/firebase/firestore/relationship/relationship_crud.dart';
 import 'package:crea_chess/package/firebase/firestore/user/user_cubit.dart';
 import 'package:crea_chess/package/firebase/firestore/user/user_model.dart';
 
@@ -31,20 +30,6 @@ class _UserCRUD extends CollectionCRUD<UserModel> {
         usernameLowercase: data.username?.toLowerCase(),
       ),
     );
-  }
-
-  /// Delete the user & its relationships
-  @override
-  Future<void> delete({required String? documentId}) async {
-    await super.delete(documentId: documentId);
-
-    final relationships = await relationshipCRUD.readFiltered(
-      filter: (collection) =>
-          collection.where('userIds', arrayContains: documentId),
-    );
-    for (final relationship in relationships) {
-      await relationshipCRUD.delete(documentId: relationship.id);
-    }
   }
 
   Stream<UserModel?> streamUsername(String username) {
