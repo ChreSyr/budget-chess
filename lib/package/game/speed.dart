@@ -1,11 +1,12 @@
 import 'package:crea_chess/package/game/time_control.dart';
+import 'package:crea_chess/package/lichess/lichess_icons.dart';
 import 'package:flutter/material.dart';
 
 enum Speed {
-  bullet(Icons.bolt, 0),
-  blitz(Icons.local_fire_department, 1),
-  rapid(Icons.cruelty_free, 2),
-  classical(Icons.sentiment_satisfied, 3);
+  bullet(LichessIcons.bullet, 0),
+  blitz(LichessIcons.blitz, 1),
+  rapid(LichessIcons.rapid, 2),
+  classical(LichessIcons.classical, 3);
 
   const Speed(this.icon, this._index);
 
