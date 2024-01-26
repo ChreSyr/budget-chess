@@ -5,12 +5,15 @@ import 'package:crea_chess/package/atomic_design/widget/divider.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/authentication/authentication_crud.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
+import 'package:crea_chess/package/preferences/preferences_cubit.dart';
+import 'package:crea_chess/package/preferences/preferences_state.dart';
 import 'package:crea_chess/route/route_body.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_sign_in_web/google_sign_in_web.dart';
 
 class SignMethodsBody extends RouteBody {
   const SignMethodsBody({super.key});
@@ -26,24 +29,29 @@ class SignMethodsBody extends RouteBody {
       },
       child: SizedBox(
         width: CCWidgetSize.large4,
-        child: ListView(
-          shrinkWrap: true,
+        child: Column(
           children: [
-            // sign in button
-            FilledButton(
-              onPressed: () => context.push('/sso/signin'),
-              child: Text(context.l10n.signin),
+            SizedBox(
+              width: CCWidgetSize.xlarge,
+              child: ListView(
+                shrinkWrap: true,
+                children: [
+                  // sign in button
+                  FilledButton(
+                    onPressed: () => context.push('/sso/signin'),
+                    child: Text(context.l10n.signin),
+                  ),
+                  CCGap.medium,
+                  // sign up button
+                  FilledButton(
+                    onPressed: () => context.push('/sso/signup'),
+                    child: Text(context.l10n.signup),
+                  ),
+                ],
+              ),
             ),
 
-            CCGap.small,
-
-            // sign up button
-            FilledButton(
-              onPressed: () => context.push('/sso/signup'),
-              child: Text(context.l10n.signup),
-            ),
-
-            CCGap.medium,
+            CCGap.xlarge,
 
             // or continue with
             Row(
@@ -55,9 +63,9 @@ class SignMethodsBody extends RouteBody {
                 Expanded(child: CCDivider.xthin),
               ],
             ),
-            CCGap.medium,
 
             // google or facebook loading animation
+            CCGap.medium,
             BlocConsumer<AuthProviderStatusCubit, AuthProviderStatus>(
               listener: (context, status) {
                 if (status == AuthProviderStatus.error) {
@@ -76,6 +84,7 @@ class SignMethodsBody extends RouteBody {
                 return Container();
               },
             ),
+            CCGap.medium,
 
             // google + facebook sign in buttons
             AuthProviderButton.google(),
@@ -92,58 +101,75 @@ class AuthProviderButton extends StatelessWidget {
   const AuthProviderButton._({required this.provider});
 
   factory AuthProviderButton.facebook() => const AuthProviderButton._(
-        provider: 'facebook.com',
+        provider: 'facebook',
       );
 
   factory AuthProviderButton.google() => const AuthProviderButton._(
-        provider: 'google.com',
+        provider: 'google',
       );
 
   final String provider;
 
   @override
   Widget build(BuildContext context) {
-    final String? imageAsset;
-    final String title;
-    final VoidCallback? onPressed;
-    switch (provider) {
-      case 'facebook.com':
-        imageAsset = 'assets/icon/facebook_icon.png';
-        title = 'Se connecter avec Facebook'; // TODO : l10n
-        onPressed = authenticationCRUD.signInWithFacebook;
-      case 'google.com':
-        imageAsset = 'assets/icon/google_icon.png';
-        title = 'Se connecter avec Google'; // TODO : l10n
-        onPressed = authenticationCRUD.signInWithGoogle;
-        if (kIsWeb) return authenticationCRUD.webGoogleSignInButton;
-      default:
-        imageAsset = null;
-        title = 'Unable to find provider';
-        onPressed = null;
-    }
-    return ActionChip(
-      shape: const RoundedRectangleBorder(
-        borderRadius: CCBorderRadiusCircular.xsmall,
-        side: BorderSide(
-          color: Color.fromARGB(255, 209, 209, 209),
-          width: .5,
-        ),
-      ),
-      backgroundColor: Colors.white,
-      padding: const EdgeInsets.only(
-        left: 12,
-        top: 12,
-        right: 4,
-        bottom: 12,
-      ),
-      avatar: imageAsset == null
-          ? null
-          : Image.asset(
-              imageAsset,
-              height: CCSize.large,
+    return SizedBox(
+      height: 40,
+      child: BlocBuilder<PreferencesCubit, PreferencesState>(
+        builder: (context, preferences) {
+
+          final String? imageAsset;
+          final VoidCallback? onPressed;
+          switch (provider) {
+            case 'facebook':
+              imageAsset = 'assets/icon/facebook_icon.png';
+              onPressed = authenticationCRUD.signInWithFacebook;
+            case 'google':
+              imageAsset = 'assets/icon/google_icon.png';
+              onPressed = authenticationCRUD.signInWithGoogle;
+              if (kIsWeb) {
+                return authenticationCRUD.getGoogleSignInButtonForWeb(
+                  configuration: GSIButtonConfiguration(
+                    locale: context.l10n.localeName,
+                    theme: preferences.isDarkMode
+                        ? GSIButtonTheme.filledBlack
+                        : GSIButtonTheme.outline,
+                  ),
+                );
+              }
+            default:
+              imageAsset = null;
+              onPressed = null;
+          }
+
+          return ActionChip(
+            shape: RoundedRectangleBorder(
+              borderRadius: CCBorderRadiusCircular.xsmall,
+              side: preferences.isDarkMode
+                  ? const BorderSide(color: Colors.transparent)
+                  : const BorderSide(
+                      color: Color.fromARGB(255, 209, 209, 209),
+                      width: .5,
+                    ),
             ),
-      label: Text(title, style: const TextStyle(color: Colors.black)),
-      onPressed: onPressed,
+            backgroundColor:
+                preferences.isDarkMode ? Color.fromARGB(255, 28, 28, 32) : null,
+            padding: const EdgeInsets.only(
+              left: 12,
+              top: 12,
+              right: 8,
+              bottom: 12,
+            ),
+            avatar: imageAsset == null
+                ? null
+                : Image.asset(
+                    imageAsset,
+                    height: CCSize.large,
+                  ),
+            label: Text(context.l10n.signWithProvider(provider)),
+            onPressed: onPressed,
+          );
+        },
+      ),
     );
   }
 }

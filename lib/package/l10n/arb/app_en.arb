@@ -73,6 +73,12 @@
   "signin": "Log in",
   "signout": "Sign out",
   "signup": "Sign up",
+  "signWithProvider": "{provider, select, other{Unknown provider} facebook{Sign in with Facebook} google{Sign in with Google}}",
+  "@signWithProvider": {
+    "placeholders": {
+      "provider": {}
+    }
+  },
   "timeControl": "Time control",
   "tipChallengesRemoved": "As soon as one of your challenges is accepted, all others will be deleted",
   "userUnblock": "Unblock this user ?",

@@ -9,14 +9,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:google_sign_in_platform_interface/google_sign_in_platform_interface.dart';
-import 'package:google_sign_in_web/google_sign_in_web.dart' as web;
+import 'package:google_sign_in_web/google_sign_in_web.dart';
 
 final _firebaseAuth = FirebaseAuth.instance;
 
 final _googleAuth = GoogleSignIn();
 final _googleAuthProvider = GoogleAuthProvider();
 final _googleWebPlugin =
-    GoogleSignInPlatform.instance as web.GoogleSignInPlugin;
+    GoogleSignInPlatform.instance as GoogleSignInPlugin;
 
 final _facebookAuth = FacebookLogin(debug: true);
 final _facebookAuthProvider = FacebookAuthProvider();
@@ -25,11 +25,6 @@ const accountBeingDeleted = '#---account-being-deleted---#';
 
 class _AuthenticationCRUD {
   final authProviderStatusCubit = AuthProviderStatusCubit();
-
-  Widget get webGoogleSignInButton {
-    if (!kIsWeb) return const SizedBox.shrink();
-    return _googleWebPlugin.renderButton();
-  }
 
   /// Permanently delete account. Reauthentication may be required.
   Future<void> deleteUserAccount({String? userId}) async {
@@ -85,6 +80,11 @@ class _AuthenticationCRUD {
     }
 
     await signOut();
+  }
+
+  Widget getGoogleSignInButtonForWeb({GSIButtonConfiguration? configuration}) {
+    if (!kIsWeb) return const SizedBox.shrink();
+    return _googleWebPlugin.renderButton(configuration: configuration);
   }
 
   /// Reload the user, to check if something changed.
