@@ -22,7 +22,7 @@ class SignMethodsBody extends RouteBody {
   Widget build(BuildContext context) {
     return BlocListener<AuthenticationCubit, User?>(
       listener: (context, user) {
-        if (user != null) context.pop();
+        if (user != null && context.canPop()) context.pop();
       },
       child: const _SignMethodsBody(),
     );
@@ -112,6 +112,10 @@ class _SignMethodsBody extends StatelessWidget {
               ),
             ],
           ),
+
+          CCGap.large,
+
+          authenticationCRUD.webGoogleSignInButton,
 
           CCGap.large,
         ],

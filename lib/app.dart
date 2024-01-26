@@ -20,7 +20,7 @@ class CreaChessApp extends StatelessWidget {
           create: (context) => authenticationCRUD.authProviderStatusCubit,
         ),
         BlocProvider(
-          create: (context) => authenticationCRUD.authenticationCubit,
+          create: (context) => AuthenticationCubit(),
         ),
         BlocProvider(
           create: (context) => userCRUD.userCubit,

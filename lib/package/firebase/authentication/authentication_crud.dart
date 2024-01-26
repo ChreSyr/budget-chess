@@ -4,18 +4,19 @@ import 'package:crea_chess/package/firebase/export.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:google_sign_in_platform_interface/google_sign_in_platform_interface.dart';
+import 'package:google_sign_in_web/google_sign_in_web.dart' as web;
 
 final _firebaseAuth = FirebaseAuth.instance;
 
-final _googleAuth = GoogleSignIn(
-  clientId:
-      // ignore: lines_longer_than_80_chars
-      '737365859201-spnihhusekc0prr23451hdjaj9a6dltc.apps.googleusercontent.com',
-);
+final _googleAuth = GoogleSignIn();
 final _googleAuthProvider = GoogleAuthProvider();
+final _googleWebPlugin =
+    GoogleSignInPlatform.instance as web.GoogleSignInPlugin;
 
 final _facebookAuth = FacebookLogin(debug: true);
 final _facebookAuthProvider = FacebookAuthProvider();
@@ -23,8 +24,12 @@ final _facebookAuthProvider = FacebookAuthProvider();
 const accountBeingDeleted = '#---account-being-deleted---#';
 
 class _AuthenticationCRUD {
-  final authenticationCubit = AuthenticationCubit._();
   final authProviderStatusCubit = AuthProviderStatusCubit();
+
+  Widget get webGoogleSignInButton {
+    if (!kIsWeb) return const SizedBox.shrink();
+    return _googleWebPlugin.renderButton();
+  }
 
   /// Permanently delete account. Reauthentication may be required.
   Future<void> deleteUserAccount({String? userId}) async {
@@ -151,19 +156,28 @@ class _AuthenticationCRUD {
     }
   }
 
-  /// SignIn with Google
+  /// SignIn with Google, deprecated on web
   Future<void> signInWithGoogle() async {
+
+    try {
+      await _signInWithGoogleUser(await _googleAuth.signIn());
+    } catch (e) {
+      if (e.toString() == 'popup_closed') {
+        authProviderStatusCubit.idle();
+      } else {
+        authProviderStatusCubit.error();
+      }
+    }
+  }
+
+  Future<void> _signInWithGoogleUser(GoogleSignInAccount? gUser) async {
+    if (gUser == null) {
+      // Handle the cases where the user canceled the sign-in or signed out
+      return authProviderStatusCubit.idle();
+    }
     authProviderStatusCubit.waiting();
 
     try {
-      // begin interactive sign in process
-      final gUser = await _googleAuth.signIn();
-
-      if (gUser == null) {
-        // Handle the case where the user canceled the sign-in
-        return authProviderStatusCubit.idle();
-      }
-
       // obtain auth details from request
       final gAuth = await gUser.authentication;
 
@@ -175,7 +189,7 @@ class _AuthenticationCRUD {
 
       await FirebaseAuth.instance.signInWithCredential(credential);
       authProviderStatusCubit.success();
-    } catch (_) {
+    } catch (e) {
       authProviderStatusCubit.error();
     }
   }
@@ -212,8 +226,12 @@ class AuthProviderStatusCubit extends Cubit<AuthProviderStatus> {
 }
 
 class AuthenticationCubit extends Cubit<User?> {
-  AuthenticationCubit._() : super(_firebaseAuth.currentUser) {
+  AuthenticationCubit() : super(_firebaseAuth.currentUser) {
     _authStream = _firebaseAuth.userChanges().listen(emit);
+    if (kIsWeb) {
+      _googleAuth.onCurrentUserChanged
+          .listen(authenticationCRUD._signInWithGoogleUser);
+    }
   }
 
   late StreamSubscription<User?> _authStream;

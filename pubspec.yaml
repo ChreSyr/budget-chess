@@ -36,6 +36,8 @@ dependencies:
   gap: ^3.0.1
   go_router: ^12.1.1
   google_sign_in: ^6.1.5
+  google_sign_in_platform_interface: ^2.4.5
+  google_sign_in_web: ^0.12.3+2
   html: ^0.15.4
   http: ^1.1.2
   hydrated_bloc: ^9.1.2
@@ -83,3 +85,5 @@ flutter_launcher_icons:
   ios: true
   remove_alpha_ios: true
   image_path: "assets/icon/crea_chess_icon_v1.png"
+
+# flutter run -d chrome --web-hostname localhost --web-port 7357
