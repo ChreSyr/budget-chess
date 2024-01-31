@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:google_sign_in_platform_interface/google_sign_in_platform_interface.dart';
@@ -15,8 +16,7 @@ final _firebaseAuth = FirebaseAuth.instance;
 
 final _googleAuth = GoogleSignIn();
 final _googleAuthProvider = GoogleAuthProvider();
-final _googleWebPlugin =
-    GoogleSignInPlatform.instance as GoogleSignInPlugin;
+final _googleWebPlugin = GoogleSignInPlatform.instance as GoogleSignInPlugin;
 
 final _facebookAuth = FacebookLogin(debug: true);
 final _facebookAuthProvider = FacebookAuthProvider();
@@ -123,25 +123,13 @@ class _AuthenticationCRUD {
 
   /// SignIn with Facebook
   Future<void> signInWithFacebook() async {
-    authProviderStatusCubit.waiting();
 
     try {
-      // Log in
-      final res = await _facebookAuth.logIn(
-        permissions: [
-          FacebookPermission.publicProfile,
-          FacebookPermission.email,
-        ],
-      );
-
-      // Check result status
-      switch (res.status) {
-        case FacebookLoginStatus.cancel:
-          return authProviderStatusCubit.idle();
-        case FacebookLoginStatus.error:
-          return authProviderStatusCubit.error();
-        case FacebookLoginStatus.success:
-          final accessToken = res.accessToken;
+      if (kIsWeb) {
+        // Request by default the email and the public profile
+        final result = await FacebookAuth.instance.login();
+        if (result.status == LoginStatus.success) {
+          final accessToken = result.accessToken;
           if (accessToken == null) {
             return authProviderStatusCubit.error();
           }
@@ -150,6 +138,37 @@ class _AuthenticationCRUD {
             FacebookAuthProvider.credential(accessToken.token),
           );
           authProviderStatusCubit.success();
+        } else {
+          authProviderStatusCubit.error();
+        }
+      } else {
+        authProviderStatusCubit.waiting();
+
+        // Log in
+        final res = await _facebookAuth.logIn(
+          permissions: [
+            FacebookPermission.publicProfile,
+            FacebookPermission.email,
+          ],
+        );
+
+        // Check result status
+        switch (res.status) {
+          case FacebookLoginStatus.cancel:
+            return authProviderStatusCubit.idle();
+          case FacebookLoginStatus.error:
+            return authProviderStatusCubit.error();
+          case FacebookLoginStatus.success:
+            final accessToken = res.accessToken;
+            if (accessToken == null) {
+              return authProviderStatusCubit.error();
+            }
+
+            await FirebaseAuth.instance.signInWithCredential(
+              FacebookAuthProvider.credential(accessToken.token),
+            );
+            authProviderStatusCubit.success();
+        }
       }
     } catch (_) {
       authProviderStatusCubit.error();
@@ -158,7 +177,6 @@ class _AuthenticationCRUD {
 
   /// SignIn with Google, deprecated on web
   Future<void> signInWithGoogle() async {
-
     try {
       await _signInWithGoogleUser(await _googleAuth.signIn());
     } catch (e) {
@@ -200,6 +218,9 @@ class _AuthenticationCRUD {
 
     // Sign out to force the account chooser next time
     await _googleAuth.signOut();
+
+    // Facebook
+    await FacebookAuth.instance.logOut();
   }
 
   /// SignUp with email and password
@@ -231,6 +252,12 @@ class AuthenticationCubit extends Cubit<User?> {
     if (kIsWeb) {
       _googleAuth.onCurrentUserChanged
           .listen(authenticationCRUD._signInWithGoogleUser);
+      FacebookAuth.i.webAndDesktopInitialize(
+        appId: '880565243648285',
+        cookie: true,
+        xfbml: true,
+        version: 'v15.0',
+      );
     }
   }
 
