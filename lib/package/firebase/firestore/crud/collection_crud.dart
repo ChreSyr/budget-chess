@@ -4,23 +4,22 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 abstract class CollectionCRUD<T> {
-  CollectionCRUD({
-    required this.collectionName,
-    required this.toFirestore,
-    required T Function(
-      DocumentSnapshot<Map<String, dynamic>>,
-      SnapshotOptions?,
-    ) fromFirestore,
-  }) : _collection = FirebaseFirestore.instance
-            .collection(collectionName)
-            .withConverter<T>(
-              toFirestore: toFirestore,
-              fromFirestore: fromFirestore,
+  CollectionCRUD({required this.collectionName}) {
+    _collection =
+        FirebaseFirestore.instance.collection(collectionName).withConverter<T?>(
+              toFirestore: modelToJson,
+              fromFirestore: jsonToModel,
             );
+  }
 
   final String collectionName;
-  final CollectionReference<T> _collection;
-  final Map<String, Object?> Function(T, SetOptions?) toFirestore;
+  late final CollectionReference<T?> _collection;
+
+  T? jsonToModel(
+    DocumentSnapshot<Map<String, dynamic>> snapshot,
+    SnapshotOptions? _,
+  );
+  Map<String, Object?> modelToJson(T? data, SetOptions? _);
 
   Future<void> create({required T data, String? documentId}) async {
     await _collection.doc(documentId).set(data);
@@ -33,10 +32,10 @@ abstract class CollectionCRUD<T> {
   }
 
   Future<Iterable<T>> readFiltered({
-    required Query<T> Function(CollectionReference<T>) filter,
+    required Query<T?> Function(CollectionReference<T?>) filter,
   }) {
     return filter(_collection).get().then(
-          (snapshot) => snapshot.docs.map((doc) => doc.data()).toList(),
+          (snapshot) => snapshot.docs.map((doc) => doc.data()).whereType<T>(),
         );
   }
 
@@ -44,8 +43,6 @@ abstract class CollectionCRUD<T> {
     final streamController = StreamController<T?>();
 
     if (documentId.isNotEmpty) {
-      // streamController.add(_converter.emptyModel());
-      // } else {
       _collection.doc(documentId).snapshots().listen((snapshot) {
         streamController.add(snapshot.data());
       });
@@ -56,23 +53,23 @@ abstract class CollectionCRUD<T> {
 
   Stream<Iterable<T>> streamAll() {
     return _collection.snapshots().map(
-          (snapshot) => snapshot.docs.map((doc) => doc.data()).toList(),
+          (snapshot) => snapshot.docs.map((doc) => doc.data()).whereType<T>(),
         );
   }
 
   Stream<Iterable<T>> streamFiltered({
-    required Query<T> Function(CollectionReference<T>) filter,
+    required Query<T?> Function(CollectionReference<T?>) filter,
   }) {
     return filter(_collection).snapshots().map(
-          (snapshot) => snapshot.docs.map((doc) => doc.data()).toList(),
+          (snapshot) => snapshot.docs.map((doc) => doc.data()).whereType<T>(),
         );
   }
 
   Future<void> update({required String documentId, required T data}) async {
-    await _collection.doc(documentId).update(toFirestore(data, null));
+    await _collection.doc(documentId).update(modelToJson(data, null));
   }
 
-  Future<void> delete({required String? documentId}) async {
+  Future<void> delete({required String documentId}) async {
     await _collection.doc(documentId).delete();
   }
 }

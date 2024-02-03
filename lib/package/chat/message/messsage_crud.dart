@@ -10,17 +10,30 @@ class _MessageCRUD extends SubCollectionCRUD<MessageModel> {
       : super(
           parentCollectionName: relationshipCRUD.collectionName,
           collectionName: 'message',
-          toFirestore: (
-            MessageModel data,
-            SetOptions? _,
-          ) =>
-              data.toFirestore(),
-          fromFirestore: (
-            DocumentSnapshot<Map<String, dynamic>> snapshot,
-            SnapshotOptions? _,
-          ) =>
-              MessageModel.fromFirestore(snapshot),
         );
+
+  @override
+  MessageModel? jsonToModel(
+    DocumentSnapshot<Map<String, dynamic>> snapshot,
+    SnapshotOptions? _,
+  ) {
+    try {
+      final json = snapshot.data() ?? {};
+      json['id'] = snapshot.id;
+      return MessageModel.fromJson(json);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  @override
+  Map<String, Object?> modelToJson(MessageModel? data, SetOptions? _) {
+    return (data?.toJson()
+          ?..removeWhere(
+            (key, value) => key == 'id' || value == null,
+          )) ??
+        {};
+  }
 
   CollectionReference<Map<String, dynamic>> _collection(
     String relationshipId,

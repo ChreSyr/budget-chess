@@ -19,7 +19,6 @@ Widget? getRelationshipButton(
   if (currentUserId == userId) return null;
 
   switch (relation.status) {
-    case null:
     case RelationshipStatus.canceled:
       return FilledButton.icon(
         icon: const Icon(Icons.person_add),

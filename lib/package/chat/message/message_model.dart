@@ -66,14 +66,4 @@ class MessageModel with _$MessageModel {
 
   factory MessageModel.fromJson(Map<String, dynamic> json) =>
       _$MessageModelFromJson(json);
-
-  factory MessageModel.fromFirestore(
-    DocumentSnapshot<Map<String, dynamic>> doc,
-  ) {
-    return MessageModel.fromJson(doc.data() ?? {}).copyWith(id: doc.id);
-  }
-
-  Map<String, dynamic> toFirestore() {
-    return toJson()..removeWhere((key, value) => key == 'id' || value == null);
-  }
 }

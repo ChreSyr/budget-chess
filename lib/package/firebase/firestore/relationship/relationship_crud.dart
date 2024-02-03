@@ -3,20 +3,30 @@ import 'package:crea_chess/package/firebase/firestore/crud/collection_crud.dart'
 import 'package:crea_chess/package/firebase/firestore/relationship/relationship_model.dart';
 
 class _RelationshipCRUD extends CollectionCRUD<RelationshipModel> {
-  _RelationshipCRUD()
-      : super(
-          collectionName: 'relationship',
-          toFirestore: (
-            RelationshipModel data,
-            SetOptions? _,
-          ) =>
-              data.toFirestore(),
-          fromFirestore: (
-            DocumentSnapshot<Map<String, dynamic>> snapshot,
-            SnapshotOptions? _,
-          ) =>
-              RelationshipModel.fromFirestore(snapshot),
-        );
+  _RelationshipCRUD() : super(collectionName: 'relationship');
+
+  @override
+  RelationshipModel? jsonToModel(
+    DocumentSnapshot<Map<String, dynamic>> snapshot,
+    SnapshotOptions? _,
+  ) {
+    try {
+      final json = snapshot.data() ?? {};
+      json['id'] = snapshot.id;
+      return RelationshipModel.fromJson(json);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  @override
+  Map<String, Object?> modelToJson(RelationshipModel? data, SetOptions? _) {
+    return (data?.toJson()
+          ?..removeWhere(
+            (key, value) => key == 'id' || value == null,
+          )) ??
+        {};
+  }
 
   Future<void> block({
     required String blockerId,

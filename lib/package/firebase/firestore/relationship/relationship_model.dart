@@ -1,6 +1,5 @@
 // ignore_for_file: public_member_api_docs, invalid_annotation_target
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crea_chess/package/firebase/firestore/converter/timestamp_to_datetime.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -20,12 +19,12 @@ enum RelationshipStatus {
 class RelationshipModel with _$RelationshipModel {
   factory RelationshipModel({
     required String id,
+    required List<String> userIds,
+    @Default(RelationshipStatus.canceled) RelationshipStatus status,
     /// Date of friendship start
     @TimestampToDateTimeConverter() DateTime? createdAt,
     /// Last time a message was sent or a game got updated
     @TimestampToDateTimeConverter() DateTime? updatedAt,
-    @Default([]) List<String> userIds,
-    RelationshipStatus? status,
   }) = _RelationshipModel;
 
   /// Required for the override getter
@@ -33,17 +32,6 @@ class RelationshipModel with _$RelationshipModel {
 
   factory RelationshipModel.fromJson(Map<String, dynamic> json) =>
       _$RelationshipModelFromJson(json);
-
-  factory RelationshipModel.fromFirestore(
-    DocumentSnapshot<Map<String, dynamic>> doc,
-  ) {
-    final json = doc.data() ?? {};
-    json['id'] = doc.id;
-    return RelationshipModel.fromJson(json);
-  }
-
-  Map<String, dynamic> toFirestore() =>
-      toJson()..removeWhere((key, value) => key == 'id' || value == null);
 
   // ---
 

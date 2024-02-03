@@ -7,17 +7,31 @@ class _ChallengeFilterCRUD extends SubCollectionCRUD<ChallengeFilterModel> {
       : super(
           parentCollectionName: userCRUD.collectionName,
           collectionName: 'challengeFilter',
-          toFirestore: (
-            ChallengeFilterModel data,
-            SetOptions? _,
-          ) =>
-              data.toFirestore(),
-          fromFirestore: (
-            DocumentSnapshot<Map<String, dynamic>> snapshot,
-            SnapshotOptions? _,
-          ) =>
-              ChallengeFilterModel.fromFirestore(snapshot),
         );
+
+  @override
+  ChallengeFilterModel? jsonToModel(
+    DocumentSnapshot<Map<String, dynamic>> snapshot,
+    SnapshotOptions? _,
+  ) {
+    try {
+      final json = snapshot.data() ?? {};
+      json['userId'] = snapshot.reference.parent.parent?.id ?? '';
+      json['id'] = snapshot.id;
+      return ChallengeFilterModel.fromJson(json);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  @override
+  Map<String, Object?> modelToJson(ChallengeFilterModel? data, SetOptions? _) {
+    return (data?.toJson()
+          ?..removeWhere(
+            (key, value) => key == 'id' || key == 'userId' || value == null,
+          )) ??
+        {};
+  }
 
   void onAccountCreation(String authUid) {
     challengeFilterCRUD

@@ -39,12 +39,12 @@ Color getUserAvatarNameColor(UserModel user, List<Color> colors) =>
 String getUserInitials(UserModel user) {
   var initials = '';
 
-  if ((user.username ?? '').isNotEmpty) {
-    initials += user.username![0].toUpperCase();
+  if (user.username.isNotEmpty) {
+    initials += user.username[0].toUpperCase();
   }
 
-  if ((user.username ?? '').isNotEmpty) {
-    initials += user.username![0].toUpperCase();
+  if (user.username.isNotEmpty) {
+    initials += user.username[0].toUpperCase();
   }
 
   return initials.trim();

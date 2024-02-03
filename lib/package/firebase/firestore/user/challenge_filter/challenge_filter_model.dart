@@ -1,7 +1,6 @@
 // ignore_for_file: invalid_annotation_target
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:crea_chess/package/firebase/firestore/challenge/challenge_model.dart';
+import 'package:crea_chess/package/firebase/firestore/game/challenge/challenge_model.dart';
 import 'package:crea_chess/package/game/speed.dart';
 import 'package:dartchess_webok/dartchess_webok.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -24,20 +23,6 @@ class ChallengeFilterModel with _$ChallengeFilterModel {
 
   factory ChallengeFilterModel.fromJson(Map<String, dynamic> json) =>
       _$ChallengeFilterModelFromJson(json);
-
-  factory ChallengeFilterModel.fromFirestore(
-    DocumentSnapshot<Map<String, dynamic>> doc,
-  ) {
-    final json = doc.data() ?? {};
-    json['userId'] = doc.reference.parent.parent?.id ?? '';
-    json['id'] = doc.id;
-    return ChallengeFilterModel.fromJson(json);
-  }
-
-  Map<String, dynamic> toFirestore() => toJson()
-    ..removeWhere(
-      (key, value) => key == 'id' || key == 'userId' || value == null,
-    );
 
   // ---
 

@@ -4,22 +4,32 @@ import 'package:crea_chess/package/firebase/firestore/user/user_cubit.dart';
 import 'package:crea_chess/package/firebase/firestore/user/user_model.dart';
 
 class _UserCRUD extends CollectionCRUD<UserModel> {
-  _UserCRUD()
-      : super(
-          collectionName: 'user',
-          toFirestore: (
-            UserModel data,
-            SetOptions? _,
-          ) =>
-              data.toFirestore(),
-          fromFirestore: (
-            DocumentSnapshot<Map<String, dynamic>> snapshot,
-            SnapshotOptions? _,
-          ) =>
-              UserModel.fromFirestore(snapshot),
-        );
+  _UserCRUD() : super(collectionName: 'user');
 
   final userCubit = UserCubit();
+
+  @override
+  UserModel? jsonToModel(
+    DocumentSnapshot<Map<String, dynamic>> snapshot,
+    SnapshotOptions? _,
+  ) {
+    try {
+      final json = snapshot.data() ?? {};
+      json['id'] = snapshot.id;
+      return UserModel.fromJson(json);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  @override
+  Map<String, Object?> modelToJson(UserModel? data, SetOptions? _) {
+    return (data?.toJson()
+          ?..removeWhere(
+            (key, value) => key == 'id' || value == null,
+          )) ??
+        {};
+  }
 
   @override
   Future<void> create({required UserModel data, String? documentId}) {
@@ -27,7 +37,7 @@ class _UserCRUD extends CollectionCRUD<UserModel> {
       documentId: documentId,
       data: data.copyWith(
         createdAt: DateTime.now(),
-        usernameLowercase: data.username?.toLowerCase(),
+        usernameLowercase: data.username.toLowerCase(),
       ),
     );
   }

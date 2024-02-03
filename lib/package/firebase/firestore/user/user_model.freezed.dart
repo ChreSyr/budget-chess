@@ -21,8 +21,8 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$UserModel {
   String get id => throw _privateConstructorUsedError; // same as auth
+  String get username => throw _privateConstructorUsedError;
   DateTime? get createdAt => throw _privateConstructorUsedError;
-  String? get username => throw _privateConstructorUsedError;
   String? get usernameLowercase => throw _privateConstructorUsedError;
   String? get photo => throw _privateConstructorUsedError;
   String? get banner => throw _privateConstructorUsedError;
@@ -40,8 +40,8 @@ abstract class $UserModelCopyWith<$Res> {
   @useResult
   $Res call(
       {String id,
+      String username,
       DateTime? createdAt,
-      String? username,
       String? usernameLowercase,
       String? photo,
       String? banner});
@@ -61,8 +61,8 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
   @override
   $Res call({
     Object? id = null,
+    Object? username = null,
     Object? createdAt = freezed,
-    Object? username = freezed,
     Object? usernameLowercase = freezed,
     Object? photo = freezed,
     Object? banner = freezed,
@@ -72,14 +72,14 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
+      username: null == username
+          ? _value.username
+          : username // ignore: cast_nullable_to_non_nullable
+              as String,
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
-      username: freezed == username
-          ? _value.username
-          : username // ignore: cast_nullable_to_non_nullable
-              as String?,
       usernameLowercase: freezed == usernameLowercase
           ? _value.usernameLowercase
           : usernameLowercase // ignore: cast_nullable_to_non_nullable
@@ -106,8 +106,8 @@ abstract class _$$UserModelImplCopyWith<$Res>
   @useResult
   $Res call(
       {String id,
+      String username,
       DateTime? createdAt,
-      String? username,
       String? usernameLowercase,
       String? photo,
       String? banner});
@@ -125,8 +125,8 @@ class __$$UserModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
+    Object? username = null,
     Object? createdAt = freezed,
-    Object? username = freezed,
     Object? usernameLowercase = freezed,
     Object? photo = freezed,
     Object? banner = freezed,
@@ -136,14 +136,14 @@ class __$$UserModelImplCopyWithImpl<$Res>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
+      username: null == username
+          ? _value.username
+          : username // ignore: cast_nullable_to_non_nullable
+              as String,
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
-      username: freezed == username
-          ? _value.username
-          : username // ignore: cast_nullable_to_non_nullable
-              as String?,
       usernameLowercase: freezed == usernameLowercase
           ? _value.usernameLowercase
           : usernameLowercase // ignore: cast_nullable_to_non_nullable
@@ -165,8 +165,8 @@ class __$$UserModelImplCopyWithImpl<$Res>
 class _$UserModelImpl extends _UserModel {
   _$UserModelImpl(
       {required this.id,
+      required this.username,
       this.createdAt,
-      this.username,
       this.usernameLowercase,
       this.photo,
       this.banner})
@@ -179,9 +179,9 @@ class _$UserModelImpl extends _UserModel {
   final String id;
 // same as auth
   @override
-  final DateTime? createdAt;
+  final String username;
   @override
-  final String? username;
+  final DateTime? createdAt;
   @override
   final String? usernameLowercase;
   @override
@@ -191,7 +191,7 @@ class _$UserModelImpl extends _UserModel {
 
   @override
   String toString() {
-    return 'UserModel(id: $id, createdAt: $createdAt, username: $username, usernameLowercase: $usernameLowercase, photo: $photo, banner: $banner)';
+    return 'UserModel(id: $id, username: $username, createdAt: $createdAt, usernameLowercase: $usernameLowercase, photo: $photo, banner: $banner)';
   }
 
   @override
@@ -200,10 +200,10 @@ class _$UserModelImpl extends _UserModel {
         (other.runtimeType == runtimeType &&
             other is _$UserModelImpl &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt) &&
             (identical(other.username, username) ||
                 other.username == username) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
             (identical(other.usernameLowercase, usernameLowercase) ||
                 other.usernameLowercase == usernameLowercase) &&
             (identical(other.photo, photo) || other.photo == photo) &&
@@ -213,7 +213,7 @@ class _$UserModelImpl extends _UserModel {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType, id, createdAt, username, usernameLowercase, photo, banner);
+      runtimeType, id, username, createdAt, usernameLowercase, photo, banner);
 
   @JsonKey(ignore: true)
   @override
@@ -232,8 +232,8 @@ class _$UserModelImpl extends _UserModel {
 abstract class _UserModel extends UserModel {
   factory _UserModel(
       {required final String id,
+      required final String username,
       final DateTime? createdAt,
-      final String? username,
       final String? usernameLowercase,
       final String? photo,
       final String? banner}) = _$UserModelImpl;
@@ -245,9 +245,9 @@ abstract class _UserModel extends UserModel {
   @override
   String get id;
   @override // same as auth
-  DateTime? get createdAt;
+  String get username;
   @override
-  String? get username;
+  DateTime? get createdAt;
   @override
   String? get usernameLowercase;
   @override

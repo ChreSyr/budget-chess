@@ -196,7 +196,7 @@ class IncompleteProfileNotifier extends StatelessWidget {
                 .read<NavNotifCubit>()
                 .remove(UserBody.routeId, UserBody.notifPhotoEmpty);
           }
-          if ((user.username ?? '').isEmpty || user.username == user.id) {
+          if (user.username.isEmpty || user.username == user.id) {
             context
                 .read<NavNotifCubit>()
                 .add(UserBody.routeId, UserBody.notifNameEmpty);

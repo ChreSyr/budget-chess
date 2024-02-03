@@ -7,24 +7,23 @@ abstract class SubCollectionCRUD<T> {
   const SubCollectionCRUD({
     required this.parentCollectionName,
     required this.collectionName,
-    required this.toFirestore,
-    required this.fromFirestore,
   });
 
   final String parentCollectionName;
   final String collectionName;
-  final Map<String, Object?> Function(T, SetOptions?) toFirestore;
-  final T Function(
-    DocumentSnapshot<Map<String, dynamic>>,
-    SnapshotOptions?,
-  ) fromFirestore;
 
-  CollectionReference<T> _collection(String parentDocumentId) =>
+  T? jsonToModel(
+    DocumentSnapshot<Map<String, dynamic>> snapshot,
+    SnapshotOptions? _,
+  );
+  Map<String, Object?> modelToJson(T? bool, SetOptions? _);
+
+  CollectionReference<T?> _collection(String parentDocumentId) =>
       FirebaseFirestore.instance
           .collection('$parentCollectionName/$parentDocumentId/$collectionName')
-          .withConverter<T>(
-            toFirestore: toFirestore,
-            fromFirestore: fromFirestore,
+          .withConverter<T?>(
+            toFirestore: modelToJson,
+            fromFirestore: jsonToModel,
           );
 
   Future<void> create({
@@ -46,10 +45,10 @@ abstract class SubCollectionCRUD<T> {
 
   Future<Iterable<T>> readFiltered({
     required String parentDocumentId,
-    required Query<T> Function(CollectionReference<T>) filter,
+    required Query<T?> Function(CollectionReference<T?>) filter,
   }) {
     return filter(_collection(parentDocumentId)).get().then(
-          (snapshot) => snapshot.docs.map((doc) => doc.data()).toList(),
+          (snapshot) => snapshot.docs.map((doc) => doc.data()).whereType<T>(),
         );
   }
 
@@ -73,16 +72,16 @@ abstract class SubCollectionCRUD<T> {
 
   Stream<Iterable<T>> streamAll({required String parentDocumentId}) {
     return _collection(parentDocumentId).snapshots().map(
-          (snapshot) => snapshot.docs.map((doc) => doc.data()),
+          (snapshot) => snapshot.docs.map((doc) => doc.data()).whereType<T>(),
         );
   }
 
   Stream<Iterable<T>> streamFiltered({
     required String parentDocumentId,
-    required Query<T> Function(CollectionReference<T>) filter,
+    required Query<T?> Function(CollectionReference<T?>) filter,
   }) {
     return filter(_collection(parentDocumentId)).snapshots().map(
-          (snapshot) => snapshot.docs.map((doc) => doc.data()).toList(),
+          (snapshot) => snapshot.docs.map((doc) => doc.data()).whereType<T>(),
         );
   }
 
@@ -93,12 +92,12 @@ abstract class SubCollectionCRUD<T> {
   }) async {
     await _collection(parentDocumentId)
         .doc(documentId)
-        .update(toFirestore(data, null));
+        .update(modelToJson(data, null));
   }
 
   Future<void> delete({
     required String parentDocumentId,
-    required String? documentId,
+    required String documentId,
   }) async {
     await _collection(parentDocumentId).doc(documentId).delete();
   }

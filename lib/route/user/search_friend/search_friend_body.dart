@@ -148,7 +148,6 @@ Widget getUserTile(BuildContext context, UserModel user) {
 
         if (relationship == null) return sendRequestButton;
         switch (relationship.status) {
-          case null:
           case RelationshipStatus.canceled:
             return sendRequestButton;
           case RelationshipStatus.requestedByFirst:
@@ -191,7 +190,7 @@ Widget getUserTile(BuildContext context, UserModel user) {
 
       return ListTile(
         leading: UserPhoto(photo: user.photo),
-        title: Text(user.username ?? ''),
+        title: Text(user.username),
         trailing: trailing,
         onTap: () => context.go('/user/@${user.usernameLowercase}'),
       );
