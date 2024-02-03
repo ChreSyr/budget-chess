@@ -4,13 +4,13 @@ import 'package:crea_chess/package/firebase/export.dart';
 import 'package:dartchess_webok/dartchess_webok.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'live_game_model.freezed.dart';
-part 'live_game_model.g.dart';
+part 'past_game_model.freezed.dart';
+part 'past_game_model.g.dart';
 
-/// Represents a game being currently played
+/// Represents a game who ended
 @freezed
-class LiveGameModel with _$LiveGameModel {
-  const factory LiveGameModel({
+class PastGameModel with _$PastGameModel {
+  const factory PastGameModel({
     required String id,
     required ChallengeModel challenge,
     required String blackId,
@@ -18,13 +18,13 @@ class LiveGameModel with _$LiveGameModel {
     required String pgn,
     required GameStatus status,
     Side? winner, // if status is ended & winner is null : draw
-  }) = _LiveGameModel;
+  }) = _PastGameModel;
 
   /// Required for the override getter
-  const LiveGameModel._();
+  const PastGameModel._();
 
-  factory LiveGameModel.fromJson(Map<String, dynamic> json) =>
-      _$LiveGameModelFromJson(json);
+  factory PastGameModel.fromJson(Map<String, dynamic> json) =>
+      _$PastGameModelFromJson(json);
 
   // ---
 }

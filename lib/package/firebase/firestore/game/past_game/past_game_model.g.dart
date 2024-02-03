@@ -1,13 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'live_game_model.dart';
+part of 'past_game_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$LiveGameModelImpl _$$LiveGameModelImplFromJson(Map<String, dynamic> json) =>
-    _$LiveGameModelImpl(
+_$PastGameModelImpl _$$PastGameModelImplFromJson(Map<String, dynamic> json) =>
+    _$PastGameModelImpl(
       id: json['id'] as String,
       challenge:
           ChallengeModel.fromJson(json['challenge'] as Map<String, dynamic>),
@@ -18,7 +18,7 @@ _$LiveGameModelImpl _$$LiveGameModelImplFromJson(Map<String, dynamic> json) =>
       winner: $enumDecodeNullable(_$SideEnumMap, json['winner']),
     );
 
-Map<String, dynamic> _$$LiveGameModelImplToJson(_$LiveGameModelImpl instance) =>
+Map<String, dynamic> _$$PastGameModelImplToJson(_$PastGameModelImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'challenge': instance.challenge,

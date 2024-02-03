@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'live_game_model.dart';
+part of 'past_game_model.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,12 +14,12 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
-LiveGameModel _$LiveGameModelFromJson(Map<String, dynamic> json) {
-  return _LiveGameModel.fromJson(json);
+PastGameModel _$PastGameModelFromJson(Map<String, dynamic> json) {
+  return _PastGameModel.fromJson(json);
 }
 
 /// @nodoc
-mixin _$LiveGameModel {
+mixin _$PastGameModel {
   String get id => throw _privateConstructorUsedError;
   ChallengeModel get challenge => throw _privateConstructorUsedError;
   String get blackId => throw _privateConstructorUsedError;
@@ -30,15 +30,15 @@ mixin _$LiveGameModel {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $LiveGameModelCopyWith<LiveGameModel> get copyWith =>
+  $PastGameModelCopyWith<PastGameModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $LiveGameModelCopyWith<$Res> {
-  factory $LiveGameModelCopyWith(
-          LiveGameModel value, $Res Function(LiveGameModel) then) =
-      _$LiveGameModelCopyWithImpl<$Res, LiveGameModel>;
+abstract class $PastGameModelCopyWith<$Res> {
+  factory $PastGameModelCopyWith(
+          PastGameModel value, $Res Function(PastGameModel) then) =
+      _$PastGameModelCopyWithImpl<$Res, PastGameModel>;
   @useResult
   $Res call(
       {String id,
@@ -53,9 +53,9 @@ abstract class $LiveGameModelCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$LiveGameModelCopyWithImpl<$Res, $Val extends LiveGameModel>
-    implements $LiveGameModelCopyWith<$Res> {
-  _$LiveGameModelCopyWithImpl(this._value, this._then);
+class _$PastGameModelCopyWithImpl<$Res, $Val extends PastGameModel>
+    implements $PastGameModelCopyWith<$Res> {
+  _$PastGameModelCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -115,11 +115,11 @@ class _$LiveGameModelCopyWithImpl<$Res, $Val extends LiveGameModel>
 }
 
 /// @nodoc
-abstract class _$$LiveGameModelImplCopyWith<$Res>
-    implements $LiveGameModelCopyWith<$Res> {
-  factory _$$LiveGameModelImplCopyWith(
-          _$LiveGameModelImpl value, $Res Function(_$LiveGameModelImpl) then) =
-      __$$LiveGameModelImplCopyWithImpl<$Res>;
+abstract class _$$PastGameModelImplCopyWith<$Res>
+    implements $PastGameModelCopyWith<$Res> {
+  factory _$$PastGameModelImplCopyWith(
+          _$PastGameModelImpl value, $Res Function(_$PastGameModelImpl) then) =
+      __$$PastGameModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -136,11 +136,11 @@ abstract class _$$LiveGameModelImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$LiveGameModelImplCopyWithImpl<$Res>
-    extends _$LiveGameModelCopyWithImpl<$Res, _$LiveGameModelImpl>
-    implements _$$LiveGameModelImplCopyWith<$Res> {
-  __$$LiveGameModelImplCopyWithImpl(
-      _$LiveGameModelImpl _value, $Res Function(_$LiveGameModelImpl) _then)
+class __$$PastGameModelImplCopyWithImpl<$Res>
+    extends _$PastGameModelCopyWithImpl<$Res, _$PastGameModelImpl>
+    implements _$$PastGameModelImplCopyWith<$Res> {
+  __$$PastGameModelImplCopyWithImpl(
+      _$PastGameModelImpl _value, $Res Function(_$PastGameModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -154,7 +154,7 @@ class __$$LiveGameModelImplCopyWithImpl<$Res>
     Object? status = null,
     Object? winner = freezed,
   }) {
-    return _then(_$LiveGameModelImpl(
+    return _then(_$PastGameModelImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -189,8 +189,8 @@ class __$$LiveGameModelImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$LiveGameModelImpl extends _LiveGameModel {
-  const _$LiveGameModelImpl(
+class _$PastGameModelImpl extends _PastGameModel {
+  const _$PastGameModelImpl(
       {required this.id,
       required this.challenge,
       required this.blackId,
@@ -200,8 +200,8 @@ class _$LiveGameModelImpl extends _LiveGameModel {
       this.winner})
       : super._();
 
-  factory _$LiveGameModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$LiveGameModelImplFromJson(json);
+  factory _$PastGameModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PastGameModelImplFromJson(json);
 
   @override
   final String id;
@@ -220,14 +220,14 @@ class _$LiveGameModelImpl extends _LiveGameModel {
 
   @override
   String toString() {
-    return 'LiveGameModel(id: $id, challenge: $challenge, blackId: $blackId, whiteId: $whiteId, pgn: $pgn, status: $status, winner: $winner)';
+    return 'PastGameModel(id: $id, challenge: $challenge, blackId: $blackId, whiteId: $whiteId, pgn: $pgn, status: $status, winner: $winner)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$LiveGameModelImpl &&
+            other is _$PastGameModelImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.challenge, challenge) ||
                 other.challenge == challenge) &&
@@ -246,30 +246,30 @@ class _$LiveGameModelImpl extends _LiveGameModel {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$LiveGameModelImplCopyWith<_$LiveGameModelImpl> get copyWith =>
-      __$$LiveGameModelImplCopyWithImpl<_$LiveGameModelImpl>(this, _$identity);
+  _$$PastGameModelImplCopyWith<_$PastGameModelImpl> get copyWith =>
+      __$$PastGameModelImplCopyWithImpl<_$PastGameModelImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$LiveGameModelImplToJson(
+    return _$$PastGameModelImplToJson(
       this,
     );
   }
 }
 
-abstract class _LiveGameModel extends LiveGameModel {
-  const factory _LiveGameModel(
+abstract class _PastGameModel extends PastGameModel {
+  const factory _PastGameModel(
       {required final String id,
       required final ChallengeModel challenge,
       required final String blackId,
       required final String whiteId,
       required final String pgn,
       required final GameStatus status,
-      final Side? winner}) = _$LiveGameModelImpl;
-  const _LiveGameModel._() : super._();
+      final Side? winner}) = _$PastGameModelImpl;
+  const _PastGameModel._() : super._();
 
-  factory _LiveGameModel.fromJson(Map<String, dynamic> json) =
-      _$LiveGameModelImpl.fromJson;
+  factory _PastGameModel.fromJson(Map<String, dynamic> json) =
+      _$PastGameModelImpl.fromJson;
 
   @override
   String get id;
@@ -287,6 +287,6 @@ abstract class _LiveGameModel extends LiveGameModel {
   Side? get winner;
   @override
   @JsonKey(ignore: true)
-  _$$LiveGameModelImplCopyWith<_$LiveGameModelImpl> get copyWith =>
+  _$$PastGameModelImplCopyWith<_$PastGameModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
