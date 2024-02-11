@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, invalid_annotation_target
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crea_chess/package/firebase/firestore/converter/timestamp_to_datetime.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
