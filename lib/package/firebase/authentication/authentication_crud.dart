@@ -174,6 +174,8 @@ class _AuthenticationCRUD {
 
   /// SignIn with Google, deprecated on web
   Future<void> signInWithGoogle() async {
+    authProviderStatusCubit.waiting();
+        
     try {
       await _signInWithGoogleUser(await _googleAuth.signIn());
     } catch (e) {
