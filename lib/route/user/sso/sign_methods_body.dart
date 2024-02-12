@@ -13,7 +13,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_sign_in_web/google_sign_in_web.dart';
 
 class SignMethodsBody extends RouteBody {
   const SignMethodsBody({super.key});
@@ -124,18 +123,13 @@ class AuthProviderButton extends StatelessWidget {
               imageAsset = 'assets/icon/facebook_icon.png';
               onPressed = authenticationCRUD.signInWithFacebook;
             case 'google':
-              imageAsset = 'assets/icon/google_icon.png';
-              onPressed = authenticationCRUD.signInWithGoogle;
               if (kIsWeb) {
-                return authenticationCRUD.getGoogleSignInButtonForWeb(
-                  configuration: GSIButtonConfiguration(
-                    locale: context.l10n.localeName,
-                    theme: preferences.isDarkMode
-                        ? GSIButtonTheme.filledBlack
-                        : GSIButtonTheme.outline,
-                  ),
+                return authenticationCRUD.getGoogleSignInButton(
+                  darkMode: preferences.isDarkMode,
                 );
               }
+              imageAsset = 'assets/icon/google_icon.png';
+              onPressed = authenticationCRUD.signInWithGoogle;
             default:
               imageAsset = null;
               onPressed = null;
@@ -152,7 +146,9 @@ class AuthProviderButton extends StatelessWidget {
                     ),
             ),
             backgroundColor:
-                preferences.isDarkMode ? Color.fromARGB(255, 28, 28, 32) : null,
+                preferences.isDarkMode
+                ? const Color.fromARGB(255, 28, 28, 32)
+                : null,
             padding: const EdgeInsets.only(
               left: 12,
               top: 12,

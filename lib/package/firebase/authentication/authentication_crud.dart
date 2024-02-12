@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:crea_chess/package/firebase/authentication/google/google_sign_in.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -9,14 +10,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:google_sign_in_platform_interface/google_sign_in_platform_interface.dart';
-import 'package:google_sign_in_web/google_sign_in_web.dart';
 
 final _firebaseAuth = FirebaseAuth.instance;
 
 final _googleAuth = GoogleSignIn();
 final _googleAuthProvider = GoogleAuthProvider();
-final _googleWebPlugin = GoogleSignInPlatform.instance as GoogleSignInPlugin;
 
 final _facebookAuth = FacebookLogin(debug: true);
 final _facebookAuthProvider = FacebookAuthProvider();
@@ -82,9 +80,9 @@ class _AuthenticationCRUD {
     await signOut();
   }
 
-  Widget getGoogleSignInButtonForWeb({GSIButtonConfiguration? configuration}) {
+  Widget getGoogleSignInButton({required bool darkMode}) {
     if (!kIsWeb) return const SizedBox.shrink();
-    return _googleWebPlugin.renderButton(configuration: configuration);
+    return GoogleSignInInterface().getSignInButton(darkMode: darkMode);
   }
 
   /// Reload the user, to check if something changed.
@@ -123,7 +121,6 @@ class _AuthenticationCRUD {
 
   /// SignIn with Facebook
   Future<void> signInWithFacebook() async {
-
     try {
       if (kIsWeb) {
         // Request by default the email and the public profile

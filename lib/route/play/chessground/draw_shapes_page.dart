@@ -2,8 +2,7 @@ import 'dart:math';
 
 import 'package:chessground/chessground.dart';
 import 'package:dartchess_webok/dartchess_webok.dart' as dc;
-import 'package:fast_immutable_collections/fast_immutable_collections.dart'
-    hide Tuple2;
+import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
 
 class DrawShapesPage extends StatefulWidget {
