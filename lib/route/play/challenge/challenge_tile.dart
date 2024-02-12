@@ -45,11 +45,15 @@ class ChallengeTile extends StatelessWidget {
           CCGap.small,
           Text(timeControl.toString()),
           const Expanded(child: CCGap.small),
-          IconButton(
-            icon: Icon(authUid == authorId ? Icons.close : Icons.check),
-            onPressed: authUid == authorId
-                ? () => challengeCRUD.delete(documentId: challenge.id)
-                : () {},
+          if (authUid == authorId)
+            IconButton(
+              icon: const Icon(Icons.close),
+              onPressed: () => challengeCRUD.delete(documentId: challenge.id),
+            )
+          else
+            IconButton(
+              icon: const Icon(Icons.check),
+              onPressed: () => context.go('/play/game'),
           ),
         ],
       ),

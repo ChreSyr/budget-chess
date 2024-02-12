@@ -7,6 +7,7 @@ import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/route/nav_notif_cubit.dart';
 import 'package:crea_chess/route/play/chessground/chessground_body.dart';
 import 'package:crea_chess/route/play/create_challenge/create_challenge_body.dart';
+import 'package:crea_chess/route/play/game/game_body.dart';
 import 'package:crea_chess/route/play/play_body.dart';
 import 'package:crea_chess/route/route_scaffold.dart';
 import 'package:crea_chess/route/settings/settings_body.dart';
@@ -59,6 +60,11 @@ final router = GoRouter(
                   path: 'create_challenge',
                   builder: (context, state) =>
                       const RouteScaffold(body: CreateChallengeBody()),
+                ),
+                GoRoute(
+                  path: 'game',
+                  builder: (context, state) =>
+                      const RouteScaffold(body: GameBody()),
                 ),
               ],
             ),
