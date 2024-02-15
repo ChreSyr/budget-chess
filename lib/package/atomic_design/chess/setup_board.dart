@@ -145,9 +145,6 @@ class _BoardState extends State<SetupBoard> {
   void initState() {
     super.initState();
     pieces = readFen(widget.fen);
-    print(pieces);
-    print(widget.fen);
-
     for (var rank = 0; rank < 4; rank++) {
       for (var file = 0; file < 8; file++) {
         validDests.add(Coord(x: file, y: rank).squareId);
@@ -166,8 +163,6 @@ class _BoardState extends State<SetupBoard> {
     super.didUpdateWidget(oldBoard);
     if (oldBoard.fen != widget.fen) {
       pieces = readFen(widget.fen);
-      print(pieces);
-      print(widget.fen);
     }
   }
 

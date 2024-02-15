@@ -7,7 +7,7 @@ part 'setup_model.g.dart';
 @freezed
 class SetupModel with _$SetupModel {
   const factory SetupModel({
-    required String halfFen,
+    @protected required String halfFen,
     Side? betterWithSide,
   }) = _SetupModel;
 
@@ -18,4 +18,7 @@ class SetupModel with _$SetupModel {
       _$SetupModelFromJson(json);
 
   // ---
+
+  String halfFenAs(Side color) =>
+      color == Side.white ? halfFen.toUpperCase() : halfFen.toLowerCase();
 }

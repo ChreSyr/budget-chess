@@ -7,11 +7,18 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 class SetupCubit extends HydratedCubit<SetupModel> {
   SetupCubit({required this.side, required String halfFen})
-      : super(SetupModel(halfFen: halfFen));
-
+      : super(
+          SetupModel(
+            halfFen: halfFen,
+          ),
+        );
+      
   final Side side;
 
-  dc_w.Board get board => dc_w.Board.parseFen('8/8/8/8/${state.halfFen}');
+  dc_w.Board get board => dc_w.Board.parseFen(
+        '8/8/8/8/${state.halfFenAs(side)}',
+      );
+  
 
   void onDrop(DropMove move) {
     final to = dc_w.parseSquare(move.squareId);

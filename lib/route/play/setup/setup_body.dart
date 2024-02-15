@@ -40,7 +40,7 @@ class _SetupBody extends StatelessWidget {
           children: [
             SetupBoard(
               size: CCSize.boardSizeOf(context),
-              halfFen: setup.halfFen,
+              halfFen: setup.halfFenAs(side),
               color: side,
               onDrop: setupCubit.onDrop,
               onMove: setupCubit.onMove,

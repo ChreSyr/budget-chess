@@ -20,6 +20,7 @@ SetupModel _$SetupModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$SetupModel {
+  @protected
   String get halfFen => throw _privateConstructorUsedError;
   Side? get betterWithSide => throw _privateConstructorUsedError;
 
@@ -35,7 +36,7 @@ abstract class $SetupModelCopyWith<$Res> {
           SetupModel value, $Res Function(SetupModel) then) =
       _$SetupModelCopyWithImpl<$Res, SetupModel>;
   @useResult
-  $Res call({String halfFen, Side? betterWithSide});
+  $Res call({@protected String halfFen, Side? betterWithSide});
 }
 
 /// @nodoc
@@ -75,7 +76,7 @@ abstract class _$$SetupModelImplCopyWith<$Res>
       __$$SetupModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String halfFen, Side? betterWithSide});
+  $Res call({@protected String halfFen, Side? betterWithSide});
 }
 
 /// @nodoc
@@ -108,13 +109,15 @@ class __$$SetupModelImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$SetupModelImpl extends _SetupModel {
-  const _$SetupModelImpl({required this.halfFen, this.betterWithSide})
+  const _$SetupModelImpl(
+      {@protected required this.halfFen, this.betterWithSide})
       : super._();
 
   factory _$SetupModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$SetupModelImplFromJson(json);
 
   @override
+  @protected
   final String halfFen;
   @override
   final Side? betterWithSide;
@@ -154,7 +157,7 @@ class _$SetupModelImpl extends _SetupModel {
 
 abstract class _SetupModel extends SetupModel {
   const factory _SetupModel(
-      {required final String halfFen,
+      {@protected required final String halfFen,
       final Side? betterWithSide}) = _$SetupModelImpl;
   const _SetupModel._() : super._();
 
@@ -162,6 +165,7 @@ abstract class _SetupModel extends SetupModel {
       _$SetupModelImpl.fromJson;
 
   @override
+  @protected
   String get halfFen;
   @override
   Side? get betterWithSide;
