@@ -5,6 +5,7 @@ import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/firestore/game/inventory/inventory_model.dart';
 import 'package:crea_chess/package/firebase/firestore/game/setup/setup_model.dart';
+import 'package:crea_chess/route/play/setup/challenge_cubit.dart';
 import 'package:crea_chess/route/play/setup/inventory.dart';
 import 'package:crea_chess/route/play/setup/selected_role_cubit.dart';
 import 'package:crea_chess/route/play/setup/setup_budget_counter.dart';
@@ -20,6 +21,9 @@ class SetupBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(
+          create: (BuildContext context) => ChallengeCubit(),
+        ),
         BlocProvider(
           create: (BuildContext context) => SetupCubit(
             side: Side.black,
@@ -40,6 +44,8 @@ class _SetupBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final challenge = context.read<ChallengeCubit>().state;
+
     final setupCubit = context.read<SetupCubit>();
     final side = setupCubit.side;
     const settings = BoardSettings(
@@ -85,7 +91,10 @@ class _SetupBody extends StatelessWidget {
             CCPadding.allSmall(
               child: Row(
                 children: [
-                  SetupBudgetCounter(budget: 19, cost: setup.totalValue),
+                  SetupBudgetCounter(
+                    budget: challenge.budget,
+                    cost: setup.totalValue,
+                  ),
                   const Expanded(child: SizedBox.shrink()),
                   const SetupValidateButton(),
                 ],
