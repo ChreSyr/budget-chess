@@ -30,6 +30,9 @@ class CCColor {
   static Color onSecondary(BuildContext context) =>
       Theme.of(context).colorScheme.onSecondary;
 
+  static Color onSurfaceVariant(BuildContext context) =>
+      Theme.of(context).colorScheme.onSurfaceVariant;
+
   static Color outline(BuildContext context) =>
       Theme.of(context).colorScheme.outline;
 
