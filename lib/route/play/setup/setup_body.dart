@@ -2,6 +2,7 @@ import 'package:chessground/chessground.dart';
 import 'package:crea_chess/package/atomic_design/chess/setup_board.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/firebase/firestore/game/inventory/inventory_model.dart';
+import 'package:crea_chess/package/firebase/firestore/game/setup/setup_model.dart';
 import 'package:crea_chess/route/play/setup/inventory.dart';
 import 'package:crea_chess/route/play/setup/setup_cubit.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,7 @@ class SetupBody extends StatelessWidget {
     return BlocProvider(
       create: (BuildContext context) => SetupCubit(
         side: Side.white,
-        fen: '8/3qk3/8/8/8/8/3QK3/8',
+        fen: '8/8/8/8/8/8/8/8',
       ),
       child: const _SetupBody(),
     );
@@ -27,26 +28,37 @@ class _SetupBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final setupCubit = context.read<SetupCubit>();
+    final side = setupCubit.side;
     const settings = BoardSettings(
       colorScheme: BoardColorScheme.blue3,
     );
-    return BlocBuilder<SetupCubit, BoardData>(
-      builder: (context, boardData) {
+
+    return BlocBuilder<SetupCubit, SetupModel>(
+      builder: (context, setup) {
+        final boardData = BoardData(
+          interactableSide: side == Side.white
+              ? InteractableSide.white
+              : InteractableSide.black,
+          orientation: side,
+          sideToMove: side,
+          fen: setup.fen,
+        );
+
         return Column(
           children: [
             SetupBoard(
               size: CCSize.boardSizeOf(context),
               data: boardData,
-              onDrop: context.read<SetupCubit>().onDrop,
-              onMove: context.read<SetupCubit>().onMove,
-              onRemove: context.read<SetupCubit>().onRemove,
+              onDrop: setupCubit.onDrop,
+              onMove: setupCubit.onMove,
+              onRemove: setupCubit.onRemove,
               settings: settings,
             ),
             Inventory(
               inventory: const InventoryModel(
                 id: 'id',
                 ownerId: 'ownerId',
-                knights: 0,
               ),
               color: boardData.orientation,
               settings: settings,

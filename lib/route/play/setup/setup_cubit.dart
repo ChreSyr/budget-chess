@@ -1,25 +1,17 @@
 import 'package:chessground/chessground.dart';
 import 'package:crea_chess/package/atomic_design/chess/setup_board.dart';
+import 'package:crea_chess/package/firebase/firestore/game/setup/setup_model.dart';
 import 'package:crea_chess/route/play/setup/role.dart';
 import 'package:dartchess_webok/dartchess_webok.dart' as dc_w;
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 
-class SetupCubit extends Cubit<BoardData> {
+class SetupCubit extends HydratedCubit<SetupModel> {
   SetupCubit({required this.side, required String fen})
-      : board = dc_w.Board.parseFen(fen),
-        super(
-          BoardData(
-            interactableSide: side == Side.white
-                ? InteractableSide.white
-                : InteractableSide.black,
-            orientation: side,
-            sideToMove: side,
-            fen: fen,
-          ),
-        );
+      : super(SetupModel(fen: fen));
 
   final Side side;
-  dc_w.Board board;
+
+  dc_w.Board get board => dc_w.Board.parseFen(state.fen);
 
   void onDrop(DropMove move) {
     final to = dc_w.parseSquare(move.squareId);
@@ -27,7 +19,7 @@ class SetupCubit extends Cubit<BoardData> {
     final role = dc_w.Role.fromChar(move.piece.role.char);
     if (role == null) return;
 
-    board = board.setPieceAt(
+    final newBoard = board.setPieceAt(
       to,
       dc_w.Piece(
         color:
@@ -36,14 +28,7 @@ class SetupCubit extends Cubit<BoardData> {
       ),
     );
 
-    emit(
-      BoardData(
-        interactableSide: state.interactableSide,
-        orientation: state.orientation,
-        sideToMove: state.sideToMove,
-        fen: board.fen,
-      ),
-    );
+    emit(state.copyWith(fen: newBoard.fen));
   }
 
   void onMove(Move move) {
@@ -52,29 +37,27 @@ class SetupCubit extends Cubit<BoardData> {
     if (from == null || to == null) return;
     final piece = board.pieceAt(from);
     if (piece == null) return;
-    board = board.removePieceAt(from);
-    board = board.setPieceAt(to, piece);
-    emit(
-      BoardData(
-        interactableSide: state.interactableSide,
-        orientation: state.orientation,
-        sideToMove: state.sideToMove,
-        fen: board.fen,
-      ),
-    );
+    var newBoard = board.removePieceAt(from);
+    newBoard = newBoard.setPieceAt(to, piece);
+
+    emit(state.copyWith(fen: newBoard.fen));
   }
 
   void onRemove(SquareId squareId) {
     final square = dc_w.parseSquare(squareId);
     if (square == null) return;
-    board = board.removePieceAt(square);
-    emit(
-      BoardData(
-        interactableSide: state.interactableSide,
-        orientation: state.orientation,
-        sideToMove: state.sideToMove,
-        fen: board.fen,
-      ),
-    );
+    final newBoard = board.removePieceAt(square);
+
+    emit(state.copyWith(fen: newBoard.fen));
+  }
+
+  @override
+  SetupModel? fromJson(Map<String, dynamic> json) {
+    return SetupModel.fromJson(json);
+  }
+
+  @override
+  Map<String, dynamic>? toJson(SetupModel state) {
+    return state.toJson();
   }
 }

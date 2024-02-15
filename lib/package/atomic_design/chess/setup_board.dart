@@ -69,19 +69,16 @@ class _BoardState extends State<SetupBoard> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = widget.settings.colorScheme;
+    final orientation = widget.data.orientation;
+
     final Widget board = Stack(
       children: [
-        if (widget.settings.enableCoordinates)
-          widget.data.orientation == Side.white
-              ? colorScheme.whiteCoordBackground
-              : colorScheme.blackCoordBackground
-        else
-          colorScheme.background,
+        colorScheme.background,
         if (_dragOrigin != null && _dragAvatar != null)
           PositionedSquare(
             key: ValueKey('${_dragOrigin!}-dragOrigin'),
             size: widget.squareSize,
-            orientation: widget.data.orientation,
+            orientation: orientation,
             squareId: _dragOrigin!,
             child: Highlight(
               size: widget.squareSize,
@@ -93,7 +90,7 @@ class _BoardState extends State<SetupBoard> {
             PositionedSquare(
               key: ValueKey('${entry.key}-${entry.value.kind.name}'),
               size: widget.squareSize,
-              orientation: widget.data.orientation,
+              orientation: orientation,
               squareId: entry.key,
               child: PieceWidget(
                 piece: entry.value,
@@ -105,7 +102,7 @@ class _BoardState extends State<SetupBoard> {
         for (final squareId in validDests)
           PositionedSquare(
             size: widget.squareSize,
-            orientation: widget.data.orientation,
+            orientation: orientation,
             squareId: squareId,
             child: DragTarget<Role>(
               onAccept: (role) => _onDrop(squareId, role),
