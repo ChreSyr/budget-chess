@@ -4,6 +4,7 @@ import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/firebase/firestore/game/inventory/inventory_model.dart';
 import 'package:crea_chess/package/firebase/firestore/game/setup/setup_model.dart';
 import 'package:crea_chess/route/play/setup/inventory.dart';
+import 'package:crea_chess/route/play/setup/selected_role_cubit.dart';
 import 'package:crea_chess/route/play/setup/setup_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,11 +14,18 @@ class SetupBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (BuildContext context) => SetupCubit(
-        side: Side.white,
-        halfFen: '8/8/8/8',
-      ),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (BuildContext context) => SetupCubit(
+            side: Side.white,
+            halfFen: '8/8/8/8',
+          ),
+        ),
+        BlocProvider(
+          create: (context) => SelectedRoleCubit(),
+        ),
+      ],
       child: const _SetupBody(),
     );
   }

@@ -3,6 +3,7 @@ import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/firebase/firestore/game/inventory/inventory_model.dart';
+import 'package:crea_chess/route/play/setup/selected_role_cubit.dart';
 import 'package:crea_chess/route/play/setup/setup_cubit.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
@@ -30,18 +31,23 @@ class Inventory extends StatelessWidget {
 
     final leftInventory = inventory.less(color: color, board: board);
 
-    return Wrap(
-      children: leftInventory.pieces.entries
-          .map<InventorySlot>(
-            (entry) => InventorySlot(
-              width: slotWidth,
-              color: color,
-              assets: settings.pieceAssets,
-              role: entry.key,
-              amount: entry.value,
-            ),
-          )
-          .toList(),
+    return BlocBuilder<SelectedRoleCubit, Role?>(
+      builder: (context, selectedRole) {
+        return Wrap(
+          children: leftInventory.pieces.entries
+              .map<InventorySlot>(
+                (entry) => InventorySlot(
+                  width: slotWidth,
+                  color: color,
+                  assets: settings.pieceAssets,
+                  role: entry.key,
+                  amount: entry.value,
+                  isSelected: entry.key == selectedRole,
+                ),
+              )
+              .toList(),
+        );
+      },
     );
   }
 }
@@ -53,6 +59,7 @@ class InventorySlot extends StatelessWidget {
     required this.assets,
     required this.role,
     required this.amount,
+    required this.isSelected,
     super.key,
   });
 
@@ -61,9 +68,14 @@ class InventorySlot extends StatelessWidget {
   final IMap<PieceKind, AssetImage> assets; // TODO : cubit ?
   final Role role;
   final int amount;
+  final bool isSelected;
 
   @override
   Widget build(BuildContext context) {
+    if (isSelected && amount == 0) {
+      context.read<SelectedRoleCubit>().selectRole(null);
+    }
+
     final piece = PieceWidget(
       piece: Piece(
         color: color,
@@ -76,41 +88,46 @@ class InventorySlot extends StatelessWidget {
     return SizedBox(
       height: width,
       width: width,
-      child: Stack(
-        children: [
-          Card(
-            color: CCColor.secondaryContainer(context),
-            child: Draggable<Role>(
-              data: role,
-              feedback: piece,
-              childWhenDragging: SizedBox(
-                height: width,
-                width: width,
-              ),
-              child: piece,
-            ),
-          ),
-          if (amount == 0)
+      child: GestureDetector(
+        onTap: () => context.read<SelectedRoleCubit>().selectRole(role),
+        child: Stack(
+          children: [
             Card(
-              color: CCColor.transparentGrey,
-              child: SizedBox(
-                height: width,
-                width: width,
+              color: isSelected
+                  ? CCColor.primary(context)
+                  : CCColor.secondaryContainer(context),
+              child: Draggable<Role>(
+                data: role,
+                feedback: piece,
+                childWhenDragging: SizedBox(
+                  height: width,
+                  width: width,
+                ),
+                child: piece,
               ),
             ),
-          Align(
-            alignment: Alignment.topRight,
-            child: CCPadding.allXxsmall(
-              child: Badge.count(
-                count: amount,
-                backgroundColor: amount == 0
-                    ? CCColor.outline(context)
-                    : CCColor.primary(context),
-                textColor: CCColor.background(context),
+            if (amount == 0)
+              Card(
+                color: CCColor.transparentGrey,
+                child: SizedBox(
+                  height: width,
+                  width: width,
+                ),
+              ),
+            Align(
+              alignment: Alignment.topRight,
+              child: CCPadding.allXxsmall(
+                child: Badge.count(
+                  count: amount,
+                  backgroundColor: amount == 0
+                      ? CCColor.outline(context)
+                      : CCColor.primary(context),
+                  textColor: CCColor.background(context),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
