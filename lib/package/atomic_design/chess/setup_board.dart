@@ -57,7 +57,6 @@ class _BoardState extends State<SetupBoard> {
   Map<String, (PositionedPiece, PositionedPiece)> translatingPieces = {};
   Map<String, Piece> fadingPieces = {};
   SquareId? selected;
-  bool _shouldDeselectOnTapUp = false;
   Move? _lastDrop;
   _DragAvatar? _dragAvatar;
   SquareId? _dragOrigin;
@@ -102,7 +101,7 @@ class _BoardState extends State<SetupBoard> {
                     HighlightDetails(solidColor: colorScheme.validPremoves),
               ),
             ),
-        if (selected != null)
+        if (selected != null && _dragAvatar != null)
           PositionedSquare(
             key: ValueKey('${selected!}-selected'),
             size: widget.squareSize,
@@ -317,7 +316,6 @@ class _BoardState extends State<SetupBoard> {
     // to ensure we can select another piece
     if (_isMovable(squareId) &&
         (selected == null || !_canMove(selected!, squareId))) {
-      _shouldDeselectOnTapUp = selected == squareId;
       setState(() {
         selected = squareId;
       });
@@ -391,6 +389,7 @@ class _BoardState extends State<SetupBoard> {
     _dragAvatar = null;
     setState(() {
       _dragOrigin = null;
+      selected = null;
     });
   }
 
@@ -407,10 +406,7 @@ class _BoardState extends State<SetupBoard> {
     final squareId = widget.localOffset2SquareId(details.localPosition);
     if (squareId != null && squareId != selected) {
       _tryMoveTo(squareId);
-    } else if (squareId != null &&
-        selected == squareId &&
-        _shouldDeselectOnTapUp) {
-      _shouldDeselectOnTapUp = false;
+    } else if (squareId != null && selected == squareId) {
       setState(() {
         selected = null;
       });
