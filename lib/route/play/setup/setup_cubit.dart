@@ -63,4 +63,18 @@ class SetupCubit extends Cubit<BoardData> {
       ),
     );
   }
+
+  void onRemove(SquareId squareId) {
+    final square = dc_w.parseSquare(squareId);
+    if (square == null) return;
+    board = board.removePieceAt(square);
+    emit(
+      BoardData(
+        interactableSide: state.interactableSide,
+        orientation: state.orientation,
+        sideToMove: state.sideToMove,
+        fen: board.fen,
+      ),
+    );
+  }
 }

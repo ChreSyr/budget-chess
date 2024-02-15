@@ -39,6 +39,7 @@ class _SetupBody extends StatelessWidget {
               data: boardData,
               onDrop: context.read<SetupCubit>().onDrop,
               onMove: context.read<SetupCubit>().onMove,
+              onRemove: context.read<SetupCubit>().onRemove,
               settings: settings,
             ),
             Inventory(

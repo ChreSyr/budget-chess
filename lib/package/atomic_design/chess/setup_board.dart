@@ -15,6 +15,7 @@ class SetupBoard extends StatefulWidget {
     this.settings = const BoardSettings(),
     this.onDrop,
     this.onMove,
+    this.onRemove,
   });
 
   /// Visal size of the board
@@ -31,6 +32,9 @@ class SetupBoard extends StatefulWidget {
 
   /// Callback called after a move has been made.
   final void Function(Move)? onMove;
+
+  /// Callback called after a piece has been dragged out of the board.
+  final void Function(SquareId)? onRemove;
 
   double get squareSize => size / 8;
 
@@ -257,8 +261,12 @@ class _BoardState extends State<SetupBoard> {
       final box = context.findRenderObject()! as RenderBox;
       final localPos = box.globalToLocal(_dragAvatar!._position);
       final squareId = widget.localOffset2SquareId(localPos);
-      if (squareId != null && squareId != _dragOrigin) {
+      if (squareId == _dragOrigin) {
+        // back to where it was
+      } else if (squareId != null && _canMove(_dragOrigin!, squareId)) {
         _tryMoveTo(squareId);
+      } else {
+        _removeDraggedPiece();
       }
     }
     _dragAvatar?.end();
@@ -274,6 +282,10 @@ class _BoardState extends State<SetupBoard> {
     setState(() {
       _dragOrigin = null;
     });
+  }
+
+  void _removeDraggedPiece() {
+    if (_dragOrigin != null) widget.onRemove?.call(_dragOrigin!);
   }
 
   bool _isMovable(SquareId squareId) {
