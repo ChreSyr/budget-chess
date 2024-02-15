@@ -158,7 +158,6 @@ class _BoardState extends State<SetupBoard> {
               onTapDown: (TapDownDetails? details) {},
               onTapUp: _onTapUpPiece,
               onPanDown: _onPanDownPiece,
-              onPanStart: _onPanStartPiece,
               onPanUpdate: _onPanUpdatePiece,
               onPanEnd: _onPanEndPiece,
               onPanCancel: _onPanCancelPiece,
@@ -281,28 +280,12 @@ class _BoardState extends State<SetupBoard> {
     if (details == null) return;
 
     final squareId = widget.localOffset2SquareId(details.localPosition);
-    if (squareId == null) return;
-
-    // if a movable piece is already selected, we want to allow castling by
-    // selecting the king and then the rook, so `canMove` check must be false
-    // to ensure we can select another piece
-    if (_isMovable(squareId) &&
-        (selected == null || !_canMove(selected!, squareId))) {
-      setState(() {
-        selected = squareId;
-      });
-    }
-  }
-
-  void _onPanStartPiece(DragStartDetails? details) {
-    if (details == null) return;
-
-    final squareId = widget.localOffset2SquareId(details.localPosition);
     final piece = squareId != null ? pieces[squareId] : null;
     final feedbackSize = widget.squareSize * widget.settings.dragFeedbackSize;
     if (squareId != null && piece != null && (_isMovable(squareId))) {
       setState(() {
         _dragOrigin = squareId;
+        selected = squareId;
       });
       final squareTargetOffset =
           _squareTargetGlobalOffset(details.localPosition);
