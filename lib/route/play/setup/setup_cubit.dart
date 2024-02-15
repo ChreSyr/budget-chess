@@ -6,12 +6,12 @@ import 'package:dartchess_webok/dartchess_webok.dart' as dc_w;
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 class SetupCubit extends HydratedCubit<SetupModel> {
-  SetupCubit({required this.side, required String fen})
-      : super(SetupModel(fen: fen));
+  SetupCubit({required this.side, required String halfFen})
+      : super(SetupModel(halfFen: halfFen));
 
   final Side side;
 
-  dc_w.Board get board => dc_w.Board.parseFen(state.fen);
+  dc_w.Board get board => dc_w.Board.parseFen('8/8/8/8/${state.halfFen}');
 
   void onDrop(DropMove move) {
     final to = dc_w.parseSquare(move.squareId);
@@ -28,7 +28,7 @@ class SetupCubit extends HydratedCubit<SetupModel> {
       ),
     );
 
-    emit(state.copyWith(fen: newBoard.fen));
+    emit(state.copyWith(halfFen: newBoard.fen.substring(8)));
   }
 
   void onMove(Move move) {
@@ -40,7 +40,7 @@ class SetupCubit extends HydratedCubit<SetupModel> {
     var newBoard = board.removePieceAt(from);
     newBoard = newBoard.setPieceAt(to, piece);
 
-    emit(state.copyWith(fen: newBoard.fen));
+    emit(state.copyWith(halfFen: newBoard.fen.substring(8)));
   }
 
   void onRemove(SquareId squareId) {
@@ -48,7 +48,7 @@ class SetupCubit extends HydratedCubit<SetupModel> {
     if (square == null) return;
     final newBoard = board.removePieceAt(square);
 
-    emit(state.copyWith(fen: newBoard.fen));
+    emit(state.copyWith(halfFen: newBoard.fen.substring(8)));
   }
 
   @override

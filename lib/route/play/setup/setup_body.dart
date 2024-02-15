@@ -16,7 +16,7 @@ class SetupBody extends StatelessWidget {
     return BlocProvider(
       create: (BuildContext context) => SetupCubit(
         side: Side.white,
-        fen: '8/8/8/8/8/8/8/8',
+        halfFen: '8/8/8/8',
       ),
       child: const _SetupBody(),
     );
@@ -36,20 +36,12 @@ class _SetupBody extends StatelessWidget {
 
     return BlocBuilder<SetupCubit, SetupModel>(
       builder: (context, setup) {
-        final boardData = BoardData(
-          interactableSide: side == Side.white
-              ? InteractableSide.white
-              : InteractableSide.black,
-          orientation: side,
-          sideToMove: side,
-          fen: setup.fen,
-        );
-
         return Column(
           children: [
             SetupBoard(
               size: CCSize.boardSizeOf(context),
-              data: boardData,
+              halfFen: setup.halfFen,
+              color: side,
               onDrop: setupCubit.onDrop,
               onMove: setupCubit.onMove,
               onRemove: setupCubit.onRemove,
@@ -60,7 +52,7 @@ class _SetupBody extends StatelessWidget {
                 id: 'id',
                 ownerId: 'ownerId',
               ),
-              color: boardData.orientation,
+              color: side,
               settings: settings,
             ),
           ],

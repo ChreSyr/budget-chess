@@ -20,7 +20,7 @@ SetupModel _$SetupModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$SetupModel {
-  String get fen => throw _privateConstructorUsedError;
+  String get halfFen => throw _privateConstructorUsedError;
   Side? get betterWithSide => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -35,7 +35,7 @@ abstract class $SetupModelCopyWith<$Res> {
           SetupModel value, $Res Function(SetupModel) then) =
       _$SetupModelCopyWithImpl<$Res, SetupModel>;
   @useResult
-  $Res call({String fen, Side? betterWithSide});
+  $Res call({String halfFen, Side? betterWithSide});
 }
 
 /// @nodoc
@@ -51,13 +51,13 @@ class _$SetupModelCopyWithImpl<$Res, $Val extends SetupModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? fen = null,
+    Object? halfFen = null,
     Object? betterWithSide = freezed,
   }) {
     return _then(_value.copyWith(
-      fen: null == fen
-          ? _value.fen
-          : fen // ignore: cast_nullable_to_non_nullable
+      halfFen: null == halfFen
+          ? _value.halfFen
+          : halfFen // ignore: cast_nullable_to_non_nullable
               as String,
       betterWithSide: freezed == betterWithSide
           ? _value.betterWithSide
@@ -75,7 +75,7 @@ abstract class _$$SetupModelImplCopyWith<$Res>
       __$$SetupModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String fen, Side? betterWithSide});
+  $Res call({String halfFen, Side? betterWithSide});
 }
 
 /// @nodoc
@@ -89,13 +89,13 @@ class __$$SetupModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? fen = null,
+    Object? halfFen = null,
     Object? betterWithSide = freezed,
   }) {
     return _then(_$SetupModelImpl(
-      fen: null == fen
-          ? _value.fen
-          : fen // ignore: cast_nullable_to_non_nullable
+      halfFen: null == halfFen
+          ? _value.halfFen
+          : halfFen // ignore: cast_nullable_to_non_nullable
               as String,
       betterWithSide: freezed == betterWithSide
           ? _value.betterWithSide
@@ -108,19 +108,20 @@ class __$$SetupModelImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$SetupModelImpl extends _SetupModel {
-  const _$SetupModelImpl({required this.fen, this.betterWithSide}) : super._();
+  const _$SetupModelImpl({required this.halfFen, this.betterWithSide})
+      : super._();
 
   factory _$SetupModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$SetupModelImplFromJson(json);
 
   @override
-  final String fen;
+  final String halfFen;
   @override
   final Side? betterWithSide;
 
   @override
   String toString() {
-    return 'SetupModel(fen: $fen, betterWithSide: $betterWithSide)';
+    return 'SetupModel(halfFen: $halfFen, betterWithSide: $betterWithSide)';
   }
 
   @override
@@ -128,14 +129,14 @@ class _$SetupModelImpl extends _SetupModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$SetupModelImpl &&
-            (identical(other.fen, fen) || other.fen == fen) &&
+            (identical(other.halfFen, halfFen) || other.halfFen == halfFen) &&
             (identical(other.betterWithSide, betterWithSide) ||
                 other.betterWithSide == betterWithSide));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, fen, betterWithSide);
+  int get hashCode => Object.hash(runtimeType, halfFen, betterWithSide);
 
   @JsonKey(ignore: true)
   @override
@@ -153,7 +154,7 @@ class _$SetupModelImpl extends _SetupModel {
 
 abstract class _SetupModel extends SetupModel {
   const factory _SetupModel(
-      {required final String fen,
+      {required final String halfFen,
       final Side? betterWithSide}) = _$SetupModelImpl;
   const _SetupModel._() : super._();
 
@@ -161,7 +162,7 @@ abstract class _SetupModel extends SetupModel {
       _$SetupModelImpl.fromJson;
 
   @override
-  String get fen;
+  String get halfFen;
   @override
   Side? get betterWithSide;
   @override

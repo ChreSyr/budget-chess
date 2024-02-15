@@ -7,7 +7,7 @@ part 'setup_model.g.dart';
 @freezed
 class SetupModel with _$SetupModel {
   const factory SetupModel({
-    required String fen,
+    required String halfFen,
     Side? betterWithSide,
   }) = _SetupModel;
 

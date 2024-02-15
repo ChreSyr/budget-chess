@@ -10,13 +10,14 @@ import 'package:flutter/widgets.dart';
 class SetupBoard extends StatefulWidget {
   const SetupBoard({
     required this.size,
-    required this.data,
+    required String halfFen,
+    required this.color,
     super.key,
     this.settings = const BoardSettings(),
     this.onDrop,
     this.onMove,
     this.onRemove,
-  });
+  }) : fen = '8/8/8/8/$halfFen';
 
   /// Visal size of the board
   final double size;
@@ -25,7 +26,10 @@ class SetupBoard extends StatefulWidget {
   final BoardSettings settings;
 
   /// Data that represents the current state of the board
-  final BoardData data;
+  final String fen;
+
+  /// The color of the pieces
+  final Side color;
 
   /// Callback called after a piece has been dropped from outside of this board.
   final void Function(DropMove)? onDrop;
@@ -41,8 +45,8 @@ class SetupBoard extends StatefulWidget {
   Coord? localOffset2Coord(Offset offset) {
     final x = (offset.dx / squareSize).floor();
     final y = (offset.dy / squareSize).floor();
-    final orientX = data.orientation == Side.black ? 7 - x : x;
-    final orientY = data.orientation == Side.black ? y : 7 - y;
+    final orientX = x;
+    final orientY = 7 - y;
     if (orientX >= 0 && orientX <= 7 && orientY >= 0 && orientY <= 7) {
       return Coord(x: orientX, y: orientY);
     } else {
@@ -69,7 +73,7 @@ class _BoardState extends State<SetupBoard> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = widget.settings.colorScheme;
-    final orientation = widget.data.orientation;
+    const orientation = Side.white;
 
     final Widget board = Stack(
       children: [
@@ -117,18 +121,15 @@ class _BoardState extends State<SetupBoard> {
       dimension: widget.size,
       child: Stack(
         children: [
-          if (widget.data.interactableSide != InteractableSide.none)
-            GestureDetector(
-              onTapDown: (TapDownDetails? details) {},
-              onPanDown: _onPanDownPiece,
-              onPanUpdate: _onPanUpdatePiece,
-              onPanEnd: _onPanEndPiece,
-              onPanCancel: _onPanCancelPiece,
-              dragStartBehavior: DragStartBehavior.down,
-              child: board,
-            )
-          else
-            board,
+          GestureDetector(
+            onTapDown: (TapDownDetails? details) {},
+            onPanDown: _onPanDownPiece,
+            onPanUpdate: _onPanUpdatePiece,
+            onPanEnd: _onPanEndPiece,
+            onPanCancel: _onPanCancelPiece,
+            dragStartBehavior: DragStartBehavior.down,
+            child: board,
+          ),
           // sail above enemy's territory
           Container(
             color: const Color.fromARGB(128, 0, 0, 0),
@@ -143,13 +144,13 @@ class _BoardState extends State<SetupBoard> {
   @override
   void initState() {
     super.initState();
-    pieces = readFen(widget.data.fen);
+    pieces = readFen(widget.fen);
+    print(pieces);
+    print(widget.fen);
 
-    final rankDelta =
-        widget.data.interactableSide == InteractableSide.white ? 0 : 4;
     for (var rank = 0; rank < 4; rank++) {
       for (var file = 0; file < 8; file++) {
-        validDests.add(Coord(x: file, y: rank + rankDelta).squareId);
+        validDests.add(Coord(x: file, y: rank).squareId);
       }
     }
   }
@@ -163,13 +164,10 @@ class _BoardState extends State<SetupBoard> {
   @override
   void didUpdateWidget(SetupBoard oldBoard) {
     super.didUpdateWidget(oldBoard);
-    if (widget.data.interactableSide == InteractableSide.none) {
-      _dragAvatar?.cancel();
-      _dragAvatar = null;
-      _dragOrigin = null;
-    }
-    if (oldBoard.data.fen != widget.data.fen) {
-      pieces = readFen(widget.data.fen);
+    if (oldBoard.fen != widget.fen) {
+      pieces = readFen(widget.fen);
+      print(pieces);
+      print(widget.fen);
     }
   }
 
@@ -177,8 +175,7 @@ class _BoardState extends State<SetupBoard> {
   Offset? _squareTargetGlobalOffset(Offset localPosition) {
     final coord = widget.localOffset2Coord(localPosition);
     if (coord == null) return null;
-    final localOffset =
-        coord.offset(widget.data.orientation, widget.squareSize);
+    final localOffset = coord.offset(Side.white, widget.squareSize);
     final box = context.findRenderObject()! as RenderBox;
     final tmpOffset = box.localToGlobal(localOffset);
     return Offset(
@@ -191,7 +188,7 @@ class _BoardState extends State<SetupBoard> {
   void _onDrop(SquareId squareId, Role role) {
     final move = DropMove(
       piece: Piece(
-        color: widget.data.orientation,
+        color: widget.color,
         role: role,
       ),
       squareId: squareId,
@@ -285,13 +282,7 @@ class _BoardState extends State<SetupBoard> {
     if (_dragOrigin != null) widget.onRemove?.call(_dragOrigin!);
   }
 
-  bool _isMovable(SquareId squareId) {
-    final piece = pieces[squareId];
-    return piece != null &&
-        (widget.data.interactableSide == InteractableSide.both ||
-            widget.data.interactableSide.name == piece.color.name) &&
-        widget.data.sideToMove == piece.color;
-  }
+  bool _isMovable(SquareId squareId) => pieces[squareId] != null;
 
   bool _canMove(SquareId orig, SquareId dest) {
     return orig != dest && validDests.contains(dest);

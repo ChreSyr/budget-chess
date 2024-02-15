@@ -8,14 +8,14 @@ part of 'setup_model.dart';
 
 _$SetupModelImpl _$$SetupModelImplFromJson(Map<String, dynamic> json) =>
     _$SetupModelImpl(
-      fen: json['fen'] as String,
+      halfFen: json['halfFen'] as String,
       betterWithSide:
           $enumDecodeNullable(_$SideEnumMap, json['betterWithSide']),
     );
 
 Map<String, dynamic> _$$SetupModelImplToJson(_$SetupModelImpl instance) =>
     <String, dynamic>{
-      'fen': instance.fen,
+      'halfFen': instance.halfFen,
       'betterWithSide': _$SideEnumMap[instance.betterWithSide],
     };
 
