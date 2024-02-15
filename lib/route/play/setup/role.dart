@@ -9,4 +9,21 @@ extension RoleExt on Role {
         Role.knight => 3.05,
         Role.pawn => 1,
       };
+
+  String get char {
+    switch (this) {
+      case Role.pawn:
+        return 'p';
+      case Role.knight:
+        return 'n';
+      case Role.bishop:
+        return 'b';
+      case Role.rook:
+        return 'r';
+      case Role.queen:
+        return 'q';
+      case Role.king:
+        return 'k';
+    }
+  }
 }

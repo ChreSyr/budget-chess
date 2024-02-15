@@ -80,7 +80,15 @@ class InventorySlot extends StatelessWidget {
         children: [
           Card(
             color: CCColor.secondaryContainer(context),
-            child: piece,
+            child: Draggable<Role>(
+              data: role,
+              feedback: piece,
+              childWhenDragging: SizedBox(
+                height: width,
+                width: width,
+              ),
+              child: piece,
+            ),
           ),
           if (amount == 0)
             Card(

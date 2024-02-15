@@ -13,6 +13,7 @@ class SetupBoard extends StatefulWidget {
     required this.data,
     super.key,
     this.settings = const BoardSettings(),
+    this.onDrop,
     this.onMove,
   });
 
@@ -24,6 +25,9 @@ class SetupBoard extends StatefulWidget {
 
   /// Data that represents the current state of the board
   final BoardData data;
+
+  /// Callback called after a piece has been dropped from outside of this board.
+  final void Function(DropMove)? onDrop;
 
   /// Callback called after a move has been made.
   final void Function(Move)? onMove;
@@ -94,6 +98,17 @@ class _BoardState extends State<SetupBoard> {
                 blindfoldMode: widget.settings.blindfoldMode,
               ),
             ),
+        for (final squareId in validDests)
+          PositionedSquare(
+            size: widget.squareSize,
+            orientation: widget.data.orientation,
+            squareId: squareId,
+            child: DragTarget<Role>(
+              onAccept: (role) => _onDrop(squareId, role),
+              builder: (context, candidateData, rejectedData) =>
+                  const SizedBox.shrink(),
+            ),
+          ),
       ],
     );
 
@@ -169,6 +184,18 @@ class _BoardState extends State<SetupBoard> {
       tmpOffset.dx - widget.squareSize / 2,
       tmpOffset.dy - widget.squareSize / 2,
     );
+  }
+
+  /// Called when a piece is dropped from the inventory
+  void _onDrop(SquareId squareId, Role role) {
+    final move = DropMove(
+      piece: Piece(
+        color: widget.data.orientation,
+        role: role,
+      ),
+      squareId: squareId,
+    );
+    widget.onDrop?.call(move);
   }
 
   void _onPanDownPiece(DragDownDetails? details) {
@@ -388,133 +415,9 @@ class PositionedSquare extends StatelessWidget {
   }
 }
 
-class PieceTranslation extends StatefulWidget {
-  const PieceTranslation({
-    required this.child,
-    required this.fromCoord,
-    required this.toCoord,
-    required this.orientation,
-    required this.onComplete,
-    super.key,
-    Duration? duration,
-    Curve? curve,
-  })  : duration = duration ?? const Duration(milliseconds: 150),
-        curve = curve ?? Curves.easeInOutCubic;
-
-  final Widget child;
-  final Coord fromCoord;
-  final Coord toCoord;
-  final Side orientation;
-  final void Function() onComplete;
-  final Duration duration;
-  final Curve curve;
-
-  int get orientationFactor => orientation == Side.white ? 1 : -1;
-  double get dx => -(toCoord.x - fromCoord.x).toDouble() * orientationFactor;
-  double get dy => (toCoord.y - fromCoord.y).toDouble() * orientationFactor;
-
-  @override
-  State<PieceTranslation> createState() => _PieceTranslationState();
-}
-
-class _PieceTranslationState extends State<PieceTranslation>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _controller = AnimationController(
-    duration: widget.duration,
-    vsync: this,
-  )
-    ..addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        widget.onComplete();
-      }
-    })
-    ..forward();
-  late final Animation<Offset> _offsetAnimation = Tween<Offset>(
-    begin: Offset(widget.dx, widget.dy),
-    end: Offset.zero,
-  ).animate(
-    CurvedAnimation(
-      parent: _controller,
-      curve: widget.curve,
-    ),
-  );
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SlideTransition(
-      position: _offsetAnimation,
-      child: widget.child,
-    );
-  }
-}
-
-class PieceFadeOut extends StatefulWidget {
-  const PieceFadeOut({
-    required this.piece,
-    required this.size,
-    required this.onComplete,
-    required this.pieceAssets,
-    super.key,
-    this.blindfoldMode = false,
-    Duration? duration,
-    Curve? curve,
-  })  : duration = duration ?? const Duration(milliseconds: 150),
-        curve = curve ?? Curves.easeInQuad;
+class DropMove {
+  const DropMove({required this.piece, required this.squareId});
 
   final Piece piece;
-  final double size;
-  final PieceAssets pieceAssets;
-  final bool blindfoldMode;
-  final Duration duration;
-  final Curve curve;
-  final void Function() onComplete;
-
-  @override
-  State<PieceFadeOut> createState() => _PieceFadeOutState();
-}
-
-class _PieceFadeOutState extends State<PieceFadeOut>
-    with TickerProviderStateMixin {
-  late final AnimationController _controller = AnimationController(
-    duration: widget.duration,
-    vsync: this,
-  )
-    ..addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        widget.onComplete();
-      }
-    })
-    ..forward();
-  late final Animation<double> _animation = Tween<double>(
-    begin: 1,
-    end: 0,
-  ).animate(
-    CurvedAnimation(
-      parent: _controller,
-      curve: widget.curve,
-    ),
-  );
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return PieceWidget(
-      piece: widget.piece,
-      size: widget.size,
-      opacity: _animation,
-      pieceAssets: widget.pieceAssets,
-      blindfoldMode: widget.blindfoldMode,
-    );
-  }
+  final SquareId squareId;
 }

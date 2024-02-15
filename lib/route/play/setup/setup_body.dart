@@ -37,6 +37,7 @@ class _SetupBody extends StatelessWidget {
             SetupBoard(
               size: CCSize.boardSizeOf(context),
               data: boardData,
+              onDrop: context.read<SetupCubit>().onDrop,
               onMove: context.read<SetupCubit>().onMove,
               settings: settings,
             ),
