@@ -185,10 +185,7 @@ class _BoardState extends State<SetupBoard> {
   /// Called when a piece is dropped from the inventory
   void _onDrop(SquareId squareId, Role role) {
     final move = DropMove(
-      piece: Piece(
-        color: widget.color,
-        role: role,
-      ),
+      role: role,
       squareId: squareId,
     );
     widget.onDrop?.call(move);
@@ -418,8 +415,8 @@ class PositionedSquare extends StatelessWidget {
 }
 
 class DropMove {
-  const DropMove({required this.piece, required this.squareId});
+  const DropMove({required this.role, required this.squareId});
 
-  final Piece piece;
+  final Role role;
   final SquareId squareId;
 }

@@ -18,7 +18,7 @@ class SetupBody extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (BuildContext context) => SetupCubit(
-            side: Side.white,
+            side: Side.black,
             halfFen: '8/8/8/8',
           ),
         ),
@@ -53,15 +53,10 @@ class _SetupBody extends StatelessWidget {
                   halfFen: setup.halfFenAs(side),
                   color: side,
                   onAdd: selectedRole == null
-                      ? (squareId) => setupCubit.onDrop(
-                            DropMove(
-                              piece: Piece(color: side, role: Role.king),
-                              squareId: squareId,
-                            ),
-                          )
+                      ? null
                       : (squareId) => setupCubit.onDrop(
                             DropMove(
-                              piece: Piece(color: side, role: selectedRole),
+                              role: selectedRole,
                               squareId: squareId,
                             ),
                           ),

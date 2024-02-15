@@ -12,25 +12,23 @@ class SetupCubit extends HydratedCubit<SetupModel> {
             halfFen: halfFen,
           ),
         );
-      
+
   final Side side;
 
   dc_w.Board get board => dc_w.Board.parseFen(
         '8/8/8/8/${state.halfFenAs(side)}',
       );
-  
 
   void onDrop(DropMove move) {
     final to = dc_w.parseSquare(move.squareId);
     if (to == null) return;
-    final role = dc_w.Role.fromChar(move.piece.role.char);
+    final role = dc_w.Role.fromChar(move.role.char);
     if (role == null) return;
 
     final newBoard = board.setPieceAt(
       to,
       dc_w.Piece(
-        color:
-            move.piece.color == Side.white ? dc_w.Side.white : dc_w.Side.black,
+        color: side == Side.white ? dc_w.Side.white : dc_w.Side.black,
         role: role,
       ),
     );
