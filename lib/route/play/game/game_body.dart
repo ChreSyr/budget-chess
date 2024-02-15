@@ -4,7 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class GameBody extends RouteBody {
-  const GameBody({super.key}) : super(padded: false);
+  const GameBody({super.key})
+      : super(
+          padded: false,
+          centered: false,
+          scrolled: false,
+        );
 
   @override
   String getTitle(AppLocalizations l10n) {

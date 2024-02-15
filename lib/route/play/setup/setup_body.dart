@@ -15,7 +15,7 @@ class SetupBody extends StatelessWidget {
     return BlocProvider(
       create: (BuildContext context) => SetupCubit(
         side: Side.black,
-        fen: '8/3qK3/8/8/8/8/3QK3/8',
+        fen: '8/3QK3/8/8/8/8/3QK3/8',
       ),
       child: const _SetupBody(),
     );

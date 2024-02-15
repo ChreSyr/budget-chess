@@ -27,12 +27,22 @@ class CCColor {
   static Color onPrimaryContainer(BuildContext context) =>
       Theme.of(context).colorScheme.onPrimaryContainer;
 
+  static Color onSecondary(BuildContext context) =>
+      Theme.of(context).colorScheme.onSecondary;
+
+  static Color outline(BuildContext context) =>
+      Theme.of(context).colorScheme.outline;
+
   static Color primary(BuildContext context) =>
       Theme.of(context).colorScheme.primary;
 
   static Color primaryContainer(BuildContext context) =>
       Theme.of(context).colorScheme.primaryContainer;
 
+  static Color secondaryContainer(BuildContext context) =>
+      Theme.of(context).colorScheme.secondaryContainer;
+
+  // TODO : check
   static Color surfaceTintColor(BuildContext context) =>
       CardTheme.of(context).surfaceTintColor ??
       Theme.of(context).colorScheme.error;

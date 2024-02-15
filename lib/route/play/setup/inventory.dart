@@ -67,19 +67,31 @@ class InventorySlot extends StatelessWidget {
     );
 
     return SizedBox(
+      height: width,
       width: width,
       child: Stack(
         children: [
           Card(
-            color: amount == 0 ? CCColor.transparentGrey : null,
+            color: CCColor.secondaryContainer(context),
             child: piece,
           ),
+          if (amount == 0)
+            Card(
+              color: CCColor.transparentGrey,
+              child: SizedBox(
+                height: width,
+                width: width,
+              ),
+            ),
           Align(
             alignment: Alignment.topRight,
             child: CCPadding.allXxsmall(
               child: Badge.count(
                 count: amount,
-                backgroundColor: CCColor.primary(context),
+                backgroundColor: amount == 0
+                    ? CCColor.outline(context)
+                    : CCColor.primary(context),
+                textColor: CCColor.background(context),
               ),
             ),
           ),
