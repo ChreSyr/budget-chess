@@ -1,3 +1,4 @@
+import 'package:crea_chess/package/atomic_design/dialog/pop_dialog.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +18,7 @@ void showYesNoDialog({
           ElevatedButton.icon(
             icon: const Icon(Icons.close),
             // for some reason, dialogContext.pop pops the pageContext
-            onPressed: () => Navigator.pop(dialogContext),
+            onPressed: () => popDialog(dialogContext),
             label: Text(pageContext.l10n.no),
           ),
           ElevatedButton.icon(
@@ -25,7 +26,7 @@ void showYesNoDialog({
             onPressed: () {
               onYes();
               // for some reason, dialogContext.pop pops the pageContext
-              Navigator.pop(dialogContext);
+              popDialog(dialogContext);
             },
             label: Text(pageContext.l10n.yes),
           ),

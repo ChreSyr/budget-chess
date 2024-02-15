@@ -1,26 +1,26 @@
+import 'package:crea_chess/package/atomic_design/dialog/pop_dialog.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-Future<AlertDialog?> showEmailVerificationDialog(BuildContext context) {
+Future<AlertDialog?> showEmailVerificationDialog(BuildContext pageContext) {
   return showDialog<AlertDialog>(
-    context: context,
-    builder: (BuildContext context) {
+    context: pageContext,
+    builder: (BuildContext dialogContext) {
       return AlertDialog(
         content: Text(
-          context.l10n.verifyEmailExplanation,
+          pageContext.l10n.verifyEmailExplanation,
         ),
         actions: [
           TextButton(
-            onPressed: context.pop,
-            child: Text(context.l10n.cancel),
+            onPressed: () => popDialog(dialogContext),
+            child: Text(pageContext.l10n.cancel),
           ),
           FilledButton(
-            child: Text(context.l10n.sendEmail),
+            child: Text(pageContext.l10n.sendEmail),
             onPressed: () {
-              context
-                ..pop()
-                ..push('/sso/email_verification');
+              popDialog(dialogContext);
+              pageContext.push('/sso/email_verification');
             },
           ),
         ],

@@ -1,10 +1,10 @@
+import 'package:crea_chess/package/atomic_design/dialog/pop_dialog.dart';
 import 'package:crea_chess/package/atomic_design/dialog/relationship/block_user.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 void showAnswerFriendRequestDialog(
   BuildContext pageContext,
@@ -35,7 +35,7 @@ void showAnswerFriendRequestDialog(
               relationshipCRUD.delete(
                 documentId: relationshipCRUD.getId(fromUserId, currentUserId),
               );
-              dialogContext.pop();
+              popDialog(dialogContext);
               showBlockUserDialog(pageContext, fromUserId);
             },
             label: Text(pageContext.l10n.decline),
@@ -43,7 +43,7 @@ void showAnswerFriendRequestDialog(
           ElevatedButton.icon(
             icon: const Icon(Icons.check),
             onPressed: () {
-              dialogContext.pop();
+              popDialog(dialogContext);
               relationshipCRUD.makeFriends(fromUserId, currentUserId);
               // LATER: fiest animation on new friend
             },

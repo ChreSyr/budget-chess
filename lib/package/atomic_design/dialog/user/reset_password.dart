@@ -1,34 +1,34 @@
+import 'package:crea_chess/package/atomic_design/dialog/pop_dialog.dart';
 import 'package:crea_chess/package/atomic_design/snack_bar.dart';
 import 'package:crea_chess/package/firebase/authentication/authentication_crud.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 Future<AlertDialog?> showResetPasswordDialog(
-  BuildContext context,
+  BuildContext pageContext,
   String email,
 ) {
   return showDialog<AlertDialog>(
-    context: context,
-    builder: (BuildContext context) {
+    context: pageContext,
+    builder: (BuildContext dialogContext) {
       return AlertDialog(
         content: Text(
-          context.l10n.resetPasswordExplanation(email),
+          pageContext.l10n.resetPasswordExplanation(email),
         ),
         actions: [
           TextButton(
-            onPressed: context.pop,
-            child: Text(context.l10n.cancel),
+            onPressed: () => popDialog(dialogContext),
+            child: Text(pageContext.l10n.cancel),
           ),
           FilledButton(
-            child: Text(context.l10n.sendEmail),
+            child: Text(pageContext.l10n.sendEmail),
             onPressed: () {
               try {
                 authenticationCRUD.sendPasswordResetEmail(email: email);
-                snackBarNotify(context, context.l10n.verifyMailbox);
-                context.pop();
+                snackBarNotify(pageContext, pageContext.l10n.verifyMailbox);
+                popDialog(dialogContext);
               } catch (_) {
-                snackBarError(context, context.l10n.errorOccurred);
+                snackBarError(pageContext, pageContext.l10n.errorOccurred);
               }
             },
           ),

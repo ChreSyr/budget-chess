@@ -1,4 +1,5 @@
 import 'package:crea_chess/package/atomic_design/dialog/setup/budget_exceeded.dart';
+import 'package:crea_chess/package/atomic_design/dialog/setup/incomplete_setup.dart';
 import 'package:crea_chess/package/atomic_design/dialog/setup/inventory_exceeded.dart';
 import 'package:crea_chess/route/play/setup/challenge_cubit.dart';
 import 'package:crea_chess/route/play/setup/inventory_cubit.dart';
@@ -17,8 +18,9 @@ class SetupValidateButton extends StatelessWidget {
       onPressed: () {
         final challenge = context.read<ChallengeCubit>().state;
         final setup = context.read<SetupCubit>().state;
+        final setupCost = setup.totalValue;
 
-        if (challenge.budget < setup.totalValue) {
+        if (challenge.budget < setupCost) {
           return showBudgetExceededDialog(
             pageContext: context,
             budget: challenge.budget,
@@ -30,6 +32,12 @@ class SetupValidateButton extends StatelessWidget {
 
         if (!inventory.allows(setup)) {
           return showInventoryExceededDialog(
+            pageContext: context,
+          );
+        }
+
+        if (challenge.budget > setupCost) {
+          return showIncompleteSetupDialog(
             pageContext: context,
           );
         }
