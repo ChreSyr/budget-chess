@@ -1,17 +1,16 @@
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 void showEnumChoiceDialog<T extends Enum>(
-  BuildContext context, {
+  BuildContext pageContext, {
   required List<T> choices,
   required T selectedItem,
   required Widget Function(T choice) labelBuilder,
   required void Function(T choice) onSelectedItemChanged,
 }) {
   showDialog<void>(
-    context: context,
-    builder: (context) {
+    context: pageContext,
+    builder: (dialogContext) {
       return AlertDialog(
         contentPadding: const EdgeInsets.only(top: 12),
         scrollable: true,
@@ -24,15 +23,17 @@ void showEnumChoiceDialog<T extends Enum>(
               groupValue: selectedItem,
               onChanged: (value) {
                 if (value != null) onSelectedItemChanged(value);
-                context.pop();
+                // for some reason, dialogContext.pop pops the pageContext
+                Navigator.pop(dialogContext);
               },
             );
           }).toList(growable: false),
         ),
         actions: [
           TextButton(
-            onPressed: context.pop,
-            child: Text(context.l10n.cancel),
+            // for some reason, dialogContext.pop pops the pageContext
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text(pageContext.l10n.cancel),
           ),
         ],
       );

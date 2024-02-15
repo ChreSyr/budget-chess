@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 void showOkDialog({
   required BuildContext pageContext,
@@ -14,7 +13,8 @@ void showOkDialog({
         content: content,
         actions: [
           ElevatedButton(
-            onPressed: dialogContext.pop,
+            // for some reason, dialogContext.pop pops the pageContext
+            onPressed: () => Navigator.pop(dialogContext),
             child: const Text('Ok'), // TODO : l10n
           ),
         ],

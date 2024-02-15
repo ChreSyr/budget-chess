@@ -1,6 +1,5 @@
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 void showYesNoDialog({
   required BuildContext pageContext,
@@ -17,14 +16,16 @@ void showYesNoDialog({
         actions: [
           ElevatedButton.icon(
             icon: const Icon(Icons.close),
-            onPressed: dialogContext.pop,
+            // for some reason, dialogContext.pop pops the pageContext
+            onPressed: () => Navigator.pop(dialogContext),
             label: Text(pageContext.l10n.no),
           ),
           ElevatedButton.icon(
             icon: const Icon(Icons.check),
             onPressed: () {
               onYes();
-              dialogContext.pop();
+              // for some reason, dialogContext.pop pops the pageContext
+              Navigator.pop(dialogContext);
             },
             label: Text(pageContext.l10n.yes),
           ),
