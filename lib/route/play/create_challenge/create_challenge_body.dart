@@ -165,15 +165,15 @@ class _CreateChallengeBody extends StatelessWidget {
               ),
               CCGap.large,
               _TitledRow(
-                title: 'Taille du plateau',
+                title: 'Taille du plateau', // TODO : l10n
                 child: OutlinedButton(
                   onPressed: null,
                   // () => ModalSelect.show(
                   //   context: context,
-                  //   title: 'Taille du plateau',
+                  //   title: 'Taille du plateau', // TODO : l10n
                   //   choices: [
                   //     ModalSelectRowData(
-                  //       title: 'Petit',
+                  //       title: 'Petit', // TODO : l10n
                   //       choices: const [
                   //         BoardSize(5, 5),
                   //         BoardSize(6, 6),
@@ -181,7 +181,7 @@ class _CreateChallengeBody extends StatelessWidget {
                   //       ],
                   //     ),
                   //     ModalSelectRowData(
-                  //       title: 'Grand',
+                  //       title: 'Grand', // TODO : l10n
                   //       choices: const [
                   //         BoardSize(8, 8),
                   //         BoardSize(9, 9),
@@ -200,18 +200,18 @@ class _CreateChallengeBody extends StatelessWidget {
               ),
               CCGap.large,
               _TitledRow(
-                title: 'Budget',
+                title: 'Budget', // TODO : l10n
                 child: OutlinedButton(
                   onPressed: () => ModalSelect.show(
                     context: context,
-                    title: 'Budget',
+                    title: 'Budget', // TODO : l10n
                     choices: [
                       ModalSelectRowData(
-                        title: 'Maigre',
+                        title: 'Maigre', // TODO : l10n
                         choices: const [18, 21, 24, 27, 30],
                       ),
                       ModalSelectRowData(
-                        title: 'Normal',
+                        title: 'Normal', // TODO : l10n
                         choices: const [33, 36, 39, 42, 45],
                       ),
                     ],

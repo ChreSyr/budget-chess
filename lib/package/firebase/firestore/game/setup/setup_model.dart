@@ -1,4 +1,6 @@
 import 'package:chessground/chessground.dart';
+import 'package:crea_chess/route/play/setup/role.dart';
+import 'package:dartchess_webok/dartchess_webok.dart' as dc_w;
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'setup_model.freezed.dart';
@@ -21,4 +23,19 @@ class SetupModel with _$SetupModel {
 
   String halfFenAs(Side color) =>
       color == Side.white ? halfFen.toUpperCase() : halfFen.toLowerCase();
+
+  int get totalValue {
+    var total = 0;
+
+    final board = dc_w.Board.parseFen(
+      '8/8/8/8/$halfFen',
+    );
+
+    for (final role in dc_w.Role.values) {
+      final size = board.byRole(role).size;
+      total += size * role.intValue;
+    }
+
+    return total;
+  }
 }
