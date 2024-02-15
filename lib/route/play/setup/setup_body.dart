@@ -46,14 +46,31 @@ class _SetupBody extends StatelessWidget {
       builder: (context, setup) {
         return Column(
           children: [
-            SetupBoard(
-              size: CCSize.boardSizeOf(context),
-              halfFen: setup.halfFenAs(side),
-              color: side,
-              onDrop: setupCubit.onDrop,
-              onMove: setupCubit.onMove,
-              onRemove: setupCubit.onRemove,
-              settings: settings,
+            BlocBuilder<SelectedRoleCubit, Role?>(
+              builder: (context, selectedRole) {
+                return SetupBoard(
+                  size: CCSize.boardSizeOf(context),
+                  halfFen: setup.halfFenAs(side),
+                  color: side,
+                  onAdd: selectedRole == null
+                      ? (squareId) => setupCubit.onDrop(
+                            DropMove(
+                              piece: Piece(color: side, role: Role.king),
+                              squareId: squareId,
+                            ),
+                          )
+                      : (squareId) => setupCubit.onDrop(
+                            DropMove(
+                              piece: Piece(color: side, role: selectedRole),
+                              squareId: squareId,
+                            ),
+                          ),
+                  onDrop: setupCubit.onDrop,
+                  onMove: setupCubit.onMove,
+                  onRemove: setupCubit.onRemove,
+                  settings: settings,
+                );
+              },
             ),
             Inventory(
               inventory: const InventoryModel(

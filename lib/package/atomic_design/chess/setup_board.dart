@@ -14,6 +14,7 @@ class SetupBoard extends StatefulWidget {
     required this.color,
     super.key,
     this.settings = const BoardSettings(),
+    this.onAdd,
     this.onDrop,
     this.onMove,
     this.onRemove,
@@ -30,6 +31,9 @@ class SetupBoard extends StatefulWidget {
 
   /// The color of the pieces
   final Side color;
+
+  /// Callback called after a valid destination has been selected.
+  final void Function(String)? onAdd;
 
   /// Callback called after a piece has been dropped from outside of this board.
   final void Function(DropMove)? onDrop;
@@ -122,7 +126,6 @@ class _BoardState extends State<SetupBoard> {
       child: Stack(
         children: [
           GestureDetector(
-            onTapDown: (TapDownDetails? details) {},
             onPanDown: _onPanDownPiece,
             onPanUpdate: _onPanUpdatePiece,
             onPanEnd: _onPanEndPiece,
@@ -195,9 +198,13 @@ class _BoardState extends State<SetupBoard> {
     if (details == null) return;
 
     final squareId = widget.localOffset2SquareId(details.localPosition);
-    final piece = squareId != null ? pieces[squareId] : null;
+    if (squareId == null) return; // should never happen
+
+    final piece = pieces[squareId];
+    if (piece == null) return widget.onAdd?.call(squareId);
+
     final feedbackSize = widget.squareSize * widget.settings.dragFeedbackSize;
-    if (squareId != null && piece != null && (_isMovable(squareId))) {
+    if (_isMovable(squareId)) {
       setState(() {
         _dragOrigin = squareId;
       });
