@@ -72,7 +72,7 @@ class InventorySlot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (isSelected && amount == 0) {
+    if (isSelected && amount <= 0) {
       context.read<SelectedRoleCubit>().selectRole(null);
     }
 
@@ -89,7 +89,9 @@ class InventorySlot extends StatelessWidget {
       height: width,
       width: width,
       child: GestureDetector(
-        onPanDown: (_) => context.read<SelectedRoleCubit>().selectRole(role),
+        onPanDown: amount <= 0
+            ? null
+            : (_) => context.read<SelectedRoleCubit>().selectRole(role),
         child: Stack(
           children: [
             Card(
@@ -106,7 +108,7 @@ class InventorySlot extends StatelessWidget {
                 child: piece,
               ),
             ),
-            if (amount == 0)
+            if (amount <= 0)
               Card(
                 color: CCColor.transparentGrey,
                 child: SizedBox(
@@ -119,7 +121,7 @@ class InventorySlot extends StatelessWidget {
               child: CCPadding.allXxsmall(
                 child: Badge.count(
                   count: amount,
-                  backgroundColor: amount == 0
+                  backgroundColor: amount <= 0
                       ? CCColor.outline(context)
                       : CCColor.primary(context),
                   textColor: CCColor.background(context),
