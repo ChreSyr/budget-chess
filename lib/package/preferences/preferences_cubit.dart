@@ -12,7 +12,7 @@ class PreferencesCubit extends HydratedCubit<PreferencesState> {
   PreferencesCubit()
       : super(
           PreferencesState(
-            brightness: Brightness.dark,
+            brightness: Brightness.light,
             languageCode: defaultLocale,
             seedColor: SeedColor.lightgreen,
           ),
