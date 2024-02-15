@@ -65,7 +65,6 @@ class _BoardState extends State<SetupBoard> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = widget.settings.colorScheme;
-    final premove = widget.data.premove;
     final Widget board = Stack(
       children: [
         if (widget.settings.enableCoordinates)
@@ -74,33 +73,6 @@ class _BoardState extends State<SetupBoard> {
               : colorScheme.blackCoordBackground
         else
           colorScheme.background,
-        if (widget.settings.showLastMove && widget.data.lastMove != null)
-          for (final squareId in widget.data.lastMove!.squares)
-            if (premove == null || !premove.hasSquare(squareId))
-              PositionedSquare(
-                key: ValueKey('$squareId-lastMove'),
-                size: widget.squareSize,
-                orientation: widget.data.orientation,
-                squareId: squareId,
-                child: Highlight(
-                  size: widget.squareSize,
-                  details: colorScheme.lastMove,
-                ),
-              ),
-        if (premove != null &&
-            widget.data.interactableSide != InteractableSide.none)
-          for (final squareId in premove.squares)
-            PositionedSquare(
-              key: ValueKey('$squareId-premove'),
-              size: widget.squareSize,
-              orientation: widget.data.orientation,
-              squareId: squareId,
-              child: Highlight(
-                size: widget.squareSize,
-                details:
-                    HighlightDetails(solidColor: colorScheme.validPremoves),
-              ),
-            ),
         if (selected != null && _dragAvatar != null)
           PositionedSquare(
             key: ValueKey('${selected!}-selected'),
