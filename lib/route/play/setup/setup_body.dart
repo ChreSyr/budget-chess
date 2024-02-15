@@ -1,5 +1,8 @@
 import 'package:chessground/chessground.dart';
 import 'package:crea_chess/package/atomic_design/chess/setup_board.dart';
+import 'package:crea_chess/package/atomic_design/size.dart';
+import 'package:crea_chess/package/firebase/firestore/game/inventory/inventory_model.dart';
+import 'package:crea_chess/route/play/setup/inventory.dart';
 import 'package:crea_chess/route/play/setup/setup_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,12 +27,29 @@ class _SetupBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const settings = BoardSettings(
+      colorScheme: BoardColorScheme.blue3,
+    );
     return BlocBuilder<SetupCubit, BoardData>(
       builder: (context, boardData) {
-        return SetupBoard(
-          size: MediaQuery.of(context).size.width,
-          data: boardData,
-          onMove: context.read<SetupCubit>().onMove,
+        return Column(
+          children: [
+            SetupBoard(
+              size: CCSize.boardSizeOf(context),
+              data: boardData,
+              onMove: context.read<SetupCubit>().onMove,
+              settings: settings,
+            ),
+            Inventory(
+              inventory: const InventoryModel(
+                id: 'id',
+                ownerId: 'ownerId',
+                knights: 0,
+              ),
+              color: boardData.orientation,
+              settings: settings,
+            ),
+          ],
         );
       },
     );

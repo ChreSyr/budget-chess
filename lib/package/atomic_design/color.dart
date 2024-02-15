@@ -27,6 +27,9 @@ class CCColor {
   static Color onPrimaryContainer(BuildContext context) =>
       Theme.of(context).colorScheme.onPrimaryContainer;
 
+  static Color primary(BuildContext context) =>
+      Theme.of(context).colorScheme.primary;
+
   static Color primaryContainer(BuildContext context) =>
       Theme.of(context).colorScheme.primaryContainer;
 

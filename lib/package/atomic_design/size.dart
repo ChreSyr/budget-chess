@@ -1,3 +1,7 @@
+import 'dart:math';
+
+import 'package:flutter/material.dart';
+
 class CCSize {
   /// 2.0
   static const xxsmall = 2.0;
@@ -22,6 +26,9 @@ class CCSize {
 
   /// 64.0
   static const xxxlarge = 64.0;
+
+  static double boardSizeOf(BuildContext context) =>
+      min(MediaQuery.of(context).size.width, CCWidgetSize.large4);
 }
 
 class CCWidgetSize {
