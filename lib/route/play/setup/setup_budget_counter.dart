@@ -2,9 +2,14 @@ import 'package:crea_chess/package/atomic_design/text_style.dart';
 import 'package:flutter/material.dart';
 
 class SetupBudgetCounter extends StatelessWidget {
-  const SetupBudgetCounter({required this.budgetLeft, super.key});
+  const SetupBudgetCounter({
+    required this.budget,
+    required this.cost,
+    super.key,
+  });
 
-  final int budgetLeft;
+  final int budget;
+  final int cost;
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +17,7 @@ class SetupBudgetCounter extends StatelessWidget {
       onPressed: () {}, // TODO : dialog or modal explaining budget
       icon: const Icon(Icons.attach_money),
       label: Text(
-        budgetLeft.toString(),
+        '$cost / $budget',
         style: CCTextStyle.titleLarge(context),
       ),
     );

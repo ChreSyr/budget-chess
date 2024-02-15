@@ -7,8 +7,8 @@ import 'package:crea_chess/package/firebase/firestore/game/inventory/inventory_m
 import 'package:crea_chess/package/firebase/firestore/game/setup/setup_model.dart';
 import 'package:crea_chess/route/play/setup/inventory.dart';
 import 'package:crea_chess/route/play/setup/selected_role_cubit.dart';
-import 'package:crea_chess/route/play/setup/setup_cubit.dart';
 import 'package:crea_chess/route/play/setup/setup_budget_counter.dart';
+import 'package:crea_chess/route/play/setup/setup_cubit.dart';
 import 'package:crea_chess/route/play/setup/setup_validate_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -85,7 +85,7 @@ class _SetupBody extends StatelessWidget {
             CCPadding.allSmall(
               child: Row(
                 children: [
-                  SetupBudgetCounter(budgetLeft: setup.totalValue),
+                  SetupBudgetCounter(budget: 39, cost: setup.totalValue),
                   const Expanded(child: SizedBox.shrink()),
                   const SetupValidateButton(),
                 ],
