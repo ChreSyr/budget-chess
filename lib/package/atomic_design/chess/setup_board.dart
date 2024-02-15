@@ -156,7 +156,6 @@ class _BoardState extends State<SetupBoard> {
               // there is no need to implement the callback since we handle the selection login
               // in onPanDown; plus this way we avoid the timeout before onTapDown is called
               onTapDown: (TapDownDetails? details) {},
-              onTapUp: _onTapUpPiece,
               onPanDown: _onPanDownPiece,
               onPanUpdate: _onPanUpdatePiece,
               onPanEnd: _onPanEndPiece,
@@ -354,18 +353,6 @@ class _BoardState extends State<SetupBoard> {
     setState(() {
       _dragOrigin = null;
     });
-  }
-
-  void _onTapUpPiece(TapUpDetails? details) {
-    if (details == null) return;
-    final squareId = widget.localOffset2SquareId(details.localPosition);
-    if (squareId != null && squareId != selected) {
-      _tryMoveTo(squareId);
-    } else if (squareId != null && selected == squareId) {
-      setState(() {
-        selected = null;
-      });
-    }
   }
 
   bool _isMovable(SquareId squareId) {
