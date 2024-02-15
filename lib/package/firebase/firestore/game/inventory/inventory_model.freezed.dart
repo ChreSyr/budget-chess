@@ -23,6 +23,7 @@ mixin _$InventoryModel {
   String get id => throw _privateConstructorUsedError;
   String get ownerId => throw _privateConstructorUsedError;
   int get bishops => throw _privateConstructorUsedError;
+  int get kings => throw _privateConstructorUsedError;
   int get knights => throw _privateConstructorUsedError;
   int get pawns => throw _privateConstructorUsedError;
   int get queens => throw _privateConstructorUsedError;
@@ -44,6 +45,7 @@ abstract class $InventoryModelCopyWith<$Res> {
       {String id,
       String ownerId,
       int bishops,
+      int kings,
       int knights,
       int pawns,
       int queens,
@@ -66,6 +68,7 @@ class _$InventoryModelCopyWithImpl<$Res, $Val extends InventoryModel>
     Object? id = null,
     Object? ownerId = null,
     Object? bishops = null,
+    Object? kings = null,
     Object? knights = null,
     Object? pawns = null,
     Object? queens = null,
@@ -83,6 +86,10 @@ class _$InventoryModelCopyWithImpl<$Res, $Val extends InventoryModel>
       bishops: null == bishops
           ? _value.bishops
           : bishops // ignore: cast_nullable_to_non_nullable
+              as int,
+      kings: null == kings
+          ? _value.kings
+          : kings // ignore: cast_nullable_to_non_nullable
               as int,
       knights: null == knights
           ? _value.knights
@@ -116,6 +123,7 @@ abstract class _$$InventoryModelImplCopyWith<$Res>
       {String id,
       String ownerId,
       int bishops,
+      int kings,
       int knights,
       int pawns,
       int queens,
@@ -136,6 +144,7 @@ class __$$InventoryModelImplCopyWithImpl<$Res>
     Object? id = null,
     Object? ownerId = null,
     Object? bishops = null,
+    Object? kings = null,
     Object? knights = null,
     Object? pawns = null,
     Object? queens = null,
@@ -153,6 +162,10 @@ class __$$InventoryModelImplCopyWithImpl<$Res>
       bishops: null == bishops
           ? _value.bishops
           : bishops // ignore: cast_nullable_to_non_nullable
+              as int,
+      kings: null == kings
+          ? _value.kings
+          : kings // ignore: cast_nullable_to_non_nullable
               as int,
       knights: null == knights
           ? _value.knights
@@ -181,6 +194,7 @@ class _$InventoryModelImpl extends _InventoryModel {
       {required this.id,
       required this.ownerId,
       this.bishops = 2,
+      this.kings = 1,
       this.knights = 2,
       this.pawns = 8,
       this.queens = 1,
@@ -199,6 +213,9 @@ class _$InventoryModelImpl extends _InventoryModel {
   final int bishops;
   @override
   @JsonKey()
+  final int kings;
+  @override
+  @JsonKey()
   final int knights;
   @override
   @JsonKey()
@@ -212,7 +229,7 @@ class _$InventoryModelImpl extends _InventoryModel {
 
   @override
   String toString() {
-    return 'InventoryModel(id: $id, ownerId: $ownerId, bishops: $bishops, knights: $knights, pawns: $pawns, queens: $queens, rooks: $rooks)';
+    return 'InventoryModel(id: $id, ownerId: $ownerId, bishops: $bishops, kings: $kings, knights: $knights, pawns: $pawns, queens: $queens, rooks: $rooks)';
   }
 
   @override
@@ -223,6 +240,7 @@ class _$InventoryModelImpl extends _InventoryModel {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.ownerId, ownerId) || other.ownerId == ownerId) &&
             (identical(other.bishops, bishops) || other.bishops == bishops) &&
+            (identical(other.kings, kings) || other.kings == kings) &&
             (identical(other.knights, knights) || other.knights == knights) &&
             (identical(other.pawns, pawns) || other.pawns == pawns) &&
             (identical(other.queens, queens) || other.queens == queens) &&
@@ -232,7 +250,7 @@ class _$InventoryModelImpl extends _InventoryModel {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType, id, ownerId, bishops, knights, pawns, queens, rooks);
+      runtimeType, id, ownerId, bishops, kings, knights, pawns, queens, rooks);
 
   @JsonKey(ignore: true)
   @override
@@ -254,6 +272,7 @@ abstract class _InventoryModel extends InventoryModel {
       {required final String id,
       required final String ownerId,
       final int bishops,
+      final int kings,
       final int knights,
       final int pawns,
       final int queens,
@@ -269,6 +288,8 @@ abstract class _InventoryModel extends InventoryModel {
   String get ownerId;
   @override
   int get bishops;
+  @override
+  int get kings;
   @override
   int get knights;
   @override

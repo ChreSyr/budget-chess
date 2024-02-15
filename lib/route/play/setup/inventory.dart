@@ -3,8 +3,10 @@ import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/firebase/firestore/game/inventory/inventory_model.dart';
+import 'package:crea_chess/route/play/setup/setup_cubit.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Inventory extends StatelessWidget {
   const Inventory({
@@ -23,8 +25,13 @@ class Inventory extends StatelessWidget {
     final boardWidth = CCSize.boardSizeOf(context);
     final slotWidth = boardWidth / 6; // 6 slots per line
 
+    final setupCubit = context.watch<SetupCubit>();
+    final board = setupCubit.board;
+
+    final leftInventory = inventory.less(color: color, board: board);
+
     return Wrap(
-      children: inventory.pieces.entries
+      children: leftInventory.pieces.entries
           .map<InventorySlot>(
             (entry) => InventorySlot(
               width: slotWidth,
