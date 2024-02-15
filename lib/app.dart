@@ -42,15 +42,11 @@ class CreaChessApp extends StatelessWidget {
             title: 'Crea-Chess Bêta',
             theme: ThemeData(
               useMaterial3: true,
-              colorScheme: preferences.brightness == Brightness.dark
-                  ? ColorScheme.dark(
-                      primary: color,
-                      secondary: color,
-                    )
-                  : ColorScheme.light(
-                      primary: color,
-                      secondary: color,
-                    ),
+              colorScheme: ColorScheme.fromSeed(
+                brightness: preferences.brightness,
+                seedColor: color,
+                primary: color,
+              ),
             ),
             debugShowCheckedModeBanner: false, // hide debug banner at topleft
             supportedLocales: AppLocalizations.supportedLocales,
