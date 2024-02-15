@@ -89,7 +89,7 @@ class InventorySlot extends StatelessWidget {
       height: width,
       width: width,
       child: GestureDetector(
-        onTap: () => context.read<SelectedRoleCubit>().selectRole(role),
+        onPanDown: (_) => context.read<SelectedRoleCubit>().selectRole(role),
         child: Stack(
           children: [
             Card(
