@@ -54,10 +54,6 @@ class SetupBoard extends StatefulWidget {
 
 class _BoardState extends State<SetupBoard> {
   Pieces pieces = {};
-  Map<String, (PositionedPiece, PositionedPiece)> translatingPieces = {};
-  Map<String, Piece> fadingPieces = {};
-  SquareId? selected;
-  Move? _lastDrop;
   _DragAvatar? _dragAvatar;
   SquareId? _dragOrigin;
   List<SquareId> validDests = [];
@@ -73,37 +69,19 @@ class _BoardState extends State<SetupBoard> {
               : colorScheme.blackCoordBackground
         else
           colorScheme.background,
-        if (selected != null && _dragAvatar != null)
+        if (_dragOrigin != null && _dragAvatar != null)
           PositionedSquare(
-            key: ValueKey('${selected!}-selected'),
+            key: ValueKey('${_dragOrigin!}-dragOrigin'),
             size: widget.squareSize,
             orientation: widget.data.orientation,
-            squareId: selected!,
+            squareId: _dragOrigin!,
             child: Highlight(
               size: widget.squareSize,
               details: colorScheme.selected,
             ),
           ),
-        for (final entry in fadingPieces.entries)
-          PositionedSquare(
-            key: ValueKey('${entry.key}-${entry.value.kind.name}-fading'),
-            size: widget.squareSize,
-            orientation: widget.data.orientation,
-            squareId: entry.key,
-            child: PieceFadeOut(
-              duration: widget.settings.animationDuration,
-              piece: entry.value,
-              size: widget.squareSize,
-              pieceAssets: widget.settings.pieceAssets,
-              blindfoldMode: widget.settings.blindfoldMode,
-              onComplete: () {
-                fadingPieces.remove(entry.key);
-              },
-            ),
-          ),
         for (final entry in pieces.entries)
-          if (!translatingPieces.containsKey(entry.key) &&
-              entry.key != _dragOrigin)
+          if (entry.key != _dragOrigin)
             PositionedSquare(
               key: ValueKey('${entry.key}-${entry.value.kind.name}'),
               size: widget.squareSize,
@@ -116,28 +94,6 @@ class _BoardState extends State<SetupBoard> {
                 blindfoldMode: widget.settings.blindfoldMode,
               ),
             ),
-        for (final entry in translatingPieces.entries)
-          PositionedSquare(
-            key: ValueKey('${entry.key}-${entry.value.$1.piece.kind.name}'),
-            size: widget.squareSize,
-            orientation: widget.data.orientation,
-            squareId: entry.key,
-            child: PieceTranslation(
-              fromCoord: entry.value.$1.coord,
-              toCoord: entry.value.$2.coord,
-              orientation: widget.data.orientation,
-              duration: widget.settings.animationDuration,
-              onComplete: () {
-                translatingPieces.remove(entry.key);
-              },
-              child: PieceWidget(
-                piece: entry.value.$1.piece,
-                size: widget.squareSize,
-                pieceAssets: widget.settings.pieceAssets,
-                blindfoldMode: widget.settings.blindfoldMode,
-              ),
-            ),
-          ),
       ],
     );
 
@@ -145,16 +101,8 @@ class _BoardState extends State<SetupBoard> {
       dimension: widget.size,
       child: Stack(
         children: [
-          // Consider using Listener instead as we don't control the drag start threshold with
-          // GestureDetector (TODO)
-          if (widget.data.interactableSide != InteractableSide.none &&
-              !widget.settings.drawShape
-                  .enable) // Disable moving pieces when drawing is enabled
+          if (widget.data.interactableSide != InteractableSide.none)
             GestureDetector(
-              // registering onTapDown is needed to prevent the panStart event to win the
-              // competition too early
-              // there is no need to implement the callback since we handle the selection login
-              // in onPanDown; plus this way we avoid the timeout before onTapDown is called
               onTapDown: (TapDownDetails? details) {},
               onPanDown: _onPanDownPiece,
               onPanUpdate: _onPanUpdatePiece,
@@ -203,62 +151,10 @@ class _BoardState extends State<SetupBoard> {
       _dragAvatar?.cancel();
       _dragAvatar = null;
       _dragOrigin = null;
-      selected = null;
     }
-    if (oldBoard.data.fen == widget.data.fen) {
-      _lastDrop = null;
-      // as long as the fen is the same as before let's keep animations
-      return;
+    if (oldBoard.data.fen != widget.data.fen) {
+      pieces = readFen(widget.data.fen);
     }
-    translatingPieces = {};
-    fadingPieces = {};
-    final newPieces = readFen(widget.data.fen);
-    final newOnSquare = <PositionedPiece>[];
-    final missingOnSquare = <PositionedPiece>[];
-    final animatedOrigins = <String>{};
-    for (final s in allSquares) {
-      if (s == _lastDrop?.from || s == _lastDrop?.to) {
-        continue;
-      }
-      final oldP = pieces[s];
-      final newP = newPieces[s];
-      final squareCoord = Coord.fromSquareId(s);
-      if (newP != null) {
-        if (oldP != null) {
-          if (newP != oldP) {
-            missingOnSquare.add(
-              PositionedPiece(piece: oldP, squareId: s, coord: squareCoord),
-            );
-            newOnSquare.add(
-              PositionedPiece(piece: newP, squareId: s, coord: squareCoord),
-            );
-          }
-        } else {
-          newOnSquare.add(
-            PositionedPiece(piece: newP, squareId: s, coord: squareCoord),
-          );
-        }
-      } else if (oldP != null) {
-        missingOnSquare
-            .add(PositionedPiece(piece: oldP, squareId: s, coord: squareCoord));
-      }
-    }
-    for (final newPiece in newOnSquare) {
-      final fromP = newPiece.closest(
-        missingOnSquare.where((m) => m.piece == newPiece.piece).toList(),
-      );
-      if (fromP != null) {
-        translatingPieces[newPiece.squareId] = (fromP, newPiece);
-        animatedOrigins.add(fromP.squareId);
-      }
-    }
-    for (final m in missingOnSquare) {
-      if (!animatedOrigins.contains(m.squareId)) {
-        fadingPieces[m.squareId] = m.piece;
-      }
-    }
-    _lastDrop = null;
-    pieces = newPieces;
   }
 
   // returns the position of the square target during drag as a global offset
@@ -284,7 +180,6 @@ class _BoardState extends State<SetupBoard> {
     if (squareId != null && piece != null && (_isMovable(squareId))) {
       setState(() {
         _dragOrigin = squareId;
-        selected = squareId;
       });
       final squareTargetOffset =
           _squareTargetGlobalOffset(details.localPosition);
@@ -323,7 +218,7 @@ class _BoardState extends State<SetupBoard> {
     final box = context.findRenderObject()! as RenderBox;
     final localPos = box.globalToLocal(_dragAvatar!._position);
     final dest = widget.localOffset2SquareId(localPos);
-    if (selected != null && dest != null && _canMove(selected!, dest)) {
+    if (_dragOrigin != null && dest != null && _canMove(_dragOrigin!, dest)) {
       _dragAvatar?.updateSquareTarget(squareTargetOffset);
     } else {
       _dragAvatar?.updateSquareTarget(null);
@@ -335,15 +230,14 @@ class _BoardState extends State<SetupBoard> {
       final box = context.findRenderObject()! as RenderBox;
       final localPos = box.globalToLocal(_dragAvatar!._position);
       final squareId = widget.localOffset2SquareId(localPos);
-      if (squareId != null && squareId != selected) {
-        _tryMoveTo(squareId, drop: true);
+      if (squareId != null && squareId != _dragOrigin) {
+        _tryMoveTo(squareId);
       }
     }
     _dragAvatar?.end();
     _dragAvatar = null;
     setState(() {
       _dragOrigin = null;
-      selected = null;
     });
   }
 
@@ -367,17 +261,14 @@ class _BoardState extends State<SetupBoard> {
     return orig != dest && validDests.contains(dest);
   }
 
-  void _tryMoveTo(SquareId squareId, {bool drop = false}) {
-    final selectedPiece = selected != null ? pieces[selected] : null;
-    if (selectedPiece != null && _canMove(selected!, squareId)) {
-      final move = Move(from: selected!, to: squareId);
-      if (drop) {
-        _lastDrop = move;
-      }
+  void _tryMoveTo(SquareId squareId) {
+    final draggedPiece = _dragOrigin != null ? pieces[_dragOrigin] : null;
+    if (draggedPiece != null && _canMove(_dragOrigin!, squareId)) {
+      final move = Move(from: _dragOrigin!, to: squareId);
       widget.onMove?.call(move);
     }
     setState(() {
-      selected = null;
+      _dragOrigin = null;
     });
   }
 }
