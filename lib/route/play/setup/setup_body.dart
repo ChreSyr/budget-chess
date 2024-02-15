@@ -85,7 +85,7 @@ class _SetupBody extends StatelessWidget {
             CCPadding.allSmall(
               child: Row(
                 children: [
-                  SetupBudgetCounter(budget: 39, cost: setup.totalValue),
+                  SetupBudgetCounter(budget: 19, cost: setup.totalValue),
                   const Expanded(child: SizedBox.shrink()),
                   const SetupValidateButton(),
                 ],

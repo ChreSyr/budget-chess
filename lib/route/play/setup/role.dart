@@ -1,16 +1,9 @@
 import 'package:chessground/chessground.dart';
+import 'package:crea_chess/package/lichess/lichess_icons.dart';
 import 'package:dartchess_webok/dartchess_webok.dart' as dc_w;
+import 'package:flutter/material.dart';
 
 extension DCWRoleExt on dc_w.Role {
-  double get sortValue => switch (this) {
-        dc_w.Role.king => 100,
-        dc_w.Role.queen => 9.5,
-        dc_w.Role.rook => 5.63,
-        dc_w.Role.bishop => 3.33,
-        dc_w.Role.knight => 3.05,
-        dc_w.Role.pawn => 1,
-      };
-
   int get intValue => switch (this) {
         dc_w.Role.king => 0,
         dc_w.Role.queen => 9,
@@ -22,23 +15,18 @@ extension DCWRoleExt on dc_w.Role {
 }
 
 extension RoleExt on Role {
-  double get sortValue => switch (this) {
-        Role.king => 100,
+  double get _sortValue => switch (this) {
+        Role.king => 0,
         Role.queen => 9.5,
         Role.rook => 5.63,
         Role.bishop => 3.33,
         Role.knight => 3.05,
         Role.pawn => 1,
       };
+  static List<Role> sortedValues = List.from(Role.values)
+    ..sort((r1, r2) => r1._sortValue.compareTo(r2._sortValue));
 
-  double get intValue => switch (this) {
-        Role.king => 0,
-        Role.queen => 9,
-        Role.rook => 5,
-        Role.bishop => 3,
-        Role.knight => 3,
-        Role.pawn => 1,
-      };
+  int get intValue => _sortValue.toInt();
 
   String get char {
     switch (this) {
@@ -54,6 +42,23 @@ extension RoleExt on Role {
         return 'q';
       case Role.king:
         return 'k';
+    }
+  }
+
+  IconData get icon {
+    switch (this) {
+      case Role.pawn:
+        return LichessIcons.chess_pawn;
+      case Role.knight:
+        return LichessIcons.chess_knight;
+      case Role.bishop:
+        return LichessIcons.chess_bishop;
+      case Role.rook:
+        return LichessIcons.chess_rook;
+      case Role.queen:
+        return LichessIcons.chess_queen;
+      case Role.king:
+        return LichessIcons.chess_king;
     }
   }
 }
