@@ -1,5 +1,5 @@
 import 'package:chessground/chessground.dart';
-import 'package:dartchess_webok/dartchess_webok.dart' as dc_w;
+import 'package:crea_chess/package/firebase/firestore/game/setup/setup_model.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'inventory_model.freezed.dart';
@@ -26,6 +26,14 @@ class InventoryModel with _$InventoryModel {
 
   // ---
 
+  bool get isLegal =>
+      bishops >= 0 &&
+      kings >= 0 &&
+      knights >= 0 &&
+      pawns >= 0 &&
+      queens >= 0 &&
+      rooks >= 0;
+
   Map<Role, int> get pieces => {
         Role.king: kings,
         Role.queen: queens,
@@ -35,19 +43,30 @@ class InventoryModel with _$InventoryModel {
         Role.pawn: pawns,
       };
 
-  /// Return an inventory where the pieces of the color required who are on the
-  /// board are removed from the inventory
-  InventoryModel less({required Side color, required dc_w.Board board}) {
-    final pieces = color == Side.white ? board.white : board.black;
+  /// Return an inventory where the pieces of the fen removed from this
+  /// inventory.
+  ///
+  /// Usefull when calculating the pieces that can still be added to the setup.
+  InventoryModel less({required String fen}) {
+    final pieces = readFen(fen).values;
+    final roles = <Role, int>{};
+    for (final piece in pieces) {
+      roles[piece.role] = (roles[piece.role] ?? 0) + 1;
+    }
+
     return InventoryModel(
       id: id,
       ownerId: ownerId,
-      bishops: bishops - pieces.intersect(board.bishops).size,
-      kings: kings - pieces.intersect(board.kings).size,
-      knights: knights - pieces.intersect(board.knights).size,
-      pawns: pawns - pieces.intersect(board.pawns).size,
-      queens: queens - pieces.intersect(board.queens).size,
-      rooks: rooks - pieces.intersect(board.rooks).size,
+      bishops: bishops - (roles[Role.bishop] ?? 0),
+      kings: kings - (roles[Role.king] ?? 0),
+      knights: knights - (roles[Role.knight] ?? 0),
+      pawns: pawns - (roles[Role.pawn] ?? 0),
+      queens: queens - (roles[Role.queen] ?? 0),
+      rooks: rooks - (roles[Role.rook] ?? 0),
     );
+  }
+
+  bool allows(SetupModel setup) {
+    return less(fen: setup.halfFenAs(Side.white)).isLegal;
   }
 }

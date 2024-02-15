@@ -2,7 +2,7 @@ import 'package:chessground/chessground.dart';
 import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
-import 'package:crea_chess/package/firebase/firestore/game/inventory/inventory_model.dart';
+import 'package:crea_chess/route/play/setup/inventory_cubit.dart';
 import 'package:crea_chess/route/play/setup/selected_role_cubit.dart';
 import 'package:crea_chess/route/play/setup/setup_cubit.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
@@ -11,26 +11,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Inventory extends StatelessWidget {
   const Inventory({
-    required this.inventory,
     required this.color,
     this.settings = const BoardSettings(),
     super.key,
   });
 
-  final InventoryModel inventory;
   final Side color;
   final BoardSettings settings;
 
   @override
   Widget build(BuildContext context) {
+    final setup = context.watch<SetupCubit>().state;
+    final inventory = context.read<InventoryCubit>().state;
+    final leftInventory = inventory.less(fen: setup.halfFenAs(Side.white));
+
     final boardWidth = CCSize.boardSizeOf(context);
     final slotWidth = boardWidth / 6; // 6 slots per line
-
-    final setupCubit = context.watch<SetupCubit>();
-    final board = setupCubit.board;
-
-    final leftInventory = inventory.less(color: color, board: board);
-
+    
     return BlocBuilder<SelectedRoleCubit, Role?>(
       builder: (context, selectedRole) {
         return Wrap(

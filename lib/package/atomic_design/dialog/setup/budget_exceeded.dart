@@ -10,7 +10,7 @@ void showBudgetExceededDialog({
     pageContext: pageContext,
     title: 'Budget dépassé !', // TODO : l10n
     content: Text(
-      'Cette partie accorde un budget de $budget, tandis que votre setup coûte $cost.\nRetirez simplement quelques pièces.',
+      'Cette partie accorde un budget de $budget, tandis que votre setup coûte $cost. Retirez simplement quelques pièces !',
     ),
   );
 }

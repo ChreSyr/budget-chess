@@ -3,10 +3,10 @@ import 'package:crea_chess/package/atomic_design/chess/setup_board.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
-import 'package:crea_chess/package/firebase/firestore/game/inventory/inventory_model.dart';
 import 'package:crea_chess/package/firebase/firestore/game/setup/setup_model.dart';
 import 'package:crea_chess/route/play/setup/challenge_cubit.dart';
 import 'package:crea_chess/route/play/setup/inventory.dart';
+import 'package:crea_chess/route/play/setup/inventory_cubit.dart';
 import 'package:crea_chess/route/play/setup/selected_role_cubit.dart';
 import 'package:crea_chess/route/play/setup/setup_budget_counter.dart';
 import 'package:crea_chess/route/play/setup/setup_cubit.dart';
@@ -23,6 +23,9 @@ class SetupBody extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (BuildContext context) => ChallengeCubit(),
+        ),
+        BlocProvider(
+          create: (BuildContext context) => InventoryCubit(),
         ),
         BlocProvider(
           create: (BuildContext context) => SetupCubit(
@@ -79,10 +82,6 @@ class _SetupBody extends StatelessWidget {
             ),
             CCGap.small,
             Inventory(
-              inventory: const InventoryModel(
-                id: 'id',
-                ownerId: 'ownerId',
-              ),
               color: side,
               settings: settings,
             ),
