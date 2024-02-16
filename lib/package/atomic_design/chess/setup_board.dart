@@ -1,4 +1,5 @@
 import 'package:chessground/chessground.dart';
+import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -72,6 +73,7 @@ class _BoardState extends State<SetupBoard> {
   Pieces pieces = {};
   _DragAvatar? _dragAvatar;
   SquareId? _dragOrigin;
+  SquareId? _dropTarget;
   List<SquareId> validDests = [];
 
   @override
@@ -113,10 +115,48 @@ class _BoardState extends State<SetupBoard> {
             orientation: orientation,
             squareId: squareId,
             child: DragTarget<Role>(
-              onAccept: (role) => _onDrop(squareId, role),
+              onAccept: (role) {
+                _onDrop(squareId, role);
+                setState(() {
+                  _dropTarget = null;
+                });
+              },
               builder: (context, candidateData, rejectedData) =>
                   const SizedBox.shrink(),
+              onMove: (_) => _dropTarget == squareId
+                  ? null
+                  : setState(() {
+                      _dropTarget = squareId;
+                    }),
+              onLeave: (_) => _dropTarget != squareId
+                  ? null
+                  : setState(() {
+                      _dropTarget = null;
+                    }),
             ),
+          ),
+        if (_dropTarget != null)
+          Builder(
+            builder: (context) {
+              final coord = Coord.fromSquareId(_dropTarget!);
+              final pos = _dropTargetLocalOffsetFromCoord(coord);
+              if (pos == null) return CCGap.zero;
+
+              return Positioned(
+                left: pos.dx,
+                top: pos.dy,
+                child: IgnorePointer(
+                  child: Container(
+                    width: widget.squareSize * 2,
+                    height: widget.squareSize * 2,
+                    decoration: const BoxDecoration(
+                      color: Color(0x33000000),
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+              );
+            },
           ),
       ],
     );
@@ -179,6 +219,15 @@ class _BoardState extends State<SetupBoard> {
     return Offset(
       tmpOffset.dx - widget.squareSize / 2,
       tmpOffset.dy - widget.squareSize / 2,
+    );
+  }
+
+  Offset? _dropTargetLocalOffsetFromCoord(Coord? coord) {
+    if (coord == null) return null;
+    final localOffset = coord.offset(Side.white, widget.squareSize);
+    return Offset(
+      localOffset.dx - widget.squareSize / 2,
+      localOffset.dy - widget.squareSize / 2,
     );
   }
 
