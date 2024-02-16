@@ -2,7 +2,9 @@ import 'package:chessground/chessground.dart';
 import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
+import 'package:crea_chess/route/play/setup/challenge_cubit.dart';
 import 'package:crea_chess/route/play/setup/inventory_cubit.dart';
+import 'package:crea_chess/route/play/setup/role.dart';
 import 'package:crea_chess/route/play/setup/selected_role_cubit.dart';
 import 'package:crea_chess/route/play/setup/setup_cubit.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
@@ -25,9 +27,13 @@ class Inventory extends StatelessWidget {
     final inventory = context.read<InventoryCubit>().state;
     final leftInventory = inventory.less(fen: setup.halfFenAs(Side.white));
 
+    final budget = context.read<ChallengeCubit>().state.budget;
+    final setupCost = setup.cost;
+    final budgetLeft = budget - setupCost;
+
     final boardWidth = CCSize.boardSizeOf(context);
     final slotWidth = boardWidth / 6; // 6 slots per line
-    
+
     return BlocBuilder<SelectedRoleCubit, Role?>(
       builder: (context, selectedRole) {
         return Wrap(
@@ -40,6 +46,7 @@ class Inventory extends StatelessWidget {
                   role: entry.key,
                   amount: entry.value,
                   isSelected: entry.key == selectedRole,
+                  budgetLeft: budgetLeft,
                 ),
               )
               .toList(),
@@ -57,6 +64,7 @@ class InventorySlot extends StatelessWidget {
     required this.role,
     required this.amount,
     required this.isSelected,
+    required this.budgetLeft,
     super.key,
   });
 
@@ -66,10 +74,13 @@ class InventorySlot extends StatelessWidget {
   final Role role;
   final int amount;
   final bool isSelected;
+  final int budgetLeft;
 
   @override
   Widget build(BuildContext context) {
-    if (isSelected && amount <= 0) {
+    final disabled = amount <= 0 || budgetLeft < role.cost;
+
+    if (isSelected && disabled) {
       context.read<SelectedRoleCubit>().selectRole(null);
     }
 
@@ -86,7 +97,7 @@ class InventorySlot extends StatelessWidget {
       height: width,
       width: width,
       child: GestureDetector(
-        onPanDown: amount <= 0
+        onPanDown: disabled
             ? null
             : (_) => context.read<SelectedRoleCubit>().selectRole(role),
         child: Stack(
@@ -105,7 +116,7 @@ class InventorySlot extends StatelessWidget {
                 child: piece,
               ),
             ),
-            if (amount <= 0)
+            if (disabled)
               Card(
                 color: CCColor.transparentGrey,
                 child: SizedBox(
@@ -118,7 +129,7 @@ class InventorySlot extends StatelessWidget {
               child: CCPadding.allXxsmall(
                 child: Badge.count(
                   count: amount,
-                  backgroundColor: amount <= 0
+                  backgroundColor: disabled
                       ? CCColor.outline(context)
                       : CCColor.primary(context),
                   textColor: CCColor.background(context),

@@ -24,7 +24,7 @@ class SetupModel with _$SetupModel {
   String halfFenAs(Side color) =>
       color == Side.white ? halfFen.toUpperCase() : halfFen.toLowerCase();
 
-  int get totalValue {
+  int get cost {
     var total = 0;
 
     final board = dc_w.Board.parseFen(
@@ -33,7 +33,7 @@ class SetupModel with _$SetupModel {
 
     for (final role in dc_w.Role.values) {
       final size = board.byRole(role).size;
-      total += size * role.intValue;
+      total += size * role.cost;
     }
 
     return total;

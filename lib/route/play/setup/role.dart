@@ -4,7 +4,7 @@ import 'package:dartchess_webok/dartchess_webok.dart' as dc_w;
 import 'package:flutter/material.dart';
 
 extension DCWRoleExt on dc_w.Role {
-  int get intValue => switch (this) {
+  int get cost => switch (this) {
         dc_w.Role.king => 0,
         dc_w.Role.queen => 9,
         dc_w.Role.rook => 5,
@@ -26,7 +26,7 @@ extension RoleExt on Role {
   static List<Role> sortedValues = List.from(Role.values)
     ..sort((r1, r2) => r1._sortValue.compareTo(r2._sortValue));
 
-  int get intValue => _sortValue.toInt();
+  int get cost => _sortValue.toInt();
 
   String get char {
     switch (this) {

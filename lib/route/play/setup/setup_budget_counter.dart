@@ -41,7 +41,7 @@ class SetupBudgetCounter extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    e.intValue.toString(),
+                    e.cost.toString(),
                     style: CCTextStyle.titleLarge(context),
                   ),
                   const Icon(Icons.attach_money),

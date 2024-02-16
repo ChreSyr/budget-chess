@@ -18,13 +18,13 @@ class SetupValidateButton extends StatelessWidget {
       onPressed: () {
         final challenge = context.read<ChallengeCubit>().state;
         final setup = context.read<SetupCubit>().state;
-        final setupCost = setup.totalValue;
+        final setupCost = setup.cost;
 
         if (challenge.budget < setupCost) {
           return showBudgetExceededDialog(
             pageContext: context,
             budget: challenge.budget,
-            cost: setup.totalValue,
+            cost: setup.cost,
           );
         }
 

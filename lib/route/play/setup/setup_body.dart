@@ -92,7 +92,7 @@ class _SetupBody extends StatelessWidget {
                 children: [
                   SetupBudgetCounter(
                     budget: challenge.budget,
-                    cost: setup.totalValue,
+                    cost: setup.cost,
                   ),
                   const Expanded(child: SizedBox.shrink()),
                   const SetupValidateButton(),
