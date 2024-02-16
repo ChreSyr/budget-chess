@@ -3,7 +3,7 @@ import 'package:crea_chess/package/atomic_design/chess/setup_board.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
-import 'package:crea_chess/package/firebase/firestore/game/setup/setup_model.dart';
+import 'package:crea_chess/route/play/setup/board_settings_cubit.dart';
 import 'package:crea_chess/route/play/setup/challenge_cubit.dart';
 import 'package:crea_chess/route/play/setup/inventory.dart';
 import 'package:crea_chess/route/play/setup/inventory_cubit.dart';
@@ -49,59 +49,55 @@ class _SetupBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final challenge = context.read<ChallengeCubit>().state;
 
-    final setupCubit = context.read<SetupCubit>();
+    final setupCubit = context.watch<SetupCubit>();
     final side = setupCubit.side;
-    const settings = BoardSettings(
-      colorScheme: BoardColorScheme.blue3,
-    );
+    final setup = setupCubit.state;
 
-    return BlocBuilder<SetupCubit, SetupModel>(
-      builder: (context, setup) {
-        return Column(
-          children: [
-            BlocBuilder<SelectedRoleCubit, Role?>(
-              builder: (context, selectedRole) {
-                return SetupBoard(
-                  size: CCSize.boardSizeOf(context),
-                  halfFen: setup.halfFenAs(side),
-                  color: side,
-                  onAdd: selectedRole == null
-                      ? null
-                      : (squareId) => setupCubit.onDrop(
-                            DropMove(
-                              role: selectedRole,
-                              squareId: squareId,
-                            ),
-                          ),
-                  onDrop: setupCubit.onDrop,
-                  onMove: setupCubit.onMove,
-                  onRemove: setupCubit.onRemove,
-                  settings: settings,
-                );
-              },
-            ),
-            CCGap.small,
-            Inventory(
+    final settings = context.watch<BoardSettingsCubit>().state;
+
+    return Column(
+      children: [
+        BlocBuilder<SelectedRoleCubit, Role?>(
+          builder: (context, selectedRole) {
+            return SetupBoard(
+              size: CCSize.boardSizeOf(context),
+              halfFen: setup.halfFenAs(side),
               color: side,
+              onAdd: selectedRole == null
+                  ? null
+                  : (squareId) => setupCubit.onDrop(
+                        DropMove(
+                          role: selectedRole,
+                          squareId: squareId,
+                        ),
+                      ),
+              onDrop: setupCubit.onDrop,
+              onMove: setupCubit.onMove,
+              onRemove: setupCubit.onRemove,
               settings: settings,
-            ),
-            CCGap.small,
-            const Divider(height: 0),
-            CCPadding.allSmall(
-              child: Row(
-                children: [
-                  SetupBudgetCounter(
-                    budget: challenge.budget,
-                    cost: setup.cost,
-                  ),
-                  const Expanded(child: SizedBox.shrink()),
-                  const SetupValidateButton(),
-                ],
+            );
+          },
+        ),
+        CCGap.small,
+        Inventory(
+          color: side,
+          settings: settings,
+        ),
+        CCGap.small,
+        const Divider(height: 0),
+        CCPadding.allSmall(
+          child: Row(
+            children: [
+              SetupBudgetCounter(
+                budget: challenge.budget,
+                cost: setup.cost,
               ),
-            ),
-          ],
-        );
-      },
+              const Expanded(child: SizedBox.shrink()),
+              const SetupValidateButton(),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

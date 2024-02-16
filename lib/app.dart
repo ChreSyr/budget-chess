@@ -3,6 +3,7 @@ import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/package/preferences/preferences_cubit.dart';
 import 'package:crea_chess/package/preferences/preferences_state.dart';
 import 'package:crea_chess/route/nav_notif_cubit.dart';
+import 'package:crea_chess/route/play/setup/board_settings_cubit.dart';
 import 'package:crea_chess/route/router.dart';
 import 'package:crea_chess/route/user/search_friend/search_friend_body.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +34,9 @@ class CreaChessApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => QueriedUsersCubit(),
+        ),
+        BlocProvider(
+          create: (context) => BoardSettingsCubit(),
         ),
       ],
       child: BlocBuilder<PreferencesCubit, PreferencesState>(

@@ -106,7 +106,6 @@ class _BoardState extends State<SetupBoard> {
                 piece: entry.value,
                 size: widget.squareSize,
                 pieceAssets: widget.settings.pieceAssets,
-                blindfoldMode: widget.settings.blindfoldMode,
               ),
             ),
         for (final squareId in validDests)
@@ -277,7 +276,6 @@ class _BoardState extends State<SetupBoard> {
             piece: piece,
             size: feedbackSize,
             pieceAssets: widget.settings.pieceAssets,
-            blindfoldMode: widget.settings.blindfoldMode,
           ),
         ),
       );
