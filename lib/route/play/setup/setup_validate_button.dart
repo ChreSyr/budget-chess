@@ -1,6 +1,7 @@
 import 'package:crea_chess/package/atomic_design/dialog/setup/budget_exceeded.dart';
 import 'package:crea_chess/package/atomic_design/dialog/setup/incomplete_setup.dart';
 import 'package:crea_chess/package/atomic_design/dialog/setup/inventory_exceeded.dart';
+import 'package:crea_chess/package/atomic_design/dialog/setup/not_one_king.dart';
 import 'package:crea_chess/route/play/setup/challenge_cubit.dart';
 import 'package:crea_chess/route/play/setup/inventory_cubit.dart';
 import 'package:crea_chess/route/play/setup/setup_cubit.dart';
@@ -17,7 +18,8 @@ class SetupValidateButton extends StatelessWidget {
       label: const Text('Valider'), // TODO : l10n
       onPressed: () {
         final challenge = context.read<ChallengeCubit>().state;
-        final setup = context.read<SetupCubit>().state;
+        final setupCubit = context.read<SetupCubit>();
+        final setup = setupCubit.state;
         final setupCost = setup.cost;
 
         if (challenge.budget < setupCost) {
@@ -41,6 +43,17 @@ class SetupValidateButton extends StatelessWidget {
             pageContext: context,
           );
         }
+
+        final board = setupCubit.board;
+        final kingsCount = board.kings.size;
+        if (kingsCount != 1) {
+          return showNotOneKingDialog(
+            pageContext: context,
+          );
+        }
+
+        // TODO:  what if pawn on first rank ?
+        // TODO : what if the black king is in check from the first move ?
       },
     );
   }
