@@ -1,9 +1,8 @@
-import 'package:chessground/chessground.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
+import 'package:crea_chess/package/dartchess/export.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/route/play/game/game_cubit.dart';
 import 'package:crea_chess/route/play/game/side.dart';
-import 'package:dartchess_webok/dartchess_webok.dart' as dc;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -55,20 +54,20 @@ class PlayerTile extends StatelessWidget {
     );
   }
 
-  dc.Move? _getRandomMove(dc.Position position) {
+  Move? _getRandomMove(Position position) {
     if (position.isGameOver) return null;
     final allMoves = [
       for (final entry in position.legalMoves.entries)
         for (final dest in entry.value.squares)
-          dc.NormalMove(from: entry.key, to: dest),
+          NormalMove(from: entry.key, to: dest),
     ];
     // if (allMoves.isNotEmpty) {
     return (allMoves..shuffle()).firstOrNull;
     // final newPosition = position.playUnchecked(mv);
     // lastMove =
-    //     Move(from: dc.toAlgebraic(mv.from), to: dc.toAlgebraic(mv.to));
+    //     Move(from: toAlgebraic(mv.from), to: toAlgebraic(mv.to));
     // fen = position.fen;
-    // validMoves = dc.algebraicLegalMoves(position);
+    // validMoves = algebraicLegalMoves(position);
     // lastPos = position;
     // }
   }

@@ -1,8 +1,8 @@
-import 'package:chessground/chessground.dart';
-import 'package:crea_chess/package/atomic_design/chess/setup_board.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
+import 'package:crea_chess/package/chessground/setup_board.dart';
+import 'package:crea_chess/package/dartchess/export.dart';
 import 'package:crea_chess/route/play/game/game_cubit.dart';
 import 'package:crea_chess/route/play/setup/board_settings_cubit.dart';
 import 'package:crea_chess/route/play/setup/inventory.dart';
@@ -65,7 +65,7 @@ class _SetupBody extends StatelessWidget {
               onAdd: selectedRole == null
                   ? null
                   : (squareId) => setupCubit.onDrop(
-                        DropMove(
+                        CGDropMove(
                           role: selectedRole,
                           squareId: squareId,
                         ),

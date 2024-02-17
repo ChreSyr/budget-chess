@@ -1,8 +1,8 @@
 // ignore_for_file: invalid_annotation_target
 
+import 'package:crea_chess/package/dartchess/export.dart';
 import 'package:crea_chess/package/firebase/firestore/game/challenge/challenge_model.dart';
 import 'package:crea_chess/package/game/speed.dart';
-import 'package:dartchess_webok/dartchess_webok.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'challenge_filter_model.freezed.dart';

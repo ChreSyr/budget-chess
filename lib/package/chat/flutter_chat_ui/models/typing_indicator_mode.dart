@@ -1,5 +1,3 @@
-// ignore_for_file: comment_references
-
 /// Used to toggle the display of avatars, names or both on [TypingIndicator].
 enum TypingIndicatorMode {
   /// Show avatars of typing users.

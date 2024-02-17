@@ -1,5 +1,3 @@
-// ignore_for_file: comment_references
-
 import 'package:crea_chess/package/chat/flutter_chat_ui/models/bubble_rtl_alignment.dart';
 import 'package:crea_chess/package/chat/flutter_chat_ui/models/typing_indicator_mode.dart';
 import 'package:crea_chess/package/chat/flutter_chat_ui/util.dart';

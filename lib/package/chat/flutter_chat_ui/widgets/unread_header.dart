@@ -1,5 +1,3 @@
-// ignore_for_file: comment_references
-
 import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/state/inherited_chat_theme.dart';
 import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/state/inherited_l10n.dart';
 import 'package:flutter/material.dart';

@@ -1,6 +1,5 @@
-import 'package:chessground/chessground.dart';
+import 'package:crea_chess/package/dartchess/export.dart';
 import 'package:crea_chess/route/play/setup/role.dart';
-import 'package:dartchess_webok/dartchess_webok.dart' as dc_w;
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'setup_model.freezed.dart';
@@ -27,11 +26,11 @@ class SetupModel with _$SetupModel {
   int get cost {
     var total = 0;
 
-    final board = dc_w.Board.parseFen(
+    final board = Board.parseFen(
       '8/8/8/8/$halfFen',
     );
 
-    for (final role in dc_w.Role.values) {
+    for (final role in Role.values) {
       final size = board.byRole(role).size;
       total += size * role.cost;
     }

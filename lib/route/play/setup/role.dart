@@ -1,20 +1,17 @@
-import 'package:chessground/chessground.dart';
+import 'package:crea_chess/package/dartchess/export.dart';
 import 'package:crea_chess/package/lichess/lichess_icons.dart';
-import 'package:dartchess_webok/dartchess_webok.dart' as dc_w;
 import 'package:flutter/material.dart';
 
-extension DCWRoleExt on dc_w.Role {
-  int get cost => switch (this) {
-        dc_w.Role.king => 0,
-        dc_w.Role.queen => 9,
-        dc_w.Role.rook => 5,
-        dc_w.Role.bishop => 3,
-        dc_w.Role.knight => 3,
-        dc_w.Role.pawn => 1,
-      };
-}
-
 extension RoleExt on Role {
+  int get cost => switch (this) {
+        Role.king => 0,
+        Role.queen => 9,
+        Role.rook => 5,
+        Role.bishop => 3,
+        Role.knight => 3,
+        Role.pawn => 1,
+      };
+      
   double get _sortValue => switch (this) {
         Role.king => 0,
         Role.queen => 9.5,
@@ -25,8 +22,6 @@ extension RoleExt on Role {
       };
   static List<Role> sortedValues = List.from(Role.values)
     ..sort((r1, r2) => r1._sortValue.compareTo(r2._sortValue));
-
-  int get cost => _sortValue.toInt();
 
   String get char {
     switch (this) {

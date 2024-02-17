@@ -1,7 +1,7 @@
 import 'dart:math';
 
-import 'package:chessground/chessground.dart';
-import 'package:dartchess_webok/dartchess_webok.dart' as dc;
+import 'package:crea_chess/package/chessground/export.dart';
+import 'package:crea_chess/package/dartchess/export.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
 
@@ -13,10 +13,10 @@ class DrawShapesPage extends StatefulWidget {
 }
 
 class _DrawShapesPageState extends State<DrawShapesPage> {
-  dc.Position<dc.Chess> position = dc.Chess.initial;
+  Position<Chess> position = Chess.initial;
   Side orientation = Side.white;
-  String fen = dc.kInitialBoardFEN;
-  Move? lastMove;
+  String fen = kInitialBoardFEN;
+  CGMove? lastMove;
   ValidMoves validMoves = IMap(const {});
   Side sideToMove = Side.white;
   PieceSet pieceSet = PieceSet.merida;
@@ -25,7 +25,7 @@ class _DrawShapesPageState extends State<DrawShapesPage> {
   bool drawShapes = true;
   Color newShapeColor = const Color(0xAA15781b);
   final Color defaultShapeColor = const Color(0xAA15781b);
-  dc.Position<dc.Chess>? lastPos;
+  Position<Chess>? lastPos;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +39,7 @@ class _DrawShapesPageState extends State<DrawShapesPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Board(
+            BoardWidget(
               size: screenWidth,
               settings: BoardSettings(
                 pieceAssets: pieceSet.assets,
@@ -51,7 +51,7 @@ class _DrawShapesPageState extends State<DrawShapesPage> {
                 ),
               ),
               data: BoardData(
-                interactableSide: (position.turn == dc.Side.white
+                interactableSide: (position.turn == Side.white
                     ? InteractableSide.white
                     : InteractableSide.black),
                 validMoves: validMoves,
@@ -59,7 +59,7 @@ class _DrawShapesPageState extends State<DrawShapesPage> {
                 fen: fen,
                 lastMove: lastMove,
                 sideToMove:
-                    position.turn == dc.Side.white ? Side.white : Side.black,
+                    position.turn == Side.white ? Side.white : Side.black,
                 isCheck: position.isCheck,
                 shapes: shapes.isNotEmpty ? shapes : null,
               ),
@@ -111,7 +111,7 @@ class _DrawShapesPageState extends State<DrawShapesPage> {
 
   @override
   void initState() {
-    validMoves = dc.algebraicLegalMoves(position);
+    validMoves = algebraicLegalMoves(position);
     super.initState();
   }
 
@@ -128,14 +128,14 @@ class _DrawShapesPageState extends State<DrawShapesPage> {
     }
   }
 
-  void _onUserMoveFreePlay(Move move, {bool? isDrop, bool? isPremove}) {
+  void _onUserMoveFreePlay(CGMove move, {bool? isDrop, bool? isPremove}) {
     lastPos = position;
-    final m = dc.Move.fromUci(move.uci)!;
+    final m = Move.fromUci(move.uci)!;
     setState(() {
       position = position.playUnchecked(m);
       lastMove = move;
       fen = position.fen;
-      validMoves = dc.algebraicLegalMoves(position);
+      validMoves = algebraicLegalMoves(position);
     });
   }
 }

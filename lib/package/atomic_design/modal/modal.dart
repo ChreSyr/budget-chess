@@ -25,7 +25,7 @@ class Modal {
               ),
               width: CCWidgetSize.xxxsmall,
               height: 6,
-            )
+            ),
           ],
           CCGap.large,
           if (title != null) ...[

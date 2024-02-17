@@ -1,6 +1,6 @@
-import 'package:chessground/chessground.dart';
+import 'package:crea_chess/package/chessground/export.dart';
+import 'package:crea_chess/package/dartchess/export.dart';
 import 'package:crea_chess/package/firebase/export.dart';
-import 'package:dartchess_webok/dartchess_webok.dart' as dc;
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class GameCubit extends Cubit<GameModel> {
@@ -25,14 +25,14 @@ class GameCubit extends Cubit<GameModel> {
     }
   }
 
-  void onMove(Move move, {bool? isDrop, bool? isPremove}) {
-    final m = dc.Move.fromUci(move.uci);
+  void onMove(CGMove move, {bool? isDrop, bool? isPremove}) {
+    final m = Move.fromUci(move.uci);
     if (m == null) return;
 
     onDartchessMove(m);
   }
 
-  void onDartchessMove(dc.Move move) {
+  void onDartchessMove(Move move) {
     final oldPosition = state.position;
     final position = oldPosition.playUnchecked(move);
 

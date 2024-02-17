@@ -1,3 +1,4 @@
+import 'package:crea_chess/package/dartchess/export.dart';
 import 'package:crea_chess/package/form/form_error.dart';
 import 'package:crea_chess/package/form/input/input_int.dart';
 import 'package:crea_chess/package/form/input/input_select.dart';
@@ -5,7 +6,6 @@ import 'package:crea_chess/package/game/board_size.dart';
 import 'package:crea_chess/package/game/time_control.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/route/play/create_challenge/create_challenge_status.dart';
-import 'package:dartchess_webok/dartchess_webok.dart';
 import 'package:formz/formz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 

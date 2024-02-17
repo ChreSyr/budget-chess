@@ -1,16 +1,16 @@
-import 'package:chessground/chessground.dart';
+import 'package:crea_chess/package/chessground/export.dart';
+import 'package:crea_chess/package/dartchess/export.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/route/play/game/game_cubit.dart';
 import 'package:crea_chess/route/play/game/player_tile.dart';
+import 'package:crea_chess/route/play/game/side.dart';
 import 'package:crea_chess/route/play/setup/board_settings_cubit.dart';
 import 'package:crea_chess/route/play/setup/setup_body.dart';
 import 'package:crea_chess/route/route_body.dart';
-import 'package:dartchess_webok/dartchess_webok.dart' as dc;
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:crea_chess/route/play/game/side.dart';
 
 class GameBody extends RouteBody {
   const GameBody({super.key})
@@ -79,13 +79,13 @@ class _GameBody extends StatelessWidget {
           PlayerTile(
             userId: orientation == Side.white ? game.blackId : game.whiteId,
           ),
-          Board(
+          BoardWidget(
             size: MediaQuery.of(context).size.width,
             settings: boardSettings,
             data: BoardData(
               interactableSide: interactableSide,
               validMoves: side?.toDartchess == position.turn
-                  ? dc.algebraicLegalMoves(position)
+                  ? algebraicLegalMoves(position)
                   : IMap(const {}),
               orientation: orientation,
               fen: position.fen,

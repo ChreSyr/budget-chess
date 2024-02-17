@@ -1,6 +1,6 @@
+import 'package:crea_chess/package/dartchess/export.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/game/speed.dart';
-import 'package:dartchess_webok/dartchess_webok.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 class ChallengeFilterCubit extends HydratedCubit<ChallengeFilterModel?> {

@@ -1,5 +1,3 @@
-// ignore_for_file: comment_references
-
 import 'package:crea_chess/package/chat/flutter_chat_types/src/preview_data.dart'
     show PreviewData;
 import 'package:crea_chess/package/chat/message/message_model.dart';

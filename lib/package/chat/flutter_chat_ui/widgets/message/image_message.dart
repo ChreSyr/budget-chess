@@ -1,5 +1,3 @@
-// ignore_for_file: comment_references
-
 import 'package:crea_chess/package/chat/flutter_chat_ui/conditional/conditional.dart';
 import 'package:crea_chess/package/chat/flutter_chat_ui/util.dart';
 import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/state/inherited_chat_theme.dart';

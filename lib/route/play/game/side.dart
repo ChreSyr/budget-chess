@@ -1,5 +1,5 @@
-import 'package:chessground/chessground.dart';
-import 'package:dartchess_webok/dartchess_webok.dart' as dc;
+import 'package:crea_chess/package/chessground/export.dart';
+import 'package:crea_chess/package/dartchess/export.dart';
 
 extension SideExt on Side {
   InteractableSide get interactable => switch (this) {
@@ -7,15 +7,15 @@ extension SideExt on Side {
         Side.black => InteractableSide.black,
       };
 
-  dc.Side get toDartchess => switch (this) {
-        Side.white => dc.Side.white,
-        Side.black => dc.Side.black,
+  Side get toDartchess => switch (this) {
+        Side.white => Side.white,
+        Side.black => Side.black,
       };
 }
 
-extension DCSideExt on dc.Side {
+extension DCSideExt on Side {
   Side get toChessground => switch (this) {
-        dc.Side.white => Side.white,
-        dc.Side.black => Side.black,
+        Side.white => Side.white,
+        Side.black => Side.black,
       };
 }

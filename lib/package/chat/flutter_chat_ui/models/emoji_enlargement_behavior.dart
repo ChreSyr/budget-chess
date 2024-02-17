@@ -1,5 +1,3 @@
-// ignore_for_file: comment_references
-
 /// Used to control the enlargement behavior of the emojis in the
 /// [types.TextMessage].
 enum EmojiEnlargementBehavior {

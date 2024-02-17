@@ -1,5 +1,3 @@
-// ignore_for_file: comment_references
-
 /// Used to set [Input] clear mode when message is sent.
 enum InputClearMode {
   /// Always clear [Input] regardless if message is sent or not.

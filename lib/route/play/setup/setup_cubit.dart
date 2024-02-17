@@ -1,8 +1,7 @@
-import 'package:chessground/chessground.dart';
-import 'package:crea_chess/package/atomic_design/chess/setup_board.dart';
+import 'package:crea_chess/package/chessground/export.dart';
+import 'package:crea_chess/package/chessground/setup_board.dart';
+import 'package:crea_chess/package/dartchess/export.dart';
 import 'package:crea_chess/package/firebase/firestore/game/setup/setup_model.dart';
-import 'package:crea_chess/route/play/setup/role.dart';
-import 'package:dartchess_webok/dartchess_webok.dart' as dc_w;
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 class SetupCubit extends HydratedCubit<SetupModel> {
@@ -15,20 +14,20 @@ class SetupCubit extends HydratedCubit<SetupModel> {
 
   final Side side;
 
-  dc_w.Board get board => dc_w.Board.parseFen(
+  Board get board => Board.parseFen(
         '8/8/8/8/${state.halfFenAs(side)}',
       );
 
-  void onDrop(DropMove move) {
-    final to = dc_w.parseSquare(move.squareId);
+  void onDrop(CGDropMove move) {
+    final to = parseSquare(move.squareId);
     if (to == null) return;
-    final role = dc_w.Role.fromChar(move.role.char);
+    final role = Role.fromChar(move.role.char);
     if (role == null) return;
 
     final newBoard = board.setPieceAt(
       to,
-      dc_w.Piece(
-        color: side == Side.white ? dc_w.Side.white : dc_w.Side.black,
+      Piece(
+        color: side == Side.white ? Side.white : Side.black,
         role: role,
       ),
     );
@@ -36,9 +35,9 @@ class SetupCubit extends HydratedCubit<SetupModel> {
     emit(state.copyWith(halfFen: newBoard.fen.substring(8)));
   }
 
-  void onMove(Move move) {
-    final from = dc_w.parseSquare(move.from);
-    final to = dc_w.parseSquare(move.to);
+  void onMove(CGMove move) {
+    final from = parseSquare(move.from);
+    final to = parseSquare(move.to);
     if (from == null || to == null) return;
     final piece = board.pieceAt(from);
     if (piece == null) return;
@@ -49,7 +48,7 @@ class SetupCubit extends HydratedCubit<SetupModel> {
   }
 
   void onRemove(SquareId squareId) {
-    final square = dc_w.parseSquare(squareId);
+    final square = parseSquare(squareId);
     if (square == null) return;
     final newBoard = board.removePieceAt(square);
 

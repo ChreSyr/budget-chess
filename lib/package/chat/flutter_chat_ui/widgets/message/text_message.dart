@@ -1,5 +1,3 @@
-// ignore_for_file: comment_references
-
 import 'package:crea_chess/package/chat/flutter_chat_types/flutter_chat_types.dart'
     as types;
 import 'package:crea_chess/package/chat/flutter_chat_ui/models/emoji_enlargement_behavior.dart';

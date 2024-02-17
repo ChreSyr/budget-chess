@@ -1,5 +1,6 @@
-import 'package:chessground/chessground.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
+import 'package:crea_chess/package/chessground/export.dart';
+import 'package:crea_chess/package/dartchess/export.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -37,10 +38,10 @@ class SetupBoard extends StatefulWidget {
   final void Function(String)? onAdd;
 
   /// Callback called after a piece has been dropped from outside of this board.
-  final void Function(DropMove)? onDrop;
+  final void Function(CGDropMove)? onDrop;
 
   /// Callback called after a move has been made.
-  final void Function(Move)? onMove;
+  final void Function(CGMove)? onMove;
 
   /// Callback called after a piece has been dragged out of the board.
   final void Function(SquareId)? onRemove;
@@ -232,7 +233,7 @@ class _BoardState extends State<SetupBoard> {
 
   /// Called when a piece is dropped from the inventory
   void _onDrop(SquareId squareId, Role role) {
-    final move = DropMove(
+    final move = CGDropMove(
       role: role,
       squareId: squareId,
     );
@@ -337,7 +338,7 @@ class _BoardState extends State<SetupBoard> {
   void _tryMoveTo(SquareId squareId) {
     final draggedPiece = _dragOrigin != null ? pieces[_dragOrigin] : null;
     if (draggedPiece != null && _canMove(_dragOrigin!, squareId)) {
-      final move = Move(from: _dragOrigin!, to: squareId);
+      final move = CGMove(from: _dragOrigin!, to: squareId);
       widget.onMove?.call(move);
     }
     setState(() {
@@ -429,9 +430,9 @@ class _DragAvatar {
   }
 }
 
-/// Board aware Positioned widget
+/// BoardWidget aware Positioned widget
 ///
-/// Use to position things, such as [Piece], [Highlight] on the board.
+/// Use to position things, such as [CGPiece], [Highlight] on the board.
 /// Since it's a wrapper over a [Positioned] widget it must be a descendant of a
 /// [Stack].
 class PositionedSquare extends StatelessWidget {
@@ -461,8 +462,8 @@ class PositionedSquare extends StatelessWidget {
   }
 }
 
-class DropMove {
-  const DropMove({required this.role, required this.squareId});
+class CGDropMove {
+  const CGDropMove({required this.role, required this.squareId});
 
   final Role role;
   final SquareId squareId;

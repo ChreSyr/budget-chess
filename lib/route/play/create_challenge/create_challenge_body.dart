@@ -3,6 +3,7 @@ import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/snack_bar.dart';
 import 'package:crea_chess/package/atomic_design/text_style.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
+import 'package:crea_chess/package/dartchess/export.dart';
 import 'package:crea_chess/package/firebase/authentication/authentication_crud.dart';
 import 'package:crea_chess/package/game/speed.dart';
 import 'package:crea_chess/package/game/time_control.dart';
@@ -13,7 +14,6 @@ import 'package:crea_chess/route/play/create_challenge/create_challenge_form.dar
 import 'package:crea_chess/route/play/create_challenge/create_challenge_status.dart';
 import 'package:crea_chess/route/route_body.dart';
 import 'package:crea_chess/route/user/user_body.dart';
-import 'package:dartchess_webok/dartchess_webok.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';

@@ -1,8 +1,8 @@
-import 'package:chessground/chessground.dart';
 import 'package:crea_chess/frenzy_piece_set.dart';
 import 'package:crea_chess/package/atomic_design/dialog/enum_choice.dart';
+import 'package:crea_chess/package/chessground/export.dart';
+import 'package:crea_chess/package/dartchess/export.dart';
 import 'package:crea_chess/route/play/chessground/draw_shapes_page.dart';
-import 'package:dartchess_webok/dartchess_webok.dart' as dc;
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,11 +21,11 @@ class PlayPage extends StatefulWidget {
 }
 
 class _HomePageState extends State<PlayPage> {
-  dc.Position<dc.Chess> position = dc.Chess.initial;
+  Position<Chess> position = Chess.initial;
   Side orientation = Side.white;
-  String fen = dc.kInitialBoardFEN;
-  Move? lastMove;
-  Move? premove;
+  String fen = kInitialBoardFEN;
+  CGMove? lastMove;
+  CGMove? premove;
   ValidMoves validMoves = IMap(const {});
   Side sideToMove = Side.white;
   PieceSet? pieceSet;
@@ -33,7 +33,7 @@ class _HomePageState extends State<PlayPage> {
   BoardTheme boardTheme = BoardTheme.blue;
   bool immersiveMode = false;
   Mode playMode = Mode.botPlay;
-  dc.Position<dc.Chess>? lastPos;
+  Position<Chess>? lastPos;
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +61,7 @@ class _HomePageState extends State<PlayPage> {
                 setState(() {
                   playMode = Mode.botPlay;
                 });
-                if (position.turn == dc.Side.black) {
+                if (position.turn == Side.black) {
                   _playBlackMove();
                 }
                 Navigator.pop(context);
@@ -94,7 +94,7 @@ class _HomePageState extends State<PlayPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            Board(
+            BoardWidget(
               size: screenWidth,
               settings: BoardSettings(
                 pieceAssets: pieceSet?.assets ?? pieceAssets,
@@ -103,7 +103,7 @@ class _HomePageState extends State<PlayPage> {
               data: BoardData(
                 interactableSide: playMode == Mode.botPlay
                     ? InteractableSide.white
-                    : (position.turn == dc.Side.white
+                    : (position.turn == Side.white
                         ? InteractableSide.white
                         : InteractableSide.black),
                 validMoves: validMoves,
@@ -111,7 +111,7 @@ class _HomePageState extends State<PlayPage> {
                 fen: fen,
                 lastMove: lastMove,
                 sideToMove:
-                    position.turn == dc.Side.white ? Side.white : Side.black,
+                    position.turn == Side.white ? Side.white : Side.black,
                 isCheck: position.isCheck,
                 premove: premove,
               ),
@@ -152,7 +152,8 @@ class _HomePageState extends State<PlayPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ElevatedButton(
-                      child: Text('Piece set: ${pieceSet?.label ?? 'frenzy'}'),
+                      child:
+                          Text('CGPiece set: ${pieceSet?.label ?? 'frenzy'}'),
                       onPressed: () => showEnumChoiceDialog<PieceSet>(
                         context,
                         choices: PieceSet.values,
@@ -169,7 +170,7 @@ class _HomePageState extends State<PlayPage> {
                     ),
                     const SizedBox(width: 8),
                     ElevatedButton(
-                      child: Text('Board theme: ${boardTheme.label}'),
+                      child: Text('BoardWidget theme: ${boardTheme.label}'),
                       onPressed: () => showEnumChoiceDialog<BoardTheme>(
                         context,
                         choices: BoardTheme.values,
@@ -193,7 +194,7 @@ class _HomePageState extends State<PlayPage> {
                           ? () => setState(() {
                                 position = lastPos!;
                                 fen = position.fen;
-                                validMoves = dc.algebraicLegalMoves(position);
+                                validMoves = algebraicLegalMoves(position);
                                 lastPos = null;
                               })
                           : null,
@@ -210,34 +211,34 @@ class _HomePageState extends State<PlayPage> {
 
   @override
   void initState() {
-    validMoves = dc.algebraicLegalMoves(position);
+    validMoves = algebraicLegalMoves(position);
     super.initState();
   }
 
-  void _onSetPremove(Move? move) {
+  void _onSetPremove(CGMove? move) {
     setState(() {
       premove = move;
     });
   }
 
-  void _onUserMoveFreePlay(Move move, {bool? isDrop, bool? isPremove}) {
+  void _onUserMoveFreePlay(CGMove move, {bool? isDrop, bool? isPremove}) {
     lastPos = position;
-    final m = dc.Move.fromUci(move.uci)!;
+    final m = Move.fromUci(move.uci)!;
     setState(() {
       position = position.playUnchecked(m);
       lastMove = move;
       fen = position.fen;
-      validMoves = dc.algebraicLegalMoves(position);
+      validMoves = algebraicLegalMoves(position);
     });
   }
 
   Future<void> _onUserMoveAgainstBot(
-    Move move, {
+    CGMove move, {
     bool? isDrop,
     bool? isPremove,
   }) async {
     lastPos = position;
-    final m = dc.Move.fromUci(move.uci)!;
+    final m = Move.fromUci(move.uci)!;
     setState(() {
       position = position.playUnchecked(m);
       lastMove = move;
@@ -252,16 +253,16 @@ class _HomePageState extends State<PlayPage> {
       final allMoves = [
         for (final entry in position.legalMoves.entries)
           for (final dest in entry.value.squares)
-            dc.NormalMove(from: entry.key, to: dest),
+            NormalMove(from: entry.key, to: dest),
       ];
       if (allMoves.isNotEmpty) {
         final mv = (allMoves..shuffle()).first;
         setState(() {
           position = position.playUnchecked(mv);
           lastMove =
-              Move(from: dc.toAlgebraic(mv.from), to: dc.toAlgebraic(mv.to));
+              CGMove(from: toAlgebraic(mv.from), to: toAlgebraic(mv.to));
           fen = position.fen;
-          validMoves = dc.algebraicLegalMoves(position);
+          validMoves = algebraicLegalMoves(position);
         });
         lastPos = position;
       }

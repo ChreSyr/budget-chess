@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, invalid_annotation_target
 
+import 'package:crea_chess/package/dartchess/export.dart';
 import 'package:crea_chess/package/firebase/export.dart';
-import 'package:dartchess_webok/dartchess_webok.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'past_game_model.freezed.dart';
