@@ -1,5 +1,3 @@
-// ignore_for_file: public_member_api_docs, invalid_annotation_target
-
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:dartchess_webok/dartchess_webok.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -29,4 +27,21 @@ class GameModel with _$GameModel {
       _$GameModelFromJson(json);
 
   // ---
+
+  Position get position {
+    final fen =
+        '${blackHalfFen?.split('').reversed.join() ?? '8/8/8/8'}/${whiteHalfFen ?? '8/8/8/8'}';
+    final board = Board.parseFen(fen);
+
+    return Position.setupPosition(
+      challenge.rule,
+      Setup(
+        board: board,
+        turn: Side.white,
+        unmovedRooks: board.rooks,
+        halfmoves: 0,
+        fullmoves: 0,
+      ),
+    );
+  }
 }
