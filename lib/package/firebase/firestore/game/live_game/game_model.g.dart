@@ -19,6 +19,7 @@ _$GameModelImpl _$$GameModelImplFromJson(Map<String, dynamic> json) =>
       moves:
           (json['moves'] as List<dynamic>?)?.map((e) => e as String).toList() ??
               const [],
+      currentFen: json['currentFen'] as String?,
       winner: $enumDecodeNullable(_$SideEnumMap, json['winner']),
     );
 
@@ -32,6 +33,7 @@ Map<String, dynamic> _$$GameModelImplToJson(_$GameModelImpl instance) =>
       'blackHalfFen': instance.blackHalfFen,
       'whiteHalfFen': instance.whiteHalfFen,
       'moves': instance.moves,
+      'currentFen': instance.currentFen,
       'winner': _$SideEnumMap[instance.winner],
     };
 

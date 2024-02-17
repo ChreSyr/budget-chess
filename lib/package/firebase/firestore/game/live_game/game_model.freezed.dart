@@ -30,6 +30,7 @@ mixin _$GameModel {
   String? get whiteHalfFen =>
       throw _privateConstructorUsedError; // starting position of white pieces
   List<String> get moves => throw _privateConstructorUsedError;
+  String? get currentFen => throw _privateConstructorUsedError;
   Side? get winner => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -52,6 +53,7 @@ abstract class $GameModelCopyWith<$Res> {
       String? blackHalfFen,
       String? whiteHalfFen,
       List<String> moves,
+      String? currentFen,
       Side? winner});
 
   $ChallengeModelCopyWith<$Res> get challenge;
@@ -78,6 +80,7 @@ class _$GameModelCopyWithImpl<$Res, $Val extends GameModel>
     Object? blackHalfFen = freezed,
     Object? whiteHalfFen = freezed,
     Object? moves = null,
+    Object? currentFen = freezed,
     Object? winner = freezed,
   }) {
     return _then(_value.copyWith(
@@ -113,6 +116,10 @@ class _$GameModelCopyWithImpl<$Res, $Val extends GameModel>
           ? _value.moves
           : moves // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      currentFen: freezed == currentFen
+          ? _value.currentFen
+          : currentFen // ignore: cast_nullable_to_non_nullable
+              as String?,
       winner: freezed == winner
           ? _value.winner
           : winner // ignore: cast_nullable_to_non_nullable
@@ -146,6 +153,7 @@ abstract class _$$GameModelImplCopyWith<$Res>
       String? blackHalfFen,
       String? whiteHalfFen,
       List<String> moves,
+      String? currentFen,
       Side? winner});
 
   @override
@@ -171,6 +179,7 @@ class __$$GameModelImplCopyWithImpl<$Res>
     Object? blackHalfFen = freezed,
     Object? whiteHalfFen = freezed,
     Object? moves = null,
+    Object? currentFen = freezed,
     Object? winner = freezed,
   }) {
     return _then(_$GameModelImpl(
@@ -206,6 +215,10 @@ class __$$GameModelImplCopyWithImpl<$Res>
           ? _value._moves
           : moves // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      currentFen: freezed == currentFen
+          ? _value.currentFen
+          : currentFen // ignore: cast_nullable_to_non_nullable
+              as String?,
       winner: freezed == winner
           ? _value.winner
           : winner // ignore: cast_nullable_to_non_nullable
@@ -226,6 +239,7 @@ class _$GameModelImpl extends _GameModel {
       this.blackHalfFen,
       this.whiteHalfFen,
       final List<String> moves = const [],
+      this.currentFen,
       this.winner})
       : _moves = moves,
         super._();
@@ -260,11 +274,13 @@ class _$GameModelImpl extends _GameModel {
   }
 
   @override
+  final String? currentFen;
+  @override
   final Side? winner;
 
   @override
   String toString() {
-    return 'GameModel(id: $id, challenge: $challenge, blackId: $blackId, whiteId: $whiteId, status: $status, blackHalfFen: $blackHalfFen, whiteHalfFen: $whiteHalfFen, moves: $moves, winner: $winner)';
+    return 'GameModel(id: $id, challenge: $challenge, blackId: $blackId, whiteId: $whiteId, status: $status, blackHalfFen: $blackHalfFen, whiteHalfFen: $whiteHalfFen, moves: $moves, currentFen: $currentFen, winner: $winner)';
   }
 
   @override
@@ -283,6 +299,8 @@ class _$GameModelImpl extends _GameModel {
             (identical(other.whiteHalfFen, whiteHalfFen) ||
                 other.whiteHalfFen == whiteHalfFen) &&
             const DeepCollectionEquality().equals(other._moves, _moves) &&
+            (identical(other.currentFen, currentFen) ||
+                other.currentFen == currentFen) &&
             (identical(other.winner, winner) || other.winner == winner));
   }
 
@@ -298,6 +316,7 @@ class _$GameModelImpl extends _GameModel {
       blackHalfFen,
       whiteHalfFen,
       const DeepCollectionEquality().hash(_moves),
+      currentFen,
       winner);
 
   @JsonKey(ignore: true)
@@ -324,6 +343,7 @@ abstract class _GameModel extends GameModel {
       final String? blackHalfFen,
       final String? whiteHalfFen,
       final List<String> moves,
+      final String? currentFen,
       final Side? winner}) = _$GameModelImpl;
   const _GameModel._() : super._();
 
@@ -346,6 +366,8 @@ abstract class _GameModel extends GameModel {
   String? get whiteHalfFen;
   @override // starting position of white pieces
   List<String> get moves;
+  @override
+  String? get currentFen;
   @override
   Side? get winner;
   @override

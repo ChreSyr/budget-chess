@@ -17,6 +17,7 @@ class GameModel with _$GameModel {
     String? blackHalfFen, // starting position of black pieces
     String? whiteHalfFen, // starting position of white pieces
     @Default([]) List<String> moves,
+    String? currentFen,
     Side? winner, // if status is ended & winner is null : draw
   }) = _GameModel;
 
@@ -29,9 +30,13 @@ class GameModel with _$GameModel {
   // ---
 
   Position get position {
-    final fen =
+    final fen = currentFen ??
         '${blackHalfFen?.split('').reversed.join() ?? '8/8/8/8'}/${whiteHalfFen ?? '8/8/8/8'}';
+
+    print('fen');
+    print(fen);
     final board = Board.parseFen(fen);
+    print('board completed');
 
     return Position.setupPosition(
       challenge.rule,

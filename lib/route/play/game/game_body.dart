@@ -5,9 +5,11 @@ import 'package:crea_chess/route/play/setup/board_settings_cubit.dart';
 import 'package:crea_chess/route/play/setup/setup_body.dart';
 import 'package:crea_chess/route/route_body.dart';
 import 'package:dartchess_webok/dartchess_webok.dart' as dc;
+import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:crea_chess/route/play/game/side.dart';
 
 class GameBody extends RouteBody {
   const GameBody({super.key})
@@ -52,29 +54,21 @@ class _GameBody extends StatelessWidget {
     final game = context.watch<GameCubit>().state;
     final authUid = context.watch<AuthenticationCubit>().state?.uid;
 
-    final plays = game.blackId == authUid || game.whiteId == authUid;
-    final isWhite = game.whiteId == authUid;
+    final side = game.blackId == authUid
+        ? Side.black
+        : game.whiteId == authUid
+            ? Side.white
+            : null;
 
-    if (plays && game.status == GameStatus.setup) {
-      return SetupBody(
-        side: isWhite ? Side.white : Side.black,
-      );
+    if (side != null && game.status == GameStatus.setup) {
+      return SetupBody(side: side);
     }
 
     final boardSettings = context.watch<BoardSettingsCubit>().state;
-    final interactableSide = plays
-        ? isWhite
-            ? InteractableSide.white
-            : InteractableSide.black
-        : InteractableSide.none;
+    final interactableSide = side?.interactable ?? InteractableSide.none;
     final position = game.position;
 
-    // TODO : OrientationCubit ?
-    final orientation = plays
-        ? isWhite
-            ? Side.white
-            : Side.black
-        : Side.white;
+    final gameCubit = context.read<GameCubit>();
 
     return Center(
       child: Board(
@@ -82,15 +76,17 @@ class _GameBody extends StatelessWidget {
         settings: boardSettings,
         data: BoardData(
           interactableSide: interactableSide,
-          validMoves: null,
-          orientation: orientation,
+          validMoves: side?.toDc == position.turn
+              ? dc.algebraicLegalMoves(position)
+              : IMap(const {}),
+          orientation: side ?? Side.white,
           fen: position.fen,
           lastMove: null,
           sideToMove: position.turn == dc.Side.white ? Side.white : Side.black,
           isCheck: position.isCheck,
           premove: null,
         ),
-        onMove: (move, {isDrop, isPremove}) {},
+        onMove: gameCubit.onMove,
         onPremove: (move) {},
       ),
     );
