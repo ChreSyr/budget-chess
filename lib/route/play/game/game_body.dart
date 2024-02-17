@@ -1,6 +1,7 @@
 import 'package:chessground/chessground.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/route/play/game/game_cubit.dart';
+import 'package:crea_chess/route/play/game/player_tile.dart';
 import 'package:crea_chess/route/play/setup/board_settings_cubit.dart';
 import 'package:crea_chess/route/play/setup/setup_body.dart';
 import 'package:crea_chess/route/route_body.dart';
@@ -51,7 +52,9 @@ class _GameBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final game = context.watch<GameCubit>().state;
+    final gameCubit = context.watch<GameCubit>();
+    final game = gameCubit.state;
+
     final authUid = context.watch<AuthenticationCubit>().state?.uid;
 
     final side = game.blackId == authUid
@@ -68,26 +71,36 @@ class _GameBody extends StatelessWidget {
     final interactableSide = side?.interactable ?? InteractableSide.none;
     final position = game.position;
 
-    final gameCubit = context.read<GameCubit>();
+    final orientation = side ?? Side.white;
 
     return Center(
-      child: Board(
-        size: MediaQuery.of(context).size.width,
-        settings: boardSettings,
-        data: BoardData(
-          interactableSide: interactableSide,
-          validMoves: side?.toDc == position.turn
-              ? dc.algebraicLegalMoves(position)
-              : IMap(const {}),
-          orientation: side ?? Side.white,
-          fen: position.fen,
-          lastMove: null,
-          sideToMove: position.turn == dc.Side.white ? Side.white : Side.black,
-          isCheck: position.isCheck,
-          premove: null,
-        ),
-        onMove: gameCubit.onMove,
-        onPremove: (move) {},
+      child: Column(
+        children: [
+          PlayerTile(
+            userId: orientation == Side.white ? game.blackId : game.whiteId,
+          ),
+          Board(
+            size: MediaQuery.of(context).size.width,
+            settings: boardSettings,
+            data: BoardData(
+              interactableSide: interactableSide,
+              validMoves: side?.toDartchess == position.turn
+                  ? dc.algebraicLegalMoves(position)
+                  : IMap(const {}),
+              orientation: orientation,
+              fen: position.fen,
+              lastMove: null,
+              sideToMove: position.turn.toChessground,
+              isCheck: position.isCheck,
+              premove: null,
+            ),
+            onMove: gameCubit.onMove,
+            onPremove: (move) {},
+          ),
+          PlayerTile(
+            userId: orientation == Side.white ? game.whiteId : game.blackId,
+          ),
+        ],
       ),
     );
   }

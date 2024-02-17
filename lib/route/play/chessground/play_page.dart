@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:chessground/chessground.dart';
 import 'package:crea_chess/frenzy_piece_set.dart';
 import 'package:crea_chess/package/atomic_design/dialog/enum_choice.dart';
@@ -250,14 +248,7 @@ class _HomePageState extends State<PlayPage> {
   }
 
   Future<void> _playBlackMove() async {
-    await Future<void>.delayed(const Duration(milliseconds: 10)).then((value) {
-      setState(() {});
-    });
     if (!position.isGameOver) {
-      final random = Random();
-      await Future<void>.delayed(
-        Duration(milliseconds: random.nextInt(5500) + 500),
-      );
       final allMoves = [
         for (final entry in position.legalMoves.entries)
           for (final dest in entry.value.squares)

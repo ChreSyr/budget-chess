@@ -7,8 +7,15 @@ extension SideExt on Side {
         Side.black => InteractableSide.black,
       };
 
-  dc.Side get toDc => switch (this) {
+  dc.Side get toDartchess => switch (this) {
         Side.white => dc.Side.white,
         Side.black => dc.Side.black,
+      };
+}
+
+extension DCSideExt on dc.Side {
+  Side get toChessground => switch (this) {
+        dc.Side.white => Side.white,
+        dc.Side.black => Side.black,
       };
 }

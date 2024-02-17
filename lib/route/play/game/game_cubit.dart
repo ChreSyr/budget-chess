@@ -29,8 +29,12 @@ class GameCubit extends Cubit<GameModel> {
     final m = dc.Move.fromUci(move.uci);
     if (m == null) return;
 
+    onDartchessMove(m);
+  }
+
+  void onDartchessMove(dc.Move move) {
     final oldPosition = state.position;
-    final position = oldPosition.playUnchecked(m);
+    final position = oldPosition.playUnchecked(move);
 
     emit(
       state.copyWith(

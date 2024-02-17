@@ -33,16 +33,13 @@ class GameModel with _$GameModel {
     final fen = currentFen ??
         '${blackHalfFen?.split('').reversed.join() ?? '8/8/8/8'}/${whiteHalfFen ?? '8/8/8/8'}';
 
-    print('fen');
-    print(fen);
     final board = Board.parseFen(fen);
-    print('board completed');
 
     return Position.setupPosition(
       challenge.rule,
       Setup(
         board: board,
-        turn: Side.white,
+        turn: moves.length.isEven ? Side.white : Side.black,
         unmovedRooks: board.rooks,
         halfmoves: 0,
         fullmoves: 0,
