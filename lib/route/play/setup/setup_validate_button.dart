@@ -2,7 +2,7 @@ import 'package:crea_chess/package/atomic_design/dialog/setup/budget_exceeded.da
 import 'package:crea_chess/package/atomic_design/dialog/setup/incomplete_setup.dart';
 import 'package:crea_chess/package/atomic_design/dialog/setup/inventory_exceeded.dart';
 import 'package:crea_chess/package/atomic_design/dialog/setup/not_one_king.dart';
-import 'package:crea_chess/route/play/setup/challenge_cubit.dart';
+import 'package:crea_chess/route/play/game/game_cubit.dart';
 import 'package:crea_chess/route/play/setup/inventory_cubit.dart';
 import 'package:crea_chess/route/play/setup/setup_cubit.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +17,7 @@ class SetupValidateButton extends StatelessWidget {
       icon: const Icon(Icons.check),
       label: const Text('Valider'), // TODO : l10n
       onPressed: () {
-        final challenge = context.read<ChallengeCubit>().state;
+        final challenge = context.read<GameCubit>().state.challenge;
         final setupCubit = context.read<SetupCubit>();
         final setup = setupCubit.state;
         final setupCost = setup.cost;
@@ -38,10 +38,12 @@ class SetupValidateButton extends StatelessWidget {
           );
         }
 
+        void submit() => context
+            .read<GameCubit>()
+            .submitSetup(setup, forSide: setupCubit.side);
+
         if (challenge.budget > setupCost) {
-          return showIncompleteSetupDialog(
-            pageContext: context,
-          );
+          return showIncompleteSetupDialog(pageContext: context, onYes: submit);
         }
 
         final board = setupCubit.board;
@@ -51,6 +53,8 @@ class SetupValidateButton extends StatelessWidget {
             pageContext: context,
           );
         }
+
+        submit();
 
         // TODO:  what if pawn on first rank ?
         // TODO : what if the black king is in check from the first move ?

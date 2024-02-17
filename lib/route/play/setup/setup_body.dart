@@ -3,8 +3,8 @@ import 'package:crea_chess/package/atomic_design/chess/setup_board.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
+import 'package:crea_chess/route/play/game/game_cubit.dart';
 import 'package:crea_chess/route/play/setup/board_settings_cubit.dart';
-import 'package:crea_chess/route/play/setup/challenge_cubit.dart';
 import 'package:crea_chess/route/play/setup/inventory.dart';
 import 'package:crea_chess/route/play/setup/inventory_cubit.dart';
 import 'package:crea_chess/route/play/setup/selected_role_cubit.dart';
@@ -15,21 +15,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SetupBody extends StatelessWidget {
-  const SetupBody({super.key});
+  const SetupBody({required this.side, super.key});
+
+  final Side side;
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (BuildContext context) => ChallengeCubit(),
-        ),
-        BlocProvider(
           create: (BuildContext context) => InventoryCubit(),
         ),
         BlocProvider(
           create: (BuildContext context) => SetupCubit(
-            side: Side.black,
+            side: side,
             halfFen: '8/8/8/8',
           ),
         ),
@@ -47,7 +46,7 @@ class _SetupBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final challenge = context.read<ChallengeCubit>().state;
+    final challenge = context.read<GameCubit>().state.challenge;
 
     final setupCubit = context.watch<SetupCubit>();
     final side = setupCubit.side;

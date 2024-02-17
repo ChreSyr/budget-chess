@@ -1,36 +1,43 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'live_game_model.dart';
+part of 'game_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$LiveGameModelImpl _$$LiveGameModelImplFromJson(Map<String, dynamic> json) =>
-    _$LiveGameModelImpl(
+_$GameModelImpl _$$GameModelImplFromJson(Map<String, dynamic> json) =>
+    _$GameModelImpl(
       id: json['id'] as String,
       challenge:
           ChallengeModel.fromJson(json['challenge'] as Map<String, dynamic>),
       blackId: json['blackId'] as String,
       whiteId: json['whiteId'] as String,
-      pgn: json['pgn'] as String,
       status: $enumDecode(_$GameStatusEnumMap, json['status']),
+      blackHalfFen: json['blackHalfFen'] as String?,
+      whiteHalfFen: json['whiteHalfFen'] as String?,
+      moves:
+          (json['moves'] as List<dynamic>?)?.map((e) => e as String).toList() ??
+              const [],
       winner: $enumDecodeNullable(_$SideEnumMap, json['winner']),
     );
 
-Map<String, dynamic> _$$LiveGameModelImplToJson(_$LiveGameModelImpl instance) =>
+Map<String, dynamic> _$$GameModelImplToJson(_$GameModelImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'challenge': instance.challenge,
       'blackId': instance.blackId,
       'whiteId': instance.whiteId,
-      'pgn': instance.pgn,
       'status': _$GameStatusEnumMap[instance.status]!,
+      'blackHalfFen': instance.blackHalfFen,
+      'whiteHalfFen': instance.whiteHalfFen,
+      'moves': instance.moves,
       'winner': _$SideEnumMap[instance.winner],
     };
 
 const _$GameStatusEnumMap = {
   GameStatus.unknown: 'unknown',
+  GameStatus.setup: 'setup',
   GameStatus.created: 'created',
   GameStatus.started: 'started',
   GameStatus.aborted: 'aborted',

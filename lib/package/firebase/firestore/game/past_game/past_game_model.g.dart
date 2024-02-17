@@ -31,6 +31,7 @@ Map<String, dynamic> _$$PastGameModelImplToJson(_$PastGameModelImpl instance) =>
 
 const _$GameStatusEnumMap = {
   GameStatus.unknown: 'unknown',
+  GameStatus.setup: 'setup',
   GameStatus.created: 'created',
   GameStatus.started: 'started',
   GameStatus.aborted: 'aborted',

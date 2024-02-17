@@ -4,27 +4,29 @@ import 'package:crea_chess/package/firebase/export.dart';
 import 'package:dartchess_webok/dartchess_webok.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'live_game_model.freezed.dart';
-part 'live_game_model.g.dart';
+part 'game_model.freezed.dart';
+part 'game_model.g.dart';
 
 /// Represents a game being currently played
 @freezed
-class LiveGameModel with _$LiveGameModel {
-  const factory LiveGameModel({
+class GameModel with _$GameModel {
+  const factory GameModel({
     required String id,
     required ChallengeModel challenge,
     required String blackId,
     required String whiteId,
-    required String pgn,
     required GameStatus status,
+    String? blackHalfFen, // starting position of black pieces
+    String? whiteHalfFen, // starting position of white pieces
+    @Default([]) List<String> moves,
     Side? winner, // if status is ended & winner is null : draw
-  }) = _LiveGameModel;
+  }) = _GameModel;
 
   /// Required for the override getter
-  const LiveGameModel._();
+  const GameModel._();
 
-  factory LiveGameModel.fromJson(Map<String, dynamic> json) =>
-      _$LiveGameModelFromJson(json);
+  factory GameModel.fromJson(Map<String, dynamic> json) =>
+      _$GameModelFromJson(json);
 
   // ---
 }

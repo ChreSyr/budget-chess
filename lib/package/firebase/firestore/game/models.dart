@@ -1,5 +1,6 @@
 enum GameStatus {
   unknown,
+  setup,
   created,
   started,
   aborted,

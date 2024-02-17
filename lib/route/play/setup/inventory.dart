@@ -2,7 +2,7 @@ import 'package:chessground/chessground.dart';
 import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
-import 'package:crea_chess/route/play/setup/challenge_cubit.dart';
+import 'package:crea_chess/route/play/game/game_cubit.dart';
 import 'package:crea_chess/route/play/setup/inventory_cubit.dart';
 import 'package:crea_chess/route/play/setup/role.dart';
 import 'package:crea_chess/route/play/setup/selected_role_cubit.dart';
@@ -27,7 +27,7 @@ class Inventory extends StatelessWidget {
     final inventory = context.read<InventoryCubit>().state;
     final leftInventory = inventory.less(fen: setup.halfFenAs(Side.white));
 
-    final budget = context.read<ChallengeCubit>().state.budget;
+    final budget = context.read<GameCubit>().state.challenge.budget;
     final setupCost = setup.cost;
     final budgetLeft = budget - setupCost;
 
