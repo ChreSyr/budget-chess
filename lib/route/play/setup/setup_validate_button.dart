@@ -38,20 +38,20 @@ class SetupValidateButton extends StatelessWidget {
           );
         }
 
-        void submit() => context
-            .read<GameCubit>()
-            .submitSetup(setup, forSide: setupCubit.side);
-
-        if (challenge.budget > setupCost) {
-          return showIncompleteSetupDialog(pageContext: context, onYes: submit);
-        }
-
         final board = setupCubit.board;
         final kingsCount = board.kings.size;
         if (kingsCount != 1) {
           return showNotOneKingDialog(
             pageContext: context,
           );
+        }
+
+        void submit() => context
+            .read<GameCubit>()
+            .submitSetup(setup, forSide: setupCubit.side);
+
+        if (challenge.budget > setupCost) {
+          return showIncompleteSetupDialog(pageContext: context, onYes: submit);
         }
 
         submit();
