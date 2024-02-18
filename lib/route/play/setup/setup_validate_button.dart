@@ -17,7 +17,7 @@ class SetupValidateButton extends StatelessWidget {
       icon: const Icon(Icons.check),
       label: const Text('Valider'), // TODO : l10n
       onPressed: () {
-        final challenge = context.read<GameCubit>().state.challenge;
+        final challenge = context.read<GameCubit>().state.game.challenge;
         final setupCubit = context.read<SetupCubit>();
         final setup = setupCubit.state;
         final setupCost = setup.cost;

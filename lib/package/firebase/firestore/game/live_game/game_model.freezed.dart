@@ -30,7 +30,9 @@ mixin _$GameModel {
   /// null means white is seting up its pieces.
   String? get whiteHalfFen => throw _privateConstructorUsedError;
   List<GameStep> get steps => throw _privateConstructorUsedError;
-  Side? get winner => throw _privateConstructorUsedError;
+  Side? get winner =>
+      throw _privateConstructorUsedError; // if status is ended & winner is null : draw
+  GamePrefs? get prefs => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $GameModelCopyWith<GameModel> get copyWith =>
@@ -51,9 +53,11 @@ abstract class $GameModelCopyWith<$Res> {
       String? blackHalfFen,
       String? whiteHalfFen,
       List<GameStep> steps,
-      Side? winner});
+      Side? winner,
+      GamePrefs? prefs});
 
   $ChallengeModelCopyWith<$Res> get challenge;
+  $GamePrefsCopyWith<$Res>? get prefs;
 }
 
 /// @nodoc
@@ -78,6 +82,7 @@ class _$GameModelCopyWithImpl<$Res, $Val extends GameModel>
     Object? whiteHalfFen = freezed,
     Object? steps = null,
     Object? winner = freezed,
+    Object? prefs = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -116,6 +121,10 @@ class _$GameModelCopyWithImpl<$Res, $Val extends GameModel>
           ? _value.winner
           : winner // ignore: cast_nullable_to_non_nullable
               as Side?,
+      prefs: freezed == prefs
+          ? _value.prefs
+          : prefs // ignore: cast_nullable_to_non_nullable
+              as GamePrefs?,
     ) as $Val);
   }
 
@@ -124,6 +133,18 @@ class _$GameModelCopyWithImpl<$Res, $Val extends GameModel>
   $ChallengeModelCopyWith<$Res> get challenge {
     return $ChallengeModelCopyWith<$Res>(_value.challenge, (value) {
       return _then(_value.copyWith(challenge: value) as $Val);
+    });
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $GamePrefsCopyWith<$Res>? get prefs {
+    if (_value.prefs == null) {
+      return null;
+    }
+
+    return $GamePrefsCopyWith<$Res>(_value.prefs!, (value) {
+      return _then(_value.copyWith(prefs: value) as $Val);
     });
   }
 }
@@ -145,10 +166,13 @@ abstract class _$$GameModelImplCopyWith<$Res>
       String? blackHalfFen,
       String? whiteHalfFen,
       List<GameStep> steps,
-      Side? winner});
+      Side? winner,
+      GamePrefs? prefs});
 
   @override
   $ChallengeModelCopyWith<$Res> get challenge;
+  @override
+  $GamePrefsCopyWith<$Res>? get prefs;
 }
 
 /// @nodoc
@@ -171,6 +195,7 @@ class __$$GameModelImplCopyWithImpl<$Res>
     Object? whiteHalfFen = freezed,
     Object? steps = null,
     Object? winner = freezed,
+    Object? prefs = freezed,
   }) {
     return _then(_$GameModelImpl(
       id: null == id
@@ -209,6 +234,10 @@ class __$$GameModelImplCopyWithImpl<$Res>
           ? _value.winner
           : winner // ignore: cast_nullable_to_non_nullable
               as Side?,
+      prefs: freezed == prefs
+          ? _value.prefs
+          : prefs // ignore: cast_nullable_to_non_nullable
+              as GamePrefs?,
     ));
   }
 }
@@ -225,7 +254,8 @@ class _$GameModelImpl extends _GameModel {
       this.blackHalfFen,
       this.whiteHalfFen,
       final List<GameStep> steps = const [],
-      this.winner})
+      this.winner,
+      this.prefs})
       : _steps = steps,
         super._();
 
@@ -260,10 +290,13 @@ class _$GameModelImpl extends _GameModel {
 
   @override
   final Side? winner;
+// if status is ended & winner is null : draw
+  @override
+  final GamePrefs? prefs;
 
   @override
   String toString() {
-    return 'GameModel(id: $id, challenge: $challenge, blackId: $blackId, whiteId: $whiteId, status: $status, blackHalfFen: $blackHalfFen, whiteHalfFen: $whiteHalfFen, steps: $steps, winner: $winner)';
+    return 'GameModel(id: $id, challenge: $challenge, blackId: $blackId, whiteId: $whiteId, status: $status, blackHalfFen: $blackHalfFen, whiteHalfFen: $whiteHalfFen, steps: $steps, winner: $winner, prefs: $prefs)';
   }
 
   @override
@@ -282,7 +315,8 @@ class _$GameModelImpl extends _GameModel {
             (identical(other.whiteHalfFen, whiteHalfFen) ||
                 other.whiteHalfFen == whiteHalfFen) &&
             const DeepCollectionEquality().equals(other._steps, _steps) &&
-            (identical(other.winner, winner) || other.winner == winner));
+            (identical(other.winner, winner) || other.winner == winner) &&
+            (identical(other.prefs, prefs) || other.prefs == prefs));
   }
 
   @override
@@ -296,7 +330,8 @@ class _$GameModelImpl extends _GameModel {
       blackHalfFen,
       whiteHalfFen,
       const DeepCollectionEquality().hash(_steps),
-      winner);
+      winner,
+      prefs);
 
   @JsonKey(ignore: true)
   @override
@@ -315,7 +350,8 @@ abstract class _GameModel extends GameModel {
       final String? blackHalfFen,
       final String? whiteHalfFen,
       final List<GameStep> steps,
-      final Side? winner}) = _$GameModelImpl;
+      final Side? winner,
+      final GamePrefs? prefs}) = _$GameModelImpl;
   const _GameModel._() : super._();
 
   @override
@@ -342,6 +378,8 @@ abstract class _GameModel extends GameModel {
   List<GameStep> get steps;
   @override
   Side? get winner;
+  @override // if status is ended & winner is null : draw
+  GamePrefs? get prefs;
   @override
   @JsonKey(ignore: true)
   _$$GameModelImplCopyWith<_$GameModelImpl> get copyWith =>

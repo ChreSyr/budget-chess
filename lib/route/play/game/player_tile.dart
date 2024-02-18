@@ -27,8 +27,9 @@ class PlayerTile extends StatelessWidget {
           trailing: Builder(
             builder: (context) {
               final gameCubit = context.watch<GameCubit>();
-              final game = gameCubit.state;
-              final position = game.lastPosition;
+              final gameState = gameCubit.state;
+              final game = gameState.game;
+              final position = gameState.position;
 
               final side = game.blackId == userId
                   ? Side.black

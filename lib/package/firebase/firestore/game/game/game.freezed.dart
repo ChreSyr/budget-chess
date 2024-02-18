@@ -1061,8 +1061,6 @@ mixin _$GamePrefs {
   bool get showRatings => throw _privateConstructorUsedError;
   bool get enablePremove => throw _privateConstructorUsedError;
   AutoQueen get autoQueen => throw _privateConstructorUsedError;
-  bool get confirmResign => throw _privateConstructorUsedError;
-  bool get submitMove => throw _privateConstructorUsedError;
   Zen get zenMode => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -1076,12 +1074,7 @@ abstract class $GamePrefsCopyWith<$Res> {
       _$GamePrefsCopyWithImpl<$Res, GamePrefs>;
   @useResult
   $Res call(
-      {bool showRatings,
-      bool enablePremove,
-      AutoQueen autoQueen,
-      bool confirmResign,
-      bool submitMove,
-      Zen zenMode});
+      {bool showRatings, bool enablePremove, AutoQueen autoQueen, Zen zenMode});
 }
 
 /// @nodoc
@@ -1100,8 +1093,6 @@ class _$GamePrefsCopyWithImpl<$Res, $Val extends GamePrefs>
     Object? showRatings = null,
     Object? enablePremove = null,
     Object? autoQueen = null,
-    Object? confirmResign = null,
-    Object? submitMove = null,
     Object? zenMode = null,
   }) {
     return _then(_value.copyWith(
@@ -1117,14 +1108,6 @@ class _$GamePrefsCopyWithImpl<$Res, $Val extends GamePrefs>
           ? _value.autoQueen
           : autoQueen // ignore: cast_nullable_to_non_nullable
               as AutoQueen,
-      confirmResign: null == confirmResign
-          ? _value.confirmResign
-          : confirmResign // ignore: cast_nullable_to_non_nullable
-              as bool,
-      submitMove: null == submitMove
-          ? _value.submitMove
-          : submitMove // ignore: cast_nullable_to_non_nullable
-              as bool,
       zenMode: null == zenMode
           ? _value.zenMode
           : zenMode // ignore: cast_nullable_to_non_nullable
@@ -1142,12 +1125,7 @@ abstract class _$$GamePrefsImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {bool showRatings,
-      bool enablePremove,
-      AutoQueen autoQueen,
-      bool confirmResign,
-      bool submitMove,
-      Zen zenMode});
+      {bool showRatings, bool enablePremove, AutoQueen autoQueen, Zen zenMode});
 }
 
 /// @nodoc
@@ -1164,8 +1142,6 @@ class __$$GamePrefsImplCopyWithImpl<$Res>
     Object? showRatings = null,
     Object? enablePremove = null,
     Object? autoQueen = null,
-    Object? confirmResign = null,
-    Object? submitMove = null,
     Object? zenMode = null,
   }) {
     return _then(_$GamePrefsImpl(
@@ -1181,14 +1157,6 @@ class __$$GamePrefsImplCopyWithImpl<$Res>
           ? _value.autoQueen
           : autoQueen // ignore: cast_nullable_to_non_nullable
               as AutoQueen,
-      confirmResign: null == confirmResign
-          ? _value.confirmResign
-          : confirmResign // ignore: cast_nullable_to_non_nullable
-              as bool,
-      submitMove: null == submitMove
-          ? _value.submitMove
-          : submitMove // ignore: cast_nullable_to_non_nullable
-              as bool,
       zenMode: null == zenMode
           ? _value.zenMode
           : zenMode // ignore: cast_nullable_to_non_nullable
@@ -1204,8 +1172,6 @@ class _$GamePrefsImpl extends _GamePrefs {
       {required this.showRatings,
       required this.enablePremove,
       required this.autoQueen,
-      required this.confirmResign,
-      required this.submitMove,
       required this.zenMode})
       : super._();
 
@@ -1216,15 +1182,11 @@ class _$GamePrefsImpl extends _GamePrefs {
   @override
   final AutoQueen autoQueen;
   @override
-  final bool confirmResign;
-  @override
-  final bool submitMove;
-  @override
   final Zen zenMode;
 
   @override
   String toString() {
-    return 'GamePrefs(showRatings: $showRatings, enablePremove: $enablePremove, autoQueen: $autoQueen, confirmResign: $confirmResign, submitMove: $submitMove, zenMode: $zenMode)';
+    return 'GamePrefs(showRatings: $showRatings, enablePremove: $enablePremove, autoQueen: $autoQueen, zenMode: $zenMode)';
   }
 
   @override
@@ -1238,16 +1200,12 @@ class _$GamePrefsImpl extends _GamePrefs {
                 other.enablePremove == enablePremove) &&
             (identical(other.autoQueen, autoQueen) ||
                 other.autoQueen == autoQueen) &&
-            (identical(other.confirmResign, confirmResign) ||
-                other.confirmResign == confirmResign) &&
-            (identical(other.submitMove, submitMove) ||
-                other.submitMove == submitMove) &&
             (identical(other.zenMode, zenMode) || other.zenMode == zenMode));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, showRatings, enablePremove,
-      autoQueen, confirmResign, submitMove, zenMode);
+  int get hashCode =>
+      Object.hash(runtimeType, showRatings, enablePremove, autoQueen, zenMode);
 
   @JsonKey(ignore: true)
   @override
@@ -1261,8 +1219,6 @@ abstract class _GamePrefs extends GamePrefs {
       {required final bool showRatings,
       required final bool enablePremove,
       required final AutoQueen autoQueen,
-      required final bool confirmResign,
-      required final bool submitMove,
       required final Zen zenMode}) = _$GamePrefsImpl;
   const _GamePrefs._() : super._();
 
@@ -1272,10 +1228,6 @@ abstract class _GamePrefs extends GamePrefs {
   bool get enablePremove;
   @override
   AutoQueen get autoQueen;
-  @override
-  bool get confirmResign;
-  @override
-  bool get submitMove;
   @override
   Zen get zenMode;
   @override

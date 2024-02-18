@@ -25,10 +25,13 @@ class GameModel with _$GameModel {
     String? whiteHalfFen,
     @Default([]) List<GameStep> steps,
     Side? winner, // if status is ended & winner is null : draw
+    GamePrefs? prefs,
   }) = _GameModel;
 
   /// Required for the override getter
   const GameModel._();
-
-  Position? get lastPosition => steps.lastOrNull?.position;
+  
+  bool get playable => status.value < GameStatus.aborted.value;
+  bool get aborted => status == GameStatus.aborted;
+  bool get finished => status.value >= GameStatus.mate.value;
 }

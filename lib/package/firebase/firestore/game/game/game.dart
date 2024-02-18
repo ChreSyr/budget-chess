@@ -249,8 +249,6 @@ class GamePrefs with _$GamePrefs {
     required bool showRatings,
     required bool enablePremove,
     required AutoQueen autoQueen,
-    required bool confirmResign,
-    required bool submitMove,
     required Zen zenMode,
   }) = _GamePrefs;
 

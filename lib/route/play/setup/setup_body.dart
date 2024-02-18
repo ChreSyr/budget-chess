@@ -46,7 +46,7 @@ class _SetupBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final challenge = context.read<GameCubit>().state.challenge;
+    final challenge = context.read<GameCubit>().state.game.challenge;
 
     final setupCubit = context.watch<SetupCubit>();
     final side = setupCubit.side;
