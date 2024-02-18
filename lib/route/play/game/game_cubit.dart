@@ -8,6 +8,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class GameCubit extends Cubit<GameState> {
   GameCubit(super.initialState);
 
+  bool startEndAnimation = false;
+
   void submitSetup(SetupModel setup, {required Side forSide}) {
     // TODO : rework
     final whiteHalfFen = forSide == Side.white
@@ -75,6 +77,8 @@ class GameCubit extends Cubit<GameState> {
       status = state.game.status;
     }
 
+    if (status.value > GameStatus.aborted.value) startEndAnimation = true;
+
     emit(
       state.copyWith(
         game: state.game.copyWith(
@@ -87,6 +91,8 @@ class GameCubit extends Cubit<GameState> {
               ),
             ),
           status: status,
+          winner:
+              status == GameStatus.mate ? oldPosition.turn : state.game.winner,
         ),
         stepCursor: state.stepCursor + 1,
       ),
@@ -94,4 +100,8 @@ class GameCubit extends Cubit<GameState> {
   }
 
   void onPremove(CGMove? premove) => emit(state.copyWith(premove: premove));
+
+  void resetEndAnimation() {
+    startEndAnimation = false;
+  }
 }

@@ -87,12 +87,14 @@ class _GameBody extends StatelessWidget {
         children: [
           PlayerTile(
             userId: orientation == Side.white ? game.blackId : game.whiteId,
+            winner: game.winner,
           ),
           BoardWidget(
             size: MediaQuery.of(context).size.width,
             settings: boardSettings,
             data: BoardData(
-              interactableSide: interactableSide,
+              interactableSide:
+                  game.playable ? interactableSide : InteractableSide.none,
               validMoves: game.playable &&
                       position != null &&
                       side?.toDartchess == position.turn
@@ -110,6 +112,7 @@ class _GameBody extends StatelessWidget {
           ),
           PlayerTile(
             userId: orientation == Side.white ? game.whiteId : game.blackId,
+            winner: game.winner,
           ),
         ],
       ),
