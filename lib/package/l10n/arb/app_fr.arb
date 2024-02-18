@@ -1,7 +1,10 @@
 {
   "@@locale": "fr",
   "accept": "Accepter",
+  "aiNameLevelAiLevel": "{param1} niveau {param2}",
   "alreadyHaveAccount": "Tu as déjà un compte ?",
+  "always": "Toujours",
+  "anonymous": "Anonyme",
   "avatarChoose": "Choisir un avatar",
   "back": "Retour",
   "block": "Bloquer",
@@ -48,6 +51,7 @@
   "iAcceptConditions": "Je n'ai lu ni les Conditions d'utilisation, ni la Politique de confidentialité.",
   "messages": "Messages",
   "needAccount": "Besoin d'un compte ?",
+  "never": "Jamais",
   "next": "Suivant",
   "no": "Non",
   "notConnected": "Vous n'êtes pas connecté",
@@ -58,6 +62,8 @@
   "pictureTake": "Prendre une photo",
   "pictureImport": "Importer une photo",
   "play": "Jouer",
+  "preferencesInGameOnly": "Seulement durant la partie",
+  "preferencesWhenPremoving": "Lors d'un pré-coup",
   "profile": "Profil",
   "resetPasswordExplanation": "Voulez-vous réinitialiser votre mot de passe ?\n\nUn mail sera envoté à {email}",
   "@resetPasswordExplanation": {

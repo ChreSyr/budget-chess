@@ -12,3 +12,4 @@ linter:
     public_member_api_docs: false
     comment_references: false
     prefer_asserts_with_message: false
+    avoid_positional_boolean_parameters: false

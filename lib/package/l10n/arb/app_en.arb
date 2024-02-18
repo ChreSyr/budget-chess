@@ -1,7 +1,10 @@
 {
   "@@locale": "en",
   "accept": "Accept",
+  "aiNameLevelAiLevel": "{param1} level {param2}",
   "alreadyHaveAccount": "Already have an account ?",
+  "always": "Always",
+  "anonymous": "Anonymmous",
   "avatarChoose": "Choose an avatar",
   "back": "Back",
   "block": "Block",
@@ -48,6 +51,7 @@
   "iAcceptConditions": "I have not read the Terms of Use or the Privacy Policy.",
   "messages": "Messages",
   "needAccount": "Need an account ?",
+  "never": "Never",
   "next": "Next",
   "no": "No",
   "notConnected": "You are not connected",
@@ -58,6 +62,8 @@
   "pictureTake": "Take a picture",
   "pictureImport": "Import a picture",
   "play": "Play",
+  "preferencesInGameOnly": "In-game only",
+  "preferencesWhenPremoving": "When premoving",
   "profile": "Profile",
   "resetPasswordExplanation": "Do you want to reset your password ?\n\nAn email will be sent to {email}",
   "@resetPasswordExplanation": {
