@@ -3,6 +3,7 @@ import 'package:crea_chess/package/dartchess/export.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/route/play/game/game_cubit.dart';
 import 'package:crea_chess/route/play/game/player_tile.dart';
+import 'package:crea_chess/route/play/game/premove_cubit.dart';
 import 'package:crea_chess/route/play/game/side.dart';
 import 'package:crea_chess/route/play/setup/board_settings_cubit.dart';
 import 'package:crea_chess/route/play/setup/setup_body.dart';
@@ -27,21 +28,28 @@ class GameBody extends RouteBody {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => GameCubit(
-        const GameModel(
-          id: 'testing',
-          challenge: ChallengeModel(
-            id: '0',
-            authorId: 'mael',
-            budget: 19,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => GameCubit(
+            const GameModel(
+              id: 'testing',
+              challenge: ChallengeModel(
+                id: '0',
+                authorId: 'mael',
+                budget: 19,
+              ),
+              whiteId: 'WVJCtjHxhaU4c5beOaN87Rt9E4F2',
+              blackId: '2Kp6LTX4TqSVPphhCtloPZ9oPo43',
+              blackHalfFen: '8/8/pppppppp/rnbqkbnr',
+              status: GameStatus.created,
+            ),
           ),
-          whiteId: 'WVJCtjHxhaU4c5beOaN87Rt9E4F2',
-          blackId: '2Kp6LTX4TqSVPphhCtloPZ9oPo43',
-          blackHalfFen: '8/8/pppppppp/rnbqkbnr',
-          status: GameStatus.setup,
         ),
-      ),
+        BlocProvider(
+          create: (context) => PremoveCubit(),
+        ),
+      ],
       child: const _GameBody(),
     );
   }
@@ -63,7 +71,7 @@ class _GameBody extends StatelessWidget {
             ? Side.white
             : null;
 
-    if (side != null && game.status == GameStatus.setup) {
+    if (side != null && game.status == GameStatus.created) {
       return SetupBody(side: side);
     }
 
@@ -75,29 +83,37 @@ class _GameBody extends StatelessWidget {
 
     final orientation = side ?? Side.white;
 
+    final lastMove = game.steps.lastOrNull?.sanMove?.move;
+
     return Center(
       child: Column(
         children: [
           PlayerTile(
             userId: orientation == Side.white ? game.blackId : game.whiteId,
           ),
-          BoardWidget(
-            size: MediaQuery.of(context).size.width,
-            settings: boardSettings,
-            data: BoardData(
-              interactableSide: interactableSide,
-              validMoves: position != null && side?.toDartchess == position.turn
-                  ? algebraicLegalMoves(position)
-                  : IMap(const {}),
-              orientation: orientation,
-              fen: position?.fen ?? '',
-              lastMove: null,
-              sideToMove: position?.turn.toChessground,
-              isCheck: position?.isCheck,
-              premove: null,
-            ),
-            onMove: gameCubit.onCGMove,
-            onPremove: (move) {},
+          BlocBuilder<PremoveCubit, CGMove?>(
+            builder: (context, premove) {
+              return BoardWidget(
+                size: MediaQuery.of(context).size.width,
+                settings: boardSettings,
+                data: BoardData(
+                  interactableSide: interactableSide,
+                  validMoves:
+                      position != null && side?.toDartchess == position.turn
+                          ? algebraicLegalMoves(position)
+                          : IMap(const {}),
+                  orientation: orientation,
+                  fen: position?.fen ?? '',
+                  lastMove:
+                      lastMove == null ? null : CGMove.fromUci(lastMove.uci),
+                  sideToMove: position?.turn.toChessground,
+                  isCheck: position?.isCheck,
+                  premove: premove,
+                ),
+                onMove: gameCubit.onCGMove,
+                onPremove: context.read<PremoveCubit>().setPremove,
+              );
+            },
           ),
           PlayerTile(
             userId: orientation == Side.white ? game.whiteId : game.blackId,
