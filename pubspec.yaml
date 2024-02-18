@@ -69,6 +69,7 @@ flutter:
   assets:
     - assets/avatar/
     - assets/banner/
+    - assets/boards/
     - assets/chat/
     - assets/icon/
     - assets/piece_sets/frenzy/

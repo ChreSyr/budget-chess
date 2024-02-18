@@ -4,6 +4,7 @@ import 'package:crea_chess/package/firebase/firestore/game/game/converter.dart';
 import 'package:crea_chess/package/firebase/firestore/game/game/enum.dart';
 import 'package:crea_chess/package/firebase/firestore/game/game/player.dart';
 import 'package:crea_chess/package/game/speed.dart';
+import 'package:crea_chess/route/play/setup/role.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -13,11 +14,12 @@ part 'game.g.dart';
 /// Represents a [Move] with its associated SAN.
 @Freezed(fromJson: true, toJson: true)
 class SanMove with _$SanMove {
-  const SanMove._();
   const factory SanMove(
     String san,
     @MoveConverter() Move move,
   ) = _SanMove;
+
+  const SanMove._();
 
   factory SanMove.fromJson(Map<String, dynamic> json) =>
       _$SanMoveFromJson(json);
@@ -34,28 +36,20 @@ class MaterialDiffSide with _$MaterialDiffSide {
   }) = _MaterialDiffSide;
 }
 
-const IMap<Role, int> pieceScores = IMapConst({
-  Role.king: 0,
-  Role.queen: 9,
-  Role.rook: 5,
-  Role.bishop: 3,
-  Role.knight: 3,
-  Role.pawn: 1,
-});
-
 @freezed
 class MaterialDiff with _$MaterialDiff {
-  const MaterialDiff._();
 
   const factory MaterialDiff({
     required MaterialDiffSide black,
     required MaterialDiffSide white,
   }) = _MaterialDiff;
+  
+  const MaterialDiff._();
 
   factory MaterialDiff.fromBoard(Board board) {
-    int score = 0;
-    final IMap<Role, int> blackCount = board.materialCount(Side.black);
-    final IMap<Role, int> whiteCount = board.materialCount(Side.white);
+    var score = 0;
+    final blackCount = board.materialCount(Side.black);
+    final whiteCount = board.materialCount(Side.white);
 
     Map<Role, int> count;
     Map<Role, int> black;
@@ -90,7 +84,7 @@ class MaterialDiff with _$MaterialDiff {
 
     whiteCount.forEach((role, cnt) {
       count[role] = cnt - blackCount[role]!;
-      score += pieceScores[role]! * count[role]!;
+      score += role.cost * count[role]!;
     });
 
     count.forEach((role, cnt) {
@@ -224,8 +218,6 @@ mixin IndexableSteps on BaseGame {
 
 @freezed
 class PlayableGameMeta with _$PlayableGameMeta {
-  const PlayableGameMeta._();
-
   @Assert('!(clock != null && daysPerTurn != null)')
   const factory PlayableGameMeta({
     required bool rated,
@@ -247,12 +239,12 @@ class PlayableGameMeta with _$PlayableGameMeta {
     int? startedAtTurn,
     ISet<GameRule>? rules,
   }) = _PlayableGameMeta;
+
+  const PlayableGameMeta._();
 }
 
 @freezed
 class GamePrefs with _$GamePrefs {
-  const GamePrefs._();
-
   const factory GamePrefs({
     required bool showRatings,
     required bool enablePremove,
@@ -261,6 +253,8 @@ class GamePrefs with _$GamePrefs {
     required bool submitMove,
     required Zen zenMode,
   }) = _GamePrefs;
+
+  const GamePrefs._();
 }
 
 @freezed

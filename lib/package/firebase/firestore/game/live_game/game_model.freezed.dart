@@ -14,10 +14,6 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-GameModel _$GameModelFromJson(Map<String, dynamic> json) {
-  return _GameModel.fromJson(json);
-}
-
 /// @nodoc
 mixin _$GameModel {
   String get id => throw _privateConstructorUsedError;
@@ -25,15 +21,17 @@ mixin _$GameModel {
   String get blackId => throw _privateConstructorUsedError;
   String get whiteId => throw _privateConstructorUsedError;
   GameStatus get status => throw _privateConstructorUsedError;
-  String? get blackHalfFen =>
-      throw _privateConstructorUsedError; // starting position of black pieces
-  String? get whiteHalfFen =>
-      throw _privateConstructorUsedError; // starting position of white pieces
-  List<String> get moves => throw _privateConstructorUsedError;
-  String? get currentFen => throw _privateConstructorUsedError;
+
+  /// Starting position of black pieces.
+  /// null means black is seting up its pieces.
+  String? get blackHalfFen => throw _privateConstructorUsedError;
+
+  /// Starting position of white pieces.
+  /// null means white is seting up its pieces.
+  String? get whiteHalfFen => throw _privateConstructorUsedError;
+  List<GameStep> get steps => throw _privateConstructorUsedError;
   Side? get winner => throw _privateConstructorUsedError;
 
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
   $GameModelCopyWith<GameModel> get copyWith =>
       throw _privateConstructorUsedError;
@@ -52,8 +50,7 @@ abstract class $GameModelCopyWith<$Res> {
       GameStatus status,
       String? blackHalfFen,
       String? whiteHalfFen,
-      List<String> moves,
-      String? currentFen,
+      List<GameStep> steps,
       Side? winner});
 
   $ChallengeModelCopyWith<$Res> get challenge;
@@ -79,8 +76,7 @@ class _$GameModelCopyWithImpl<$Res, $Val extends GameModel>
     Object? status = null,
     Object? blackHalfFen = freezed,
     Object? whiteHalfFen = freezed,
-    Object? moves = null,
-    Object? currentFen = freezed,
+    Object? steps = null,
     Object? winner = freezed,
   }) {
     return _then(_value.copyWith(
@@ -112,14 +108,10 @@ class _$GameModelCopyWithImpl<$Res, $Val extends GameModel>
           ? _value.whiteHalfFen
           : whiteHalfFen // ignore: cast_nullable_to_non_nullable
               as String?,
-      moves: null == moves
-          ? _value.moves
-          : moves // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      currentFen: freezed == currentFen
-          ? _value.currentFen
-          : currentFen // ignore: cast_nullable_to_non_nullable
-              as String?,
+      steps: null == steps
+          ? _value.steps
+          : steps // ignore: cast_nullable_to_non_nullable
+              as List<GameStep>,
       winner: freezed == winner
           ? _value.winner
           : winner // ignore: cast_nullable_to_non_nullable
@@ -152,8 +144,7 @@ abstract class _$$GameModelImplCopyWith<$Res>
       GameStatus status,
       String? blackHalfFen,
       String? whiteHalfFen,
-      List<String> moves,
-      String? currentFen,
+      List<GameStep> steps,
       Side? winner});
 
   @override
@@ -178,8 +169,7 @@ class __$$GameModelImplCopyWithImpl<$Res>
     Object? status = null,
     Object? blackHalfFen = freezed,
     Object? whiteHalfFen = freezed,
-    Object? moves = null,
-    Object? currentFen = freezed,
+    Object? steps = null,
     Object? winner = freezed,
   }) {
     return _then(_$GameModelImpl(
@@ -211,14 +201,10 @@ class __$$GameModelImplCopyWithImpl<$Res>
           ? _value.whiteHalfFen
           : whiteHalfFen // ignore: cast_nullable_to_non_nullable
               as String?,
-      moves: null == moves
-          ? _value._moves
-          : moves // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      currentFen: freezed == currentFen
-          ? _value.currentFen
-          : currentFen // ignore: cast_nullable_to_non_nullable
-              as String?,
+      steps: null == steps
+          ? _value._steps
+          : steps // ignore: cast_nullable_to_non_nullable
+              as List<GameStep>,
       winner: freezed == winner
           ? _value.winner
           : winner // ignore: cast_nullable_to_non_nullable
@@ -228,7 +214,7 @@ class __$$GameModelImplCopyWithImpl<$Res>
 }
 
 /// @nodoc
-@JsonSerializable()
+
 class _$GameModelImpl extends _GameModel {
   const _$GameModelImpl(
       {required this.id,
@@ -238,14 +224,10 @@ class _$GameModelImpl extends _GameModel {
       required this.status,
       this.blackHalfFen,
       this.whiteHalfFen,
-      final List<String> moves = const [],
-      this.currentFen,
+      final List<GameStep> steps = const [],
       this.winner})
-      : _moves = moves,
+      : _steps = steps,
         super._();
-
-  factory _$GameModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$GameModelImplFromJson(json);
 
   @override
   final String id;
@@ -257,30 +239,31 @@ class _$GameModelImpl extends _GameModel {
   final String whiteId;
   @override
   final GameStatus status;
+
+  /// Starting position of black pieces.
+  /// null means black is seting up its pieces.
   @override
   final String? blackHalfFen;
-// starting position of black pieces
+
+  /// Starting position of white pieces.
+  /// null means white is seting up its pieces.
   @override
   final String? whiteHalfFen;
-// starting position of white pieces
-  final List<String> _moves;
-// starting position of white pieces
+  final List<GameStep> _steps;
   @override
   @JsonKey()
-  List<String> get moves {
-    if (_moves is EqualUnmodifiableListView) return _moves;
+  List<GameStep> get steps {
+    if (_steps is EqualUnmodifiableListView) return _steps;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_moves);
+    return EqualUnmodifiableListView(_steps);
   }
 
-  @override
-  final String? currentFen;
   @override
   final Side? winner;
 
   @override
   String toString() {
-    return 'GameModel(id: $id, challenge: $challenge, blackId: $blackId, whiteId: $whiteId, status: $status, blackHalfFen: $blackHalfFen, whiteHalfFen: $whiteHalfFen, moves: $moves, currentFen: $currentFen, winner: $winner)';
+    return 'GameModel(id: $id, challenge: $challenge, blackId: $blackId, whiteId: $whiteId, status: $status, blackHalfFen: $blackHalfFen, whiteHalfFen: $whiteHalfFen, steps: $steps, winner: $winner)';
   }
 
   @override
@@ -298,13 +281,10 @@ class _$GameModelImpl extends _GameModel {
                 other.blackHalfFen == blackHalfFen) &&
             (identical(other.whiteHalfFen, whiteHalfFen) ||
                 other.whiteHalfFen == whiteHalfFen) &&
-            const DeepCollectionEquality().equals(other._moves, _moves) &&
-            (identical(other.currentFen, currentFen) ||
-                other.currentFen == currentFen) &&
+            const DeepCollectionEquality().equals(other._steps, _steps) &&
             (identical(other.winner, winner) || other.winner == winner));
   }
 
-  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -315,8 +295,7 @@ class _$GameModelImpl extends _GameModel {
       status,
       blackHalfFen,
       whiteHalfFen,
-      const DeepCollectionEquality().hash(_moves),
-      currentFen,
+      const DeepCollectionEquality().hash(_steps),
       winner);
 
   @JsonKey(ignore: true)
@@ -324,13 +303,6 @@ class _$GameModelImpl extends _GameModel {
   @pragma('vm:prefer-inline')
   _$$GameModelImplCopyWith<_$GameModelImpl> get copyWith =>
       __$$GameModelImplCopyWithImpl<_$GameModelImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$GameModelImplToJson(
-      this,
-    );
-  }
 }
 
 abstract class _GameModel extends GameModel {
@@ -342,13 +314,9 @@ abstract class _GameModel extends GameModel {
       required final GameStatus status,
       final String? blackHalfFen,
       final String? whiteHalfFen,
-      final List<String> moves,
-      final String? currentFen,
+      final List<GameStep> steps,
       final Side? winner}) = _$GameModelImpl;
   const _GameModel._() : super._();
-
-  factory _GameModel.fromJson(Map<String, dynamic> json) =
-      _$GameModelImpl.fromJson;
 
   @override
   String get id;
@@ -361,13 +329,17 @@ abstract class _GameModel extends GameModel {
   @override
   GameStatus get status;
   @override
+
+  /// Starting position of black pieces.
+  /// null means black is seting up its pieces.
   String? get blackHalfFen;
-  @override // starting position of black pieces
-  String? get whiteHalfFen;
-  @override // starting position of white pieces
-  List<String> get moves;
   @override
-  String? get currentFen;
+
+  /// Starting position of white pieces.
+  /// null means white is seting up its pieces.
+  String? get whiteHalfFen;
+  @override
+  List<GameStep> get steps;
   @override
   Side? get winner;
   @override

@@ -69,7 +69,9 @@ class _GameBody extends StatelessWidget {
 
     final boardSettings = context.watch<BoardSettingsCubit>().state;
     final interactableSide = side?.interactable ?? InteractableSide.none;
-    final position = game.position;
+
+    // null means the setup is not finished
+    final position = game.lastPosition;
 
     final orientation = side ?? Side.white;
 
@@ -84,17 +86,17 @@ class _GameBody extends StatelessWidget {
             settings: boardSettings,
             data: BoardData(
               interactableSide: interactableSide,
-              validMoves: side?.toDartchess == position.turn
+              validMoves: position != null && side?.toDartchess == position.turn
                   ? algebraicLegalMoves(position)
                   : IMap(const {}),
               orientation: orientation,
-              fen: position.fen,
+              fen: position?.fen ?? '',
               lastMove: null,
-              sideToMove: position.turn.toChessground,
-              isCheck: position.isCheck,
+              sideToMove: position?.turn.toChessground,
+              isCheck: position?.isCheck,
               premove: null,
             ),
-            onMove: gameCubit.onMove,
+            onMove: gameCubit.onCGMove,
             onPremove: (move) {},
           ),
           PlayerTile(

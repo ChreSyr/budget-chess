@@ -28,21 +28,21 @@ class PlayerTile extends StatelessWidget {
             builder: (context) {
               final gameCubit = context.watch<GameCubit>();
               final game = gameCubit.state;
-              final position = game.position;
+              final position = game.lastPosition;
 
               final side = game.blackId == userId
                   ? Side.black
                   : game.whiteId == userId
                       ? Side.white
                       : null;
-              final sideToMove = position.turn.toChessground;
+              final sideToMove = position?.turn.toChessground;
 
               return IconButton.outlined(
-                onPressed: sideToMove == side
+                onPressed: sideToMove == side && position != null
                     ? () {
                         final move = _getRandomMove(position);
                         if (move == null) return;
-                        gameCubit.onDartchessMove(move);
+                        gameCubit.onMove(move);
                       }
                     : null,
                 icon: const Icon(Icons.play_arrow),

@@ -1,45 +1,72 @@
 import 'package:crea_chess/package/chessground/export.dart';
 import 'package:crea_chess/package/dartchess/export.dart';
 import 'package:crea_chess/package/firebase/export.dart';
+import 'package:crea_chess/package/firebase/firestore/game/game/game.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class GameCubit extends Cubit<GameModel> {
   GameCubit(super.initialState);
 
   void submitSetup(SetupModel setup, {required Side forSide}) {
-    switch (forSide) {
-      case Side.white:
-        emit(
-          state.copyWith(
-            whiteHalfFen: setup.halfFenAs(forSide),
-            status: GameStatus.started, // TODO : remove
+    // TODO : rework
+    final whiteHalfFen =
+        forSide == Side.white ? setup.halfFenAs(forSide) : state.whiteHalfFen;
+    final blackHalfFen =
+        forSide == Side.black ? setup.halfFenAs(forSide) : state.blackHalfFen;
+
+    final board = Board.parseFen(
+      '${blackHalfFen?.split('').reversed.join() ?? '8/8/8/8'}/${whiteHalfFen ?? '8/8/8/8'}',
+    );
+
+    emit(
+      state.copyWith(
+        whiteHalfFen: whiteHalfFen,
+        blackHalfFen: blackHalfFen,
+        status: GameStatus.started,
+        steps: [
+          GameStep(
+            position: Position.setupPosition(
+              state.challenge.rule,
+              Setup(
+                board: board,
+                turn: Side.white,
+                unmovedRooks: board.rooks,
+                halfmoves: 0,
+                fullmoves: 0,
+              ),
+            ),
           ),
-        );
-      case Side.black:
-        emit(
-          state.copyWith(
-            blackHalfFen: setup.halfFenAs(forSide),
-            status: GameStatus.started, // TODO : remove
-          ),
-        );
-    }
+        ],
+      ),
+    );
   }
 
-  void onMove(CGMove move, {bool? isDrop, bool? isPremove}) {
+  void onCGMove(CGMove move, {bool? isDrop, bool? isPremove}) {
     final m = Move.fromUci(move.uci);
     if (m == null) return;
 
-    onDartchessMove(m);
+    onMove(m);
   }
 
-  void onDartchessMove(Move move) {
-    final oldPosition = state.position;
+  void onMove(Move move) {
+    final oldPosition = state.lastPosition;
+
+    // the game didn't start yet
+    if (oldPosition == null) return;
+
+    final san = oldPosition.makeSanUnchecked(move).$2;
     final position = oldPosition.playUnchecked(move);
 
     emit(
       state.copyWith(
-        moves: List.from(state.moves)..add(move.uci),
-        currentFen: position.board.fen,
+        steps: List.from(state.steps)
+          ..add(
+            GameStep(
+              sanMove: SanMove(san, move),
+              position: position,
+              diff: MaterialDiff.fromBoard(position.board),
+            ),
+          ),
       ),
     );
   }
