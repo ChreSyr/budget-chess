@@ -62,19 +62,12 @@ final router = GoRouter(
                       const RouteScaffold(body: CreateChallengeBody()),
                 ),
                 GoRoute(
-                  path: 'game',
-                  builder: (context, state) =>
-                      RouteScaffold(body: GameBody.games()),
-                  routes: [
-                    GoRoute(
-                      path: ':gameId',
-                      builder: (context, state) => RouteScaffold(
-                        body: GameBody(
-                          gameId: state.pathParameters['gameId'] ?? 'none',
-                        ),
-                      ),
+                  path: ':gameId',
+                  builder: (context, state) => RouteScaffold(
+                    body: GameBody(
+                      gameId: state.pathParameters['gameId'] ?? 'none',
                     ),
-                  ],
+                  ),
                 ),
               ],
             ),
