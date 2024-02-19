@@ -22,8 +22,6 @@ class PlayerAnalysis with _$PlayerAnalysis {
 
 @Freezed(fromJson: true, toJson: true)
 class Player with _$Player {
-  const Player._();
-
   const factory Player({
     UserModel? user,
     int? aiLevel,
@@ -46,6 +44,8 @@ class Player with _$Player {
     /// Post game player analysis summary
     PlayerAnalysis? analysis,
   }) = _Player;
+
+  const Player._();
 
   factory Player.fromJson(Map<String, dynamic> json) => _$PlayerFromJson(json);
 

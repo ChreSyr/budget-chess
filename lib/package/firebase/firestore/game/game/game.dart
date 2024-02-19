@@ -273,7 +273,8 @@ class PlayableClockData with _$PlayableClockData {
 /// the current logged in player.
 ///
 /// See also:
-/// - [ArchivedGame] for a game that is finished and not owned by the current user.
+/// - [ArchivedGame] for a game that is finished and not owned by the current
+/// user.
 @freezed
 class PlayableGame
     with _$PlayableGame, BaseGame, IndexableSteps

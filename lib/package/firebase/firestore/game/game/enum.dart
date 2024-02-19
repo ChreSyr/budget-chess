@@ -79,10 +79,6 @@ enum Perf {
 
   const Perf(this.title, this.shortTitle, this.icon);
 
-  final String title;
-  final String shortTitle;
-  final IconData icon;
-
   // TODO : and from StartSetup
   factory Perf.fromRuleAndSpeed(Rule rule, Speed speed) {
     switch (rule) {
@@ -113,6 +109,10 @@ enum Perf {
         return Perf.crazyhouse;
     }
   }
+
+  final String title;
+  final String shortTitle;
+  final IconData icon;
 
   static IMap<String, Perf> nameMap = IMap(Perf.values.asNameMap());
 }
