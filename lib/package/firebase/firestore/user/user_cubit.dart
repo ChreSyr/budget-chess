@@ -16,13 +16,13 @@ class UserCubit extends Cubit<UserModel?> {
   }
 
   void _fromAuth(User? auth) {
+    _userStream?.cancel();
+    
     if (auth == null || !auth.isVerified) {
-      _userStream?.cancel();
       emit(null);
       return;
     }
 
-    _userStream?.cancel();
     _userStream = userCRUD.stream(documentId: auth.uid).listen((user) async {
       if (user == null && auth.displayName != accountBeingDeleted) {
         // Create user

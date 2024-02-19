@@ -6,28 +6,6 @@ abstract class AccountPref<T> {
   String get toFormData;
 }
 
-class BooleanPref implements AccountPref<bool> {
-  // ignore: avoid_positional_boolean_parameters
-  const BooleanPref(this.value);
-
-  @override
-  final bool value;
-
-  @override
-  String get toFormData => value ? '1' : '0';
-
-  static BooleanPref fromInt(int value) {
-    switch (value) {
-      case 1:
-        return const BooleanPref(true);
-      case 0:
-        return const BooleanPref(false);
-      default:
-        throw Exception('Invalid value for BooleanPref');
-    }
-  }
-}
-
 enum Zen implements AccountPref<int> {
   no(0),
   yes(1),

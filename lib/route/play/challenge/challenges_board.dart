@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/export.dart';
@@ -31,7 +32,14 @@ class ChallengesBoard extends StatelessWidget {
             return BlocBuilder<ChallengeFilterCubit, ChallengeFilterModel?>(
               builder: (context, filter) {
                 return StreamBuilder<Iterable<ChallengeModel>>(
-                  stream: challengeCRUD.streamAll(),
+                  stream: challengeCRUD.streamFiltered(
+                    filter: (collection) => collection.where(
+                      Filter(
+                        'acceptedAt',
+                        isNull: true,
+                      ),
+                    ),
+                  ),
                   builder: (context, snapshot) {
                     final allChallenges = snapshot.data?.toList();
                     if (allChallenges == null) {

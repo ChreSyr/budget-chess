@@ -8,6 +8,19 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'challenge_model.freezed.dart';
 part 'challenge_model.g.dart';
 
+class ChallengeModelConverter
+    implements JsonConverter<ChallengeModel, Map<String, dynamic>> {
+  const ChallengeModelConverter();
+
+  @override
+  ChallengeModel fromJson(Map<String, dynamic> json) {
+    return ChallengeModel.fromJson(json);
+  }
+
+  @override
+  Map<String, dynamic> toJson(ChallengeModel data) => data.toJson();
+}
+
 @freezed
 class ChallengeModel with _$ChallengeModel {
   const factory ChallengeModel({
@@ -33,4 +46,6 @@ class ChallengeModel with _$ChallengeModel {
 
   TimeControl get timeControl => TimeControl(time, increment);
   Speed get speed => timeControl.speed;
+
+  bool get isAccepted => acceptedAt != null;
 }

@@ -64,7 +64,17 @@ final router = GoRouter(
                 GoRoute(
                   path: 'game',
                   builder: (context, state) =>
-                      const RouteScaffold(body: GameBody()),
+                      RouteScaffold(body: GameBody.games()),
+                  routes: [
+                    GoRoute(
+                      path: ':gameId',
+                      builder: (context, state) => RouteScaffold(
+                        body: GameBody(
+                          gameId: state.pathParameters['gameId'] ?? 'none',
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -176,8 +186,13 @@ class ErrorBody extends StatelessWidget {
           Text(exception?.toString() ?? 'null'),
           TextButton(
             onPressed: () {
-              while (context.canPop()) {
-                context.pop();
+              try {
+                while (context.canPop()) {
+                  context.pop();
+                }
+              } catch (_) {
+                debugPrint('ERROR : Invalid route path');
+                context.go('/play');
               }
             },
             child: Text(context.l10n.back),

@@ -1,4 +1,5 @@
 import 'package:crea_chess/package/firebase/export.dart';
+import 'package:crea_chess/package/firebase/firestore/game/live_game/live_games_cubit.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/package/preferences/preferences_cubit.dart';
 import 'package:crea_chess/package/preferences/preferences_state.dart';
@@ -41,6 +42,9 @@ class CreaChessApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => GamePrefsCubit(),
+        ),
+        BlocProvider(
+          create: (context) => LiveGamesCubit(),
         ),
       ],
       child: BlocBuilder<PreferencesCubit, PreferencesState>(

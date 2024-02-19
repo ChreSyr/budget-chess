@@ -21,11 +21,7 @@ class ChallengeCRUD extends CollectionCRUD<ChallengeModel> {
 
   @override
   Map<String, Object?> modelToJson(ChallengeModel? data, SetOptions? _) {
-    return (data?.toJson()
-          ?..removeWhere(
-            (key, value) => key == 'id' || value == null,
-          )) ??
-        {};
+    return (data?.toJson()?..removeWhere((key, value) => key == 'id')) ?? {};
   }
 
   /// Delete the relationships of this user

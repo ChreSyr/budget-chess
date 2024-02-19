@@ -1,8 +1,8 @@
 import 'package:crea_chess/package/dartchess/export.dart';
-import 'package:crea_chess/package/firebase/firestore/game/game/account_preferences.dart';
 import 'package:crea_chess/package/firebase/firestore/game/game/converter.dart';
 import 'package:crea_chess/package/firebase/firestore/game/game/enum.dart';
 import 'package:crea_chess/package/firebase/firestore/game/game/player.dart';
+import 'package:crea_chess/package/firebase/firestore/game/live_game/game_indb.dart';
 import 'package:crea_chess/package/game/speed.dart';
 import 'package:crea_chess/route/play/setup/role.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
@@ -102,23 +102,6 @@ class MaterialDiff with _$MaterialDiff {
   }
 
   MaterialDiffSide bySide(Side side) => side == Side.black ? black : white;
-}
-
-@freezed
-class GameStep with _$GameStep {
-  const factory GameStep({
-    required Position position,
-    SanMove? sanMove,
-    MaterialDiff? diff,
-
-    /// The remaining white clock time at this step. Only available when the
-    /// game is finished.
-    Duration? archivedWhiteClock,
-
-    /// The remaining black clock time at this step. Only available when the
-    /// game is finished.
-    Duration? archivedBlackClock,
-  }) = _GameStep;
 }
 
 /// Common interface for playable and archived games.
@@ -241,18 +224,6 @@ class PlayableGameMeta with _$PlayableGameMeta {
   }) = _PlayableGameMeta;
 
   const PlayableGameMeta._();
-}
-
-@freezed
-class GamePrefs with _$GamePrefs {
-  const factory GamePrefs({
-    required bool showRatings,
-    required bool enablePremove,
-    required AutoQueen autoQueen,
-    required Zen zenMode,
-  }) = _GamePrefs;
-
-  const GamePrefs._();
 }
 
 @freezed

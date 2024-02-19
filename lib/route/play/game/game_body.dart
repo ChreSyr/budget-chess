@@ -14,12 +14,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class GameBody extends RouteBody {
-  const GameBody({super.key})
+  const GameBody({required this.gameId, super.key})
       : super(
           padded: false,
           centered: false,
           scrolled: false,
         );
+
+  // TODO : remove ? rework ?
+  factory GameBody.games() => const GameBody(gameId: 'none');
+
+  final String gameId;
 
   @override
   String getTitle(AppLocalizations l10n) {
@@ -28,25 +33,24 @@ class GameBody extends RouteBody {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => GameCubit(
-        const GameState(
-          game: GameModel(
-            id: 'testing',
-            challenge: ChallengeModel(
-              id: '0',
-              authorId: 'mael',
-              budget: 19,
+    return StreamBuilder<GameModel?>(
+      stream: liveGameCRUD.stream(documentId: gameId),
+      builder: (context, snapshot) {
+        final game = snapshot.data;
+
+        // TODO : rework
+        if (game == null) return const SizedBox.shrink();
+
+        return BlocProvider(
+          create: (context) => GameCubit(
+            GameState(
+              game: game,
+              stepCursor: 0,
             ),
-            whiteId: 'WVJCtjHxhaU4c5beOaN87Rt9E4F2',
-            blackId: '2Kp6LTX4TqSVPphhCtloPZ9oPo43',
-            blackHalfFen: '8/8/pppppppp/rnbqkbnr',
-            status: GameStatus.created,
           ),
-          stepCursor: 0,
-        ),
-      ),
-      child: const _GameBody(),
+          child: const _GameBody(),
+        );
+      },
     );
   }
 }

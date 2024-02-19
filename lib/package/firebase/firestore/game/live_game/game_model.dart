@@ -1,10 +1,10 @@
 import 'package:crea_chess/package/dartchess/export.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/firebase/firestore/game/game/game.dart';
+import 'package:crea_chess/package/firebase/firestore/game/live_game/game_indb.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'game_model.freezed.dart';
-// part 'game_model.g.dart';
 
 /// Represents a game being currently played
 @freezed
@@ -30,8 +30,82 @@ class GameModel with _$GameModel {
 
   /// Required for the override getter
   const GameModel._();
-  
+
+  GameInDB toGameInDB() {
+    return GameInDB(
+      id: id,
+      challenge: challenge,
+      blackId: blackId,
+      whiteId: whiteId,
+      status: status,
+      blackHalfFen: blackHalfFen,
+      whiteHalfFen: whiteHalfFen,
+      sanMoves: steps.map((e) => e.sanMove?.san).join(' '),
+      winner: winner,
+      prefs: prefs,
+    );
+  }
+
+  // ---
+
   bool get playable => status.value < GameStatus.aborted.value;
   bool get aborted => status == GameStatus.aborted;
   bool get finished => status.value >= GameStatus.mate.value;
+}
+
+extension GameInDBExt on GameInDB {
+  GameModel? toGameModel() {
+    try {
+      final board = Board.parseFen(
+        '${blackHalfFen?.split('').reversed.join() ?? '8/8/8/8'}/${whiteHalfFen ?? '8/8/8/8'}',
+      );
+      List<GameStep> steps;
+      try {
+        var position = Position.setupPosition(
+          challenge!.rule,
+          Setup(
+            board: board,
+            turn: Side.white,
+            unmovedRooks: board.rooks,
+            halfmoves: 0,
+            fullmoves: 0,
+          ),
+        );
+        steps = [GameStep(position: position)];
+
+        if (sanMoves!.isNotEmpty) {
+          for (final san in sanMoves!.split(' ')) {
+            final move = position.parseSan(san);
+            // assume firestore only sends correct moves
+            position = position.playUnchecked(move!);
+            steps.add(
+              GameStep(
+                sanMove: SanMove(san, move),
+                position: position,
+                diff: MaterialDiff.fromBoard(position.board),
+              ),
+            );
+          }
+        }
+      } on PositionError catch (_) {
+        steps = [];
+      }
+
+      return GameModel(
+        id: id!,
+        challenge: challenge!,
+        blackId: blackId!,
+        whiteId: whiteId!,
+        status: status!,
+        blackHalfFen: blackHalfFen,
+        whiteHalfFen: whiteHalfFen,
+        steps: steps,
+        winner: winner,
+        prefs: prefs,
+      );
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
 }

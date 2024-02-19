@@ -2,9 +2,11 @@ import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/export.dart';
+import 'package:crea_chess/package/firebase/firestore/game/live_game/live_games_cubit.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/route/play/challenge/challenge_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class MyChallenges extends StatelessWidget {
@@ -30,6 +32,26 @@ class MyChallenges extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             CCGap.small,
+            BlocBuilder<LiveGamesCubit, Iterable<GameModel>>(
+              builder: (context, liveGames) {
+                return liveGames.isEmpty
+                    ? const SizedBox.shrink()
+                    : Column(
+                        children: [
+                          CCGap.small,
+                          // TODO : l10n
+                          Text(
+                            'You have ${liveGames.length} games in progress.',
+                          ),
+                          CCGap.small,
+                          // TODO : LiveGameTile
+                          ...liveGames
+                              .map((e) => e.challenge)
+                              .map(ChallengeTile.new),
+                        ],
+                      );
+              },
+            ),
             if (myChallenges.isNotEmpty) ...[
               CCGap.small,
               Text(

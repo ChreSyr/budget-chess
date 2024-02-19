@@ -45,7 +45,12 @@ class ChallengeTile extends StatelessWidget {
           CCGap.small,
           Text(timeControl.toString()),
           const Expanded(child: CCGap.small),
-          if (authUid == authorId)
+          if (challenge.isAccepted)
+            IconButton(
+              icon: const Icon(Icons.login),
+              onPressed: () => context.go('/play/game/${challenge.id}'),
+            )
+          else if (authUid == authorId)
             IconButton(
               icon: const Icon(Icons.close),
               onPressed: () => challengeCRUD.delete(documentId: challenge.id),
@@ -53,8 +58,15 @@ class ChallengeTile extends StatelessWidget {
           else
             IconButton(
               icon: const Icon(Icons.check),
-              onPressed: () => context.go('/play/game'),
-          ),
+              onPressed: () {
+                if (authUid == null) return;
+
+                liveGameCRUD.onChallengeAccepted(
+                  challenge: challenge,
+                  challengerId: authUid,
+                );
+              },
+            ),
         ],
       ),
     );
