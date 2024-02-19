@@ -1,10 +1,8 @@
-import 'dart:math';
 
-import 'package:crea_chess/package/atomic_design/size.dart';
+import 'package:crea_chess/package/atomic_design/widget/crown.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/dartchess/export.dart';
 import 'package:crea_chess/package/firebase/export.dart';
-import 'package:crea_chess/route/play/game/fireworks.dart';
 import 'package:crea_chess/route/play/game/game_cubit.dart';
 import 'package:crea_chess/route/play/game/side.dart';
 import 'package:flutter/material.dart';
@@ -49,48 +47,10 @@ class PlayerTile extends StatelessWidget {
                   clipBehavior: Clip.none,
                   children: [
                     username,
-                    Positioned(
-                      left: -25,
-                      top: -26,
-                      child: SizedBox(
-                        height: CCWidgetSize.xxxsmall,
-                        width: CCWidgetSize.xxxsmall,
-                        child: Stack(
-                          children: [
-                            Center(
-                              child: FireworksExplosion(
-                                size: CCWidgetSize.xxxsmall.toInt(),
-                                fireworks: const [
-                                  FireworkData(
-                                    particlesWidth: 2,
-                                    startCoef: 0.1,
-                                    endCoef: 0.9,
-                                  ),
-                                  FireworkData(
-                                    color: Colors.blue,
-                                    particlesWidth: 2,
-                                    startCoef: 0.4,
-                                    rotateAngle: pi / 8,
-                                  ),
-                                  FireworkData(
-                                    color: Colors.yellow,
-                                    particlesCount: 16,
-                                    particlesWidth: 2,
-                                    startCoef: 0.5,
-                                    rotateAngle: pi / 16,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Center(
-                              child: Transform.rotate(
-                                angle: -.5,
-                                child: const Text('👑'),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                    const Positioned(
+                      left: -(Crown.size / 2),
+                      top: -(Crown.size / 2),
+                      child: Crown(),
                     ),
                   ],
                 )
@@ -117,14 +77,6 @@ class PlayerTile extends StatelessWidget {
         for (final dest in entry.value.squares)
           NormalMove(from: entry.key, to: dest),
     ];
-    // if (allMoves.isNotEmpty) {
     return (allMoves..shuffle()).firstOrNull;
-    // final newPosition = position.playUnchecked(mv);
-    // lastMove =
-    //     Move(from: toAlgebraic(mv.from), to: toAlgebraic(mv.to));
-    // fen = position.fen;
-    // validMoves = algebraicLegalMoves(position);
-    // lastPos = position;
-    // }
   }
 }
