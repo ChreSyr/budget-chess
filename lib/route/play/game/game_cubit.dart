@@ -11,8 +11,9 @@ class GameCubit extends Cubit<GameState> {
 
   bool startEndAnimation = false;
 
-  void submitSetup(SetupModel setup, {required Side forSide}) {
-    // TODO : rework
+  Future<void> submitSetup(SetupModel setup, {required Side forSide}) async {
+    final GameModel game;
+
     final whiteHalfFen = forSide == Side.white
         ? setup.halfFenAs(forSide)
         : state.game.whiteHalfFen;
@@ -20,32 +21,44 @@ class GameCubit extends Cubit<GameState> {
         ? setup.halfFenAs(forSide)
         : state.game.blackHalfFen;
 
-    final board = Board.parseFen(
-      '${blackHalfFen?.split('').reversed.join() ?? '8/8/8/8'}/${whiteHalfFen ?? '8/8/8/8'}',
-    );
+    if (blackHalfFen == null || whiteHalfFen == null) {
+      game = state.game.copyWith(
+        whiteHalfFen: whiteHalfFen,
+        blackHalfFen: blackHalfFen,
+      );
+    } else {
+      final board = Board.parseFen(
+        '${blackHalfFen.split('').reversed.join()}/$whiteHalfFen',
+      );
 
-    emit(
-      state.copyWith(
-        game: state.game.copyWith(
-          whiteHalfFen: whiteHalfFen,
-          blackHalfFen: blackHalfFen,
-          status: GameStatus.started,
-          steps: [
-            GameStep(
-              position: Position.setupPosition(
-                state.game.challenge.rule,
-                Setup(
-                  board: board,
-                  turn: Side.white,
-                  unmovedRooks: board.rooks,
-                  halfmoves: 0,
-                  fullmoves: 0,
-                ),
+      game = state.game.copyWith(
+        whiteHalfFen: whiteHalfFen,
+        blackHalfFen: blackHalfFen,
+        status: GameStatus.started,
+        steps: [
+          GameStep(
+            position: Position.setupPosition(
+              state.game.challenge.rule,
+              Setup(
+                board: board,
+                turn: Side.white,
+                unmovedRooks: board.rooks,
+                halfmoves: 0,
+                fullmoves: 0,
               ),
             ),
-          ],
-        ),
-      ),
+          ),
+        ],
+      );
+    }
+
+    await liveGameCRUD.update(
+      documentId: game.id,
+      data: game,
+    );
+
+    return emit(
+      state.copyWith(game: game),
     );
   }
 

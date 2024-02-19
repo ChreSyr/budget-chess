@@ -41,6 +41,8 @@ class GameBody extends RouteBody {
         // TODO : rework
         if (game == null) return const SizedBox.shrink();
 
+        print('Steps length : ${game.steps.length}');
+
         return BlocProvider(
           create: (context) => GameCubit(
             GameState(
