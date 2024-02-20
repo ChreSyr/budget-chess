@@ -4,6 +4,7 @@ import 'package:crea_chess/package/atomic_design/dialog/relationship/block_user.
 import 'package:crea_chess/package/atomic_design/dialog/relationship/cancel_relationship.dart';
 import 'package:crea_chess/package/atomic_design/modal/modal.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
+import 'package:crea_chess/package/atomic_design/text_style.dart';
 import 'package:crea_chess/package/atomic_design/widget/edit_button.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_banner.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
@@ -42,72 +43,36 @@ class UserHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Stack(
+    return Stack(alignment: Alignment.topCenter, children: [
+      const SizedBox(height: 250),
+      UserBanner(banner),
+      Positioned(
+        top: 60,
+        child: Stack(
+          alignment: Alignment.bottomCenter,
           children: [
-            const SizedBox(height: CCWidgetSize.xxxlarge),
-
-            // banner
-            Stack(
-              children: [
-                UserBanner(banner),
-                if (editable)
-                  Positioned(
-                    right: 0,
-                    bottom: 0,
-                    child:
-                        EditButton(onPressed: () => showBannerModal(context)),
-                  ),
-              ],
+            UserPhoto(
+              photo: photo,
+              radius: CCWidgetSize.xxsmall,
+              backgroundColor: photo == null ? Colors.red[100] : null,
             ),
-
-            // photo
-            Positioned(
-              left: CCSize.small,
-              bottom: 0,
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  UserPhoto(
-                    photo: photo,
-                    radius: CCWidgetSize.xxsmall,
-                    backgroundColor: photo == null ? Colors.red[100] : null,
-                  ),
-                  if (editable)
-                    Positioned(
-                      right: -CCSize.medium,
-                      bottom: 0,
-                      child: EditButton(
-                        onPressed: () => showPhotoModal(context),
-                        priorityHigh: (photo ?? '').isEmpty,
-                      ),
-                    ),
-                ],
+            if (editable)
+              Positioned(
+                child: EditButton(
+                  onPressed: () => showPhotoModal(context),
+                  priorityHigh: (photo ?? '').isEmpty,
+                ),
               ),
-            ),
           ],
         ),
-
-        // username
-        ListTile(
-          leading: const Icon(Icons.alternate_email),
-          title: Text(username ?? ''),
-          trailing: editable
-              ? EditButton(
-                  onPressed: editable
-                      ? () => context.push('/user/modify_name')
-                      : () => showUserActionsModal(context),
-                  priorityHigh: editable &&
-                      ((username ?? '').isEmpty || username == userId),
-                )
-              : IconButton(
-                  onPressed: () => showUserActionsModal(context),
-                  icon: const Icon(Icons.more_horiz),
-                ),
-        ),
-      ],
-    );
+      ),
+      Positioned(
+          bottom: 10,
+          child: Text(
+            username ?? '',
+            style: CCTextStyle.titleLarge(context),
+          ))
+    ]);
   }
 
   void showUserActionsModal(BuildContext context) {
@@ -204,6 +169,26 @@ class UserHeader extends StatelessWidget {
             showAvatarModal(context);
           },
         ),
+        ListTile(
+          leading: const Icon(Icons.landscape),
+          title: Text(context.l10n.bannerChoose),
+          onTap: () {
+            context.pop();
+            showBannerModal(context);
+          },
+        ),
+        ListTile(
+          leading: const Icon(Icons.edit),
+          title: Text(context.l10n.nameChoose),
+          onTap: () {
+            if (editable) {
+              context.pop();
+              context.push('/user/modify_name');
+            } else {
+              showUserActionsModal(context);
+            }
+          },
+        ),
       ],
     );
   }
@@ -212,24 +197,38 @@ class UserHeader extends StatelessWidget {
     Modal.show(
       context: context,
       sections: [
-        GridView.count(
-          shrinkWrap: true,
-          crossAxisCount: 4,
-          crossAxisSpacing: CCSize.large,
-          mainAxisSpacing: CCSize.large,
-          children: avatarNames
-              .map(
-                (e) => GestureDetector(
-                  onTap: () {
-                    userCRUD.userCubit.setPhoto(photo: 'avatar-$e');
-                    context.pop();
-                  },
-                  child: CircleAvatar(
-                    backgroundImage: AssetImage('assets/avatar/$e.jpg'),
+        Container(
+          height: MediaQuery.of(context).size.height * 0.5,
+          child: CustomScrollView(
+            primary: false,
+            slivers: <Widget>[
+              SliverPadding(
+                padding: const EdgeInsets.all(CCSize.large),
+                sliver: SliverGrid(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisSpacing: CCSize.medium,
+                    mainAxisSpacing: CCSize.medium,
+                    crossAxisCount: 4,
+                  ),
+                  delegate: SliverChildBuilderDelegate(
+                    (BuildContext context, int index) {
+                      final e = avatarNames[index];
+                      return GestureDetector(
+                        onTap: () {
+                          userCRUD.userCubit.setPhoto(photo: 'avatar-$e');
+                          context.pop();
+                        },
+                        child: CircleAvatar(
+                          backgroundImage: AssetImage('assets/avatar/$e.jpg'),
+                        ),
+                      );
+                    },
+                    childCount: avatarNames.length,
                   ),
                 ),
-              )
-              .toList(),
+              ),
+            ],
+          ),
         ),
       ],
     );

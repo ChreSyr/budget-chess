@@ -1,5 +1,10 @@
+import 'package:crea_chess/package/atomic_design/color.dart';
+import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/firebase/export.dart';
+import 'package:crea_chess/package/preferences/preferences_cubit.dart';
+import 'package:crea_chess/package/preferences/preferences_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 const avatarNames = [
   'antoine',
@@ -64,10 +69,18 @@ class UserPhoto extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CircleAvatar(
-      backgroundColor: backgroundColor ?? Colors.transparent,
-      backgroundImage: _getPhotoAsset(photo),
-      radius: radius,
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(
+            color: CCColor.background(context),
+            width: CCSize.xsmall), // Définir la bordure blanche
+      ),
+      child: CircleAvatar(
+        backgroundColor: backgroundColor ?? Colors.transparent,
+        backgroundImage: _getPhotoAsset(photo),
+        radius: radius,
+      ),
     );
   }
 }

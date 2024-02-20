@@ -1,8 +1,10 @@
+import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/widget/divider.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_header.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_sections.dart';
+import 'package:crea_chess/package/firebase/authentication/authentication_crud.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,6 +38,20 @@ class UserProfile extends StatelessWidget {
             child: Column(
               children: [
                 header,
+                Container(
+                  padding: EdgeInsets.all(8.0),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.black, // Couleur de la bordure
+                      width: 1.0, // Épaisseur de la bordure
+                    ),
+                    color: CCColor.primary(
+                        context), // Couleur de remplissage du contenu
+                  ),
+                  child: Text(
+                    context.read<AuthenticationCubit>().state?.email ?? '',
+                  ),
+                ),
                 if (relationshipWidget != null) relationshipWidget!,
                 if (tabSections.isNotEmpty) ...[
                   CCGap.medium,

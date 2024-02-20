@@ -18,7 +18,7 @@ class GameBody extends RouteBody {
       : super(
           padded: false,
           centered: false,
-          scrolled: false,
+          scrolled: true,
         );
 
   @override
@@ -38,7 +38,7 @@ class GameBody extends RouteBody {
               authorId: 'mael',
               budget: 19,
             ),
-            whiteId: 'WVJCtjHxhaU4c5beOaN87Rt9E4F2',
+            whiteId: 'jLgH8XSI0fVA79fsiK3VmbwqOvj2',
             blackId: '2Kp6LTX4TqSVPphhCtloPZ9oPo43',
             blackHalfFen: '8/8/pppppppp/rnbqkbnr',
             status: GameStatus.created,
