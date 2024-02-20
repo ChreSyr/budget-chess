@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crea_chess/package/atomic_design/dialog/user/email_verification.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
@@ -31,11 +32,13 @@ abstract class UserSection extends StatelessWidget {
       return [
         UserSectionFriends(userId: other),
         const UserSectionDetails(),
+        UserSectionGames(userId: other),
       ];
     } else {
       return [
         UserSectionMessages(currentUserId: current, otherId: other),
         UserSectionFriends(userId: other),
+        UserSectionGames(userId: other),
       ];
     }
   }
@@ -85,9 +88,7 @@ class UserSectionFriends extends UserSection {
             final friendsPreviews = (relations ?? []).map(
               (relationship) {
                 final friendId =
-                    relationship.userIds
-                    .where((id) => id != userId)
-                    .first;
+                    relationship.userIds.where((id) => id != userId).first;
                 return UserPhoto.fromId(
                   userId: friendId,
                   radius: radius,
@@ -384,6 +385,40 @@ class _ChatSectionState extends State<ChatSection> {
           onPreviewDataFetched: _handlePreviewDataFetched,
           onSendPressed: _handleSendPressed,
           user: currentUser,
+        );
+      },
+    );
+  }
+}
+
+class UserSectionGames extends UserSection {
+  const UserSectionGames({required this.userId, super.key});
+
+  final String userId;
+
+  @override
+  String getTitle(AppLocalizations l10n) {
+    return 'Games'; // TODO : l10n
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<Iterable<GameModel>>(
+      stream: liveGameCRUD.streamFiltered(
+        filter: (collection) => collection.where(
+          Filter.or(
+            Filter('whiteId', isEqualTo: userId),
+            Filter('blackId', isEqualTo: userId),
+          ),
+        ),
+      ),
+      builder: (context, snapshot) {
+        final games = snapshot.data;
+
+        // TODO : GamesHistory
+
+        return CCPadding.allLarge(
+          child: Text('There is ${games?.length ?? 0} games in history'),
         );
       },
     );
