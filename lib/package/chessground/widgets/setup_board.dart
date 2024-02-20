@@ -20,6 +20,7 @@ class SetupBoard extends StatefulWidget {
     this.onDrop,
     this.onMove,
     this.onRemove,
+    this.interactable = true,
   }) : fen = '8/8/8/8/$halfFen';
 
   /// Visal size of the board
@@ -45,6 +46,8 @@ class SetupBoard extends StatefulWidget {
 
   /// Callback called after a piece has been dragged out of the board.
   final void Function(SquareId)? onRemove;
+
+  final bool interactable;
 
   double get squareSize => size / 8;
 
@@ -165,14 +168,17 @@ class _BoardState extends State<SetupBoard> {
       dimension: widget.size,
       child: Stack(
         children: [
-          GestureDetector(
+          if (widget.interactable)
+            GestureDetector(
             onPanDown: _onPanDownPiece,
             onPanUpdate: _onPanUpdatePiece,
             onPanEnd: _onPanEndPiece,
             onPanCancel: _onPanCancelPiece,
             dragStartBehavior: DragStartBehavior.down,
             child: board,
-          ),
+            )
+          else
+            board,
           // sail above enemy's territory
           Container(
             color: const Color.fromARGB(128, 0, 0, 0),

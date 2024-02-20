@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:crea_chess/package/chessground/export.dart';
 import 'package:crea_chess/package/dartchess/export.dart';
 import 'package:crea_chess/package/firebase/export.dart';
@@ -6,23 +8,43 @@ import 'package:crea_chess/package/firebase/firestore/game/live_game/game_indb.d
 import 'package:crea_chess/route/play/game/game_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class GameCubit extends Cubit<GameState> {
-  GameCubit(super.initialState);
+class GameCubit extends Cubit<GameState?> {
+  GameCubit({required this.gameId}) : super(null) {
+    _gameStream = liveGameCRUD.stream(documentId: gameId).listen(
+          (game) => game == null
+              ? emit(null)
+              : emit(GameState(game: game, stepCursor: game.steps.length)),
+        );
+  }
 
-  bool startEndAnimation = false;
+  late final String gameId;
+  late StreamSubscription<GameModel?> _gameStream;
+
+  @override
+  Future<void> close() {
+    _gameStream.cancel();
+    return super.close();
+  }
+
+  // ---
+
+  bool startEndAnimation = false; // TODO : remove ?
 
   Future<void> submitSetup(SetupModel setup, {required Side forSide}) async {
+    final oldState = state;
+    if (oldState == null) return;
+
     final GameModel game;
 
     final whiteHalfFen = forSide == Side.white
         ? setup.halfFenAs(forSide)
-        : state.game.whiteHalfFen;
+        : oldState.game.whiteHalfFen;
     final blackHalfFen = forSide == Side.black
         ? setup.halfFenAs(forSide)
-        : state.game.blackHalfFen;
+        : oldState.game.blackHalfFen;
 
     if (blackHalfFen == null || whiteHalfFen == null) {
-      game = state.game.copyWith(
+      game = oldState.game.copyWith(
         whiteHalfFen: whiteHalfFen,
         blackHalfFen: blackHalfFen,
       );
@@ -31,14 +53,14 @@ class GameCubit extends Cubit<GameState> {
         '${blackHalfFen.split('').reversed.join()}/$whiteHalfFen',
       );
 
-      game = state.game.copyWith(
+      game = oldState.game.copyWith(
         whiteHalfFen: whiteHalfFen,
         blackHalfFen: blackHalfFen,
         status: GameStatus.started,
         steps: [
           GameStep(
             position: Position.setupPosition(
-              state.game.challenge.rule,
+              oldState.game.challenge.rule,
               Setup(
                 board: board,
                 turn: Side.white,
@@ -58,7 +80,7 @@ class GameCubit extends Cubit<GameState> {
     );
 
     return emit(
-      state.copyWith(game: game),
+      oldState.copyWith(game: game),
     );
   }
 
@@ -70,7 +92,10 @@ class GameCubit extends Cubit<GameState> {
   }
 
   void onMove(Move move) {
-    final oldPosition = state.position;
+    final oldState = state;
+    if (oldState == null) return;
+
+    final oldPosition = oldState.position;
 
     // the game didn't start yet
     if (oldPosition == null) return;
@@ -88,15 +113,15 @@ class GameCubit extends Cubit<GameState> {
     } else if (position.isVariantEnd) {
       status = GameStatus.variantEnd;
     } else {
-      status = state.game.status;
+      status = oldState.game.status;
     }
 
     if (status.value > GameStatus.aborted.value) startEndAnimation = true;
 
     emit(
-      state.copyWith(
-        game: state.game.copyWith(
-          steps: List.from(state.game.steps)
+      oldState.copyWith(
+        game: oldState.game.copyWith(
+          steps: List.from(oldState.game.steps)
             ..add(
               GameStep(
                 sanMove: SanMove(san, move),
@@ -106,14 +131,16 @@ class GameCubit extends Cubit<GameState> {
             ),
           status: status,
           winner:
-              status == GameStatus.mate ? oldPosition.turn : state.game.winner,
+              status == GameStatus.mate
+              ? oldPosition.turn
+              : oldState.game.winner,
         ),
-        stepCursor: state.stepCursor + 1,
+        stepCursor: oldState.stepCursor + 1,
       ),
     );
   }
 
-  void onPremove(CGMove? premove) => emit(state.copyWith(premove: premove));
+  void onPremove(CGMove? premove) => emit(state?.copyWith(premove: premove));
 
   void resetEndAnimation() {
     startEndAnimation = false;

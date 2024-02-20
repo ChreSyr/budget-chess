@@ -22,6 +22,10 @@ class PlayerTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final gameCubit = context.watch<GameCubit>();
     final gameState = gameCubit.state;
+
+    // TODO : loading
+    if (gameState == null) return const SizedBox.shrink();
+    
     final game = gameState.game;
     final position = gameState.position;
 

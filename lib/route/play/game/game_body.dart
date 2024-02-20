@@ -2,7 +2,6 @@ import 'package:crea_chess/package/chessground/export.dart';
 import 'package:crea_chess/package/dartchess/export.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/route/play/game/game_cubit.dart';
-import 'package:crea_chess/route/play/game/game_state.dart';
 import 'package:crea_chess/route/play/game/player_tile.dart';
 import 'package:crea_chess/route/play/game/side.dart';
 import 'package:crea_chess/route/play/setup/board_settings_cubit.dart';
@@ -18,7 +17,7 @@ class GameBody extends RouteBody {
       : super(
           padded: false,
           centered: false,
-          scrolled: false,
+          scrolled: true,
         );
 
   // TODO : remove ? rework ?
@@ -33,26 +32,9 @@ class GameBody extends RouteBody {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<GameModel?>(
-      stream: liveGameCRUD.stream(documentId: gameId),
-      builder: (context, snapshot) {
-        final game = snapshot.data;
-
-        // TODO : rework
-        if (game == null) return const SizedBox.shrink();
-
-        print('Steps length : ${game.steps.length}');
-
-        return BlocProvider(
-          create: (context) => GameCubit(
-            GameState(
-              game: game,
-              stepCursor: 0,
-            ),
-          ),
-          child: const _GameBody(),
-        );
-      },
+    return BlocProvider(
+      create: (context) => GameCubit(gameId: gameId),
+      child: const _GameBody(),
     );
   }
 }
@@ -64,6 +46,10 @@ class _GameBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final gameCubit = context.watch<GameCubit>();
     final gameState = gameCubit.state;
+
+    // TODO : loading
+    if (gameState == null) return const SizedBox.shrink();
+
     final game = gameState.game;
 
     final authUid = context.watch<AuthenticationCubit>().state?.uid;

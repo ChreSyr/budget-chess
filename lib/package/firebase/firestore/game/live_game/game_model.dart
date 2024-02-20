@@ -51,6 +51,22 @@ class GameModel with _$GameModel {
   bool get playable => status.value < GameStatus.aborted.value;
   bool get aborted => status == GameStatus.aborted;
   bool get finished => status.value >= GameStatus.mate.value;
+
+  String playerId(Side side) => switch (side) {
+        Side.white => whiteId,
+        Side.black => blackId,
+      };
+
+  bool sideHasSetup(Side side) => switch (side) {
+        Side.white => whiteHalfFen != null && whiteHalfFen!.isNotEmpty,
+        Side.black => blackHalfFen != null && blackHalfFen!.isNotEmpty,
+      };
+
+  Side? sideOf(String playerId) {
+    if (playerId == whiteId) return Side.white;
+    if (playerId == blackId) return Side.black;
+    return null;
+  }
 }
 
 extension GameInDBExt on GameInDB {

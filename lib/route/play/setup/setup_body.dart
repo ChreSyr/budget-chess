@@ -10,6 +10,7 @@ import 'package:crea_chess/route/play/setup/inventory_cubit.dart';
 import 'package:crea_chess/route/play/setup/selected_role_cubit.dart';
 import 'package:crea_chess/route/play/setup/setup_budget_counter.dart';
 import 'package:crea_chess/route/play/setup/setup_cubit.dart';
+import 'package:crea_chess/route/play/setup/setup_opponent_tile.dart';
 import 'package:crea_chess/route/play/setup/setup_validate_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -46,11 +47,18 @@ class _SetupBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final challenge = context.read<GameCubit>().state.game.challenge;
+    final game = context.watch<GameCubit>().state?.game;
+
+    // TODO : loading
+    if (game == null) return const SizedBox.shrink();
+
+    final challenge = game.challenge;
 
     final setupCubit = context.watch<SetupCubit>();
     final side = setupCubit.side;
     final setup = setupCubit.state;
+
+    final validatedSetup = game.sideHasSetup(side);
 
     final settings = context.watch<BoardSettingsCubit>().state;
 
@@ -74,6 +82,7 @@ class _SetupBody extends StatelessWidget {
               onMove: setupCubit.onMove,
               onRemove: setupCubit.onRemove,
               settings: settings,
+              interactable: !validatedSetup,
             );
           },
         ),
@@ -81,6 +90,7 @@ class _SetupBody extends StatelessWidget {
         Inventory(
           color: side,
           settings: settings,
+          interactable: !validatedSetup,
         ),
         CCGap.small,
         const Divider(height: 0),
@@ -92,10 +102,12 @@ class _SetupBody extends StatelessWidget {
                 cost: setup.cost,
               ),
               const Expanded(child: SizedBox.shrink()),
-              const SetupValidateButton(),
+              SetupValidateButton(validated: validatedSetup),
             ],
           ),
         ),
+        CCGap.medium,
+        SetupOpponentTile(game: game),
       ],
     );
   }

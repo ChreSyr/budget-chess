@@ -16,11 +16,13 @@ class Inventory extends StatelessWidget {
   const Inventory({
     required this.color,
     this.settings = const BoardSettings(),
+    this.interactable = true,
     super.key,
   });
 
   final Side color;
   final BoardSettings settings;
+  final bool interactable;
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +30,15 @@ class Inventory extends StatelessWidget {
     final inventory = context.read<InventoryCubit>().state;
     final leftInventory = inventory.less(fen: setup.halfFenAs(Side.white));
 
-    final budget = context.read<GameCubit>().state.game.challenge.budget;
+    final budget = context.read<GameCubit>().state?.game.challenge.budget;
+
+    // TODO : loading
+    if (budget == null) return const SizedBox.shrink();
+
     final setupCost = setup.cost;
-    final budgetLeft = budget - setupCost;
+
+    // budgetLeft at zero makes the slots non-interactable
+    final budgetLeft = interactable ? budget - setupCost : 0;
 
     final boardWidth = CCSize.boardSizeOf(context);
     final slotWidth = boardWidth / 6; // 6 slots per line
