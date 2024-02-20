@@ -34,7 +34,7 @@ class GameState with _$GameState {
   // game
   Position? get position {
     try {
-      return game.steps[stepCursor].position;
+      return game.steps.lastOrNull?.position;
     } catch (_) {
       return null;
     }

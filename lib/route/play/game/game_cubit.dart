@@ -91,7 +91,7 @@ class GameCubit extends Cubit<GameState?> {
     onMove(m);
   }
 
-  void onMove(Move move) {
+  Future<void> onMove(Move move) async {
     final oldState = state;
     if (oldState == null) return;
 
@@ -118,23 +118,28 @@ class GameCubit extends Cubit<GameState?> {
 
     if (status.value > GameStatus.aborted.value) startEndAnimation = true;
 
-    emit(
-      oldState.copyWith(
-        game: oldState.game.copyWith(
-          steps: List.from(oldState.game.steps)
-            ..add(
-              GameStep(
-                sanMove: SanMove(san, move),
-                position: position,
-                diff: MaterialDiff.fromBoard(position.board),
-              ),
-            ),
-          status: status,
-          winner:
-              status == GameStatus.mate
-              ? oldPosition.turn
-              : oldState.game.winner,
+    final game = oldState.game.copyWith(
+      steps: List.from(oldState.game.steps)
+        ..add(
+          GameStep(
+            sanMove: SanMove(san, move),
+            position: position,
+            diff: MaterialDiff.fromBoard(position.board),
+          ),
         ),
+      status: status,
+      winner:
+          status == GameStatus.mate ? oldPosition.turn : oldState.game.winner,
+    );
+
+    await liveGameCRUD.update(
+      documentId: game.id,
+      data: game,
+    );
+
+    return emit(
+      oldState.copyWith(
+        game: game,
         stepCursor: oldState.stepCursor + 1,
       ),
     );

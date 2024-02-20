@@ -40,7 +40,7 @@ class GameModel with _$GameModel {
       status: status,
       blackHalfFen: blackHalfFen,
       whiteHalfFen: whiteHalfFen,
-      sanMoves: steps.map((e) => e.sanMove?.san).join(' '),
+      sanMoves: steps.map((e) => e.sanMove?.san).whereType<String>().join(' '),
       winner: winner,
       prefs: prefs,
     );

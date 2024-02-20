@@ -69,6 +69,7 @@ class _GameBody extends StatelessWidget {
 
     // null means the setup is not finished
     final position = gameState.position;
+    if (position == null) return const SizedBox.shrink();
 
     final orientation = side ?? Side.white;
 
@@ -88,15 +89,14 @@ class _GameBody extends StatelessWidget {
               interactableSide:
                   game.playable ? interactableSide : InteractableSide.none,
               validMoves: game.playable &&
-                      position != null &&
                       side?.toDartchess == position.turn
                   ? algebraicLegalMoves(position)
                   : IMap(const {}),
               orientation: orientation,
-              fen: position?.fen ?? '',
+              fen: position.fen,
               lastMove: lastMove == null ? null : CGMove.fromUci(lastMove.uci),
-              sideToMove: position?.turn.toChessground,
-              isCheck: position?.isCheck,
+              sideToMove: position.turn.toChessground,
+              isCheck: position.isCheck,
               premove: gameState.premove,
             ),
             onMove: gameCubit.onCGMove,
