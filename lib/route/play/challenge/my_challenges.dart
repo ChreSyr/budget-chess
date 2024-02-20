@@ -34,18 +34,18 @@ class MyChallenges extends StatelessWidget {
             CCGap.small,
             BlocBuilder<LiveGamesCubit, Iterable<GameModel>>(
               builder: (context, liveGames) {
-                return liveGames.isEmpty
+                final gamesInProgress = liveGames.where((e) => e.playable);
+                return gamesInProgress.isEmpty
                     ? const SizedBox.shrink()
                     : Column(
                         children: [
                           CCGap.small,
                           // TODO : l10n
                           Text(
-                            'You have ${liveGames.length} games in progress.',
+                            'You have ${gamesInProgress.length} games in progress.',
                           ),
                           CCGap.small,
-                          // TODO : LiveGameTile
-                          ...liveGames
+                          ...gamesInProgress
                               .map((e) => e.challenge)
                               .map(ChallengeTile.new),
                         ],
