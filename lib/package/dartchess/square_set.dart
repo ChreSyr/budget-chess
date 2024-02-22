@@ -2,17 +2,13 @@ import 'package:crea_chess/package/dartchess/models.dart';
 import 'package:meta/meta.dart';
 
 final _max = BigInt.parse('0xffffffffffffffff');
-final _flip1 = BigInt.parse('0x00FF00FF00FF00FF');
-final _flip2 = BigInt.parse('0x0000FFFF0000FFFF');
-final _mirror1 = BigInt.parse('0x5555555555555555');
-final _mirror2 = BigInt.parse('0x3333333333333333');
-final _mirror4 = BigInt.parse('0x0f0f0f0f0f0f0f0f');
 final _fileA = BigInt.parse('0x0101010101010101');
 final _rank8 = BigInt.parse('0xff00000000000000');
 
-/// A set of squares represented by a 64 bit integer mask, using little endian
-/// rank-file (LERF) mapping.
+/// A set of squares represented by a (ranks x files) bit mask, using little
+/// endian rank-file (LERF) mapping.
 ///
+/// For standard chess :
 /// ```
 ///  8 | 56 57 58 59 60 61 62 63
 ///  7 | 48 49 50 51 52 53 54 55
@@ -27,13 +23,12 @@ final _rank8 = BigInt.parse('0xff00000000000000');
 /// ```
 @immutable
 class SquareSet {
-  /// Creates a [SquareSet] with the provided 64bit integer value.
-  SquareSet(this.value) : assert(value <= _max);
+  /// Creates a [SquareSet] with the provided (ranks x files) bit integer value.
+  const SquareSet(this.value);
 
   /// Creates a [SquareSet] with a single [Square].
   SquareSet.fromSquare(Square square)
-      : value = BigInt.one << square,
-        assert(square >= 0 && square < 64);
+      : value = BigInt.one << square;
 
   /// Creates a [SquareSet] from several [Square]s.
   SquareSet.fromSquares(Iterable<Square> squares)
@@ -42,31 +37,39 @@ class SquareSet {
             .fold(BigInt.zero, (left, right) => left | right);
 
   /// Create a [SquareSet] containing all squares of the given rank.
-  SquareSet.fromRank(int rank)
-      : value = BigInt.from(0xff) << (8 * rank),
-        assert(rank >= 0 && rank < 8);
+  SquareSet.fromRank(int rank, SquareSetSize size)
+      : value = size.rank1 << (size.files * rank),
+        assert(rank >= 0 && rank < size.ranks);
 
   /// Create a [SquareSet] containing all squares of the given file.
-  SquareSet.fromFile(int file)
-      : value = _fileA << file,
-        assert(file >= 0 && file < 8);
+  SquareSet.fromFile(int file, SquareSetSize size)
+      : value = size.file1 << file,
+        assert(file >= 0 && file < size.files);
 
   /// Create a [SquareSet] containing all squares of the given backrank [Side].
-  SquareSet.backrankOf(Side side)
-      : value = side == Side.white ? BigInt.from(0xff) : _rank8;
+  SquareSet.backrankOf(Side side, SquareSetSize size)
+      : value = side == Side.white
+            ? size.rank1
+            : size.rank1 << (size.files * (size.ranks - 1));
 
   /// 64 bit integer representing the square set.
   final BigInt value;
 
   static final empty = SquareSet(BigInt.zero);
-  static final full = SquareSet(_max);
-  static final lightSquares = SquareSet(BigInt.parse('0x55AA55AA55AA55AA'));
-  static final darkSquares = SquareSet(BigInt.parse('0xAA55AA55AA55AA55'));
-  static final diagonal = SquareSet(BigInt.parse('0x8040201008040201'));
-  static final antidiagonal = SquareSet(BigInt.parse('0x0102040810204080'));
-  static final corners = SquareSet(BigInt.parse('0x8100000000000081'));
-  static final center = SquareSet(BigInt.parse('0x0000001818000000'));
-  static final backranks = SquareSet(BigInt.parse('0xff000000000000ff'));
+  
+  // SquareSet full(SquareSetSize size) => SquareSet(size.max);
+  // SquareSet lightSquares(SquareSetSize size) => SquareSet(size.lightSquares);
+  // SquareSet darkSquares(SquareSetSize size) => SquareSet(size.darkSquares);
+  // SquareSet diagonal(SquareSetSize size) =>
+  //     SquareSet(BigInt.parse('0x8040201008040201'));
+  // SquareSet antidiagonal(SquareSetSize size) =>
+  //     SquareSet(BigInt.parse('0x0102040810204080'));
+  // SquareSet corners(SquareSetSize size) =>
+  //     SquareSet(BigInt.parse('0x8100000000000081'));
+  // SquareSet center(SquareSetSize size) =>
+  //     SquareSet(BigInt.parse('0x0000001818000000'));
+  // SquareSet backranks(SquareSetSize size) =>
+  //     SquareSet(BigInt.parse('0xff000000000000ff')); // TODO
 
   /// Bitwise right shift
   SquareSet shr(int shift) {
@@ -98,18 +101,23 @@ class SquareSet {
 
   SquareSet diff(SquareSet other) => SquareSet(value & ~other.value);
 
-  SquareSet flipVertical() {
-    var x = ((value >> 8) & _flip1) | ((value & _flip1) << 8);
-    x = ((x >> 16) & _flip2) | ((x & _flip2) << 16);
-    x = (x >> 32) | (x << 32) & _max;
-    return SquareSet(x);
+  SquareSet flipVertical(SquareSetSize size) {
+    return SquareSet(
+      List.generate(
+        size.ranks,
+        (index) =>
+            _getRank(index, size) << size.files * (size.ranks - 1 - index),
+      ).fold(BigInt.zero, (bi1, bi2) => bi1 + bi2),
+    );
   }
 
-  SquareSet mirrorHorizontal() {
-    var x = ((value >> 1) & _mirror1) | ((value & _mirror1) << 1);
-    x = ((x >> 2) & _mirror2) | ((x & _mirror2) << 2);
-    x = ((x >> 4) & _mirror4) | ((x & _mirror4) << 4);
-    return SquareSet(x);
+  SquareSet mirrorHorizontal(SquareSetSize size) {
+    return SquareSet(
+      List.generate(
+        size.files,
+        (index) => _getFile(index, size) << size.files - 1 - index,
+      ).fold(BigInt.zero, (bi1, bi2) => bi1 + bi2),
+    );
   }
 
   int get size => _nsbBigInt(value);
@@ -124,8 +132,8 @@ class SquareSet {
   /// Returns square if it is single, otherwise returns null.
   int? get singleSquare => moreThanOne ? null : last;
 
-  bool has(Square square) {
-    assert(square >= 0 && square < 64);
+  bool has(Square square, SquareSetSize size) {
+    assert(square >= 0 && square < size.ranks * size.files);
     return value & (BigInt.one << square) != BigInt.zero;
   }
 
@@ -165,26 +173,7 @@ class SquareSet {
   int get hashCode => value.hashCode;
 
   @override
-  String toString() {
-    final buffer = StringBuffer();
-    for (var square = 63; square >= 0; square--) {
-      buffer.write(has(square) ? '1' : '0');
-    }
-    final b = buffer.toString();
-    final first = int.parse(b.substring(0, 32), radix: 2)
-        .toRadixString(16)
-        .toUpperCase()
-        .padLeft(8, '0');
-    final last = int.parse(b.substring(32, 64), radix: 2)
-        .toRadixString(16)
-        .toUpperCase()
-        .padLeft(8, '0');
-    final stringVal = '$first$last';
-    if (stringVal == '0000000000000000') {
-      return 'SquareSet(0)';
-    }
-    return 'SquareSet(0x$first$last)';
-  }
+  String toString() => 'SquareSet(0x${value.toRadixString(16)})';
 
   Iterable<Square> _iterateSquares() sync* {
     var bitboard = value;
@@ -213,6 +202,14 @@ class SquareSet {
     }
 
     return lastSquare;
+  }
+  
+  BigInt _getFile(int fileIndex, SquareSetSize size) {
+    return size.file1 & (value >> fileIndex);
+  }
+
+  BigInt _getRank(int rankIndex, SquareSetSize size) {
+    return size.rank1 & (value >> (rankIndex * size.files));
   }
 }
 

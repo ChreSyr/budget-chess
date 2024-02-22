@@ -22,6 +22,7 @@ import 'package:flutter/material.dart';
 /// final squareSet = makeSquareSet(str);
 /// // SquareSet(0x0E0A12221E222212)
 /// ```
+/// TODO
 SquareSet makeSquareSet(String rep) {
   var ret = SquareSet.empty;
   final table = rep
@@ -43,20 +44,21 @@ SquareSet makeSquareSet(String rep) {
 }
 
 /// Prints the square set as a human readable string format
-String humanReadableSquareSet(SquareSet sq) {
+String humanReadableSquareSet(SquareSet sq, SquareSetSize size) {
   final buffer = StringBuffer();
-  for (var y = 7; y >= 0; y--) {
-    for (var x = 0; x < 8; x++) {
-      final square = x + y * 8;
+  for (var y = size.ranks - 1; y >= 0; y--) {
+    for (var x = 0; x < (size.files); x++) {
+      final square = x + y * size.files;
       buffer
-        ..write(sq.has(square) ? '1' : '.')
-        ..write(x < 7 ? ' ' : '\n');
+        ..write(sq.has(square, size) ? '1' : '.')
+        ..write(x < (size.files - 1) ? ' ' : '\n');
     }
   }
   return buffer.toString();
 }
 
 /// Prints the board as a human readable string format
+/// TODO
 String humanReadableBoard(Board board) {
   final buffer = StringBuffer();
   for (var y = 7; y >= 0; y--) {
@@ -103,6 +105,7 @@ int perft(Position pos, int depth, {bool shouldLog = false}) {
     for (final entry in pos.legalMoves.entries) {
       final from = entry.key;
       final dests = entry.value;
+      // TODO
       final promotions = squareRank(from) == (pos.turn == Side.white ? 6 : 1) &&
               pos.board.pawns.has(from)
           ? promotionRoles

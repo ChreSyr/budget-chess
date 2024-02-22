@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:crea_chess/package/dartchess/utils.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -86,7 +88,6 @@ class BoardSizeConverter
 }
 
 /// The number of ranks and files of a chessboard
-/// TODO : move to dartchess
 @immutable
 class BoardSize {
   factory BoardSize({required int ranks, required int files}) {
@@ -238,6 +239,132 @@ class BoardSize {
   String get emptyHalfFen => List.generate(ranks ~/ 2, (_) => files).join('/');
 }
 
+@immutable
+class SquareSetSize {
+  SquareSetSize({
+    required BoardSize boardSize,
+  })  : files = boardSize.files,
+        ranks = boardSize.ranks,
+        max = SquareSetSize._max(boardSize),
+        file1 = SquareSetSize._file1(boardSize),
+        rank1 = SquareSetSize._rank1(boardSize),
+        lightSquares = SquareSetSize._lightSquares(boardSize),
+        darkSquares = SquareSetSize._darkSquares(boardSize),
+        diagonal = SquareSetSize._diagonal(boardSize),
+        antidiagonal = SquareSetSize._antidiagonal(boardSize),
+        corners = SquareSetSize._corners(boardSize),
+        center = SquareSetSize._center(boardSize),
+        backranks = SquareSetSize._backranks(boardSize);
+
+  const SquareSetSize._({
+    required this.files,
+    required this.ranks,
+    required this.max,
+    required this.file1,
+    required this.rank1,
+    required this.lightSquares,
+    required this.darkSquares,
+    required this.diagonal,
+    required this.antidiagonal,
+    required this.corners,
+    required this.center,
+    required this.backranks,
+  });
+
+  final int files;
+  final int ranks;
+  final BigInt max; // TODO : used ?
+  final BigInt file1;
+  final BigInt rank1;
+  final BigInt lightSquares;
+  final BigInt darkSquares;
+  final BigInt diagonal;
+  final BigInt antidiagonal;
+  final BigInt corners;
+  final BigInt center;
+  final BigInt backranks;
+
+  static final standard = SquareSetSize._(
+    files: BoardSize.standard.files,
+    ranks: BoardSize.standard.ranks,
+    max: BigInt.parse('0xffffffffffffffff'),
+    file1: BigInt.parse('0x0101010101010101'),
+    rank1: BigInt.parse('0x00000000000000ff'),
+    lightSquares: BigInt.parse('0x55AA55AA55AA55AA'),
+    darkSquares: BigInt.parse('0xAA55AA55AA55AA55'),
+    diagonal: BigInt.parse('0x8040201008040201'),
+    antidiagonal: BigInt.parse('0x0102040810204080'),
+    corners: BigInt.parse('0x8100000000000081'),
+    center: BigInt.parse('0x0000001818000000'),
+    backranks: BigInt.parse('0xff000000000000ff'),
+  );
+
+  static BigInt _max(BoardSize boardSize) =>
+      (BigInt.one << (boardSize.files * boardSize.ranks)) - BigInt.one;
+
+  static BigInt _file1(BoardSize boardSize) => List.generate(
+        boardSize.ranks,
+        (index) => BigInt.one << (index * boardSize.files),
+      ).fold(BigInt.zero, (bi1, bi2) => bi1 + bi2);
+
+  static BigInt _rank1(BoardSize boardSize) =>
+      (BigInt.one << boardSize.files) - BigInt.one;
+
+  static BigInt _lightSquares(BoardSize size) => List.generate(
+        size.files * size.ranks,
+        (index) =>
+            BigInt.one <<
+            (index * 2 +
+                (size.files.isEven && ((index * 2 + 1) ~/ size.files).isOdd
+                    ? 0
+                    : 1)),
+      ).fold(BigInt.zero, (bi1, bi2) => bi1 + bi2);
+
+  static BigInt _darkSquares(BoardSize size) => List.generate(
+        size.files * size.ranks,
+        (index) =>
+            BigInt.one <<
+            (index * 2 +
+                (size.files.isEven && ((index * 2 + 1) ~/ size.files).isOdd
+                    ? 1
+                    : 0)),
+      ).fold(BigInt.zero, (bi1, bi2) => bi1 + bi2);
+
+  static BigInt _diagonal(BoardSize size) => List.generate(
+        min(size.files, size.ranks),
+        (index) => BigInt.one << (index + (index * size.files)),
+      ).fold(BigInt.zero, (bi1, bi2) => bi1 + bi2);
+
+  static BigInt _antidiagonal(BoardSize size) => List.generate(
+        min(size.files, size.ranks),
+        (index) =>
+            BigInt.one << (size.files - 1 - index + (index * size.files)),
+      ).fold(BigInt.zero, (bi1, bi2) => bi1 + bi2);
+
+  static BigInt _corners(BoardSize size) => [
+        BigInt.one,
+        BigInt.one << size.files - 1,
+        BigInt.one << size.files * (size.ranks - 1),
+        BigInt.one << (size.files * (size.ranks - 1) + size.files - 1),
+      ].fold(BigInt.zero, (bi1, bi2) => bi1 + bi2);
+
+  /// Used by king of the hill
+  static BigInt _center(BoardSize size) => List.generate(
+        size.files.isEven ? 2 : 3,
+        (file) => List.generate(
+          size.ranks.isEven ? 2 : 3,
+          (rank) =>
+              BigInt.one <<
+              (((size.files - 2) ~/ 2 + file) +
+                  (size.files * ((size.ranks - 2) ~/ 2 + rank))),
+        ).fold(BigInt.zero, (bi1, bi2) => bi1 + bi2),
+      ).fold(BigInt.zero, (bi1, bi2) => bi1 + bi2);
+
+  static BigInt _backranks(BoardSize size) => [
+        _rank1(size),
+        _rank1(size) << (size.files * (size.ranks - 1)),
+      ].fold(BigInt.zero, (bi1, bi2) => bi1 + bi2);
+}
 
 /// Number between 0 and 63 included representing a square on the board.
 ///
