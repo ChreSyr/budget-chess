@@ -7,6 +7,7 @@ class PromotionSelector extends StatelessWidget {
   const PromotionSelector({
     required this.move,
     required this.color,
+    required this.boardSize,
     required this.squareSize,
     required this.orientation,
     required this.onSelect,
@@ -15,13 +16,14 @@ class PromotionSelector extends StatelessWidget {
     super.key,
   });
 
-  final PieceAssets pieceAssets;
   final CGMove move;
   final Side color;
+  final BoardSize boardSize;
   final double squareSize;
   final Side orientation;
   final void Function(CGMove, CGPiece) onSelect;
   final void Function(CGMove) onCancel;
+  final PieceAssets pieceAssets;
 
   SquareId get squareId => move.to;
 
@@ -29,10 +31,25 @@ class PromotionSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     final file = squareId[0];
     final rank = squareId[1];
-    final coord = (orientation == Side.white && rank == '8' ||
-            orientation == Side.black && rank == '1')
-        ? Coord.fromSquareId(squareId)
-        : Coord.fromSquareId(file + (orientation == Side.white ? '4' : '5'));
+
+    const promotionRoles = [
+      Role.queen,
+      Role.knight,
+      Role.rook,
+      Role.bishop,
+    ];
+
+    final coord =
+        (orientation == Side.white && rank == boardSize.rankIds.last ||
+                orientation == Side.black && rank == '1')
+            ? Coord.fromSquareId(squareId, boardSize: boardSize)
+            : Coord.fromSquareId(
+                file +
+                    (orientation == Side.white
+                        ? promotionRoles.length.toString()
+                        : (boardSize.ranks - promotionRoles.length).toString()),
+                boardSize: boardSize,
+              );
     final offset = coord.offset(orientation, squareSize);
 
     return GestureDetector(
@@ -49,28 +66,12 @@ class PromotionSelector extends StatelessWidget {
               left: offset.dx,
               top: offset.dy,
               child: Column(
-                children: [
-                  CGPiece(
+                children: promotionRoles.map((role) {
+                  final piece = CGPiece(
                     color: color,
-                    role: Role.queen,
+                    role: role,
                     promoted: true,
-                  ),
-                  CGPiece(
-                    color: color,
-                    role: Role.knight,
-                    promoted: true,
-                  ),
-                  CGPiece(
-                    color: color,
-                    role: Role.rook,
-                    promoted: true,
-                  ),
-                  CGPiece(
-                    color: color,
-                    role: Role.bishop,
-                    promoted: true,
-                  ),
-                ].map((CGPiece piece) {
+                  );
                   return GestureDetector(
                     onTap: () => onSelect(move, piece),
                     child: Stack(

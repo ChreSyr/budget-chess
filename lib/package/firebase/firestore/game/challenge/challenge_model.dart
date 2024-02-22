@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, invalid_annotation_target
 
+import 'package:crea_chess/package/chessground/models.dart';
 import 'package:crea_chess/package/dartchess/export.dart';
 import 'package:crea_chess/package/game/speed.dart';
 import 'package:crea_chess/package/game/time_control.dart';
@@ -23,7 +24,7 @@ class ChallengeModelConverter
 
 @freezed
 class ChallengeModel with _$ChallengeModel {
-  const factory ChallengeModel({
+  factory ChallengeModel({
     required String id,
     DateTime? createdAt,
     DateTime? acceptedAt,
@@ -31,8 +32,7 @@ class ChallengeModel with _$ChallengeModel {
     @Default(Rule.chess) Rule rule,
     @Default(180) int time, // in seconds
     @Default(2) int increment, // in seconds
-    @Default(8) int boardWidth,
-    @Default(8) int boardHeight,
+    @BoardSizeConverter() @Default(BoardSize.standard) BoardSize boardSize,
     @Default(39) int budget,
   }) = _ChallengeModel;
 
@@ -48,4 +48,9 @@ class ChallengeModel with _$ChallengeModel {
   Speed get speed => timeControl.speed;
 
   bool get isAccepted => acceptedAt != null;
+
+  BoardSize get setupSize => BoardSize(
+        ranks: boardSize.ranks ~/ 2,
+        files: boardSize.files,
+      );
 }

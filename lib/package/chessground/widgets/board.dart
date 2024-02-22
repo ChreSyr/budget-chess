@@ -23,6 +23,7 @@ import 'package:flutter/widgets.dart';
 /// shows a live game, or a full user interactable board.
 class BoardWidget extends StatefulWidget {
   const BoardWidget({
+    required this.width,
     required this.size,
     required this.data,
     super.key,
@@ -32,7 +33,10 @@ class BoardWidget extends StatefulWidget {
   });
 
   /// Visal size of the board
-  final double size;
+  final double width;
+
+  /// Number of ranks & files of the board
+  final BoardSize size;
 
   /// Settings that control the theme, behavior and purpose of the board.
   final BoardSettings settings;
@@ -48,15 +52,18 @@ class BoardWidget extends StatefulWidget {
   /// If the callback is null, the board will not allow premoves.
   final void Function(CGMove?)? onPremove;
 
-  double get squareSize => size / 8;
+  double get squareSize => width / size.files;
 
   Coord? localOffset2Coord(Offset offset) {
     final x = (offset.dx / squareSize).floor();
     final y = (offset.dy / squareSize).floor();
-    final orientX = data.orientation == Side.black ? 7 - x : x;
-    final orientY = data.orientation == Side.black ? y : 7 - y;
-    if (orientX >= 0 && orientX <= 7 && orientY >= 0 && orientY <= 7) {
-      return Coord(x: orientX, y: orientY);
+    final orientX = x;
+    final orientY = size.files - 1 - y;
+    if (orientX >= 0 &&
+        orientX <= (size.files - 1) &&
+        orientY >= 0 &&
+        orientY <= (size.files - 1)) {
+      return Coord(x: orientX, y: orientY, boardSize: size);
     } else {
       return null;
     }
@@ -107,7 +114,7 @@ class _BoardState extends State<BoardWidget> {
               ? colorScheme.whiteCoordBackground
               : colorScheme.blackCoordBackground
         else
-          colorScheme.background,
+          colorScheme.background(widget.size),
         if (widget.settings.showLastMove && widget.data.lastMove != null)
           for (final squareId in widget.data.lastMove!.squares)
             if (premove == null || !premove.hasSquare(squareId))
@@ -115,7 +122,7 @@ class _BoardState extends State<BoardWidget> {
                 key: ValueKey('$squareId-lastMove'),
                 size: widget.squareSize,
                 orientation: widget.data.orientation,
-                squareId: squareId,
+                coord: Coord.fromSquareId(squareId, boardSize: widget.size),
                 child: Highlight(
                   size: widget.squareSize,
                   details: colorScheme.lastMove,
@@ -128,7 +135,7 @@ class _BoardState extends State<BoardWidget> {
               key: ValueKey('$squareId-premove'),
               size: widget.squareSize,
               orientation: widget.data.orientation,
-              squareId: squareId,
+              coord: Coord.fromSquareId(squareId, boardSize: widget.size),
               child: Highlight(
                 size: widget.squareSize,
                 details:
@@ -140,7 +147,7 @@ class _BoardState extends State<BoardWidget> {
             key: ValueKey('${selected!}-selected'),
             size: widget.squareSize,
             orientation: widget.data.orientation,
-            squareId: selected!,
+            coord: Coord.fromSquareId(selected!, boardSize: widget.size),
             child: Highlight(
               size: widget.squareSize,
               details: colorScheme.selected,
@@ -151,7 +158,7 @@ class _BoardState extends State<BoardWidget> {
             key: ValueKey('$dest-dest'),
             size: widget.squareSize,
             orientation: widget.data.orientation,
-            squareId: dest,
+            coord: Coord.fromSquareId(dest, boardSize: widget.size),
             child: MoveDest(
               size: widget.squareSize,
               color: colorScheme.validMoves,
@@ -163,7 +170,7 @@ class _BoardState extends State<BoardWidget> {
             key: ValueKey('$dest-premove-dest'),
             size: widget.squareSize,
             orientation: widget.data.orientation,
-            squareId: dest,
+            coord: Coord.fromSquareId(dest, boardSize: widget.size),
             child: MoveDest(
               size: widget.squareSize,
               color: colorScheme.validPremoves,
@@ -175,7 +182,7 @@ class _BoardState extends State<BoardWidget> {
             key: ValueKey('$checkSquare-check'),
             size: widget.squareSize,
             orientation: widget.data.orientation,
-            squareId: checkSquare,
+            coord: Coord.fromSquareId(checkSquare, boardSize: widget.size),
             child: CheckHighlight(size: widget.squareSize),
           ),
         for (final entry in fadingPieces.entries)
@@ -183,7 +190,7 @@ class _BoardState extends State<BoardWidget> {
             key: ValueKey('${entry.key}-${entry.value.kind.name}-fading'),
             size: widget.squareSize,
             orientation: widget.data.orientation,
-            squareId: entry.key,
+            coord: Coord.fromSquareId(entry.key, boardSize: widget.size),
             child: PieceFadeOut(
               duration: widget.settings.animationDuration,
               piece: entry.value,
@@ -202,7 +209,7 @@ class _BoardState extends State<BoardWidget> {
               key: ValueKey('${entry.key}-${entry.value.kind.name}'),
               size: widget.squareSize,
               orientation: widget.data.orientation,
-              squareId: entry.key,
+              coord: Coord.fromSquareId(entry.key, boardSize: widget.size),
               child: PieceWidget(
                 piece: entry.value,
                 size: widget.squareSize,
@@ -215,7 +222,7 @@ class _BoardState extends State<BoardWidget> {
             key: ValueKey('${entry.key}-${entry.value.$1.piece.kind.name}'),
             size: widget.squareSize,
             orientation: widget.data.orientation,
-            squareId: entry.key,
+            coord: Coord.fromSquareId(entry.key, boardSize: widget.size),
             child: PieceTranslation(
               fromCoord: entry.value.$1.coord,
               toCoord: entry.value.$2.coord,
@@ -240,25 +247,29 @@ class _BoardState extends State<BoardWidget> {
             squareSize: widget.squareSize,
             orientation: widget.data.orientation,
             squareId: entry.key,
+            boardSize: widget.size,
             annotation: entry.value,
           ),
         for (final shape in shapes)
           ShapeWidget(
             shape: shape,
-            size: widget.size,
+            boardSize: widget.size,
+            boardSquareSize: widget.squareSize,
             orientation: widget.data.orientation,
           ),
         if (_shapeAvatar != null)
           ShapeWidget(
             shape: _shapeAvatar!,
-            size: widget.size,
+            boardSize: widget.size,
+            boardSquareSize: widget.squareSize,
             orientation: widget.data.orientation,
           ),
       ],
     );
 
-    return SizedBox.square(
-      dimension: widget.size,
+    return SizedBox(
+      width: widget.width,
+      height: widget.squareSize * widget.size.ranks,
       child: Stack(
         children: [
           // Consider using Listener instead as we don't control the drag start
@@ -300,6 +311,7 @@ class _BoardState extends State<BoardWidget> {
             PromotionSelector(
               pieceAssets: widget.settings.pieceAssets,
               move: _promotionMove!,
+              boardSize: widget.size,
               squareSize: widget.squareSize,
               color: widget.data.sideToMove!,
               orientation: widget.data.orientation,
@@ -314,7 +326,7 @@ class _BoardState extends State<BoardWidget> {
   @override
   void initState() {
     super.initState();
-    pieces = readFen(widget.data.fen);
+    pieces = readFen(fen: widget.data.fen, boardSize: widget.size);
   }
 
   @override
@@ -351,17 +363,17 @@ class _BoardState extends State<BoardWidget> {
     }
     translatingPieces = {};
     fadingPieces = {};
-    final newPieces = readFen(widget.data.fen);
+    final newPieces = readFen(fen: widget.data.fen, boardSize: widget.size);
     final newOnSquare = <PositionedPiece>[];
     final missingOnSquare = <PositionedPiece>[];
     final animatedOrigins = <String>{};
-    for (final s in allSquares) {
+    for (final s in widget.size.allSquareIds) {
       if (s == _lastDrop?.from || s == _lastDrop?.to) {
         continue;
       }
       final oldP = pieces[s];
       final newP = newPieces[s];
-      final squareCoord = Coord.fromSquareId(s);
+      final squareCoord = Coord.fromSquareId(s, boardSize: widget.size);
       if (newP != null) {
         if (oldP != null) {
           if (newP != oldP) {
@@ -448,8 +460,9 @@ class _BoardState extends State<BoardWidget> {
       setState(() {
         selected = squareId;
         _premoveDests = premovesOf(
-          squareId,
-          pieces,
+          squareId: squareId,
+          boardSize: widget.size,
+          pieces: pieces,
           canCastle: widget.settings.enablePremoveCastling,
         );
       });
@@ -558,7 +571,7 @@ class _BoardState extends State<BoardWidget> {
       // Initialize shapeAvatar on tap down (Analogous to website)
       _shapeAvatar = Circle(
         color: widget.settings.drawShape.newShapeColor,
-        orig: squareId,
+        orig: Coord.fromSquareId(squareId, boardSize: widget.size),
       );
     });
   }
@@ -571,7 +584,9 @@ class _BoardState extends State<BoardWidget> {
     if (squareId == null) return;
     setState(() {
       // Update shapeAvatar on starting pan
-      _shapeAvatar = _shapeAvatar!.newDest(squareId);
+      _shapeAvatar = _shapeAvatar!.newDest(
+        Coord.fromSquareId(squareId, boardSize: widget.size),
+      );
     });
   }
 
@@ -581,12 +596,15 @@ class _BoardState extends State<BoardWidget> {
         widget.settings.drawShape.enable == false) return;
     final squareId = widget.localOffset2SquareId(details.localPosition);
     if (squareId == null ||
-        (_shapeAvatar! is Arrow && squareId == (_shapeAvatar! as Arrow).dest)) {
+        (_shapeAvatar! is Arrow &&
+            squareId == (_shapeAvatar! as Arrow).dest.squareId)) {
       return;
     }
     setState(() {
       // Update shapeAvatar on panning once a new square is reached
-      _shapeAvatar = _shapeAvatar!.newDest(squareId);
+      _shapeAvatar = _shapeAvatar!.newDest(
+        Coord.fromSquareId(squareId, boardSize: widget.size),
+      );
     });
   }
 
@@ -613,7 +631,7 @@ class _BoardState extends State<BoardWidget> {
     widget.settings.drawShape.onCompleteShape?.call(
       Circle(
         color: widget.settings.drawShape.newShapeColor,
-        orig: squareId,
+        orig: Coord.fromSquareId(squareId, boardSize: widget.size),
       ),
     );
     setState(() {
@@ -631,7 +649,7 @@ class _BoardState extends State<BoardWidget> {
 
   void _onPromotionCancel(CGMove move) {
     setState(() {
-      pieces = readFen(widget.data.fen);
+      pieces = readFen(fen: widget.data.fen, boardSize: widget.size);
       _promotionMove = null;
     });
   }
@@ -669,8 +687,9 @@ class _BoardState extends State<BoardWidget> {
     return orig != dest &&
         _isPremovable(orig) &&
         premovesOf(
-          orig,
-          pieces,
+          squareId: orig,
+          boardSize: widget.size,
+          pieces: pieces,
           canCastle: widget.settings.enablePremoveCastling,
         ).contains(dest);
   }

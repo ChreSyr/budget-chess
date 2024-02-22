@@ -10,6 +10,7 @@ class BoardAnnotation extends StatefulWidget {
     required this.squareSize,
     required this.orientation,
     required this.squareId,
+    required this.boardSize,
     super.key,
   });
   final Annotation annotation;
@@ -17,6 +18,7 @@ class BoardAnnotation extends StatefulWidget {
   final double squareSize;
   final Side orientation;
   final SquareId squareId;
+  final BoardSize boardSize;
 
   @override
   State<BoardAnnotation> createState() => _BoardAnnotationState();
@@ -53,8 +55,10 @@ class _BoardAnnotationState extends State<BoardAnnotation> {
 
   @override
   Widget build(BuildContext context) {
-    final squareOffset = Coord.fromSquareId(widget.squareId)
-        .offset(widget.orientation, widget.squareSize);
+    final squareOffset = Coord.fromSquareId(
+      widget.squareId,
+      boardSize: widget.boardSize,
+    ).offset(widget.orientation, widget.squareSize);
     final size = widget.squareSize * 0.48;
     final onRightEdge = widget.orientation == Side.white
         ? widget.squareId[0] == 'h'

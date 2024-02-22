@@ -8,18 +8,15 @@ part of 'setup_model.dart';
 
 _$SetupModelImpl _$$SetupModelImplFromJson(Map<String, dynamic> json) =>
     _$SetupModelImpl(
-      halfFen: json['halfFen'] as String,
-      betterWithSide:
-          $enumDecodeNullable(_$SideEnumMap, json['betterWithSide']),
+      fen: json['fen'] as String,
+      boardSize: json['boardSize'] == null
+          ? BoardSize.standard
+          : const BoardSizeConverter()
+              .fromJson(json['boardSize'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$SetupModelImplToJson(_$SetupModelImpl instance) =>
     <String, dynamic>{
-      'halfFen': instance.halfFen,
-      'betterWithSide': _$SideEnumMap[instance.betterWithSide],
+      'fen': instance.fen,
+      'boardSize': const BoardSizeConverter().toJson(instance.boardSize),
     };
-
-const _$SideEnumMap = {
-  Side.white: 'white',
-  Side.black: 'black',
-};

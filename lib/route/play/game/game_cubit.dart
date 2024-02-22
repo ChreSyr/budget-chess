@@ -37,10 +37,10 @@ class GameCubit extends Cubit<GameState?> {
     final GameModel game;
 
     final whiteHalfFen = forSide == Side.white
-        ? setup.halfFenAs(forSide)
+        ? setup.fenAs(forSide)
         : oldState.game.whiteHalfFen;
     final blackHalfFen = forSide == Side.black
-        ? setup.halfFenAs(forSide)
+        ? setup.fenAs(forSide)
         : oldState.game.blackHalfFen;
 
     if (blackHalfFen == null || whiteHalfFen == null) {

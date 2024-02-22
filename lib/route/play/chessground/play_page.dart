@@ -95,7 +95,8 @@ class _HomePageState extends State<PlayPage> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             BoardWidget(
-              size: screenWidth,
+              width: screenWidth,
+              size: BoardSize(ranks: 8, files: 8),
               settings: BoardSettings(
                 pieceAssets: pieceSet?.assets ?? pieceAssets,
                 colorScheme: boardTheme.colors,

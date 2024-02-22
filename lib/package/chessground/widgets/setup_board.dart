@@ -1,6 +1,7 @@
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/chessground/export.dart';
 import 'package:crea_chess/package/dartchess/export.dart';
+import 'package:crea_chess/package/firebase/export.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -10,9 +11,9 @@ import 'package:flutter/widgets.dart';
 /// This widget can be used to display a static board, a dynamic board that
 /// shows a live game, or a full user interactable board.
 class SetupBoard extends StatefulWidget {
-  const SetupBoard({
-    required this.size,
-    required String halfFen,
+  SetupBoard({
+    required this.width,
+    required SetupModel setup,
     required this.color,
     super.key,
     this.settings = const BoardSettings(),
@@ -21,10 +22,14 @@ class SetupBoard extends StatefulWidget {
     this.onMove,
     this.onRemove,
     this.interactable = true,
-  }) : fen = '8/8/8/8/$halfFen';
+  })  : size = setup.boardSize,
+        fen = setup.fenAs(Side.white);
 
   /// Visal size of the board
-  final double size;
+  final double width;
+
+  /// Number of ranks & files of the board
+  final BoardSize size;
 
   /// Settings that control the theme, behavior and purpose of the board.
   final BoardSettings settings;
@@ -49,15 +54,30 @@ class SetupBoard extends StatefulWidget {
 
   final bool interactable;
 
-  double get squareSize => size / 8;
+  double get squareSize => width / size.files;
+
+  // Coord? localOffset2Coord(Offset offset) {
+  //   final x = (offset.dx / squareSize).floor();
+  //   final y = (offset.dy / squareSize).floor();
+  //   final orientX = x;
+  //   final orientY = 7 - y;
+  //   if (orientX >= 0 && orientX <= 7 && orientY >= 0 && orientY <= 7) {
+  //     return Coord(x: orientX, y: orientY);
+  //   } else {
+  //     return null;
+  //   }
+  // }
 
   Coord? localOffset2Coord(Offset offset) {
     final x = (offset.dx / squareSize).floor();
     final y = (offset.dy / squareSize).floor();
     final orientX = x;
-    final orientY = 7 - y;
-    if (orientX >= 0 && orientX <= 7 && orientY >= 0 && orientY <= 7) {
-      return Coord(x: orientX, y: orientY);
+    final orientY = (size.ranks - 1) - y;
+    if (orientX >= 0 &&
+        orientX <= (size.files - 1) &&
+        orientY >= 0 &&
+        orientY <= (size.ranks - 1)) {
+      return Coord(x: orientX, y: orientY, boardSize: size);
     } else {
       return null;
     }
@@ -78,7 +98,7 @@ class _BoardState extends State<SetupBoard> {
   _DragAvatar? _dragAvatar;
   SquareId? _dragOrigin;
   SquareId? _dropTarget;
-  List<SquareId> validDests = [];
+  List<SquareId> dragTargets = [];
 
   @override
   Widget build(BuildContext context) {
@@ -87,13 +107,14 @@ class _BoardState extends State<SetupBoard> {
 
     final Widget board = Stack(
       children: [
-        colorScheme.background,
+        colorScheme.background(widget.size),
         if (_dragOrigin != null && _dragAvatar != null)
           PositionedSquare(
             key: ValueKey('${_dragOrigin!}-dragOrigin'),
             size: widget.squareSize,
             orientation: orientation,
             squareId: _dragOrigin!,
+            boardSize: widget.size,
             child: Highlight(
               size: widget.squareSize,
               details: colorScheme.selected,
@@ -106,17 +127,19 @@ class _BoardState extends State<SetupBoard> {
               size: widget.squareSize,
               orientation: orientation,
               squareId: entry.key,
+              boardSize: widget.size,
               child: PieceWidget(
                 piece: entry.value,
                 size: widget.squareSize,
                 pieceAssets: widget.settings.pieceAssets,
               ),
             ),
-        for (final squareId in validDests)
+        for (final squareId in dragTargets)
           PositionedSquare(
             size: widget.squareSize,
             orientation: orientation,
             squareId: squareId,
+            boardSize: widget.size,
             child: DragTarget<Role>(
               onAccept: (role) {
                 _onDrop(squareId, role);
@@ -141,7 +164,10 @@ class _BoardState extends State<SetupBoard> {
         if (_dropTarget != null)
           Builder(
             builder: (context) {
-              final coord = Coord.fromSquareId(_dropTarget!);
+              final coord = Coord.fromSquareId(
+                _dropTarget!,
+                boardSize: widget.size,
+              );
               final pos = _dropTargetLocalOffsetFromCoord(coord);
               if (pos == null) return CCGap.zero;
 
@@ -164,27 +190,22 @@ class _BoardState extends State<SetupBoard> {
       ],
     );
 
-    return SizedBox.square(
-      dimension: widget.size,
+    return SizedBox(
+      width: widget.width,
+      height: widget.squareSize * widget.size.ranks,
       child: Stack(
         children: [
           if (widget.interactable)
             GestureDetector(
-            onPanDown: _onPanDownPiece,
-            onPanUpdate: _onPanUpdatePiece,
-            onPanEnd: _onPanEndPiece,
-            onPanCancel: _onPanCancelPiece,
-            dragStartBehavior: DragStartBehavior.down,
-            child: board,
+              onPanDown: _onPanDownPiece,
+              onPanUpdate: _onPanUpdatePiece,
+              onPanEnd: _onPanEndPiece,
+              onPanCancel: _onPanCancelPiece,
+              dragStartBehavior: DragStartBehavior.down,
+              child: board,
             )
           else
             board,
-          // sail above enemy's territory
-          Container(
-            color: const Color.fromARGB(128, 0, 0, 0),
-            height: widget.size / 2,
-            width: widget.size,
-          ),
         ],
       ),
     );
@@ -193,10 +214,16 @@ class _BoardState extends State<SetupBoard> {
   @override
   void initState() {
     super.initState();
-    pieces = readFen(widget.fen);
-    for (var rank = 0; rank < 4; rank++) {
-      for (var file = 0; file < 8; file++) {
-        validDests.add(Coord(x: file, y: rank).squareId);
+    pieces = readFen(fen: widget.fen, boardSize: widget.size);
+    for (var rank = 0; rank < widget.size.ranks; rank++) {
+      for (var file = 0; file < widget.size.files; file++) {
+        dragTargets.add(
+          Coord(
+            x: file,
+            y: rank,
+            boardSize: widget.size,
+          ).squareId,
+        );
       }
     }
   }
@@ -211,7 +238,7 @@ class _BoardState extends State<SetupBoard> {
   void didUpdateWidget(SetupBoard oldBoard) {
     super.didUpdateWidget(oldBoard);
     if (oldBoard.fen != widget.fen) {
-      pieces = readFen(widget.fen);
+      pieces = readFen(fen: widget.fen, boardSize: widget.size);
     }
   }
 
@@ -338,7 +365,7 @@ class _BoardState extends State<SetupBoard> {
   bool _isMovable(SquareId squareId) => pieces[squareId] != null;
 
   bool _canMove(SquareId orig, SquareId dest) {
-    return orig != dest && validDests.contains(dest);
+    return orig != dest && dragTargets.contains(dest);
   }
 
   void _tryMoveTo(SquareId squareId) {
@@ -447,6 +474,7 @@ class PositionedSquare extends StatelessWidget {
     required this.size,
     required this.orientation,
     required this.squareId,
+    required this.boardSize,
     super.key,
   });
 
@@ -454,10 +482,12 @@ class PositionedSquare extends StatelessWidget {
   final double size;
   final Side orientation;
   final SquareId squareId;
+  final BoardSize boardSize;
 
   @override
   Widget build(BuildContext context) {
-    final offset = Coord.fromSquareId(squareId).offset(orientation, size);
+    final offset = Coord.fromSquareId(squareId, boardSize: boardSize)
+        .offset(orientation, size);
     return Positioned(
       width: size,
       height: size,

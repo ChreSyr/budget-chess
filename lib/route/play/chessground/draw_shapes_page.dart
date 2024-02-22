@@ -40,7 +40,8 @@ class _DrawShapesPageState extends State<DrawShapesPage> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             BoardWidget(
-              size: screenWidth,
+              width: screenWidth,
+              size: BoardSize(ranks: 8, files: 8),
               settings: BoardSettings(
                 pieceAssets: pieceSet.assets,
                 colorScheme: boardTheme.colors,

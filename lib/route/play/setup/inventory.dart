@@ -28,7 +28,7 @@ class Inventory extends StatelessWidget {
   Widget build(BuildContext context) {
     final setup = context.watch<SetupCubit>().state;
     final inventory = context.read<InventoryCubit>().state;
-    final leftInventory = inventory.less(fen: setup.halfFenAs(Side.white));
+    final leftInventory = inventory.less(setup: setup);
 
     final budget = context.read<GameCubit>().state?.game.challenge.budget;
 

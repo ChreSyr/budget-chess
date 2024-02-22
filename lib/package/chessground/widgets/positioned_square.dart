@@ -12,18 +12,18 @@ class PositionedSquare extends StatelessWidget {
     required this.child,
     required this.size,
     required this.orientation,
-    required this.squareId,
+    required this.coord,
     super.key,
   });
 
   final Widget child;
   final double size;
   final Side orientation;
-  final SquareId squareId;
+  final Coord coord;
 
   @override
   Widget build(BuildContext context) {
-    final offset = Coord.fromSquareId(squareId).offset(orientation, size);
+    final offset = coord.offset(orientation, size);
     return Positioned(
       width: size,
       height: size,

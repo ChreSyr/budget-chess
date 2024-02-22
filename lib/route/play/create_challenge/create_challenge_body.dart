@@ -195,7 +195,9 @@ class _CreateChallengeBody extends StatelessWidget {
                   //     context.pop();
                   //   },
                   // ),
-                  child: Text(form.boardSize.value.toString()),
+                  child: Text(
+                    '${form.boardSize.value.ranks} x ${form.boardSize.value.files}',
+                  ),
                 ),
               ),
               CCGap.large,

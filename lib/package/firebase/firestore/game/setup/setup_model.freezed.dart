@@ -21,8 +21,9 @@ SetupModel _$SetupModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$SetupModel {
   @protected
-  String get halfFen => throw _privateConstructorUsedError;
-  Side? get betterWithSide => throw _privateConstructorUsedError;
+  String get fen => throw _privateConstructorUsedError;
+  @BoardSizeConverter()
+  BoardSize get boardSize => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -36,7 +37,7 @@ abstract class $SetupModelCopyWith<$Res> {
           SetupModel value, $Res Function(SetupModel) then) =
       _$SetupModelCopyWithImpl<$Res, SetupModel>;
   @useResult
-  $Res call({@protected String halfFen, Side? betterWithSide});
+  $Res call({@protected String fen, @BoardSizeConverter() BoardSize boardSize});
 }
 
 /// @nodoc
@@ -52,18 +53,18 @@ class _$SetupModelCopyWithImpl<$Res, $Val extends SetupModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? halfFen = null,
-    Object? betterWithSide = freezed,
+    Object? fen = null,
+    Object? boardSize = null,
   }) {
     return _then(_value.copyWith(
-      halfFen: null == halfFen
-          ? _value.halfFen
-          : halfFen // ignore: cast_nullable_to_non_nullable
+      fen: null == fen
+          ? _value.fen
+          : fen // ignore: cast_nullable_to_non_nullable
               as String,
-      betterWithSide: freezed == betterWithSide
-          ? _value.betterWithSide
-          : betterWithSide // ignore: cast_nullable_to_non_nullable
-              as Side?,
+      boardSize: null == boardSize
+          ? _value.boardSize
+          : boardSize // ignore: cast_nullable_to_non_nullable
+              as BoardSize,
     ) as $Val);
   }
 }
@@ -76,7 +77,7 @@ abstract class _$$SetupModelImplCopyWith<$Res>
       __$$SetupModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({@protected String halfFen, Side? betterWithSide});
+  $Res call({@protected String fen, @BoardSizeConverter() BoardSize boardSize});
 }
 
 /// @nodoc
@@ -90,18 +91,18 @@ class __$$SetupModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? halfFen = null,
-    Object? betterWithSide = freezed,
+    Object? fen = null,
+    Object? boardSize = null,
   }) {
     return _then(_$SetupModelImpl(
-      halfFen: null == halfFen
-          ? _value.halfFen
-          : halfFen // ignore: cast_nullable_to_non_nullable
+      fen: null == fen
+          ? _value.fen
+          : fen // ignore: cast_nullable_to_non_nullable
               as String,
-      betterWithSide: freezed == betterWithSide
-          ? _value.betterWithSide
-          : betterWithSide // ignore: cast_nullable_to_non_nullable
-              as Side?,
+      boardSize: null == boardSize
+          ? _value.boardSize
+          : boardSize // ignore: cast_nullable_to_non_nullable
+              as BoardSize,
     ));
   }
 }
@@ -110,7 +111,8 @@ class __$$SetupModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$SetupModelImpl extends _SetupModel {
   const _$SetupModelImpl(
-      {@protected required this.halfFen, this.betterWithSide})
+      {@protected required this.fen,
+      @BoardSizeConverter() this.boardSize = BoardSize.standard})
       : super._();
 
   factory _$SetupModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -118,13 +120,15 @@ class _$SetupModelImpl extends _SetupModel {
 
   @override
   @protected
-  final String halfFen;
+  final String fen;
   @override
-  final Side? betterWithSide;
+  @JsonKey()
+  @BoardSizeConverter()
+  final BoardSize boardSize;
 
   @override
   String toString() {
-    return 'SetupModel(halfFen: $halfFen, betterWithSide: $betterWithSide)';
+    return 'SetupModel(fen: $fen, boardSize: $boardSize)';
   }
 
   @override
@@ -132,14 +136,14 @@ class _$SetupModelImpl extends _SetupModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$SetupModelImpl &&
-            (identical(other.halfFen, halfFen) || other.halfFen == halfFen) &&
-            (identical(other.betterWithSide, betterWithSide) ||
-                other.betterWithSide == betterWithSide));
+            (identical(other.fen, fen) || other.fen == fen) &&
+            (identical(other.boardSize, boardSize) ||
+                other.boardSize == boardSize));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, halfFen, betterWithSide);
+  int get hashCode => Object.hash(runtimeType, fen, boardSize);
 
   @JsonKey(ignore: true)
   @override
@@ -157,8 +161,8 @@ class _$SetupModelImpl extends _SetupModel {
 
 abstract class _SetupModel extends SetupModel {
   const factory _SetupModel(
-      {@protected required final String halfFen,
-      final Side? betterWithSide}) = _$SetupModelImpl;
+      {@protected required final String fen,
+      @BoardSizeConverter() final BoardSize boardSize}) = _$SetupModelImpl;
   const _SetupModel._() : super._();
 
   factory _SetupModel.fromJson(Map<String, dynamic> json) =
@@ -166,9 +170,10 @@ abstract class _SetupModel extends SetupModel {
 
   @override
   @protected
-  String get halfFen;
+  String get fen;
   @override
-  Side? get betterWithSide;
+  @BoardSizeConverter()
+  BoardSize get boardSize;
   @override
   @JsonKey(ignore: true)
   _$$SetupModelImplCopyWith<_$SetupModelImpl> get copyWith =>

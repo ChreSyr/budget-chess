@@ -3,6 +3,7 @@ import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/chessground/widgets/setup_board.dart';
 import 'package:crea_chess/package/dartchess/export.dart';
+import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/route/play/game/game_cubit.dart';
 import 'package:crea_chess/route/play/setup/board_settings_cubit.dart';
 import 'package:crea_chess/route/play/setup/inventory.dart';
@@ -16,9 +17,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SetupBody extends StatelessWidget {
-  const SetupBody({required this.side, super.key});
+  const SetupBody({required this.side, required this.challenge, super.key});
 
   final Side side;
+  final ChallengeModel challenge;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,7 @@ class SetupBody extends StatelessWidget {
         BlocProvider(
           create: (BuildContext context) => SetupCubit(
             side: side,
-            halfFen: '8/8/8/8',
+            setup: SetupModel.fromBoardSize(challenge.setupSize),
           ),
         ),
         BlocProvider(
@@ -58,6 +60,8 @@ class _SetupBody extends StatelessWidget {
     final side = setupCubit.side;
     final setup = setupCubit.state;
 
+    assert(setup.boardSize == challenge.setupSize);
+
     final validatedSetup = game.sideHasSetup(side);
 
     final settings = context.watch<BoardSettingsCubit>().state;
@@ -67,8 +71,8 @@ class _SetupBody extends StatelessWidget {
         BlocBuilder<SelectedRoleCubit, Role?>(
           builder: (context, selectedRole) {
             return SetupBoard(
-              size: CCSize.boardSizeOf(context),
-              halfFen: setup.halfFenAs(side),
+              width: CCSize.boardSizeOf(context),
+              setup: setup,
               color: side,
               onAdd: selectedRole == null
                   ? null

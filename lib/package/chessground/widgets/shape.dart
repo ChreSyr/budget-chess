@@ -7,19 +7,22 @@ import 'package:flutter/widgets.dart';
 class ShapeWidget extends StatelessWidget {
   const ShapeWidget({
     required this.shape,
-    required this.size,
+    required this.boardSize,
+    required this.boardSquareSize,
     required this.orientation,
     super.key,
   });
 
   final Shape shape;
-  final double size;
+  final BoardSize boardSize;
+  final double boardSquareSize;
   final Side orientation;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox.square(
-      dimension: size,
+    return SizedBox(
+      height: boardSize.ranks * boardSquareSize,
+      width: boardSize.files * boardSquareSize,
       child: CustomPaint(
         painter: switch (shape) {
           Arrow(
@@ -30,11 +33,11 @@ class ShapeWidget extends StatelessWidget {
             _ArrowPainter(
               color,
               orientation,
-              Coord.fromSquareId(orig),
-              Coord.fromSquareId(dest),
+              orig,
+              dest,
             ),
           Circle(color: final color, orig: final orig) =>
-            _CirclePainter(color, orientation, Coord.fromSquareId(orig)),
+            _CirclePainter(color, orientation, orig),
         },
       ),
     );

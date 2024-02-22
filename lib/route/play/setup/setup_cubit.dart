@@ -5,17 +5,16 @@ import 'package:crea_chess/package/firebase/firestore/game/setup/setup_model.dar
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 class SetupCubit extends HydratedCubit<SetupModel> {
-  SetupCubit({required this.side, required String halfFen})
-      : super(
-          SetupModel(
-            halfFen: halfFen,
-          ),
-        );
+  SetupCubit({required this.side, required SetupModel setup}) : super(setup) {
+    // required because of the hydratation of the cubit
+    if (state.boardSize != setup.boardSize) emit(setup);
+  }
 
   final Side side;
 
-  Board get board => Board.parseFen(
-        '8/8/8/8/${state.halfFenAs(side)}',
+  Board get fullboard => Board.parseFen(
+        // TODO : dartchess BoardSize, then only give the fen here
+        '${state.boardSize.emptyFen}/${state.fenAs(side)}',
       );
 
   void onDrop(CGDropMove move) {
@@ -24,7 +23,7 @@ class SetupCubit extends HydratedCubit<SetupModel> {
     final role = Role.fromChar(move.role.char);
     if (role == null) return;
 
-    final newBoard = board.setPieceAt(
+    final newBoard = fullboard.setPieceAt(
       to,
       Piece(
         color: side == Side.white ? Side.white : Side.black,
@@ -32,27 +31,27 @@ class SetupCubit extends HydratedCubit<SetupModel> {
       ),
     );
 
-    emit(state.copyWith(halfFen: newBoard.fen.substring(8)));
+    emit(state.copyWith(fen: newBoard.fen.substring(8)));
   }
 
   void onMove(CGMove move) {
     final from = parseSquare(move.from);
     final to = parseSquare(move.to);
     if (from == null || to == null) return;
-    final piece = board.pieceAt(from);
+    final piece = fullboard.pieceAt(from);
     if (piece == null) return;
-    var newBoard = board.removePieceAt(from);
+    var newBoard = fullboard.removePieceAt(from);
     newBoard = newBoard.setPieceAt(to, piece);
 
-    emit(state.copyWith(halfFen: newBoard.fen.substring(8)));
+    emit(state.copyWith(fen: newBoard.fen.substring(8)));
   }
 
   void onRemove(SquareId squareId) {
     final square = parseSquare(squareId);
     if (square == null) return;
-    final newBoard = board.removePieceAt(square);
+    final newBoard = fullboard.removePieceAt(square);
 
-    emit(state.copyWith(halfFen: newBoard.fen.substring(8)));
+    emit(state.copyWith(fen: newBoard.fen.substring(8)));
   }
 
   @override

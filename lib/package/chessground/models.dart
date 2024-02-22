@@ -1,6 +1,7 @@
 import 'package:crea_chess/package/dartchess/export.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/widgets.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 /// The side that can interact with the board.
 enum InteractableSide { both, none, white, black }
@@ -65,23 +66,171 @@ typedef Pieces = Map<SquareId, CGPiece>;
 /// Sets of each valid destinations for an origin square.
 typedef ValidMoves = IMap<SquareId, ISet<SquareId>>;
 
-/// Files of the chessboard.
-const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+class BoardSizeConverter
+    implements JsonConverter<BoardSize, Map<String, dynamic>> {
+  const BoardSizeConverter();
 
-/// Ranks of the chessboard.
-const ranks = ['1', '2', '3', '4', '5', '6', '7', '8'];
+  @override
+  BoardSize fromJson(Map<String, dynamic> json) {
+    return BoardSize.fromJson(json);
+  }
 
-/// All the squares of the chessboard.
-final List<SquareId> allSquares = List.unmodifiable([
-  for (final f in files)
-    for (final r in ranks) '$f$r',
-]);
+  @override
+  Map<String, dynamic> toJson(BoardSize data) => data.toJson();
+}
 
-/// All the coordinates of the chessboard.
-final List<Coord> allCoords = List.unmodifiable([
-  for (final f in files)
-    for (final r in ranks) Coord.fromSquareId('$f$r'),
-]);
+/// The number of ranks and files of a chessboard
+/// TODO : move to dartchess
+@immutable
+class BoardSize {
+  factory BoardSize({required int ranks, required int files}) {
+    final rankIds = _generateRankIds(ranks);
+    final fileIds = _generateFileIds(files);
+    return BoardSize._(
+      ranks: ranks,
+      files: files,
+      rankIds: rankIds,
+      fileIds: fileIds,
+      allSquareIds: List.unmodifiable([
+        for (final f in _generateFileIds(files))
+          for (final r in _generateRankIds(ranks)) '$f$r',
+      ]),
+    );
+  }
+
+  const BoardSize._({
+    required this.ranks,
+    required this.files,
+    required this.rankIds,
+    required this.fileIds,
+    required this.allSquareIds,
+  })  : assert(ranks <= 10),
+        assert(files <= 26);
+
+  factory BoardSize.fromJson(Map<String, dynamic> json) {
+    return BoardSize(
+      ranks: json['ranks'] as int,
+      files: json['files'] as int,
+    );
+  }
+
+  final int ranks;
+  final int files;
+  final List<String> rankIds;
+  final List<String> fileIds;
+  final List<SquareId> allSquareIds;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'ranks': ranks,
+      'files': files,
+    };
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is BoardSize && other.ranks == ranks && other.files == files;
+  }
+
+  @override
+  int get hashCode => ranks.hashCode ^ files.hashCode;
+
+  static List<String> _generateRankIds(int ranks) => List.unmodifiable(
+        List.generate(
+          ranks,
+          (index) => (1 + index).toString(),
+        ),
+      );
+
+  static List<String> _generateFileIds(int files) => List.unmodifiable(
+        List.generate(
+          files,
+          (index) => String.fromCharCode(97 + index),
+        ),
+      );
+
+  static const BoardSize standard = BoardSize._(
+    ranks: 8,
+    files: 8,
+    rankIds: ['1', '2', '3', '4', '5', '6', '7', '8'],
+    fileIds: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
+    allSquareIds: [
+      'a1',
+      'a2',
+      'a3',
+      'a4',
+      'a5',
+      'a6',
+      'a7',
+      'a8',
+      'b1',
+      'b2',
+      'b3',
+      'b4',
+      'b5',
+      'b6',
+      'b7',
+      'b8',
+      'c1',
+      'c2',
+      'c3',
+      'c4',
+      'c5',
+      'c6',
+      'c7',
+      'c8',
+      'd1',
+      'd2',
+      'd3',
+      'd4',
+      'd5',
+      'd6',
+      'd7',
+      'd8',
+      'e1',
+      'e2',
+      'e3',
+      'e4',
+      'e5',
+      'e6',
+      'e7',
+      'e8',
+      'f1',
+      'f2',
+      'f3',
+      'f4',
+      'f5',
+      'f6',
+      'f7',
+      'f8',
+      'g1',
+      'g2',
+      'g3',
+      'g4',
+      'g5',
+      'g6',
+      'g7',
+      'g8',
+      'h1',
+      'h2',
+      'h3',
+      'h4',
+      'h5',
+      'h6',
+      'h7',
+      'h8',
+    ],
+  );
+
+  @override
+  String toString() => 'BoardSize(files:$files, ranks:$ranks)';
+
+  String get emptyFen => List.generate(ranks, (_) => files).join('/');
+
+  String get emptyHalfFen => List.generate(ranks ~/ 2, (_) => files).join('/');
+}
 
 /// Square highlight color or image on the chessboard.
 class HighlightDetails {
@@ -102,24 +251,28 @@ class HighlightDetails {
 /// For instance a1 is (0, 0), a2 is (0, 1), etc.
 @immutable
 class Coord {
-  const Coord({
+  Coord({
     required this.x,
     required this.y,
-  })  : assert(x >= 0 && x <= 7),
-        assert(y >= 0 && y <= 7);
+    required this.boardSize,
+  })  : assert(x >= 0 && x < boardSize.files),
+        assert(y >= 0 && y < boardSize.ranks);
 
-  Coord.fromSquareId(SquareId id)
-      : x = id.codeUnitAt(0) - 97,
-        y = id.codeUnitAt(1) - 49;
+  Coord.fromSquareId(SquareId squareId, {required this.boardSize})
+      : x = squareId.codeUnitAt(0) - 97,
+        y = squareId.codeUnitAt(1) - 49;
 
   final int x;
   final int y;
+  final BoardSize boardSize;
 
-  SquareId get squareId => allSquares[8 * x + y];
+  SquareId get squareId => boardSize.allSquareIds[boardSize.ranks * x + y];
 
   Offset offset(Side orientation, double squareSize) {
-    final dx = (orientation == Side.black ? 7 - x : x) * squareSize;
-    final dy = (orientation == Side.black ? y : 7 - y) * squareSize;
+    final dx = (orientation == Side.black ? (boardSize.files - 1) - x : x) *
+        squareSize;
+    final dy = (orientation == Side.black ? y : (boardSize.ranks - 1) - y) *
+        squareSize;
     return Offset(dx, dy);
   }
 
@@ -139,6 +292,16 @@ class Coord {
 
   @override
   int get hashCode => Object.hash(x, y);
+
+  /// All the coordinates of the chessboard, for a given size.
+  static List<Coord> allCoords(BoardSize boardSize) => List.unmodifiable([
+        for (final f in boardSize.fileIds)
+          for (final r in boardSize.rankIds)
+            Coord.fromSquareId(
+              '$f$r',
+              boardSize: boardSize,
+            ),
+      ]);
 }
 
 /// Describes a chess piece by its role and color.
@@ -343,7 +506,7 @@ Role _toRole(String uciLetter) {
 sealed class Shape {
   /// Decide what shape to draw based on the current shape and the new
   /// destination.
-  Shape newDest(SquareId newDest);
+  Shape newDest(Coord newDest);
 }
 
 /// An circle shape that can be drawn on the board.
@@ -352,10 +515,10 @@ class Circle implements Shape {
   const Circle({required this.color, required this.orig});
 
   final Color color;
-  final SquareId orig;
+  final Coord orig;
 
   @override
-  Shape newDest(SquareId newDest) {
+  Shape newDest(Coord newDest) {
     return newDest == orig
         ? this
         : Arrow(color: color, orig: orig, dest: newDest);
@@ -384,11 +547,11 @@ class Arrow implements Shape {
   });
 
   final Color color;
-  final SquareId orig;
-  final SquareId dest;
+  final Coord orig;
+  final Coord dest;
 
   @override
-  Shape newDest(SquareId newDest) {
+  Shape newDest(Coord newDest) {
     return Arrow(color: color, orig: orig, dest: newDest);
   }
 

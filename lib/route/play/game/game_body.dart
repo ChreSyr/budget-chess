@@ -61,7 +61,7 @@ class _GameBody extends StatelessWidget {
             : null;
 
     if (side != null && game.status == GameStatus.created) {
-      return SetupBody(side: side);
+      return SetupBody(side: side, challenge: game.challenge);
     }
 
     final boardSettings = context.watch<BoardSettingsCubit>().state;
@@ -83,7 +83,8 @@ class _GameBody extends StatelessWidget {
             winner: game.winner,
           ),
           BoardWidget(
-            size: MediaQuery.of(context).size.width,
+            width: MediaQuery.of(context).size.width,
+            size: game.challenge.boardSize,
             settings: boardSettings,
             data: BoardData(
               interactableSide:

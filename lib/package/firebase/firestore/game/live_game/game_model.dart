@@ -73,7 +73,7 @@ extension GameInDBExt on GameInDB {
   GameModel? toGameModel() {
     try {
       final board = Board.parseFen(
-        '${blackHalfFen?.split('').reversed.join() ?? '8/8/8/8'}/${whiteHalfFen ?? '8/8/8/8'}',
+        '${blackHalfFen?.split('').reversed.join() ?? challenge!.boardSize.emptyHalfFen}${challenge!.boardSize.ranks.isEven ? '' : '8/'}/${whiteHalfFen ?? challenge!.boardSize.emptyHalfFen}',
       );
       List<GameStep> steps;
       try {

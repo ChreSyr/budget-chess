@@ -44,12 +44,15 @@ class InventoryModel with _$InventoryModel {
         Role.pawn: pawns,
       };
 
-  /// Return an inventory where the pieces of the fen removed from this
+  /// Return an inventory where the pieces of the setup are removed from this
   /// inventory.
   ///
   /// Usefull when calculating the pieces that can still be added to the setup.
-  InventoryModel less({required String fen}) {
-    final pieces = readFen(fen).values;
+  InventoryModel less({required SetupModel setup}) {
+    final pieces = readFen(
+      fen: setup.fenAs(Side.white),
+      boardSize: setup.boardSize,
+    ).values;
     final roles = <Role, int>{};
     for (final piece in pieces) {
       roles[piece.role] = (roles[piece.role] ?? 0) + 1;
@@ -68,6 +71,6 @@ class InventoryModel with _$InventoryModel {
   }
 
   bool allows(SetupModel setup) {
-    return less(fen: setup.halfFenAs(Side.white)).isLegal;
+    return less(setup: setup).isLegal;
   }
 }

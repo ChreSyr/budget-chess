@@ -1,3 +1,4 @@
+import 'package:crea_chess/package/chessground/export.dart';
 import 'package:crea_chess/package/dartchess/export.dart';
 import 'package:flutter/widgets.dart';
 
@@ -6,11 +7,13 @@ abstract class Background extends StatelessWidget {
   const Background({
     required this.lightSquare,
     required this.darkSquare,
+    required this.boardSize,
     super.key,
     this.coordinates = false,
     this.orientation = Side.white,
   });
 
+  final BoardSize boardSize;
   final bool coordinates;
   final Side orientation;
   final Color lightSquare;
@@ -21,9 +24,10 @@ class SolidColorBackground extends Background {
   const SolidColorBackground({
     required super.lightSquare,
     required super.darkSquare,
-    super.key,
+    super.boardSize = BoardSize.standard,
     super.coordinates,
     super.orientation,
+    super.key,
   });
 
   @override
@@ -31,11 +35,11 @@ class SolidColorBackground extends Background {
     return SizedBox.expand(
       child: Column(
         children: List.generate(
-          8,
+          boardSize.ranks,
           (rank) => Expanded(
             child: Row(
               children: List.generate(
-                8,
+                boardSize.files,
                 (file) => Expanded(
                   child: Container(
                     width: double.infinity,
@@ -66,9 +70,10 @@ class ImageBackground extends Background {
     required super.lightSquare,
     required super.darkSquare,
     required this.image,
-    super.key,
+    super.boardSize = BoardSize.standard,
     super.coordinates,
     super.orientation,
+    super.key,
   });
 
   final AssetImage image;
@@ -82,11 +87,11 @@ class ImageBackground extends Background {
           if (coordinates)
             Column(
               children: List.generate(
-                8,
+                boardSize.ranks,
                 (rank) => Expanded(
                   child: Row(
                     children: List.generate(
-                      8,
+                      boardSize.files,
                       (file) => Expanded(
                         child: SizedBox.expand(
                           child: Coordinate(

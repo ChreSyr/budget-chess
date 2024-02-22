@@ -27,8 +27,8 @@ mixin _$ChallengeModel {
   Rule get rule => throw _privateConstructorUsedError;
   int get time => throw _privateConstructorUsedError; // in seconds
   int get increment => throw _privateConstructorUsedError; // in seconds
-  int get boardWidth => throw _privateConstructorUsedError;
-  int get boardHeight => throw _privateConstructorUsedError;
+  @BoardSizeConverter()
+  BoardSize get boardSize => throw _privateConstructorUsedError;
   int get budget => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -51,8 +51,7 @@ abstract class $ChallengeModelCopyWith<$Res> {
       Rule rule,
       int time,
       int increment,
-      int boardWidth,
-      int boardHeight,
+      @BoardSizeConverter() BoardSize boardSize,
       int budget});
 }
 
@@ -76,8 +75,7 @@ class _$ChallengeModelCopyWithImpl<$Res, $Val extends ChallengeModel>
     Object? rule = null,
     Object? time = null,
     Object? increment = null,
-    Object? boardWidth = null,
-    Object? boardHeight = null,
+    Object? boardSize = null,
     Object? budget = null,
   }) {
     return _then(_value.copyWith(
@@ -109,14 +107,10 @@ class _$ChallengeModelCopyWithImpl<$Res, $Val extends ChallengeModel>
           ? _value.increment
           : increment // ignore: cast_nullable_to_non_nullable
               as int,
-      boardWidth: null == boardWidth
-          ? _value.boardWidth
-          : boardWidth // ignore: cast_nullable_to_non_nullable
-              as int,
-      boardHeight: null == boardHeight
-          ? _value.boardHeight
-          : boardHeight // ignore: cast_nullable_to_non_nullable
-              as int,
+      boardSize: null == boardSize
+          ? _value.boardSize
+          : boardSize // ignore: cast_nullable_to_non_nullable
+              as BoardSize,
       budget: null == budget
           ? _value.budget
           : budget // ignore: cast_nullable_to_non_nullable
@@ -141,8 +135,7 @@ abstract class _$$ChallengeModelImplCopyWith<$Res>
       Rule rule,
       int time,
       int increment,
-      int boardWidth,
-      int boardHeight,
+      @BoardSizeConverter() BoardSize boardSize,
       int budget});
 }
 
@@ -164,8 +157,7 @@ class __$$ChallengeModelImplCopyWithImpl<$Res>
     Object? rule = null,
     Object? time = null,
     Object? increment = null,
-    Object? boardWidth = null,
-    Object? boardHeight = null,
+    Object? boardSize = null,
     Object? budget = null,
   }) {
     return _then(_$ChallengeModelImpl(
@@ -197,14 +189,10 @@ class __$$ChallengeModelImplCopyWithImpl<$Res>
           ? _value.increment
           : increment // ignore: cast_nullable_to_non_nullable
               as int,
-      boardWidth: null == boardWidth
-          ? _value.boardWidth
-          : boardWidth // ignore: cast_nullable_to_non_nullable
-              as int,
-      boardHeight: null == boardHeight
-          ? _value.boardHeight
-          : boardHeight // ignore: cast_nullable_to_non_nullable
-              as int,
+      boardSize: null == boardSize
+          ? _value.boardSize
+          : boardSize // ignore: cast_nullable_to_non_nullable
+              as BoardSize,
       budget: null == budget
           ? _value.budget
           : budget // ignore: cast_nullable_to_non_nullable
@@ -216,7 +204,7 @@ class __$$ChallengeModelImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$ChallengeModelImpl extends _ChallengeModel {
-  const _$ChallengeModelImpl(
+  _$ChallengeModelImpl(
       {required this.id,
       this.createdAt,
       this.acceptedAt,
@@ -224,8 +212,7 @@ class _$ChallengeModelImpl extends _ChallengeModel {
       this.rule = Rule.chess,
       this.time = 180,
       this.increment = 2,
-      this.boardWidth = 8,
-      this.boardHeight = 8,
+      @BoardSizeConverter() this.boardSize = BoardSize.standard,
       this.budget = 39})
       : super._();
 
@@ -253,17 +240,15 @@ class _$ChallengeModelImpl extends _ChallengeModel {
 // in seconds
   @override
   @JsonKey()
-  final int boardWidth;
-  @override
-  @JsonKey()
-  final int boardHeight;
+  @BoardSizeConverter()
+  final BoardSize boardSize;
   @override
   @JsonKey()
   final int budget;
 
   @override
   String toString() {
-    return 'ChallengeModel(id: $id, createdAt: $createdAt, acceptedAt: $acceptedAt, authorId: $authorId, rule: $rule, time: $time, increment: $increment, boardWidth: $boardWidth, boardHeight: $boardHeight, budget: $budget)';
+    return 'ChallengeModel(id: $id, createdAt: $createdAt, acceptedAt: $acceptedAt, authorId: $authorId, rule: $rule, time: $time, increment: $increment, boardSize: $boardSize, budget: $budget)';
   }
 
   @override
@@ -282,17 +267,15 @@ class _$ChallengeModelImpl extends _ChallengeModel {
             (identical(other.time, time) || other.time == time) &&
             (identical(other.increment, increment) ||
                 other.increment == increment) &&
-            (identical(other.boardWidth, boardWidth) ||
-                other.boardWidth == boardWidth) &&
-            (identical(other.boardHeight, boardHeight) ||
-                other.boardHeight == boardHeight) &&
+            (identical(other.boardSize, boardSize) ||
+                other.boardSize == boardSize) &&
             (identical(other.budget, budget) || other.budget == budget));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, id, createdAt, acceptedAt,
-      authorId, rule, time, increment, boardWidth, boardHeight, budget);
+      authorId, rule, time, increment, boardSize, budget);
 
   @JsonKey(ignore: true)
   @override
@@ -310,7 +293,7 @@ class _$ChallengeModelImpl extends _ChallengeModel {
 }
 
 abstract class _ChallengeModel extends ChallengeModel {
-  const factory _ChallengeModel(
+  factory _ChallengeModel(
       {required final String id,
       final DateTime? createdAt,
       final DateTime? acceptedAt,
@@ -318,10 +301,9 @@ abstract class _ChallengeModel extends ChallengeModel {
       final Rule rule,
       final int time,
       final int increment,
-      final int boardWidth,
-      final int boardHeight,
+      @BoardSizeConverter() final BoardSize boardSize,
       final int budget}) = _$ChallengeModelImpl;
-  const _ChallengeModel._() : super._();
+  _ChallengeModel._() : super._();
 
   factory _ChallengeModel.fromJson(Map<String, dynamic> json) =
       _$ChallengeModelImpl.fromJson;
@@ -341,9 +323,8 @@ abstract class _ChallengeModel extends ChallengeModel {
   @override // in seconds
   int get increment;
   @override // in seconds
-  int get boardWidth;
-  @override
-  int get boardHeight;
+  @BoardSizeConverter()
+  BoardSize get boardSize;
   @override
   int get budget;
   @override
