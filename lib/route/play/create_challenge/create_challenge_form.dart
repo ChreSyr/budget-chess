@@ -1,4 +1,3 @@
-import 'package:crea_chess/package/chessground/models.dart';
 import 'package:crea_chess/package/dartchess/export.dart';
 import 'package:crea_chess/package/form/form_error.dart';
 import 'package:crea_chess/package/form/input/input_int.dart';

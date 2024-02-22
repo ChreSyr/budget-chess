@@ -1,6 +1,5 @@
 // ignore_for_file: public_member_api_docs, invalid_annotation_target
 
-import 'package:crea_chess/package/chessground/models.dart';
 import 'package:crea_chess/package/dartchess/export.dart';
 import 'package:crea_chess/package/game/speed.dart';
 import 'package:crea_chess/package/game/time_control.dart';

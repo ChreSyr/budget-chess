@@ -1,5 +1,6 @@
 import 'package:crea_chess/package/dartchess/utils.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
 enum Side {
@@ -66,6 +67,177 @@ enum Role {
     }
   }
 }
+
+/// Square identifier using the algebraic coordinate notation such as e2, c3,
+/// etc.
+typedef SquareId = String;
+
+class BoardSizeConverter
+    implements JsonConverter<BoardSize, Map<String, dynamic>> {
+  const BoardSizeConverter();
+
+  @override
+  BoardSize fromJson(Map<String, dynamic> json) {
+    return BoardSize.fromJson(json);
+  }
+
+  @override
+  Map<String, dynamic> toJson(BoardSize data) => data.toJson();
+}
+
+/// The number of ranks and files of a chessboard
+/// TODO : move to dartchess
+@immutable
+class BoardSize {
+  factory BoardSize({required int ranks, required int files}) {
+    final rankIds = _generateRankIds(ranks);
+    final fileIds = _generateFileIds(files);
+    return BoardSize._(
+      ranks: ranks,
+      files: files,
+      rankIds: rankIds,
+      fileIds: fileIds,
+      allSquareIds: List.unmodifiable([
+        for (final f in _generateFileIds(files))
+          for (final r in _generateRankIds(ranks)) '$f$r',
+      ]),
+    );
+  }
+
+  const BoardSize._({
+    required this.ranks,
+    required this.files,
+    required this.rankIds,
+    required this.fileIds,
+    required this.allSquareIds,
+  })  : assert(ranks <= 10),
+        assert(files <= 26);
+
+  factory BoardSize.fromJson(Map<String, dynamic> json) {
+    return BoardSize(
+      ranks: json['ranks'] as int,
+      files: json['files'] as int,
+    );
+  }
+
+  final int ranks;
+  final int files;
+  final List<String> rankIds;
+  final List<String> fileIds;
+  final List<SquareId> allSquareIds;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'ranks': ranks,
+      'files': files,
+    };
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is BoardSize && other.ranks == ranks && other.files == files;
+  }
+
+  @override
+  int get hashCode => ranks.hashCode ^ files.hashCode;
+
+  static List<String> _generateRankIds(int ranks) => List.unmodifiable(
+        List.generate(
+          ranks,
+          (index) => (1 + index).toString(),
+        ),
+      );
+
+  static List<String> _generateFileIds(int files) => List.unmodifiable(
+        List.generate(
+          files,
+          (index) => String.fromCharCode(97 + index),
+        ),
+      );
+
+  static const BoardSize standard = BoardSize._(
+    ranks: 8,
+    files: 8,
+    rankIds: ['1', '2', '3', '4', '5', '6', '7', '8'],
+    fileIds: ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'],
+    allSquareIds: [
+      'a1',
+      'a2',
+      'a3',
+      'a4',
+      'a5',
+      'a6',
+      'a7',
+      'a8',
+      'b1',
+      'b2',
+      'b3',
+      'b4',
+      'b5',
+      'b6',
+      'b7',
+      'b8',
+      'c1',
+      'c2',
+      'c3',
+      'c4',
+      'c5',
+      'c6',
+      'c7',
+      'c8',
+      'd1',
+      'd2',
+      'd3',
+      'd4',
+      'd5',
+      'd6',
+      'd7',
+      'd8',
+      'e1',
+      'e2',
+      'e3',
+      'e4',
+      'e5',
+      'e6',
+      'e7',
+      'e8',
+      'f1',
+      'f2',
+      'f3',
+      'f4',
+      'f5',
+      'f6',
+      'f7',
+      'f8',
+      'g1',
+      'g2',
+      'g3',
+      'g4',
+      'g5',
+      'g6',
+      'g7',
+      'g8',
+      'h1',
+      'h2',
+      'h3',
+      'h4',
+      'h5',
+      'h6',
+      'h7',
+      'h8',
+    ],
+  );
+
+  @override
+  String toString() => 'BoardSize(files:$files, ranks:$ranks)';
+
+  String get emptyFen => List.generate(ranks, (_) => files).join('/');
+
+  String get emptyHalfFen => List.generate(ranks ~/ 2, (_) => files).join('/');
+}
+
 
 /// Number between 0 and 63 included representing a square on the board.
 ///
