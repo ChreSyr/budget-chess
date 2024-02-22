@@ -1,5 +1,9 @@
+import 'dart:math';
+import 'dart:ui' as ui;
+
 import 'package:crea_chess/package/chessground/export.dart';
 import 'package:crea_chess/package/dartchess/export.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 /// BoardWidget background.
@@ -13,11 +17,11 @@ abstract class Background extends StatelessWidget {
     this.orientation = Side.white,
   });
 
+  final Color lightSquare;
+  final Color darkSquare;
   final BoardSize boardSize;
   final bool coordinates;
   final Side orientation;
-  final Color lightSquare;
-  final Color darkSquare;
 }
 
 class SolidColorBackground extends Background {
@@ -74,16 +78,59 @@ class ImageBackground extends Background {
     super.coordinates,
     super.orientation,
     super.key,
+    this.boardWidth = 300, // TODO
   });
 
   final AssetImage image;
+  final double boardWidth;
+
+  SolidColorBackground get solid => SolidColorBackground(
+        lightSquare: lightSquare,
+        darkSquare: darkSquare,
+        boardSize: boardSize,
+        coordinates: coordinates,
+        orientation: orientation,
+      );
 
   @override
   Widget build(BuildContext context) {
+    // final boardSize = BoardSize(files: 19, ranks: 9);
+
+    final squareSize = boardWidth / boardSize.files;
+    final boardHeight = squareSize * boardSize.ranks;
+
     return SizedBox.expand(
       child: Stack(
         children: [
-          Image(image: image),
+          FutureBuilder<ui.Image>(
+            future: _loadBackground(
+              assetPath: image.assetName,
+              squareSize: squareSize,
+            ),
+            builder: (context, snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.waiting:
+                  return solid;
+                // ignore: no_default_cases
+                default:
+                  if (snapshot.hasError) {
+                    return solid;
+                  } else {
+                    return CustomPaint(
+                      painter: _BackgroundPainter(
+                        image: snapshot.data!,
+                        boardWidth: boardWidth,
+                        boardSize: boardSize,
+                      ),
+                      child: SizedBox(
+                        width: boardWidth,
+                        height: boardHeight,
+                      ),
+                    );
+                  }
+              }
+            },
+          ),
           if (coordinates)
             Column(
               children: List.generate(
@@ -112,6 +159,55 @@ class ImageBackground extends Background {
       ),
     );
   }
+}
+
+class _BackgroundPainter extends CustomPainter {
+  _BackgroundPainter({
+    required this.image,
+    required this.boardWidth,
+    required this.boardSize,
+  });
+
+  final ui.Image image;
+  final double boardWidth;
+  final BoardSize boardSize;
+
+  @override
+  Future<void> paint(Canvas canvas, Size size) async {
+    final squareSize = boardWidth / boardSize.files;
+    final boardHeight = squareSize * boardSize.ranks;
+    final imageSize = squareSize * 8;
+
+    final paint = Paint();
+
+    for (var left = 0.0; left < boardWidth; left += imageSize) {
+      final width = min(imageSize, boardWidth - left);
+      for (var top = 0.0; top < boardHeight; top += imageSize) {
+        final height = min(imageSize, boardHeight - top);
+
+        final source = Rect.fromLTWH(0, 0, width, height);
+        final dest = Rect.fromLTWH(left, top, width, height);
+        canvas.drawImageRect(image, source, dest, paint);
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(_) => false;
+}
+
+Future<ui.Image> _loadBackground({
+  required String assetPath,
+  required double squareSize,
+}) async {
+  final data = await rootBundle.load(assetPath);
+  final codec = await ui.instantiateImageCodec(
+    data.buffer.asUint8List(),
+    targetHeight: (squareSize * 8).toInt(),
+    targetWidth: (squareSize * 8).toInt(),
+  );
+  final frame = await codec.getNextFrame();
+  return frame.image;
 }
 
 class Coordinate extends StatelessWidget {

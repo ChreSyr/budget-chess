@@ -56,18 +56,6 @@ class SetupBoard extends StatefulWidget {
 
   double get squareSize => width / size.files;
 
-  // Coord? localOffset2Coord(Offset offset) {
-  //   final x = (offset.dx / squareSize).floor();
-  //   final y = (offset.dy / squareSize).floor();
-  //   final orientX = x;
-  //   final orientY = 7 - y;
-  //   if (orientX >= 0 && orientX <= 7 && orientY >= 0 && orientY <= 7) {
-  //     return Coord(x: orientX, y: orientY);
-  //   } else {
-  //     return null;
-  //   }
-  // }
-
   Coord? localOffset2Coord(Offset offset) {
     final x = (offset.dx / squareSize).floor();
     final y = (offset.dy / squareSize).floor();
@@ -99,6 +87,8 @@ class _BoardState extends State<SetupBoard> {
   SquareId? _dragOrigin;
   SquareId? _dropTarget;
   List<SquareId> dragTargets = [];
+  // background out of the build loop so that it doesn't get refreshed
+  late Widget background;
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +97,7 @@ class _BoardState extends State<SetupBoard> {
 
     final Widget board = Stack(
       children: [
-        colorScheme.background(widget.size),
+        background,
         if (_dragOrigin != null && _dragAvatar != null)
           PositionedSquare(
             key: ValueKey('${_dragOrigin!}-dragOrigin'),
@@ -214,6 +204,8 @@ class _BoardState extends State<SetupBoard> {
   @override
   void initState() {
     super.initState();
+    background =
+        widget.settings.colorScheme.background(widget.size, widget.width);
     pieces = readFen(fen: widget.fen, boardSize: widget.size);
     for (var rank = 0; rank < widget.size.ranks; rank++) {
       for (var file = 0; file < widget.size.files; file++) {

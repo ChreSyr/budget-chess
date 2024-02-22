@@ -114,7 +114,7 @@ class _BoardState extends State<BoardWidget> {
               ? colorScheme.whiteCoordBackground
               : colorScheme.blackCoordBackground
         else
-          colorScheme.background(widget.size),
+          colorScheme.background(widget.size, widget.width),
         if (widget.settings.showLastMove && widget.data.lastMove != null)
           for (final squareId in widget.data.lastMove!.squares)
             if (premove == null || !premove.hasSquare(squareId))

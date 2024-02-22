@@ -19,6 +19,7 @@ class BoardColorScheme {
     required this.selected,
     required this.validMoves,
     required this.validPremoves,
+    this.image,
   });
 
   /// Light square color of the board
@@ -47,12 +48,23 @@ class BoardColorScheme {
   /// Color of squares occupied with valid premoves dots
   final Color validPremoves;
 
+  /// An optionnal image for the background
+  final AssetImage? image;
+
   /// BoardWidget background that defines light and dark square colors
-  Background background(BoardSize boardSize) => SolidColorBackground(
+  Background background(BoardSize boardSize, double boardWidth) => image == null
+      ? SolidColorBackground(
         lightSquare: lightSquare,
-        darkSquare: darkSquare,
+          darkSquare: darkSquare,
         boardSize: boardSize,
-      );
+        )
+      : ImageBackground(
+          lightSquare: lightSquare,
+          darkSquare: darkSquare,
+          boardWidth: boardWidth,
+          boardSize: boardSize,
+          image: image!,
+        );
 
   static const brown = BoardColorScheme(
     lightSquare: Color(0xfff0d9b6),
@@ -134,6 +146,7 @@ class BoardColorScheme {
     selected: HighlightDetails(solidColor: Color(0x6014551e)),
     validMoves: Color(0x4014551e),
     validPremoves: Color(0x40203085),
+    image: AssetImage('$_boardsPath/blue2.jpg'),
   );
 
   static const blue3 = BoardColorScheme(
@@ -156,6 +169,7 @@ class BoardColorScheme {
     selected: HighlightDetails(solidColor: Color(0x6014551e)),
     validMoves: Color(0x4014551e),
     validPremoves: Color(0x40203085),
+    image: AssetImage('$_boardsPath/blue3.jpg'),
   );
 
   static const blueMarble = BoardColorScheme(
@@ -178,6 +192,7 @@ class BoardColorScheme {
     selected: HighlightDetails(solidColor: Color(0x6014551e)),
     validMoves: Color(0x4014551e),
     validPremoves: Color(0x40203085),
+    image: AssetImage('$_boardsPath/blue-marble.jpg'),
   );
 
   static const canvas = BoardColorScheme(
@@ -200,6 +215,7 @@ class BoardColorScheme {
     selected: HighlightDetails(solidColor: Color(0x6014551e)),
     validMoves: Color(0x4014551e),
     validPremoves: Color(0x40203085),
+    image: AssetImage('$_boardsPath/canvas2.jpg'),
   );
 
   static const greenPlastic = BoardColorScheme(
@@ -222,6 +238,7 @@ class BoardColorScheme {
     selected: HighlightDetails(solidColor: Color.fromRGBO(216, 85, 0, 0.3)),
     validMoves: Color(0x4014551e),
     validPremoves: Color(0x40203085),
+    image: AssetImage('$_boardsPath/green-plastic.png'),
   );
 
   static const grey = BoardColorScheme(
@@ -244,6 +261,7 @@ class BoardColorScheme {
     selected: HighlightDetails(solidColor: Color(0x6014551e)),
     validMoves: Color(0x4014551e),
     validPremoves: Color(0x40203085),
+    image: AssetImage('$_boardsPath/grey.jpg'),
   );
 
   static const horsey = BoardColorScheme(
@@ -276,6 +294,7 @@ class BoardColorScheme {
     ),
     validMoves: Color(0x4014551e),
     validPremoves: Color(0x40203085),
+    image: AssetImage('$_boardsPath/horsey.jpg'),
   );
 
   static const leather = BoardColorScheme(
@@ -298,6 +317,7 @@ class BoardColorScheme {
     selected: HighlightDetails(solidColor: Color(0x6014551e)),
     validMoves: Color(0x4014551e),
     validPremoves: Color(0x40203085),
+    image: AssetImage('$_boardsPath/leather.jpg'),
   );
 
   static const maple = BoardColorScheme(
@@ -320,6 +340,7 @@ class BoardColorScheme {
     selected: HighlightDetails(solidColor: Color(0x6014551e)),
     validMoves: Color(0x4014551e),
     validPremoves: Color(0x40203085),
+    image: AssetImage('$_boardsPath/maple.jpg'),
   );
 
   static const maple2 = BoardColorScheme(
@@ -342,6 +363,7 @@ class BoardColorScheme {
     selected: HighlightDetails(solidColor: Color(0x6014551e)),
     validMoves: Color(0x4014551e),
     validPremoves: Color(0x40203085),
+    image: AssetImage('$_boardsPath/maple2.jpg'),
   );
 
   static const marble = BoardColorScheme(
@@ -364,6 +386,7 @@ class BoardColorScheme {
     selected: HighlightDetails(solidColor: Color.fromRGBO(216, 85, 0, 0.3)),
     validMoves: Color(0x4014551e),
     validPremoves: Color(0x40203085),
+    image: AssetImage('$_boardsPath/marble.jpg'),
   );
 
   static const metal = BoardColorScheme(
@@ -386,6 +409,7 @@ class BoardColorScheme {
     selected: HighlightDetails(solidColor: Color(0x6014551e)),
     validMoves: Color(0x4014551e),
     validPremoves: Color(0x40203085),
+    image: AssetImage('$_boardsPath/metal.jpg'),
   );
 
   static const newspaper = BoardColorScheme(
@@ -408,6 +432,7 @@ class BoardColorScheme {
     selected: HighlightDetails(solidColor: Color(0x6014551e)),
     validMoves: Color(0x4014551e),
     validPremoves: Color(0x40203085),
+    image: AssetImage('$_boardsPath/newspaper.png'),
   );
 
   static const olive = BoardColorScheme(
@@ -430,6 +455,7 @@ class BoardColorScheme {
     selected: HighlightDetails(solidColor: Color(0x6014551e)),
     validMoves: Color(0x4014551e),
     validPremoves: Color(0x40203085),
+    image: AssetImage('$_boardsPath/olive.jpg'),
   );
 
   static const pinkPyramid = BoardColorScheme(
@@ -452,6 +478,7 @@ class BoardColorScheme {
     selected: HighlightDetails(solidColor: Color(0x6014551e)),
     validMoves: Color(0x4014551e),
     validPremoves: Color(0x40203085),
+    image: AssetImage('$_boardsPath/pink-pyramid.png'),
   );
 
   static const purpleDiag = BoardColorScheme(
@@ -474,6 +501,7 @@ class BoardColorScheme {
     selected: HighlightDetails(solidColor: Color(0x6014551e)),
     validMoves: Color(0x4014551e),
     validPremoves: Color(0x40203085),
+    image: AssetImage('$_boardsPath/purple-diag.png'),
   );
 
   static const wood = BoardColorScheme(
@@ -496,6 +524,7 @@ class BoardColorScheme {
     selected: HighlightDetails(solidColor: Color(0x6014551e)),
     validMoves: Color(0x4014551e),
     validPremoves: Color(0x40203085),
+    image: AssetImage('$_boardsPath/wood.jpg'),
   );
 
   static const wood2 = BoardColorScheme(
@@ -518,6 +547,7 @@ class BoardColorScheme {
     selected: HighlightDetails(solidColor: Color(0x6014551e)),
     validMoves: Color(0x4014551e),
     validPremoves: Color(0x40203085),
+    image: AssetImage('$_boardsPath/wood2.jpg'),
   );
 
   static const wood3 = BoardColorScheme(
@@ -540,6 +570,7 @@ class BoardColorScheme {
     selected: HighlightDetails(solidColor: Color(0x6014551e)),
     validMoves: Color(0x4014551e),
     validPremoves: Color(0x40203085),
+    image: AssetImage('$_boardsPath/wood3.jpg'),
   );
 
   static const wood4 = BoardColorScheme(
@@ -562,5 +593,6 @@ class BoardColorScheme {
     selected: HighlightDetails(solidColor: Color(0x6014551e)),
     validMoves: Color(0x4014551e),
     validPremoves: Color(0x40203085),
+    image: AssetImage('$_boardsPath/wood4.jpg'),
   );
 }

@@ -6,7 +6,7 @@ class BoardSettingsCubit extends Cubit<BoardSettings> {
   BoardSettingsCubit()
       : super(
           const BoardSettings(
-            colorScheme: BoardColorScheme.blue,
+            colorScheme: BoardColorScheme.blue3,
             pieceAssets: frenzyPieceSet,
           ),
         );
