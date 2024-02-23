@@ -4,7 +4,6 @@ import 'package:crea_chess/package/dartchess/board.dart';
 import 'package:crea_chess/package/dartchess/constants.dart';
 import 'package:crea_chess/package/dartchess/models.dart';
 import 'package:crea_chess/package/dartchess/square_set.dart';
-import 'package:crea_chess/package/dartchess/utils.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:meta/meta.dart';
 

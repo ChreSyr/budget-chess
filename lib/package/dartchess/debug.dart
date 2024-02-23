@@ -22,9 +22,8 @@ import 'package:flutter/material.dart';
 /// final squareSet = makeSquareSet(str);
 /// // SquareSet(0x0E0A12221E222212)
 /// ```
-/// TODO
-SquareSet makeSquareSet(String rep) {
-  var ret = SquareSet.empty;
+SquareSet makeSquareSet(String rep, SquareSetSize size) {
+  var ret = SquareSet(BigInt.zero);
   final table = rep
       .split('\n')
       .where((l) => l.isNotEmpty)
@@ -32,11 +31,11 @@ SquareSet makeSquareSet(String rep) {
       .toList()
       .reversed
       .toList();
-  for (var y = 7; y >= 0; y--) {
-    for (var x = 0; x < 8; x++) {
+  for (var y = size.ranks - 1; y >= 0; y--) {
+    for (var x = 0; x < size.files; x++) {
       final repSq = table[y][x];
       if (repSq == '1') {
-        ret = ret.withSquare(x + y * 8);
+        ret = ret.withSquare(x + y * size.files);
       }
     }
   }

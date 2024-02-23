@@ -1056,6 +1056,40 @@ abstract class Position<T extends Position<T>> {
     }
     return null;
   }
+
+  /// Gets all the legal moves of this position in the algebraic coordinate
+  /// notation.
+  ///
+  /// Includes both possible representations of castling moves
+  /// (unless `chess960` is true).
+  IMap<String, ISet<String>> algebraicLegalMoves({
+    bool isChess960 = false,
+  }) {
+    final result = <String, ISet<String>>{};
+    for (final entry in legalMoves.entries) {
+      final dests = entry.value.squares;
+      if (dests.isNotEmpty) {
+        final from = entry.key;
+        final destSet = dests.map(board.size.algebraicOf).toSet();
+        if (!isChess960 &&
+            from == board.kingOf(turn) &&
+            board.size.fileOf(entry.key) == 4) {
+          if (dests.contains(0)) {
+            destSet.add('c1');
+          } else if (dests.contains(56)) {
+            destSet.add('c8');
+          }
+          if (dests.contains(7)) {
+            destSet.add('g1');
+          } else if (dests.contains(63)) {
+            destSet.add('g8');
+          }
+        }
+        result[board.size.algebraicOf(from)] = ISet(destSet);
+      }
+    }
+    return IMap(result);
+  }
 }
 
 /// A standard chess position.
@@ -2417,10 +2451,10 @@ class Castles {
 
   static final standard = Castles(
     unmovedRooks: SquareSet.corners,
-    whiteRookQueenSide: Squares.a1,
-    whiteRookKingSide: Squares.h1,
-    blackRookQueenSide: Squares.a8,
-    blackRookKingSide: Squares.h8,
+    whiteRookQueenSide: StandardSquares.a1,
+    whiteRookKingSide: StandardSquares.h1,
+    blackRookQueenSide: StandardSquares.a8,
+    blackRookKingSide: StandardSquares.h8,
     whitePathQueenSide: SquareSet(BigInt.from(0x000000000000000e)),
     whitePathKingSide: SquareSet(BigInt.from(0x0000000000000060)),
     blackPathQueenSide: SquareSet(BigInt.parse('0x0e00000000000000')),
@@ -2443,8 +2477,8 @@ class Castles {
     unmovedRooks: SquareSet(BigInt.parse('0x8100000000000000')),
     whiteRookKingSide: null,
     whiteRookQueenSide: null,
-    blackRookKingSide: Squares.h8,
-    blackRookQueenSide: Squares.a8,
+    blackRookKingSide: StandardSquares.h8,
+    blackRookQueenSide: StandardSquares.a8,
     whitePathKingSide: SquareSet.empty,
     whitePathQueenSide: SquareSet.empty,
     blackPathQueenSide: SquareSet(BigInt.parse('0x0e00000000000000')),

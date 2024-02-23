@@ -1,29 +1,28 @@
 import 'package:crea_chess/package/dartchess/models.dart';
 import 'package:crea_chess/package/dartchess/square_set.dart';
-import 'package:crea_chess/package/dartchess/utils.dart';
 
 /// Gets squares attacked or defended by a king on [Square].
-SquareSet kingAttacks(Square square) {
-  assert(square >= 0 && square < 64);
+SquareSet kingAttacks(Square square, SquareSetSize size) {
+  assert(square >= 0 && square < size.squaresCount);
   return _kingAttacks[square];
 }
 
 /// Gets squares attacked or defended by a knight on [Square].
-SquareSet knightAttacks(Square square) {
-  assert(square >= 0 && square < 64);
+SquareSet knightAttacks(Square square, SquareSetSize size) {
+  assert(square >= 0 && square < size.squaresCount);
   return _knightAttacks[square];
 }
 
 /// Gets squares attacked or defended by a pawn of the given [Side] on [Square].
-SquareSet pawnAttacks(Side side, Square square) {
-  assert(square >= 0 && square < 64);
+SquareSet pawnAttacks(Side side, Square square, SquareSetSize size) {
+  assert(square >= 0 && square < size.squaresCount);
   return _pawnAttacks[side]![square];
 }
 
 /// Gets squares attacked or defended by a bishop on [Square], given `occupied`
 /// squares.
 SquareSet bishopAttacks(Square square, SquareSet occupied) {
-  final bit = SquareSet.fromSquare(square);
+  final bit = SquareSet.fromSquare(square, occupied.size);
   return _hyperbola(bit, _diagRange[square], occupied) ^
       _hyperbola(bit, _antiDiagRange[square], occupied);
 }
@@ -44,9 +43,9 @@ SquareSet queenAttacks(Square square, SquareSet occupied) =>
 SquareSet attacks(Piece piece, Square square, SquareSet occupied) {
   switch (piece.role) {
     case Role.pawn:
-      return pawnAttacks(piece.color, square);
+      return pawnAttacks(piece.color, square, occupied.size);
     case Role.knight:
-      return knightAttacks(square);
+      return knightAttacks(square, occupied.size);
     case Role.bishop:
       return bishopAttacks(square, occupied);
     case Role.rook:
@@ -54,14 +53,14 @@ SquareSet attacks(Piece piece, Square square, SquareSet occupied) {
     case Role.queen:
       return queenAttacks(square, occupied);
     case Role.king:
-      return kingAttacks(square);
+      return kingAttacks(square, occupied.size);
   }
 }
 
 /// Gets all squares of the rank, file or diagonal with the two squares
 /// `a` and `b`, or an empty set if they are not aligned.
-SquareSet ray(Square a, Square b) {
-  final other = SquareSet.fromSquare(b);
+SquareSet ray(Square a, Square b, SquareSetSize size) {
+  final other = SquareSet.fromSquare(b, size);
   if (_rankRange[a].isIntersected(other)) {
     return _rankRange[a].withSquare(a);
   }
@@ -74,33 +73,34 @@ SquareSet ray(Square a, Square b) {
   if (_fileRange[a].isIntersected(other)) {
     return _fileRange[a].withSquare(a);
   }
-  return SquareSet.empty;
+  return SquareSet.empty(size);
 }
 
 /// Gets all squares between `a` and `b` (bounds not included), or an empty set
 /// if they are not on the same rank, file or diagonal.
-SquareSet between(Square a, Square b) => ray(a, b)
-    .intersect(SquareSet.full.shl(a).xor(SquareSet.full.shl(b)))
-    .withoutFirst();
+SquareSet between(Square a, Square b, SquareSetSize size) {
+  final full = SquareSet.full(size);
+  return ray(a, b, size).intersect(full.shl(a).xor(full.shl(b))).withoutFirst();
+}
 
 // --
 
-SquareSet _computeRange(Square square, List<int> deltas) {
-  var range = SquareSet.empty;
+SquareSet _computeRange(Square square, List<int> deltas, SquareSetSize size) {
+  var range = SquareSet.empty(size);
   for (final delta in deltas) {
     final sq = square + delta;
     if (0 <= sq &&
-        sq < 64 &&
-        (squareFile(square) - squareFile(sq)).abs() <= 2) {
+        sq < size.squaresCount &&
+        (size.fileOf(square) - size.fileOf(sq)).abs() <= 2) {
       range = range.withSquare(sq);
     }
   }
   return range;
 }
 
-List<T> _tabulate<T>(T Function(Square square) f) {
+List<T> _tabulate<T>(T Function(Square square) f, SquareSetSize size) {
   final table = <T>[];
-  for (var square = 0; square < 64; square++) {
+  for (var square = 0; square < size.squaresCount; square++) {
     table.insert(square, f(square));
   }
   return table;

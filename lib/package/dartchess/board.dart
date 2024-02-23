@@ -8,6 +8,7 @@ import 'package:meta/meta.dart';
 @immutable
 class Board {
   const Board({
+    required this.size,
     required this.occupied,
     required this.promoted,
     required this.white,
@@ -51,6 +52,9 @@ class Board {
     if (rank != 0 || file != 8) throw const FenError('ERR_BOARD');
     return board;
   }
+
+  /// The number of ranks and files
+  final BoardSize size;
 
   /// All occupied squares.
   final SquareSet occupied;
