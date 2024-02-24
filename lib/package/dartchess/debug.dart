@@ -1,8 +1,8 @@
 import 'package:crea_chess/package/dartchess/board.dart';
 import 'package:crea_chess/package/dartchess/models.dart';
 import 'package:crea_chess/package/dartchess/position.dart';
+import 'package:crea_chess/package/dartchess/size.dart';
 import 'package:crea_chess/package/dartchess/square_set.dart';
-import 'package:crea_chess/package/dartchess/utils.dart';
 import 'package:flutter/material.dart';
 
 /// Takes a string and returns a SquareSet. Useful for debugging/testing purposes.
@@ -23,7 +23,7 @@ import 'package:flutter/material.dart';
 /// // SquareSet(0x0E0A12221E222212)
 /// ```
 SquareSet makeSquareSet(String rep, SquareSetSize size) {
-  var ret = SquareSet(BigInt.zero);
+  var ret = SquareSet.empty(size);
   final table = rep
       .split('\n')
       .where((l) => l.isNotEmpty)
@@ -43,14 +43,14 @@ SquareSet makeSquareSet(String rep, SquareSetSize size) {
 }
 
 /// Prints the square set as a human readable string format
-String humanReadableSquareSet(SquareSet sq, SquareSetSize size) {
+String humanReadableSquareSet(SquareSet sq) {
   final buffer = StringBuffer();
-  for (var y = size.ranks - 1; y >= 0; y--) {
-    for (var x = 0; x < (size.files); x++) {
-      final square = x + y * size.files;
+  for (var y = sq.size.ranks - 1; y >= 0; y--) {
+    for (var x = 0; x < (sq.size.files); x++) {
+      final square = x + y * sq.size.files;
       buffer
-        ..write(sq.has(square, size) ? '1' : '.')
-        ..write(x < (size.files - 1) ? ' ' : '\n');
+        ..write(sq.has(square) ? '1' : '.')
+        ..write(x < (sq.size.files - 1) ? ' ' : '\n');
     }
   }
   return buffer.toString();

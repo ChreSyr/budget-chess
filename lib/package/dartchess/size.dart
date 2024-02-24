@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:crea_chess/package/dartchess/square_set.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
