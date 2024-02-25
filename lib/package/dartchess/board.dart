@@ -1,14 +1,128 @@
 import 'package:crea_chess/package/dartchess/attacks.dart';
 import 'package:crea_chess/package/dartchess/models.dart';
+import 'package:crea_chess/package/dartchess/square_map.dart';
 import 'package:crea_chess/package/dartchess/square_set.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
+
+// TODO : move this converter somewhere else
+class BoardSizeConverter
+    implements JsonConverter<BoardSize, Map<String, dynamic>> {
+  const BoardSizeConverter();
+
+  @override
+  BoardSize fromJson(Map<String, dynamic> json) {
+    return BoardSize(
+      ranks: json['ranks'] as int,
+      files: json['files'] as int,
+    );
+  }
+
+  @override
+  Map<String, dynamic> toJson(BoardSize size) => {
+        'ranks': size.ranks,
+        'files': size.files,
+      };
+}
+
+/// The number of ranks and files of a chessboard
+@immutable
+class BoardSize extends SquareMapSize {
+  BoardSize({required super.files, required super.ranks})
+      : rankIds = _generateRankIds(ranks),
+        fileIds = _generateFileIds(files),
+        allSquareIds = _generateAllSquareIds(files, ranks),
+        attacks = Attacks(SquareMapSize(files: files, ranks: ranks));
+
+  final List<String> rankIds;
+  final List<String> fileIds;
+  final List<SquareId> allSquareIds;
+
+  /// An attacks calculator
+  final Attacks attacks;
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is BoardSize && other.ranks == ranks && other.files == files;
+  }
+
+  @override
+  int get hashCode => ranks.hashCode ^ files.hashCode;
+
+  static List<String> _generateAllSquareIds(int files, int ranks) =>
+      List.unmodifiable([
+        for (final f in _generateFileIds(files))
+          for (final r in _generateRankIds(ranks)) '$f$r',
+      ]);
+
+  static List<String> _generateFileIds(int files) => List.unmodifiable(
+        List.generate(
+          files,
+          (index) => String.fromCharCode(97 + index),
+        ),
+      );
+
+  static List<String> _generateRankIds(int ranks) => List.unmodifiable(
+        List.generate(
+          ranks,
+          (index) => (1 + index).toString(),
+        ),
+      );
+
+  static final BoardSize standard = BoardSize(ranks: 8, files: 8);
+
+  /// The board part of the initial position in the FEN format.
+  static const standardInitialBoardFEN =
+      'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR';
+
+  /// Initial position in the Extended Position Description format.
+  static const standardInitialEPD = '$standardInitialBoardFEN w KQkq -';
+
+  /// Initial position in the FEN format.
+  static const standardInitialFEN = '$standardInitialEPD 0 1';
+
+  /// Empty board part in the FEN format.
+  static const standardEmptyBoardFEN = '8/8/8/8/8/8/8/8';
+
+  /// Empty board in the EPD format.
+  static const standardEmptyEPD = '$standardEmptyBoardFEN w - -';
+
+  /// Empty board in the FEN format.
+  static const standardEmptyFEN = '$standardEmptyEPD 0 1';
+
+  @override
+  String toString() => 'BoardSize(files:$files, ranks:$ranks)';
+
+  String get emptyFen => List.generate(ranks, (_) => files).join('/');
+
+  String get emptyHalfFen => List.generate(ranks ~/ 2, (_) => files).join('/');
+
+  /// Returns the algebraic coordinate notation of the [Square].
+  String algebraicOf(Square square) =>
+      fileIds[fileOf(square)] + rankIds[rankOf(square)];
+
+  /// Parses a string like 'a1', 'a2', etc. and returns a [Square] or `null` if
+  /// the square doesn't exist.
+  Square? parseSquare(String str) {
+    if (str.length != 2) return null;
+    final file = str.codeUnitAt(0) - 97; // 'a'.codeUnitAt(0);
+    final rank = str.codeUnitAt(1) - 49; // '1'.codeUnitAt(0);
+    if (file < 0 || file >= files || rank < 0 || rank >= ranks) {
+      return null;
+    }
+    return file + files * rank;
+  }
+}
 
 /// A board represented by several square sets for each piece.
 @immutable
 class Board {
-  const Board({
+  const Board._({
     required this.size,
+    required this.attacks,
     required this.occupied,
     required this.promoted,
     required this.white,
@@ -25,7 +139,7 @@ class Board {
   ///
   /// Throws a [FenError] if the provided FEN string is not valid.
   factory Board.parseFen(String boardFen) {
-    var board = Board.empty;
+    var board = Board.empty(?);
     var rank = 7;
     var file = 0;
     for (var i = 0; i < boardFen.length; i++) {
@@ -53,8 +167,26 @@ class Board {
     return board;
   }
 
+  factory Board.empty(BoardSize size) => Board._(
+    size: size,
+    attacks: Attacks(SquareSetSize(boardSize: size)),
+    occupied: SquareSet.empty(SquareSetSize(boardSize: size)),
+    promoted: SquareSet.empty(SquareSetSize(boardSize: size)),
+    white: SquareSet.empty(SquareSetSize(boardSize: size)),
+    black: SquareSet.empty(SquareSetSize(boardSize: size)),
+    pawns: SquareSet.empty(SquareSetSize(boardSize: size)),
+    knights: SquareSet.empty(SquareSetSize(boardSize: size)),
+    bishops: SquareSet.empty(SquareSetSize(boardSize: size)),
+    rooks: SquareSet.empty(SquareSetSize(boardSize: size)),
+    queens: SquareSet.empty(SquareSetSize(boardSize: size)),
+    kings: SquareSet.empty(SquareSetSize(boardSize: size)),
+  );
+
   /// The number of ranks and files
   final BoardSize size;
+
+  /// The calculator of piece attacks
+  final Attacks attacks;
 
   /// All occupied squares.
   final SquareSet occupied;
@@ -89,58 +221,51 @@ class Board {
   final SquareSet kings;
 
   /// Standard chess starting position.
-  static final standard = Board(
-    occupied: SquareSet(BigInt.parse('0xffff00000000ffff')),
-    promoted: SquareSet.empty,
-    white: SquareSet(BigInt.from(0xffff)),
-    black: SquareSet(BigInt.parse('0xffff000000000000')),
-    pawns: SquareSet(BigInt.parse('0x00ff00000000ff00')),
-    knights: SquareSet(BigInt.parse('0x4200000000000042')),
-    bishops: SquareSet(BigInt.parse('0x2400000000000024')),
-    rooks: SquareSet.corners,
-    queens: SquareSet(BigInt.parse('0x0800000000000008')),
-    kings: SquareSet(BigInt.parse('0x1000000000000010')),
+  static final standard = Board._(
+    size: BoardSize.standard,
+    attacks: Attacks.standard,
+    occupied: SquareSet(BigInt.parse('0xffff00000000ffff'), SquareSetSize.standard,),
+    promoted: SquareSet.empty(SquareSetSize.standard),
+    white: SquareSet(BigInt.from(0xffff), SquareSetSize.standard),
+    black: SquareSet(BigInt.parse('0xffff000000000000'), SquareSetSize.standard,),
+    pawns: SquareSet(BigInt.parse('0x00ff00000000ff00'), SquareSetSize.standard,),
+    knights: SquareSet(BigInt.parse('0x4200000000000042'), SquareSetSize.standard,),
+    bishops: SquareSet(BigInt.parse('0x2400000000000024'), SquareSetSize.standard,),
+    rooks: SquareSet.corners(SquareSetSize.standard),
+    queens: SquareSet(BigInt.parse('0x0800000000000008'), SquareSetSize.standard,),
+    kings: SquareSet(BigInt.parse('0x1000000000000010'), SquareSetSize.standard,),
   );
 
   /// Racing Kings start position
-  static final racingKings = Board(
-    occupied: SquareSet(BigInt.from(0xffff)),
-    promoted: SquareSet.empty,
-    white: SquareSet(BigInt.from(0xf0f0)),
-    black: SquareSet(BigInt.from(0x0f0f)),
-    pawns: SquareSet.empty,
-    knights: SquareSet(BigInt.from(0x1818)),
-    bishops: SquareSet(BigInt.from(0x2424)),
-    rooks: SquareSet(BigInt.from(0x4242)),
-    queens: SquareSet(BigInt.from(0x0081)),
-    kings: SquareSet(BigInt.from(0x8100)),
+  static final standardRacingKings =  Board._(
+    size: BoardSize.standard,
+    attacks: Attacks.standard,
+    occupied: SquareSet(BigInt.from(0xffff), SquareSetSize.standard),
+    promoted: SquareSet.empty(SquareSetSize.standard),
+    white: SquareSet(BigInt.from(0xf0f0), SquareSetSize.standard),
+    black: SquareSet(BigInt.from(0x0f0f), SquareSetSize.standard),
+    pawns: SquareSet.empty(SquareSetSize.standard),
+    knights: SquareSet(BigInt.from(0x1818), SquareSetSize.standard),
+    bishops: SquareSet(BigInt.from(0x2424), SquareSetSize.standard),
+    rooks: SquareSet(BigInt.from(0x4242), SquareSetSize.standard),
+    queens: SquareSet(BigInt.from(0x0081), SquareSetSize.standard),
+    kings: SquareSet(BigInt.from(0x8100), SquareSetSize.standard),
   );
 
-  /// Horde start Positioin
-  static final horde = Board(
-    occupied: SquareSet(BigInt.parse('0xffff0066ffffffff')),
-    promoted: SquareSet.empty,
-    white: SquareSet(BigInt.from(0x00000066ffffffff)),
-    black: SquareSet(BigInt.parse('0xffff000000000000')),
-    pawns: SquareSet(BigInt.parse('0x00ff0066ffffffff')),
-    knights: SquareSet(BigInt.parse('0x4200000000000000')),
-    bishops: SquareSet(BigInt.parse('0x2400000000000000')),
-    rooks: SquareSet(BigInt.parse('0x8100000000000000')),
-    queens: SquareSet(BigInt.parse('0x0800000000000000')),
-    kings: SquareSet(BigInt.parse('0x1000000000000000')),
-  );
-
-  static final empty = Board(
-    occupied: SquareSet.empty,
-    promoted: SquareSet.empty,
-    white: SquareSet.empty,
-    black: SquareSet.empty,
-    pawns: SquareSet.empty,
-    knights: SquareSet.empty,
-    bishops: SquareSet.empty,
-    rooks: SquareSet.empty,
-    queens: SquareSet.empty,
-    kings: SquareSet.empty,
+  /// Horde start Position
+  static final standardHorde = Board._(
+    size: BoardSize.standard,
+    attacks: Attacks.standard,
+    occupied: SquareSet(BigInt.parse('0xffff0066ffffffff'), SquareSetSize.standard,),
+    promoted: SquareSet.empty(SquareSetSize.standard),
+    white: SquareSet(BigInt.from(0x00000066ffffffff), SquareSetSize.standard,),
+    black: SquareSet(BigInt.parse('0xffff000000000000'), SquareSetSize.standard,),
+    pawns: SquareSet(BigInt.parse('0x00ff0066ffffffff'), SquareSetSize.standard,),
+    knights: SquareSet(BigInt.parse('0x4200000000000000'), SquareSetSize.standard,),
+    bishops: SquareSet(BigInt.parse('0x2400000000000000'), SquareSetSize.standard,),
+    rooks: SquareSet(BigInt.parse('0x8100000000000000'), SquareSetSize.standard,),
+    queens: SquareSet(BigInt.parse('0x0800000000000000'), SquareSetSize.standard,),
+    kings: SquareSet(BigInt.parse('0x1000000000000000'), SquareSetSize.standard,),
   );
 
   SquareSet get rooksAndQueens => rooks | queens;
@@ -185,7 +310,7 @@ class Board {
 
   /// Gets the number of pieces of each [Role] for the given [Side].
   IMap<Role, int> materialCount(Side side) => IMap.fromEntries(
-        Role.values.map((role) => MapEntry(role, piecesOf(side, role).size)),
+        Role.values.map((role) => MapEntry(role, piecesOf(side, role).bits)),
       );
 
   /// A [SquareSet] of all the pieces matching this [Side] and [Role].

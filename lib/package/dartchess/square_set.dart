@@ -1,6 +1,146 @@
+import 'package:crea_chess/package/dartchess/board.dart';
 import 'package:crea_chess/package/dartchess/models.dart';
-import 'package:crea_chess/package/dartchess/size.dart';
 import 'package:meta/meta.dart';
+
+@immutable
+class SquareSetSize {
+  SquareSetSize({
+    required BoardSize boardSize,
+  })  : files = boardSize.files,
+        ranks = boardSize.ranks,
+        squaresCount = boardSize.files * boardSize.ranks,
+        full = SquareSetSize._full(boardSize),
+        file1 = SquareSetSize._file1(boardSize),
+        rank1 = SquareSetSize._rank1(boardSize),
+        lightSquares = SquareSetSize._lightSquares(boardSize),
+        darkSquares = SquareSetSize._darkSquares(boardSize),
+        diagonal = SquareSetSize._diagonal(boardSize),
+        antidiagonal = SquareSetSize._antidiagonal(boardSize),
+        corners = SquareSetSize._corners(boardSize),
+        center = SquareSetSize._center(boardSize),
+        backranks = SquareSetSize._backranks(boardSize);
+
+  const SquareSetSize._({
+    required this.files,
+    required this.ranks,
+    required this.squaresCount,
+    required this.full,
+    required this.file1,
+    required this.rank1,
+    required this.lightSquares,
+    required this.darkSquares,
+    required this.diagonal,
+    required this.antidiagonal,
+    required this.corners,
+    required this.center,
+    required this.backranks,
+  });
+
+  final int files;
+  final int ranks;
+  final int squaresCount;
+  final BigInt full;
+  final BigInt file1;
+  final BigInt rank1;
+  final BigInt lightSquares;
+  final BigInt darkSquares;
+  final BigInt diagonal; // diag from bottomleft corner, can exceed the size
+  final BigInt antidiagonal; // from bottomright corner, can exceed the size
+  final BigInt corners;
+  final BigInt center;
+  final BigInt backranks;
+
+  static final standard = SquareSetSize._(
+    files: BoardSize.standard.files,
+    ranks: BoardSize.standard.ranks,
+    squaresCount: 64,
+    full: BigInt.parse('0xffffffffffffffff'),
+    file1: BigInt.parse('0x0101010101010101'),
+    rank1: BigInt.parse('0x00000000000000ff'),
+    lightSquares: BigInt.parse('0x55AA55AA55AA55AA'),
+    darkSquares: BigInt.parse('0xAA55AA55AA55AA55'),
+    diagonal: BigInt.parse('0x8040201008040201'),
+    antidiagonal: BigInt.parse('0x0102040810204080'),
+    corners: BigInt.parse('0x8100000000000081'),
+    center: BigInt.parse('0x0000001818000000'),
+    backranks: BigInt.parse('0xff000000000000ff'),
+  );
+
+  static BigInt _full(BoardSize boardSize) =>
+      (BigInt.one << (boardSize.files * boardSize.ranks)) - BigInt.one;
+
+  static BigInt _file1(BoardSize boardSize) => List.generate(
+        boardSize.ranks,
+        (index) => BigInt.one << (index * boardSize.files),
+      ).fold(BigInt.zero, (bi1, bi2) => bi1 | bi2);
+
+  static BigInt _rank1(BoardSize boardSize) =>
+      (BigInt.one << boardSize.files) - BigInt.one;
+
+  static BigInt _lightSquares(BoardSize size) => List.generate(
+        size.files * size.ranks,
+        (index) =>
+            BigInt.one <<
+            (index * 2 +
+                (size.files.isEven && ((index * 2 + 1) ~/ size.files).isOdd
+                    ? 0
+                    : 1)),
+      ).fold(BigInt.zero, (bi1, bi2) => bi1 | bi2);
+
+  static BigInt _darkSquares(BoardSize size) => List.generate(
+        size.files * size.ranks,
+        (index) =>
+            BigInt.one <<
+            (index * 2 +
+                (size.files.isEven && ((index * 2 + 1) ~/ size.files).isOdd
+                    ? 1
+                    : 0)),
+      ).fold(BigInt.zero, (bi1, bi2) => bi1 | bi2);
+
+  static BigInt _diagonal(BoardSize size) => List.generate(
+        size.files,
+        (index) => BigInt.one << (index + (index * size.files)),
+      ).fold(BigInt.zero, (bi1, bi2) => bi1 | bi2);
+
+  static BigInt _antidiagonal(BoardSize size) => List.generate(
+        size.files,
+        (index) =>
+            BigInt.one << (size.files - 1 - index + (index * size.files)),
+      ).fold(BigInt.zero, (bi1, bi2) => bi1 | bi2);
+
+  static BigInt _corners(BoardSize size) => [
+        BigInt.one,
+        BigInt.one << size.files - 1,
+        BigInt.one << size.files * (size.ranks - 1),
+        BigInt.one << (size.files * (size.ranks - 1) + size.files - 1),
+      ].fold(BigInt.zero, (bi1, bi2) => bi1 | bi2);
+
+  /// Used by king of the hill
+  static BigInt _center(BoardSize size) => List.generate(
+        size.files.isEven ? 2 : 3,
+        (file) => List.generate(
+          size.ranks.isEven ? 2 : 3,
+          (rank) =>
+              BigInt.one <<
+              (((size.files - 2) ~/ 2 + file) +
+                  (size.files * ((size.ranks - 2) ~/ 2 + rank))),
+        ).fold(BigInt.zero, (bi1, bi2) => bi1 | bi2),
+      ).fold(BigInt.zero, (bi1, bi2) => bi1 | bi2);
+
+  static BigInt _backranks(BoardSize size) => [
+        _rank1(size),
+        _rank1(size) << (size.files * (size.ranks - 1)),
+      ].fold(BigInt.zero, (bi1, bi2) => bi1 | bi2);
+
+  @override
+  String toString() => 'SquareSetSize(files:$files, ranks:$ranks)';
+
+  /// Gets the rank of that square.
+  int rankOf(int square) => square ~/ files;
+
+  /// Gets the file of that square.
+  int fileOf(int square) => square.remainder(files);
+}
 
 /// A set of squares represented by a (ranks x files) bit mask, using little
 /// endian rank-file (LERF) mapping.
@@ -57,6 +197,9 @@ class SquareSet {
 
   /// Create an empty [SquareSet].
   SquareSet.empty(this.size) : value = BigInt.zero;
+
+  /// Create an empty [SquareSet].
+  SquareSet.corners(this.size) : value = size.corners;
 
   /// bit integer representing the square set.
   final BigInt value;

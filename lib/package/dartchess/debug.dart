@@ -1,9 +1,60 @@
 import 'package:crea_chess/package/dartchess/board.dart';
 import 'package:crea_chess/package/dartchess/models.dart';
 import 'package:crea_chess/package/dartchess/position.dart';
-import 'package:crea_chess/package/dartchess/size.dart';
+import 'package:crea_chess/package/dartchess/square_map.dart';
 import 'package:crea_chess/package/dartchess/square_set.dart';
 import 'package:flutter/material.dart';
+
+/// Takes a string and returns a SquareSet. Useful for debugging/testing purposes.
+///
+/// Example:
+/// ```dart
+/// final str = '''
+/// . 1 1 1 . . . .
+/// . 1 . 1 . . . .
+/// . 1 . . 1 . . .
+/// . 1 . . . 1 . .
+/// . 1 1 1 1 . . .
+/// . 1 . . . 1 . .
+/// . 1 . . . 1 . .
+/// . 1 . . 1 . . .
+/// '''
+/// final squareSet = makeSquareSet(str);
+/// // SquareSet(0x0E0A12221E222212)
+/// ```
+SquareMap makeSquareMap(String rep, SquareMapSize size) {
+  var ret = SquareMap.zero;
+  final table = rep
+      .split('\n')
+      .where((l) => l.isNotEmpty)
+      .map((r) => r.split(' '))
+      .toList()
+      .reversed
+      .toList();
+  for (var y = size.ranks - 1; y >= 0; y--) {
+    for (var x = 0; x < size.files; x++) {
+      final repSq = table[y][x];
+      if (repSq == '1') {
+        ret = ret.withSquare(x + y * size.files);
+      }
+    }
+  }
+  return ret;
+}
+
+/// Prints the square set as a human readable string format
+String humanReadableSquareMap(SquareMap map, SquareMapSize size) {
+  final buffer = StringBuffer();
+  for (var y = size.ranks - 1; y >= 0; y--) {
+    for (var x = 0; x < (size.files); x++) {
+      final square = x + y * size.files;
+      buffer
+        ..write(map.has(square) ? '1' : '.')
+        ..write(x < (size.files - 1) ? ' ' : '\n');
+    }
+  }
+  return buffer.toString();
+}
 
 /// Takes a string and returns a SquareSet. Useful for debugging/testing purposes.
 ///
