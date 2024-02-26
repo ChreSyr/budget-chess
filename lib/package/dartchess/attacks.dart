@@ -22,6 +22,8 @@ class Attacks {
   final List<SquareMap> _knightAttacks;
   final Map<Side, List<SquareMap>> _pawnAttacks;
 
+  static final standard = Attacks(SquareMapSize(files: 8, ranks: 8));
+
   static List<SquareMap> _getAntiDiagRange(SquareMapSize size) => _tabulate(
         (square) {
           // shift is the lowest square in the same antidiagonal as sq

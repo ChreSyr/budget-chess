@@ -1,7 +1,6 @@
 import 'package:crea_chess/package/dartchess/attacks.dart';
 import 'package:crea_chess/package/dartchess/models.dart';
 import 'package:crea_chess/package/dartchess/square_map.dart';
-import 'package:crea_chess/package/dartchess/square_set.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
@@ -138,13 +137,13 @@ class Board {
   /// Parse the board part of a FEN string and returns a Board.
   ///
   /// Throws a [FenError] if the provided FEN string is not valid.
-  factory Board.parseFen(String boardFen) {
-    var board = Board.empty(?);
-    var rank = 7;
+  factory Board.parseFen(String boardFen, BoardSize size) {
+    var board = Board.empty(size);
+    var rank = size.ranks - 1;
     var file = 0;
     for (var i = 0; i < boardFen.length; i++) {
       final c = boardFen[i];
-      if (c == '/' && file == 8) {
+      if (c == '/' && file == size.files) {
         file = 0;
         rank--;
       } else {
@@ -152,8 +151,8 @@ class Board {
         if (code < 57) {
           file += code - 48;
         } else {
-          if (file >= 8 || rank < 0) throw const FenError('ERR_BOARD');
-          final square = file + rank * 8;
+          if (file >= size.files || rank < 0) throw const FenError('ERR_BOARD');
+          final square = file + rank * size.files;
           final promoted = i + 1 < boardFen.length && boardFen[i + 1] == '~';
           final piece = _charToPiece(c, promoted);
           if (piece == null) throw const FenError('ERR_BOARD');
@@ -163,24 +162,24 @@ class Board {
         }
       }
     }
-    if (rank != 0 || file != 8) throw const FenError('ERR_BOARD');
+    if (rank != 0 || file != size.files) throw const FenError('ERR_BOARD');
     return board;
   }
 
   factory Board.empty(BoardSize size) => Board._(
-    size: size,
-    attacks: Attacks(SquareSetSize(boardSize: size)),
-    occupied: SquareSet.empty(SquareSetSize(boardSize: size)),
-    promoted: SquareSet.empty(SquareSetSize(boardSize: size)),
-    white: SquareSet.empty(SquareSetSize(boardSize: size)),
-    black: SquareSet.empty(SquareSetSize(boardSize: size)),
-    pawns: SquareSet.empty(SquareSetSize(boardSize: size)),
-    knights: SquareSet.empty(SquareSetSize(boardSize: size)),
-    bishops: SquareSet.empty(SquareSetSize(boardSize: size)),
-    rooks: SquareSet.empty(SquareSetSize(boardSize: size)),
-    queens: SquareSet.empty(SquareSetSize(boardSize: size)),
-    kings: SquareSet.empty(SquareSetSize(boardSize: size)),
-  );
+        size: size,
+        attacks: Attacks(size),
+        occupied: SquareMap.zero,
+        promoted: SquareMap.zero,
+        white: SquareMap.zero,
+        black: SquareMap.zero,
+        pawns: SquareMap.zero,
+        knights: SquareMap.zero,
+        bishops: SquareMap.zero,
+        rooks: SquareMap.zero,
+        queens: SquareMap.zero,
+        kings: SquareMap.zero,
+      );
 
   /// The number of ranks and files
   final BoardSize size;
@@ -189,95 +188,95 @@ class Board {
   final Attacks attacks;
 
   /// All occupied squares.
-  final SquareSet occupied;
+  final SquareMap occupied;
 
   /// All squares occupied by pieces known to be promoted.
   ///
   /// This information is relevant in chess variants like [Crazyhouse].
-  final SquareSet promoted;
+  final SquareMap promoted;
 
   /// All squares occupied by white pieces.
-  final SquareSet white;
+  final SquareMap white;
 
   /// All squares occupied by black pieces.
-  final SquareSet black;
+  final SquareMap black;
 
   /// All squares occupied by pawns.
-  final SquareSet pawns;
+  final SquareMap pawns;
 
   /// All squares occupied by knights.
-  final SquareSet knights;
+  final SquareMap knights;
 
   /// All squares occupied by bishops.
-  final SquareSet bishops;
+  final SquareMap bishops;
 
   /// All squares occupied by rooks.
-  final SquareSet rooks;
+  final SquareMap rooks;
 
   /// All squares occupied by queens.
-  final SquareSet queens;
+  final SquareMap queens;
 
   /// All squares occupied by kings.
-  final SquareSet kings;
+  final SquareMap kings;
 
   /// Standard chess starting position.
   static final standard = Board._(
     size: BoardSize.standard,
     attacks: Attacks.standard,
-    occupied: SquareSet(BigInt.parse('0xffff00000000ffff'), SquareSetSize.standard,),
-    promoted: SquareSet.empty(SquareSetSize.standard),
-    white: SquareSet(BigInt.from(0xffff), SquareSetSize.standard),
-    black: SquareSet(BigInt.parse('0xffff000000000000'), SquareSetSize.standard,),
-    pawns: SquareSet(BigInt.parse('0x00ff00000000ff00'), SquareSetSize.standard,),
-    knights: SquareSet(BigInt.parse('0x4200000000000042'), SquareSetSize.standard,),
-    bishops: SquareSet(BigInt.parse('0x2400000000000024'), SquareSetSize.standard,),
-    rooks: SquareSet.corners(SquareSetSize.standard),
-    queens: SquareSet(BigInt.parse('0x0800000000000008'), SquareSetSize.standard,),
-    kings: SquareSet(BigInt.parse('0x1000000000000010'), SquareSetSize.standard,),
+    occupied: SquareMap.parse('0xffff00000000ffff'),
+    promoted: SquareMap.zero,
+    white: SquareMap.from(0xffff),
+    black: SquareMap.parse('0xffff000000000000'),
+    pawns: SquareMap.parse('0x00ff00000000ff00'),
+    knights: SquareMap.parse('0x4200000000000042'),
+    bishops: SquareMap.parse('0x2400000000000024'),
+    rooks: BoardSize.standard.corners,
+    queens: SquareMap.parse('0x0800000000000008'),
+    kings: SquareMap.parse('0x1000000000000010'),
   );
 
   /// Racing Kings start position
-  static final standardRacingKings =  Board._(
+  static final standardRacingKings = Board._(
     size: BoardSize.standard,
     attacks: Attacks.standard,
-    occupied: SquareSet(BigInt.from(0xffff), SquareSetSize.standard),
-    promoted: SquareSet.empty(SquareSetSize.standard),
-    white: SquareSet(BigInt.from(0xf0f0), SquareSetSize.standard),
-    black: SquareSet(BigInt.from(0x0f0f), SquareSetSize.standard),
-    pawns: SquareSet.empty(SquareSetSize.standard),
-    knights: SquareSet(BigInt.from(0x1818), SquareSetSize.standard),
-    bishops: SquareSet(BigInt.from(0x2424), SquareSetSize.standard),
-    rooks: SquareSet(BigInt.from(0x4242), SquareSetSize.standard),
-    queens: SquareSet(BigInt.from(0x0081), SquareSetSize.standard),
-    kings: SquareSet(BigInt.from(0x8100), SquareSetSize.standard),
+    occupied: SquareMap.from(0xffff),
+    promoted: SquareMap.zero,
+    white: SquareMap.from(0xf0f0),
+    black: SquareMap.from(0x0f0f),
+    pawns: SquareMap.zero,
+    knights: SquareMap.from(0x1818),
+    bishops: SquareMap.from(0x2424),
+    rooks: SquareMap.from(0x4242),
+    queens: SquareMap.from(0x0081),
+    kings: SquareMap.from(0x8100),
   );
 
   /// Horde start Position
   static final standardHorde = Board._(
     size: BoardSize.standard,
     attacks: Attacks.standard,
-    occupied: SquareSet(BigInt.parse('0xffff0066ffffffff'), SquareSetSize.standard,),
-    promoted: SquareSet.empty(SquareSetSize.standard),
-    white: SquareSet(BigInt.from(0x00000066ffffffff), SquareSetSize.standard,),
-    black: SquareSet(BigInt.parse('0xffff000000000000'), SquareSetSize.standard,),
-    pawns: SquareSet(BigInt.parse('0x00ff0066ffffffff'), SquareSetSize.standard,),
-    knights: SquareSet(BigInt.parse('0x4200000000000000'), SquareSetSize.standard,),
-    bishops: SquareSet(BigInt.parse('0x2400000000000000'), SquareSetSize.standard,),
-    rooks: SquareSet(BigInt.parse('0x8100000000000000'), SquareSetSize.standard,),
-    queens: SquareSet(BigInt.parse('0x0800000000000000'), SquareSetSize.standard,),
-    kings: SquareSet(BigInt.parse('0x1000000000000000'), SquareSetSize.standard,),
+    occupied: SquareMap.parse('0xffff0066ffffffff'),
+    promoted: SquareMap.zero,
+    white: SquareMap.from(0x00000066ffffffff),
+    black: SquareMap.parse('0xffff000000000000'),
+    pawns: SquareMap.parse('0x00ff0066ffffffff'),
+    knights: SquareMap.parse('0x4200000000000000'),
+    bishops: SquareMap.parse('0x2400000000000000'),
+    rooks: SquareMap.parse('0x8100000000000000'),
+    queens: SquareMap.parse('0x0800000000000000'),
+    kings: SquareMap.parse('0x1000000000000000'),
   );
 
-  SquareSet get rooksAndQueens => rooks | queens;
-  SquareSet get bishopsAndQueens => bishops | queens;
+  SquareMap get rooksAndQueens => rooks | queens;
+  SquareMap get bishopsAndQueens => bishops | queens;
 
   /// Board part of the Forsyth-Edwards-Notation.
   String get fen {
     final buffer = StringBuffer();
     var empty = 0;
-    for (var rank = 7; rank >= 0; rank--) {
-      for (var file = 0; file < 8; file++) {
-        final square = file + rank * 8;
+    for (var rank = size.ranks - 1; rank >= 0; rank--) {
+      for (var file = 0; file < size.files; file++) {
+        final square = file + rank * size.files;
         final piece = pieceAt(square);
         if (piece == null) {
           empty++;
@@ -289,7 +288,7 @@ class Board {
           buffer.write(piece.fenChar);
         }
 
-        if (file == 7) {
+        if (file == size.files - 1) {
           if (empty > 0) {
             buffer.write(empty.toString());
             empty = 0;
@@ -310,19 +309,19 @@ class Board {
 
   /// Gets the number of pieces of each [Role] for the given [Side].
   IMap<Role, int> materialCount(Side side) => IMap.fromEntries(
-        Role.values.map((role) => MapEntry(role, piecesOf(side, role).bits)),
+        Role.values.map((role) => MapEntry(role, piecesOf(side, role).length)),
       );
 
-  /// A [SquareSet] of all the pieces matching this [Side] and [Role].
-  SquareSet piecesOf(Side side, Role role) {
+  /// A [SquareMap] of all the pieces matching this [Side] and [Role].
+  SquareMap piecesOf(Side side, Role role) {
     return bySide(side) & byRole(role);
   }
 
   /// Gets all squares occupied by [Side].
-  SquareSet bySide(Side side) => side == Side.white ? white : black;
+  SquareMap bySide(Side side) => side == Side.white ? white : black;
 
   /// Gets all squares occupied by [Role].
-  SquareSet byRole(Role role) {
+  SquareMap byRole(Role role) {
     switch (role) {
       case Role.pawn:
         return pawns;
@@ -340,7 +339,7 @@ class Board {
   }
 
   /// Gets all squares occupied by [Piece].
-  SquareSet byPiece(Piece piece) {
+  SquareMap byPiece(Piece piece) {
     return bySide(piece.color) & byRole(piece.role);
   }
 
@@ -382,18 +381,15 @@ class Board {
   }
 
   /// Finds the squares who are attacking `square` by the `attacker` [Side].
-  SquareSet attacksTo(Square square, Side attacker, {SquareSet? occupied}) =>
-      bySide(attacker).intersect(
-        rookAttacks(square, occupied ?? this.occupied)
-            .intersect(rooksAndQueens)
-            .union(
-              bishopAttacks(square, occupied ?? this.occupied)
-                  .intersect(bishopsAndQueens),
-            )
-            .union(knightAttacks(square).intersect(knights))
-            .union(kingAttacks(square).intersect(kings))
-            .union(pawnAttacks(attacker.opposite, square).intersect(pawns)),
-      );
+  SquareMap attacksTo(Square square, Side attacker, {SquareMap? occupied}) =>
+      bySide(attacker) &
+          (size.attacks.ofRook(square, occupied ?? this.occupied) &
+              rooksAndQueens) |
+      (size.attacks.ofBishop(square, occupied ?? this.occupied) &
+          bishopsAndQueens) |
+      (size.attacks.ofKnight(square) & knights) |
+      (size.attacks.ofKing(square) & kings) |
+      (size.attacks.ofPawn(attacker.opposite, square) & pawns);
 
   /// Puts a [Piece] on a [Square] overriding the existing one, if any.
   Board setPieceAt(Square square, Piece piece) {
@@ -437,23 +433,25 @@ class Board {
         : this;
   }
 
-  Board withPromoted(SquareSet promoted) {
+  Board withPromoted(SquareMap promoted) {
     return _copyWith(promoted: promoted);
   }
 
   Board _copyWith({
-    SquareSet? occupied,
-    SquareSet? promoted,
-    SquareSet? white,
-    SquareSet? black,
-    SquareSet? pawns,
-    SquareSet? knights,
-    SquareSet? bishops,
-    SquareSet? rooks,
-    SquareSet? queens,
-    SquareSet? kings,
+    SquareMap? occupied,
+    SquareMap? promoted,
+    SquareMap? white,
+    SquareMap? black,
+    SquareMap? pawns,
+    SquareMap? knights,
+    SquareMap? bishops,
+    SquareMap? rooks,
+    SquareMap? queens,
+    SquareMap? kings,
   }) {
-    return Board(
+    return Board._(
+      size: size,
+      attacks: attacks,
       occupied: occupied ?? this.occupied,
       promoted: promoted ?? this.promoted,
       white: white ?? this.white,
