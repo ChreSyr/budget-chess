@@ -1,9 +1,8 @@
 import 'dart:math' as math;
 
 import 'package:crea_chess/package/dartchess/board.dart';
-import 'package:crea_chess/package/dartchess/constants.dart';
 import 'package:crea_chess/package/dartchess/models.dart';
-import 'package:crea_chess/package/dartchess/square_set.dart';
+import 'package:crea_chess/package/dartchess/square_map.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:meta/meta.dart';
 
@@ -32,7 +31,7 @@ class Setup {
   ///   FEN fields.
   ///
   /// Throws a [FenError] if the provided FEN is not valid.
-  factory Setup.parseFen(String fen) {
+  factory Setup.parseFen(String fen, BoardSize size) {
     final parts = fen.split(RegExp(r'[\s_]+'));
     if (parts.isEmpty) throw const FenError('ERR_FEN');
 
@@ -45,16 +44,16 @@ class Setup {
       if (pocketStart == -1) {
         throw const FenError('ERR_FEN');
       }
-      board = Board.parseFen(boardPart.substring(0, pocketStart));
+      board = Board.parseFen(boardPart.substring(0, pocketStart), size);
       pockets = _parsePockets(
         boardPart.substring(pocketStart + 1, boardPart.length - 1),
       );
     } else {
-      final pocketStart = _nthIndexOf(boardPart, '/', 7);
+      final pocketStart = _nthIndexOf(boardPart, '/', size.ranks - 1);
       if (pocketStart == -1) {
-        board = Board.parseFen(boardPart);
+        board = Board.parseFen(boardPart, size);
       } else {
-        board = Board.parseFen(boardPart.substring(0, pocketStart));
+        board = Board.parseFen(boardPart.substring(0, pocketStart), size);
         pockets = _parsePockets(boardPart.substring(pocketStart + 1));
       }
     }
@@ -75,9 +74,9 @@ class Setup {
     }
 
     // Castling
-    SquareSet unmovedRooks;
+    SquareMap unmovedRooks;
     if (parts.isEmpty) {
-      unmovedRooks = SquareSet.empty;
+      unmovedRooks = SquareMap.zero;
     } else {
       final castlingPart = parts.removeAt(0);
       unmovedRooks = _parseCastlingFen(board, castlingPart);
@@ -88,7 +87,7 @@ class Setup {
     if (parts.isNotEmpty) {
       final epPart = parts.removeAt(0);
       if (epPart != '-') {
-        epSquare = parseSquare(epPart);
+        epSquare = board.size.parseSquare(epPart);
         if (epSquare == null) throw const FenError('ERR_EP_SQUARE');
       }
     }
@@ -149,7 +148,7 @@ class Setup {
   final Side turn;
 
   /// Unmoved rooks positions used to determine castling rights.
-  final SquareSet unmovedRooks;
+  final SquareMap unmovedRooks;
 
   /// En passant target square.
   ///
@@ -168,7 +167,7 @@ class Setup {
   static final standard = Setup(
     board: Board.standard,
     turn: Side.white,
-    unmovedRooks: SquareSet.corners,
+    unmovedRooks: BoardSize.standard.corners,
     halfmoves: 0,
     fullmoves: 1,
   );
@@ -179,7 +178,7 @@ class Setup {
         board.fen + (pockets != null ? _makePockets(pockets!) : ''),
         turnLetter,
         _makeCastlingFen(board, unmovedRooks),
-        if (epSquare != null) toAlgebraic(epSquare!) else '-',
+        if (epSquare != null) board.size.algebraicOf(epSquare!) else '-',
         if (remainingChecks != null) _makeRemainingChecks(remainingChecks!),
         math.max(0, math.min(halfmoves, 9999)),
         math.max(1, math.min(fullmoves, 9999)),
@@ -307,8 +306,8 @@ Pockets _parsePockets(String pocketPart) {
   }
 }
 
-SquareSet _parseCastlingFen(Board board, String castlingPart) {
-  var unmovedRooks = SquareSet.empty;
+SquareMap _parseCastlingFen(Board board, String castlingPart) {
+  var unmovedRooks = SquareMap.zero;
   if (castlingPart == '-') {
     return unmovedRooks;
   }
@@ -316,7 +315,7 @@ SquareSet _parseCastlingFen(Board board, String castlingPart) {
     final c = castlingPart[i];
     final lower = c.toLowerCase();
     final color = c == lower ? Side.black : Side.white;
-    final backrankMask = SquareSet.backrankOf(color);
+    final backrankMask = board.size.backrankOf(color);
     final backrank = backrankMask & board.bySide(color);
 
     Iterable<Square> candidates;
@@ -324,11 +323,16 @@ SquareSet _parseCastlingFen(Board board, String castlingPart) {
       candidates = backrank.squares;
     } else if (lower == 'k') {
       candidates = backrank.squaresReversed;
-    } else if ('a'.compareTo(lower) <= 0 && lower.compareTo('h') <= 0) {
-      candidates =
-          (SquareSet.fromFile(lower.codeUnitAt(0) - 'a'.codeUnitAt(0)) &
-                  backrank)
-              .squares;
+    } else if ('a'.compareTo(lower) <= 0 &&
+        lower.compareTo(board.size.fileIds.last) <= 0) {
+      // Casle rights with rook file. Ex : qkGK
+      // TODO : replace by UNI-FEN notation. Ex : qkQ(g)K
+      candidates = (SquareMapExt.fromFile(
+                lower.codeUnitAt(0) - 'a'.codeUnitAt(0),
+                board.size,
+              ) &
+              backrank)
+          .squares;
     } else {
       throw const FenError('ERR_CASTLING');
     }
@@ -340,8 +344,10 @@ SquareSet _parseCastlingFen(Board board, String castlingPart) {
       }
     }
   }
-  if ((SquareSet.fromRank(0) & unmovedRooks).size > 2 ||
-      (SquareSet.fromRank(7) & unmovedRooks).size > 2) {
+  if ((SquareMapExt.fromRank(0, board.size) & unmovedRooks).length > 2 ||
+      (SquareMapExt.fromRank(board.size.ranks - 1, board.size) & unmovedRooks)
+              .length >
+          2) {
     throw const FenError('ERR_CASTLING');
   }
   return unmovedRooks;
@@ -359,10 +365,10 @@ String _makePockets(Pockets pockets) {
   return '[${wPart.toUpperCase()}$bPart]';
 }
 
-String _makeCastlingFen(Board board, SquareSet unmovedRooks) {
+String _makeCastlingFen(Board board, SquareMap unmovedRooks) {
   final buffer = StringBuffer();
   for (final color in Side.values) {
-    final backrank = SquareSet.backrankOf(color);
+    final backrank = board.size.backrankOf(color);
     final king = board.kingOf(color);
     final candidates =
         board.byPiece(Piece(color: color, role: Role.rook)) & backrank;
@@ -372,7 +378,9 @@ String _makeCastlingFen(Board board, SquareSet unmovedRooks) {
       } else if (rook == candidates.last && king != null && king < rook) {
         buffer.write(color == Side.white ? 'K' : 'k');
       } else {
-        final file = kFileNames[squareFile(rook)];
+        // Casle rights with rook file. Ex : qkGK
+        // TODO : replace by UNI-FEN notation. Ex : qkQ(g)K
+        final file = board.size.fileIds[board.size.fileOf(rook)];
         buffer.write(color == Side.white ? file.toUpperCase() : file);
       }
     }

@@ -2,10 +2,10 @@
 
 import 'dart:math' as math;
 
+import 'package:crea_chess/package/dartchess/board.dart';
 import 'package:crea_chess/package/dartchess/models.dart';
 import 'package:crea_chess/package/dartchess/position.dart';
 import 'package:crea_chess/package/dartchess/setup.dart';
-import 'package:crea_chess/package/dartchess/utils.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:meta/meta.dart';
 
@@ -419,11 +419,13 @@ enum CommentShapeColor {
 @immutable
 class PgnCommentShape {
   const PgnCommentShape({
+    required this.size,
     required this.color,
     required this.from,
     required this.to,
   });
 
+  final BoardSize size;
   final CommentShapeColor color;
   final Square from;
   final Square to;
@@ -431,21 +433,21 @@ class PgnCommentShape {
   @override
   String toString() {
     return to == from
-        ? '${color.string[0]}${toAlgebraic(to)}'
-        : '${color.string[0]}${toAlgebraic(from)}${toAlgebraic(to)}';
+        ? '${color.string[0]}${size.algebraicOf(to)}'
+        : '${color.string[0]}${size.algebraicOf(from)}${size.algebraicOf(to)}';
   }
 
   /// Parse the PGN for any comment or return null.
-  static PgnCommentShape? fromPgn(String str) {
+  static PgnCommentShape? fromPgn(String str, BoardSize size) {
     final color = CommentShapeColor.parseShapeColor(str.substring(0, 1));
-    final from = parseSquare(str.substring(1, 3));
+    final from = size.parseSquare(str.substring(1, 3));
     if (color == null || from == null) return null;
     if (str.length == 3) {
-      return PgnCommentShape(color: color, from: from, to: from);
+      return PgnCommentShape(size: size, color: color, from: from, to: from);
     }
-    final to = parseSquare(str.substring(3, 5));
+    final to = size.parseSquare(str.substring(3, 5));
     if (str.length == 5 && to != null) {
-      return PgnCommentShape(color: color, from: from, to: to);
+      return PgnCommentShape(size: size, color: color, from: from, to: to);
     }
     return null;
   }

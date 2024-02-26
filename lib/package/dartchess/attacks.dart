@@ -121,29 +121,11 @@ class Attacks {
                 [-1, -1],
                 [-1, 1],
               ],
-              size),
+            size,
+          ),
           size,
         ),
       };
-
-  // /// Gets squares attacked or defended by a `piece` on `square`, given
-  // /// `occupied` squares.
-  // SquareSet of(Piece piece, Square square, SquareSet occupied) {
-  //   switch (piece.role) {
-  //     case Role.pawn:
-  //       return pawnAttacks(piece.color, square, occupied.size);
-  //     case Role.knight:
-  //       return knightAttacks(square, occupied.size);
-  //     case Role.bishop:
-  //       return bishopAttacks(square, occupied);
-  //     case Role.rook:
-  //       return rookAttacks(square, occupied);
-  //     case Role.queen:
-  //       return queenAttacks(square, occupied);
-  //     case Role.king:
-  //       return ofKing(square);
-  //   }
-  // }
 
   SquareMap _fileAttacks(Square square, SquareMap occupied) => _hyperbola(
         SquareMapExt.fromSquare(square),
@@ -160,6 +142,25 @@ class Attacks {
     forward = forward - map;
     reverse = reverse - map.flipHorizontal(_size);
     return (forward ^ reverse.flipHorizontal(_size)) & range;
+  }
+
+  /// Gets squares attacked or defended by a `piece` on `square`, given
+  /// `occupied` squares.
+  SquareMap of(Piece piece, Square square, SquareMap occupied) {
+    switch (piece.role) {
+      case Role.pawn:
+        return ofPawn(piece.color, square);
+      case Role.knight:
+        return ofKnight(square);
+      case Role.bishop:
+        return ofBishop(square, occupied);
+      case Role.rook:
+        return ofRook(square, occupied);
+      case Role.queen:
+        return ofQueen(square, occupied);
+      case Role.king:
+        return ofKing(square);
+    }
   }
 
   /// Return a [SquareMap] with all the square a bishop attacks from this square
@@ -185,10 +186,38 @@ class Attacks {
   /// Return a [SquareMap] with all the square a rook attacks from this square
   SquareMap ofRook(Square square, SquareMap occupied) =>
       _fileAttacks(square, occupied) ^ _rankAttacks(square, occupied);
+
+  /// Gets all squares of the rank, file or diagonal with the two squares
+  /// `a` and `b`, or an empty set if they are not aligned.
+  SquareMap ray(Square a, Square b) {
+    final other = SquareMapExt.fromSquare(b);
+    if (_rankRange[a].isIntersected(other)) {
+      return _rankRange[a].withSquare(a);
+    }
+    if (_antiDiagRange[a].isIntersected(other)) {
+      return _antiDiagRange[a].withSquare(a);
+    }
+    if (_diagRange[a].isIntersected(other)) {
+      return _diagRange[a].withSquare(a);
+    }
+    if (_fileRange[a].isIntersected(other)) {
+      return _fileRange[a].withSquare(a);
+    }
+    return SquareMap.zero;
+  }
+
+  /// Gets all squares between `a` and `b` (bounds not included), or an empty set
+  /// if they are not on the same rank, file or diagonal.
+  SquareMap between(Square a, Square b) => ray(a, b)
+      .intersect(_size.full.shl(a, _size).xor(_size.full.shl(b, _size)))
+      .withoutFirst();
 }
 
 SquareMap _computeRange(
-    Square square, List<List<int>> deltas, SquareMapSize size) {
+  Square square,
+  List<List<int>> deltas,
+  SquareMapSize size,
+) {
   final x = size.fileOf(square);
   final y = size.rankOf(square);
   var range = BigInt.zero;
@@ -211,7 +240,11 @@ List<T> _tabulate<T>(T Function(Square square) f, SquareMapSize size) {
 }
 
 SquareMap _hyperbola(
-    SquareMap square, SquareMap range, SquareMap occupied, SquareMapSize size) {
+  SquareMap square,
+  SquareMap range,
+  SquareMap occupied,
+  SquareMapSize size,
+) {
   var forward = occupied & range;
   var reverse =
       forward.flipVertical(size); // Assumes no more than 1 square per rank

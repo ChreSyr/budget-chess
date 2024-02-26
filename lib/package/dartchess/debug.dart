@@ -1,5 +1,6 @@
 import 'package:crea_chess/package/dartchess/board.dart';
 import 'package:crea_chess/package/dartchess/models.dart';
+import 'package:crea_chess/package/dartchess/move.dart';
 import 'package:crea_chess/package/dartchess/position.dart';
 import 'package:crea_chess/package/dartchess/square_map.dart';
 import 'package:crea_chess/package/dartchess/square_set.dart';
@@ -111,9 +112,9 @@ String humanReadableSquareSet(SquareSet sq) {
 /// TODO
 String humanReadableBoard(Board board) {
   final buffer = StringBuffer();
-  for (var y = 7; y >= 0; y--) {
-    for (var x = 0; x < 8; x++) {
-      final square = x + y * 8;
+  for (var y = board.size.ranks - 1; y >= 0; y--) {
+    for (var x = 0; x < board.size.files; x++) {
+      final square = x + y * board.size.files;
       final p = board.pieceAt(square);
       final col = p != null ? p.fenChar : '.';
       buffer
@@ -143,10 +144,10 @@ int perft(Position pos, int depth, {bool shouldLog = false}) {
     for (final entry in pos.legalMoves.entries) {
       final from = entry.key;
       final to = entry.value;
-      nodes += to.size;
+      nodes += to.length;
       if (pos.board.pawns.has(from)) {
-        final backrank = SquareSet.backrankOf(pos.turn.opposite);
-        nodes += to.intersect(backrank).size * (promotionRoles.length - 1);
+        final backrank = pos.board.size.backrankOf(pos.turn.opposite);
+        nodes += to.intersect(backrank).length * (promotionRoles.length - 1);
       }
     }
     return nodes;
@@ -156,7 +157,8 @@ int perft(Position pos, int depth, {bool shouldLog = false}) {
       final from = entry.key;
       final dests = entry.value;
       // TODO
-      final promotions = squareRank(from) == (pos.turn == Side.white ? 6 : 1) &&
+      final promotions =
+          pos.board.size.rankOf(from) == (pos.turn == Side.white ? 6 : 1) &&
               pos.board.pawns.has(from)
           ? promotionRoles
           : [null];
@@ -174,7 +176,7 @@ int perft(Position pos, int depth, {bool shouldLog = false}) {
       for (final role in Role.values) {
         if (pos.pockets!.of(pos.turn, role) > 0) {
           for (final to in (role == Role.pawn
-                  ? legalDrops.diff(SquareSet.backranks)
+                  ? legalDrops.diff(pos.board.size.backranks)
                   : legalDrops)
               .squares) {
             final drop = DropMove(role: role, to: to);

@@ -5,8 +5,10 @@ import 'package:crea_chess/package/dartchess/models.dart';
 class SquareMapSize {
   SquareMapSize({required this.files, required this.ranks})
       : capacity = files * ranks,
-        file1 = _generateFile1(files, ranks),
-        rank1 = _generateRank1(files, ranks),
+        full = _generateFull(files, ranks),
+        firstFile = _generateFirstFile(files, ranks),
+        firstRank = _generateFirstRank(files, ranks),
+        lastRank = _generateLastRank(files, ranks),
         lightSquares = _generateLightSquares(files, ranks),
         darkSquares = _generateDarkSquares(files, ranks),
         diagonal = _generateDiagonal(files, ranks),
@@ -22,25 +24,34 @@ class SquareMapSize {
   final int capacity;
 
   /// These fields are used to accelerated calculs.
-  final SquareMap file1;
-  final SquareMap rank1;
-  final BigInt lightSquares;
-  final BigInt darkSquares;
-  final BigInt diagonal; // diag from bottomleft corner, can exceed the size
-  final BigInt antidiagonal; // from bottomright corner, can exceed the size
-  final BigInt corners;
-  final BigInt center;
-  final BigInt backranks;
+  final SquareMap full;
+  final SquareMap firstFile;
+  final SquareMap firstRank;
+  final SquareMap lastRank;
+  final SquareMap lightSquares;
+  final SquareMap darkSquares;
+  final SquareMap diagonal; // diag from bottomleft corner, can exceed the size
+  final SquareMap antidiagonal; // from bottomright corner, can exceed the size
+  final SquareMap corners;
+  final SquareMap center;
+  final SquareMap backranks;
+
+  static BigInt _generateFull(int files, int ranks) =>
+      (BigInt.one << (files * ranks)) - BigInt.one;
 
   /// Return a [SquareMap] of this size with all squares of the first file.
-  static SquareMap _generateFile1(int files, int ranks) => List.generate(
+  static SquareMap _generateFirstFile(int files, int ranks) => List.generate(
         ranks,
         (index) => BigInt.one << (index * files),
       ).fold(BigInt.zero, (bi1, bi2) => bi1 | bi2);
 
   /// Return a [SquareMap] of this size with all squares of the first rank.
-  static SquareMap _generateRank1(int files, int ranks) =>
+  static SquareMap _generateFirstRank(int files, int ranks) =>
       (BigInt.one << files) - BigInt.one;
+
+  /// Return a [SquareMap] of this size with all squares of the first rank.
+  static SquareMap _generateLastRank(int files, int ranks) =>
+      ((BigInt.one << files) - BigInt.one) << (files * (ranks - 1));
 
   /// Return a [SquareMap] of this size with all light squares.
   static BigInt _generateLightSquares(int files, int ranks) => List.generate(
@@ -95,29 +106,35 @@ class SquareMapSize {
       ).fold(BigInt.zero, (bi1, bi2) => bi1 | bi2);
 
   /// Return a [SquareMap] of this size with first and last ranks.
-  static BigInt _generateBackranks(int files, int ranks) => [
-        _generateRank1(files, ranks),
-        _generateRank1(files, ranks) << (files * (ranks - 1)),
-      ].fold(BigInt.zero, (bi1, bi2) => bi1 | bi2);
+  static BigInt _generateBackranks(int files, int ranks) =>
+      _generateFirstRank(files, ranks) | _generateLastRank(files, ranks);
 
   /// Gets the rank of that square.
   int rankOf(int square) => square ~/ files;
 
   /// Gets the file of that square.
   int fileOf(int square) => square.remainder(files);
+
+  SquareMap backrankOf(Side side) => side == Side.white ? firstRank : lastRank;
 }
 
 /// This extension helps to visualize the BigInt as a square map for chess boards.
 extension SquareMapExt on SquareMap {
-  /// Creates a [SquareMap] with a single square.
-  static SquareMap fromSquare(int square) => (BigInt.one << square);
+  /// Create a [SquareMap] containing all squares of the given file.
+  static SquareMap fromFile(int file, SquareMapSize size) =>
+      size.firstFile << file;
 
   /// Create a [SquareMap] containing all squares of the given rank.
   static SquareMap fromRank(int rank, SquareMapSize size) =>
-      size.rank1 << (size.files * rank);
+      size.firstRank << (size.files * rank);
 
-  /// Create a [SquareMap] containing all squares of the given file.
-  static SquareMap fromFile(int file, SquareMapSize size) => size.file1 << file;
+  /// Creates a [SquareMap] with a single square.
+  static SquareMap fromSquare(int square) => (BigInt.one << square);
+
+  /// Creates a [SquareSet] from several [Square]s.
+  static SquareMap fromSquares(Iterable<Square> squares) => squares
+      .map((square) => BigInt.one << square)
+      .fold(BigInt.zero, (bi1, bi2) => bi1 | bi2);
 
   /// Return the position of the lowest square.
   ///
@@ -139,6 +156,8 @@ extension SquareMapExt on SquareMap {
 
   bool get isEmpty => this == BigInt.zero;
   bool get isNotEmpty => this != BigInt.zero;
+  bool isDisjoint(SquareMap other) => (this & other).isEmpty;
+  bool isIntersected(SquareMap other) => (this & other).isNotEmpty;
 
   /// Return the position of the highest square.
   int? get last {
@@ -176,17 +195,28 @@ extension SquareMapExt on SquareMap {
   /// Returns square if it is single, otherwise returns null.
   int? get singleSquare => moreThanOne ? null : last;
 
-  /// Return a list of the squares of the [SquareMap].
+  /// Return a list of the squares of the [SquareMap], from lowest to highest.
   ///
   /// Ex : 001010 => [2, 4]
   Iterable<Square> get squares sync* {
-    var bitboard = this;
-    while (bitboard != BigInt.zero) {
-      final square = bitboard.first;
-      bitboard ^= BigInt.one << square!;
+    var bitmap = this;
+    while (bitmap != BigInt.zero) {
+      final square = bitmap.first;
+      bitmap ^= BigInt.one << square!;
       yield square;
     }
   }
+
+  /// Return a list of the squares of the [SquareMap], from highest to lowest.
+  ///
+  /// Ex : 001010 => [4, 2]
+  Iterable<Square> get squaresReversed => squares.toList().reversed;
+
+  SquareMap complement() => ~this;
+  SquareMap diff(SquareMap other) => this & ~other;
+  SquareMap intersect(SquareMap other) => this & other;
+  SquareMap union(SquareMap other) => this | other;
+  SquareMap xor(SquareMap other) => this ^ other;
 
   /// Return the same [SquareMap] flipped vertically, relatively to this size.
   SquareMap flipHorizontal(SquareMapSize size) {
@@ -208,6 +238,31 @@ extension SquareMapExt on SquareMap {
     return this & (BigInt.one << square) != BigInt.zero;
   }
 
+  /// Bitwise right shift
+  SquareMap shr(int shift, SquareMapSize size) {
+    if (shift >= size.capacity) return SquareMap.zero;
+    if (shift > 0) return (this >> shift) & size.full;
+    return this;
+  }
+
+  /// Bitwise left shift
+  SquareMap shl(int shift, SquareMapSize size) {
+    if (shift >= size.capacity) return SquareMap.zero;
+    if (shift > 0) return (this << shift) & size.full;
+    return this;
+  }
+
+  /// Removes [Square] if present, or put it if absent.
+  SquareMap toggleSquare(Square square) {
+    return this ^ (BigInt.one << square);
+  }
+
+  /// Return the same [SquareMap] without the lowest square.
+  SquareMap withoutFirst() {
+    final f = first;
+    return f != null ? withoutSquare(f) : SquareMap.zero;
+  }
+
   /// Return the same [SquareMap] with this square set.
   SquareMap withSquare(Square square) {
     return this | (BigInt.one << square);
@@ -221,12 +276,12 @@ extension SquareMapExt on SquareMap {
   /// Return a [SquareMap] of this size with all squares of the file at
   /// fileIndex.
   SquareMap _getFile(int fileIndex, SquareMapSize size) {
-    return size.file1 & (this >> fileIndex);
+    return size.firstFile & (this >> fileIndex);
   }
 
   /// Return a [SquareMap] of this size with all squares of the rank at
   /// rankIndex.
   SquareMap _getRank(int rankIndex, SquareMapSize size) {
-    return size.rank1 & (this >> (rankIndex * size.files));
+    return size.firstRank & (this >> (rankIndex * size.files));
   }
 }
