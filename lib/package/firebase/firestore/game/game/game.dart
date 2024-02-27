@@ -12,6 +12,7 @@ part 'game.freezed.dart';
 part 'game.g.dart';
 
 /// Represents a [Move] with its associated SAN.
+/// // TODO : manually transform from / to json
 @Freezed(fromJson: true, toJson: true)
 class SanMove with _$SanMove {
   const factory SanMove(

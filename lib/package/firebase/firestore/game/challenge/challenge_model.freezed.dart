@@ -27,8 +27,9 @@ mixin _$ChallengeModel {
   Rule get rule => throw _privateConstructorUsedError;
   int get time => throw _privateConstructorUsedError; // in seconds
   int get increment => throw _privateConstructorUsedError; // in seconds
+  @protected
   @BoardSizeConverter()
-  BoardSize get boardSize => throw _privateConstructorUsedError;
+  BoardSize? get boardSizeProtected => throw _privateConstructorUsedError;
   int get budget => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -51,7 +52,7 @@ abstract class $ChallengeModelCopyWith<$Res> {
       Rule rule,
       int time,
       int increment,
-      @BoardSizeConverter() BoardSize boardSize,
+      @protected @BoardSizeConverter() BoardSize? boardSizeProtected,
       int budget});
 }
 
@@ -75,7 +76,7 @@ class _$ChallengeModelCopyWithImpl<$Res, $Val extends ChallengeModel>
     Object? rule = null,
     Object? time = null,
     Object? increment = null,
-    Object? boardSize = null,
+    Object? boardSizeProtected = freezed,
     Object? budget = null,
   }) {
     return _then(_value.copyWith(
@@ -107,10 +108,10 @@ class _$ChallengeModelCopyWithImpl<$Res, $Val extends ChallengeModel>
           ? _value.increment
           : increment // ignore: cast_nullable_to_non_nullable
               as int,
-      boardSize: null == boardSize
-          ? _value.boardSize
-          : boardSize // ignore: cast_nullable_to_non_nullable
-              as BoardSize,
+      boardSizeProtected: freezed == boardSizeProtected
+          ? _value.boardSizeProtected
+          : boardSizeProtected // ignore: cast_nullable_to_non_nullable
+              as BoardSize?,
       budget: null == budget
           ? _value.budget
           : budget // ignore: cast_nullable_to_non_nullable
@@ -135,7 +136,7 @@ abstract class _$$ChallengeModelImplCopyWith<$Res>
       Rule rule,
       int time,
       int increment,
-      @BoardSizeConverter() BoardSize boardSize,
+      @protected @BoardSizeConverter() BoardSize? boardSizeProtected,
       int budget});
 }
 
@@ -157,7 +158,7 @@ class __$$ChallengeModelImplCopyWithImpl<$Res>
     Object? rule = null,
     Object? time = null,
     Object? increment = null,
-    Object? boardSize = null,
+    Object? boardSizeProtected = freezed,
     Object? budget = null,
   }) {
     return _then(_$ChallengeModelImpl(
@@ -189,10 +190,10 @@ class __$$ChallengeModelImplCopyWithImpl<$Res>
           ? _value.increment
           : increment // ignore: cast_nullable_to_non_nullable
               as int,
-      boardSize: null == boardSize
-          ? _value.boardSize
-          : boardSize // ignore: cast_nullable_to_non_nullable
-              as BoardSize,
+      boardSizeProtected: freezed == boardSizeProtected
+          ? _value.boardSizeProtected
+          : boardSizeProtected // ignore: cast_nullable_to_non_nullable
+              as BoardSize?,
       budget: null == budget
           ? _value.budget
           : budget // ignore: cast_nullable_to_non_nullable
@@ -212,7 +213,7 @@ class _$ChallengeModelImpl extends _ChallengeModel {
       this.rule = Rule.chess,
       this.time = 180,
       this.increment = 2,
-      @BoardSizeConverter() this.boardSize = BoardSize.standard,
+      @protected @BoardSizeConverter() this.boardSizeProtected,
       this.budget = 39})
       : super._();
 
@@ -239,16 +240,16 @@ class _$ChallengeModelImpl extends _ChallengeModel {
   final int increment;
 // in seconds
   @override
-  @JsonKey()
+  @protected
   @BoardSizeConverter()
-  final BoardSize boardSize;
+  final BoardSize? boardSizeProtected;
   @override
   @JsonKey()
   final int budget;
 
   @override
   String toString() {
-    return 'ChallengeModel(id: $id, createdAt: $createdAt, acceptedAt: $acceptedAt, authorId: $authorId, rule: $rule, time: $time, increment: $increment, boardSize: $boardSize, budget: $budget)';
+    return 'ChallengeModel(id: $id, createdAt: $createdAt, acceptedAt: $acceptedAt, authorId: $authorId, rule: $rule, time: $time, increment: $increment, boardSizeProtected: $boardSizeProtected, budget: $budget)';
   }
 
   @override
@@ -267,15 +268,15 @@ class _$ChallengeModelImpl extends _ChallengeModel {
             (identical(other.time, time) || other.time == time) &&
             (identical(other.increment, increment) ||
                 other.increment == increment) &&
-            (identical(other.boardSize, boardSize) ||
-                other.boardSize == boardSize) &&
+            (identical(other.boardSizeProtected, boardSizeProtected) ||
+                other.boardSizeProtected == boardSizeProtected) &&
             (identical(other.budget, budget) || other.budget == budget));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, id, createdAt, acceptedAt,
-      authorId, rule, time, increment, boardSize, budget);
+      authorId, rule, time, increment, boardSizeProtected, budget);
 
   @JsonKey(ignore: true)
   @override
@@ -301,7 +302,7 @@ abstract class _ChallengeModel extends ChallengeModel {
       final Rule rule,
       final int time,
       final int increment,
-      @BoardSizeConverter() final BoardSize boardSize,
+      @protected @BoardSizeConverter() final BoardSize? boardSizeProtected,
       final int budget}) = _$ChallengeModelImpl;
   _ChallengeModel._() : super._();
 
@@ -323,8 +324,9 @@ abstract class _ChallengeModel extends ChallengeModel {
   @override // in seconds
   int get increment;
   @override // in seconds
+  @protected
   @BoardSizeConverter()
-  BoardSize get boardSize;
+  BoardSize? get boardSizeProtected;
   @override
   int get budget;
   @override

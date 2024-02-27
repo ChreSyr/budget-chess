@@ -19,10 +19,9 @@ _$ChallengeModelImpl _$$ChallengeModelImplFromJson(Map<String, dynamic> json) =>
       rule: $enumDecodeNullable(_$RuleEnumMap, json['rule']) ?? Rule.chess,
       time: json['time'] as int? ?? 180,
       increment: json['increment'] as int? ?? 2,
-      boardSize: json['boardSize'] == null
-          ? BoardSize.standard
-          : const BoardSizeConverter()
-              .fromJson(json['boardSize'] as Map<String, dynamic>),
+      boardSizeProtected:
+          _$JsonConverterFromJson<Map<String, dynamic>, BoardSize?>(
+              json['boardSizeProtected'], const BoardSizeConverter().fromJson),
       budget: json['budget'] as int? ?? 39,
     );
 
@@ -36,7 +35,8 @@ Map<String, dynamic> _$$ChallengeModelImplToJson(
       'rule': _$RuleEnumMap[instance.rule]!,
       'time': instance.time,
       'increment': instance.increment,
-      'boardSize': const BoardSizeConverter().toJson(instance.boardSize),
+      'boardSizeProtected':
+          const BoardSizeConverter().toJson(instance.boardSizeProtected),
       'budget': instance.budget,
     };
 
@@ -50,3 +50,9 @@ const _$RuleEnumMap = {
   Rule.racingKings: 'racingKings',
   Rule.crazyhouse: 'crazyhouse',
 };
+
+Value? _$JsonConverterFromJson<Json, Value>(
+  Object? json,
+  Value? Function(Json json) fromJson,
+) =>
+    json == null ? null : fromJson(json as Json);

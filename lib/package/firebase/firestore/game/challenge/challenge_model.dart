@@ -31,12 +31,14 @@ class ChallengeModel with _$ChallengeModel {
     @Default(Rule.chess) Rule rule,
     @Default(180) int time, // in seconds
     @Default(2) int increment, // in seconds
-    @BoardSizeConverter() @Default(BoardSize.standard) BoardSize boardSize,
+    @protected @BoardSizeConverter() BoardSize? boardSizeProtected,
     @Default(39) int budget,
   }) = _ChallengeModel;
 
   /// Required for the override getter
   const ChallengeModel._();
+
+  BoardSize get boardSize => boardSizeProtected ?? BoardSize.standard;
 
   factory ChallengeModel.fromJson(Map<String, dynamic> json) =>
       _$ChallengeModelFromJson(json);

@@ -9,11 +9,13 @@ part 'setup_model.g.dart';
 class SetupModel with _$SetupModel {
   const factory SetupModel({
     @protected required String fen,
-    @BoardSizeConverter() @Default(BoardSize.standard) BoardSize boardSize,
+    @protected @BoardSizeConverter() BoardSize? boardSizeProtected,
   }) = _SetupModel;
 
   /// Required for the override getter
   const SetupModel._();
+
+  BoardSize get boardSize => boardSizeProtected ?? BoardSize.standard;
 
   factory SetupModel.fromJson(Map<String, dynamic> json) =>
       _$SetupModelFromJson(json);
@@ -22,7 +24,7 @@ class SetupModel with _$SetupModel {
 
   /// Create an empty SetupModel with the given size
   factory SetupModel.fromBoardSize(BoardSize boardSize) =>
-      SetupModel(fen: boardSize.emptyFen, boardSize: boardSize);
+      SetupModel(fen: boardSize.emptyFen, boardSizeProtected: boardSize);
 
   String fenAs(Side color) =>
       color == Side.white ? fen.toUpperCase() : fen.toLowerCase();
@@ -36,8 +38,8 @@ class SetupModel with _$SetupModel {
     );
 
     for (final role in Role.values) {
-      final size = board.byRole(role).size;
-      total += size * role.cost;
+      final amount = board.byRole(role).length;
+      total += amount * role.cost;
     }
 
     return total;
