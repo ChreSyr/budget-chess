@@ -5,13 +5,13 @@ import 'package:crea_chess/package/dartchess/square_map.dart';
 class Attacks {
   Attacks(SquareMapSize size)
       : _size = size,
-        _antiDiagRange = Attacks._getAntiDiagRange(size),
-        _diagRange = Attacks._getDiagRange(size),
-        _fileRange = Attacks._getFileRange(size),
-        _rankRange = Attacks._getRankRange(size),
-        _kingAttacks = Attacks._getKingAttacks(size),
-        _knightAttacks = Attacks._getKnightAttacks(size),
-        _pawnAttacks = Attacks._getPawnAttacks(size);
+        _antiDiagRange = Attacks._generateAntiDiagRange(size),
+        _diagRange = Attacks._generateDiagRange(size),
+        _fileRange = Attacks._generateFileRange(size),
+        _rankRange = Attacks._generateRankRange(size),
+        _kingAttacks = Attacks._generateKingAttacks(size),
+        _knightAttacks = Attacks._generateKnightAttacks(size),
+        _pawnAttacks = Attacks._generatePawnAttacks(size);
 
   final SquareMapSize _size;
   final List<SquareMap> _antiDiagRange;
@@ -24,7 +24,8 @@ class Attacks {
 
   static final standard = Attacks(SquareMapSize(files: 8, ranks: 8));
 
-  static List<SquareMap> _getAntiDiagRange(SquareMapSize size) => _tabulate(
+  static List<SquareMap> _generateAntiDiagRange(SquareMapSize size) =>
+      _tabulate(
         (square) {
           // shift is the lowest square in the same antidiagonal as sq
           final shift = size.files *
@@ -41,7 +42,7 @@ class Attacks {
         size,
       );
 
-  static List<SquareMap> _getDiagRange(SquareMapSize size) => _tabulate(
+  static List<SquareMap> _generateDiagRange(SquareMapSize size) => _tabulate(
         (sq) {
           // shift is the lower square in the same diagonal as sq
           final shift = size.files * (size.rankOf(sq) - size.fileOf(sq));
@@ -56,17 +57,17 @@ class Attacks {
         size,
       );
 
-  static List<SquareMap> _getFileRange(SquareMapSize size) => _tabulate(
+  static List<SquareMap> _generateFileRange(SquareMapSize size) => _tabulate(
         (sq) => SquareMapExt.fromFile(size.fileOf(sq), size).withoutSquare(sq),
         size,
       );
 
-  static List<SquareMap> _getRankRange(SquareMapSize size) => _tabulate(
+  static List<SquareMap> _generateRankRange(SquareMapSize size) => _tabulate(
         (sq) => SquareMapExt.fromRank(size.rankOf(sq), size).withoutSquare(sq),
         size,
       );
 
-  static List<SquareMap> _getKingAttacks(SquareMapSize size) => _tabulate(
+  static List<SquareMap> _generateKingAttacks(SquareMapSize size) => _tabulate(
         (sq) => _computeRange(
           sq,
           [
@@ -84,7 +85,8 @@ class Attacks {
         size,
       );
 
-  static List<SquareMap> _getKnightAttacks(SquareMapSize size) => _tabulate(
+  static List<SquareMap> _generateKnightAttacks(SquareMapSize size) =>
+      _tabulate(
         (sq) => _computeRange(
           sq,
           [
@@ -102,7 +104,8 @@ class Attacks {
         size,
       );
 
-  static Map<Side, List<SquareMap>> _getPawnAttacks(SquareMapSize size) => {
+  static Map<Side, List<SquareMap>> _generatePawnAttacks(SquareMapSize size) =>
+      {
         Side.white: _tabulate(
           (sq) => _computeRange(
             sq,
