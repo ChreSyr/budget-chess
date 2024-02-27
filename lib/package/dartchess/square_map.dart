@@ -55,7 +55,7 @@ class SquareMapSize {
 
   /// Return a [SquareMap] of this size with all light squares.
   static BigInt _generateLightSquares(int files, int ranks) => List.generate(
-        files * ranks,
+        files * ranks ~/ 2,
         (index) =>
             BigInt.one <<
             (index * 2 +
@@ -64,7 +64,7 @@ class SquareMapSize {
 
   /// Return a [SquareMap] of this size with all dark squares.
   static BigInt _generateDarkSquares(int files, int ranks) => List.generate(
-        files * ranks,
+        (files * ranks + 1) ~/ 2,
         (index) =>
             BigInt.one <<
             (index * 2 +
