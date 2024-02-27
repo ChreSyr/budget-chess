@@ -284,4 +284,6 @@ extension SquareMapExt on SquareMap {
   SquareMap _getRank(int rankIndex, SquareMapSize size) {
     return size.firstRank & (this >> (rankIndex * size.files));
   }
+
+  String get readable => 'SquareMap(0x${toRadixString(16)})';
 }
