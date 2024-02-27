@@ -81,7 +81,7 @@ class PgnGame<T extends PgnNodeData> {
   final List<String> comments;
 
   /// Parent node containing the game.
-  final PgnNode<T> moves;
+  final PgnNode<T> moves; 
 
   /// Create default headers of a PGN.
   static PgnHeaders defaultHeaders() => {
@@ -153,6 +153,7 @@ class PgnGame<T extends PgnNodeData> {
     PgnHeaders headers, {
     bool? ignoreImpossibleCheck,
   }) {
+    final size = BoardSize.fromPgn(headers['BoardSize']);
     final rule = Rule.fromPgn(headers['Variant']);
     if (rule == null) throw PositionError.variant;
     if (!headers.containsKey('FEN')) {
@@ -162,7 +163,7 @@ class PgnGame<T extends PgnNodeData> {
     try {
       return Position.setupPosition(
         rule,
-        Setup.parseFen(fen),
+        Setup.parseFen(fen, size),
         ignoreImpossibleCheck: ignoreImpossibleCheck,
       );
     } catch (err) {
@@ -532,7 +533,7 @@ class PgnComment {
   }) : assert(text == null || text != '');
 
   /// Parses a PGN comment string to a [PgnComment].
-  factory PgnComment.fromPgn(String comment) {
+  factory PgnComment.fromPgn(String comment, BoardSize boardSize) {
     Duration? emt;
     Duration? clock;
     final shapes = <PgnCommentShape>[];
@@ -559,13 +560,14 @@ class PgnComment {
       }
       return '  ';
     }).replaceAllMapped(
+        // TODO : what is this ? how to adapt it for any board size ?
         RegExp(
           r'\s?\[%(?:csl|cal)\s([RGYB][a-h][1-8](?:[a-h][1-8])?(?:,[RGYB][a-h][1-8](?:[a-h][1-8])?)*)\]\s?',
         ), (match) {
       final arrows = match.group(1);
       if (arrows != null) {
         for (final arrow in arrows.split(',')) {
-          final shape = PgnCommentShape.fromPgn(arrow);
+          final shape = PgnCommentShape.fromPgn(arrow, boardSize);
           if (shape != null) shapes.add(shape);
         }
       }
@@ -689,7 +691,7 @@ String _safeComment(String value) => value.replaceAll(RegExp(r'\}'), '');
 /// Return ply from a fen if fen is valid else return 0
 int _getPlyFromSetup(String fen) {
   try {
-    final setup = Setup.parseFen(fen);
+    final setup = Setup.parseFen(fen, BoardSize.fromFen(fen));
     return (setup.fullmoves - 1) * 2 + (setup.turn == Side.white ? 0 : 1);
   } catch (e) {
     return 0;
@@ -796,6 +798,7 @@ class _PgnParser {
           {
             if (_isCommentLine(line)) return;
             var moreHeaders = true;
+            // TODO : what is this ? how to adapt it for any board size ?
             final headerReg = RegExp(
               r'^\s*\[([A-Za-z0-9][A-Za-z0-9_+#=:-]*)\s+"((?:[^"\\]|\\"|\\\\)*)"\]',
             );
@@ -822,6 +825,7 @@ class _PgnParser {
               if (_isCommentLine(line)) return;
               if (_isWhitespace(line)) return _emit();
             }
+            // TODO : what is this ? how to adapt it for any board size ?
             final tokenRegex = RegExp(
               r'(?:[NBKRQ]?[a-h]?[1-8]?[-x]?[a-h][1-8](?:=?[nbrqkNBRQK])?|[pnbrqkPNBRQK]?@[a-h][1-8]|O-O-O|0-0-0|O-O|0-0)[+#]?|--|Z0|0000|@@@@|{|;|\$\d{1,4}|[?!]{1,2}|\(|\)|\*|1-0|0-1|1\/2-1\/2/',
             );

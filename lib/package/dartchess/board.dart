@@ -34,6 +34,39 @@ class BoardSize extends SquareMapSize {
         allSquareIds = _generateAllSquareIds(files, ranks),
         attacks = Attacks(SquareMapSize(files: files, ranks: ranks));
 
+  factory BoardSize.fromFen(String fen) {
+    final ranks = fen.split('/');
+    final numRanks = ranks.length;
+    final numFiles = ranks
+        .map(
+          (rank) => rank
+              .split('')
+              .fold<int>(0, (acc, char) => acc + (int.tryParse(char) ?? 1)),
+        )
+        .reduce((max, value) => value > max ? value : max);
+
+    return BoardSize(files: numFiles, ranks: numRanks);
+  }
+
+  factory BoardSize.fromPgn(String? value) {
+    try {
+      var splitter = 'x';
+      for (final possibleSplitter in ['x', '/']) {
+        if (value!.contains(possibleSplitter)) {
+          splitter = possibleSplitter;
+          break;
+        }
+      }
+      final splitted = value!.split(splitter);
+      return BoardSize(
+        files: int.parse(splitted.first),
+        ranks: int.parse(splitted[1]),
+      );
+    } catch (_) {
+      return BoardSize.standard;
+    }
+  }
+
   final List<String> rankIds;
   final List<String> fileIds;
   final List<SquareId> allSquareIds;
