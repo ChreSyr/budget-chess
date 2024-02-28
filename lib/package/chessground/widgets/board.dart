@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:crea_chess/package/chessground/board_data.dart';
 import 'package:crea_chess/package/chessground/board_settings.dart';
+import 'package:crea_chess/package/chessground/export.dart';
 import 'package:crea_chess/package/chessground/fen.dart';
 import 'package:crea_chess/package/chessground/models.dart';
 import 'package:crea_chess/package/chessground/premove.dart';
@@ -81,6 +82,7 @@ class BoardWidget extends StatefulWidget {
 
 class _BoardState extends State<BoardWidget> {
   Pieces pieces = {};
+  late BoardColorScheme colorScheme;
   Map<String, (PositionedPiece, PositionedPiece)> translatingPieces = {};
   Map<String, CGPiece> fadingPieces = {};
   SquareId? selected;
@@ -94,7 +96,6 @@ class _BoardState extends State<BoardWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = widget.settings.colorScheme;
     final moveDests = widget.settings.showValidMoves &&
             selected != null &&
             widget.data.validMoves != null
@@ -114,7 +115,7 @@ class _BoardState extends State<BoardWidget> {
               ? colorScheme.whiteCoordBackground
               : colorScheme.blackCoordBackground
         else
-          colorScheme.background(widget.size, widget.width),
+          colorScheme.background(widget.width),
         if (widget.settings.showLastMove && widget.data.lastMove != null)
           for (final squareId in widget.data.lastMove!.squares)
             if (premove == null || !premove.hasSquare(squareId))
@@ -326,6 +327,7 @@ class _BoardState extends State<BoardWidget> {
   @override
   void initState() {
     super.initState();
+    colorScheme = widget.settings.colorScheme(widget.size);
     pieces = readFen(fen: widget.data.fen, boardSize: widget.size);
   }
 

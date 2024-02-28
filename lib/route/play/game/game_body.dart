@@ -91,11 +91,13 @@ class _GameBody extends StatelessWidget {
                   game.playable ? interactableSide : InteractableSide.none,
               validMoves: game.playable &&
                       side?.toDartchess == position.turn
-                  ? algebraicLegalMoves(position)
+                  ? position.algebraicLegalMoves()
                   : IMap(const {}),
               orientation: orientation,
               fen: position.fen,
-              lastMove: lastMove == null ? null : CGMove.fromUci(lastMove.uci),
+              lastMove: lastMove == null
+                  ? null
+                  : CGMove.fromUci(lastMove.uci(position.board.size)),
               sideToMove: position.turn.toChessground,
               isCheck: position.isCheck,
               premove: gameState.premove,

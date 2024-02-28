@@ -163,7 +163,7 @@ class PgnGame<T extends PgnNodeData> {
     try {
       return Position.setupPosition(
         rule,
-        Setup.parseFen(fen, size),
+        Setup.parseFen(fen, size: size),
         ignoreImpossibleCheck: ignoreImpossibleCheck,
       );
     } catch (err) {
@@ -691,7 +691,7 @@ String _safeComment(String value) => value.replaceAll(RegExp(r'\}'), '');
 /// Return ply from a fen if fen is valid else return 0
 int _getPlyFromSetup(String fen) {
   try {
-    final setup = Setup.parseFen(fen, BoardSize.fromFen(fen));
+    final setup = Setup.parseFen(fen);
     return (setup.fullmoves - 1) * 2 + (setup.turn == Side.white ? 0 : 1);
   } catch (e) {
     return 0;

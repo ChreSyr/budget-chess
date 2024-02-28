@@ -83,6 +83,7 @@ class SetupBoard extends StatefulWidget {
 
 class _BoardState extends State<SetupBoard> {
   Pieces pieces = {};
+  late BoardColorScheme colorScheme;
   _DragAvatar? _dragAvatar;
   SquareId? _dragOrigin;
   SquareId? _dropTarget;
@@ -92,7 +93,6 @@ class _BoardState extends State<SetupBoard> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = widget.settings.colorScheme;
     const orientation = Side.white;
 
     final Widget board = Stack(
@@ -204,8 +204,8 @@ class _BoardState extends State<SetupBoard> {
   @override
   void initState() {
     super.initState();
-    background =
-        widget.settings.colorScheme.background(widget.size, widget.width);
+    colorScheme = widget.settings.colorScheme(widget.size);
+    background = colorScheme.background(widget.width);
     pieces = readFen(fen: widget.fen, boardSize: widget.size);
     for (var rank = 0; rank < widget.size.ranks; rank++) {
       for (var file = 0; file < widget.size.files; file++) {

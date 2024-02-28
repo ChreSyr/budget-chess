@@ -18,7 +18,7 @@ class SetupCubit extends HydratedCubit<SetupModel> {
       );
 
   void onDrop(CGDropMove move) {
-    final to = parseSquare(move.squareId);
+    final to = state.boardSize.parseSquare(move.squareId);
     if (to == null) return;
     final role = Role.fromChar(move.role.char);
     if (role == null) return;
@@ -35,8 +35,8 @@ class SetupCubit extends HydratedCubit<SetupModel> {
   }
 
   void onMove(CGMove move) {
-    final from = parseSquare(move.from);
-    final to = parseSquare(move.to);
+    final from = state.boardSize.parseSquare(move.from);
+    final to = state.boardSize.parseSquare(move.to);
     if (from == null || to == null) return;
     final piece = fullboard.pieceAt(from);
     if (piece == null) return;
@@ -47,7 +47,7 @@ class SetupCubit extends HydratedCubit<SetupModel> {
   }
 
   void onRemove(SquareId squareId) {
-    final square = parseSquare(squareId);
+    final square = state.boardSize.parseSquare(squareId);
     if (square == null) return;
     final newBoard = fullboard.removePieceAt(square);
 

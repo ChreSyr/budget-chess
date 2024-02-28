@@ -1,4 +1,5 @@
 import 'package:crea_chess/package/chessground/board_color_scheme.dart';
+import 'package:crea_chess/package/dartchess/export.dart';
 
 /// The chessboard theme.
 enum BoardTheme {
@@ -29,5 +30,5 @@ enum BoardTheme {
   const BoardTheme(this.label, this.colors);
   
   final String label;
-  final BoardColorScheme colors;
+  final BoardColorScheme Function(BoardSize) colors;
 }

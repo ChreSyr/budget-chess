@@ -56,7 +56,7 @@ class CreateChallengeCubit extends Cubit<CreateChallengeForm> {
           rule: state.rule.value,
           time: state.timeControl.value.time,
           increment: state.timeControl.value.increment,
-          boardSize: state.boardSize.value,
+          boardSizeProtected: state.boardSize.value,
           budget: state.budget.value,
         ),
       );

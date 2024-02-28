@@ -1,3 +1,5 @@
+// ignore_for_file: sort_constructors_first
+
 import 'package:crea_chess/package/chessground/models.dart';
 import 'package:crea_chess/package/chessground/widgets/background.dart';
 import 'package:crea_chess/package/dartchess/export.dart';
@@ -10,7 +12,8 @@ const _boardsPath = 'assets/boards';
 /// Use the static const members to ensure flutter doesn't rebuild the board
 /// more than once.
 class BoardColorScheme {
-  const BoardColorScheme({
+  const BoardColorScheme._({
+    required this.boardSize,
     required this.lightSquare,
     required this.darkSquare,
     required this.whiteCoordBackground,
@@ -21,6 +24,77 @@ class BoardColorScheme {
     required this.validPremoves,
     this.image,
   });
+
+  factory BoardColorScheme.image({
+    required BoardSize boardSize,
+    required Color lightSquare,
+    required Color darkSquare,
+    required HighlightDetails lastMove,
+    required HighlightDetails selected,
+    required Color validMoves,
+    required Color validPremoves,
+    required AssetImage image,
+  }) =>
+      BoardColorScheme._(
+        boardSize: boardSize,
+        lightSquare: lightSquare,
+        darkSquare: darkSquare,
+        whiteCoordBackground: ImageBackground(
+          lightSquare: lightSquare,
+          darkSquare: darkSquare,
+          image: image,
+          boardSize: boardSize,
+          coordinates: true,
+        ),
+        blackCoordBackground: ImageBackground(
+          lightSquare: lightSquare,
+          darkSquare: darkSquare,
+          image: image,
+          boardSize: boardSize,
+          coordinates: true,
+          orientation: Side.black,
+        ),
+        lastMove: lastMove,
+        selected: selected,
+        validMoves: validMoves,
+        validPremoves: validPremoves,
+        image: image,
+      );
+
+  factory BoardColorScheme.solid({
+    required BoardSize boardSize,
+    required Color lightSquare,
+    required Color darkSquare,
+    required HighlightDetails lastMove,
+    required HighlightDetails selected,
+    required Color validMoves,
+    required Color validPremoves,
+  }) =>
+      BoardColorScheme._(
+        boardSize: boardSize,
+        lightSquare: lightSquare,
+        darkSquare: darkSquare,
+        whiteCoordBackground: SolidColorBackground(
+          lightSquare: lightSquare,
+          darkSquare: darkSquare,
+          boardSize: boardSize,
+          coordinates: true,
+        ),
+        blackCoordBackground: SolidColorBackground(
+          lightSquare: lightSquare,
+          darkSquare: darkSquare,
+          boardSize: boardSize,
+          coordinates: true,
+          orientation: Side.black,
+        ),
+        lastMove: lastMove,
+        selected: selected,
+        validMoves: validMoves,
+        validPremoves: validPremoves,
+      );
+
+  /// Size of the board
+  final BoardSize boardSize;
 
   /// Light square color of the board
   final Color lightSquare;
@@ -52,11 +126,11 @@ class BoardColorScheme {
   final AssetImage? image;
 
   /// BoardWidget background that defines light and dark square colors
-  Background background(BoardSize boardSize, double boardWidth) => image == null
+  Background background(double boardWidth) => image == null
       ? SolidColorBackground(
-        lightSquare: lightSquare,
+          lightSquare: lightSquare,
           darkSquare: darkSquare,
-        boardSize: boardSize,
+          boardSize: boardSize,
         )
       : ImageBackground(
           lightSquare: lightSquare,
@@ -66,533 +140,271 @@ class BoardColorScheme {
           image: image!,
         );
 
-  static const brown = BoardColorScheme(
-    lightSquare: Color(0xfff0d9b6),
-    darkSquare: Color(0xffb58863),
-    whiteCoordBackground: SolidColorBackground(
-      lightSquare: Color(0xfff0d9b6),
-      darkSquare: Color(0xffb58863),
-      coordinates: true,
-    ),
-    blackCoordBackground: SolidColorBackground(
-      lightSquare: Color(0xfff0d9b6),
-      darkSquare: Color(0xffb58863),
-      coordinates: true,
-      orientation: Side.black,
-    ),
-    lastMove: HighlightDetails(solidColor: Color(0x809cc700)),
-    selected: HighlightDetails(solidColor: Color(0x6014551e)),
-    validMoves: Color(0x4014551e),
-    validPremoves: Color(0x40203085),
-  );
+  factory BoardColorScheme.brown(BoardSize size) => BoardColorScheme.solid(
+        boardSize: size,
+        lightSquare: const Color(0xfff0d9b6),
+        darkSquare: const Color(0xffb58863),
+        lastMove: const HighlightDetails(solidColor: Color(0x809cc700)),
+        selected: const HighlightDetails(solidColor: Color(0x6014551e)),
+        validMoves: const Color(0x4014551e),
+        validPremoves: const Color(0x40203085),
+      );
 
-  static const blue = BoardColorScheme(
-    lightSquare: Color(0xffdee3e6),
-    darkSquare: Color(0xff8ca2ad),
-    whiteCoordBackground: SolidColorBackground(
-      lightSquare: Color(0xffdee3e6),
-      darkSquare: Color(0xff8ca2ad),
-      coordinates: true,
-    ),
-    blackCoordBackground: SolidColorBackground(
-      lightSquare: Color(0xffdee3e6),
-      darkSquare: Color(0xff8ca2ad),
-      coordinates: true,
-      orientation: Side.black,
-    ),
-    lastMove: HighlightDetails(solidColor: Color(0x809bc700)),
-    selected: HighlightDetails(solidColor: Color(0x6014551e)),
-    validMoves: Color(0x4014551e),
-    validPremoves: Color(0x40203085),
-  );
+  factory BoardColorScheme.blue(BoardSize size) => BoardColorScheme.solid(
+        boardSize: size,
+        lightSquare: const Color(0xffdee3e6),
+        darkSquare: const Color(0xff8ca2ad),
+        lastMove: const HighlightDetails(solidColor: Color(0x809bc700)),
+        selected: const HighlightDetails(solidColor: Color(0x6014551e)),
+        validMoves: const Color(0x4014551e),
+        validPremoves: const Color(0x40203085),
+      );
 
-  static const green = BoardColorScheme(
-    lightSquare: Color(0xffffffdd),
-    darkSquare: Color(0xff86a666),
-    whiteCoordBackground: SolidColorBackground(
-      lightSquare: Color(0xffffffdd),
-      darkSquare: Color(0xff86a666),
-      coordinates: true,
-    ),
-    blackCoordBackground: SolidColorBackground(
-      lightSquare: Color(0xffffffdd),
-      darkSquare: Color(0xff86a666),
-      coordinates: true,
-      orientation: Side.black,
-    ),
-    lastMove: HighlightDetails(solidColor: Color.fromRGBO(0, 155, 199, 0.41)),
-    selected: HighlightDetails(solidColor: Color.fromRGBO(216, 85, 0, 0.3)),
-    validMoves: Color.fromRGBO(0, 0, 0, 0.20),
-    validPremoves: Color(0x40203085),
-  );
+  factory BoardColorScheme.green(BoardSize size) => BoardColorScheme.solid(
+        boardSize: size,
+        lightSquare: const Color(0xffffffdd),
+        darkSquare: const Color(0xff86a666),
+        lastMove: const HighlightDetails(
+            solidColor: Color.fromRGBO(0, 155, 199, 0.41)),
+        selected:
+            const HighlightDetails(solidColor: Color.fromRGBO(216, 85, 0, 0.3)),
+        validMoves: const Color.fromRGBO(0, 0, 0, 0.20),
+        validPremoves: const Color(0x40203085),
+      );
 
-  static const blue2 = BoardColorScheme(
-    lightSquare: Color(0xff97b2c7),
-    darkSquare: Color(0xff546f82),
-    whiteCoordBackground: ImageBackground(
-      lightSquare: Color(0xff97b2c7),
-      darkSquare: Color(0xff546f82),
-      image: AssetImage('$_boardsPath/blue2.jpg'),
-      coordinates: true,
-    ),
-    blackCoordBackground: ImageBackground(
-      lightSquare: Color(0xff97b2c7),
-      darkSquare: Color(0xff546f82),
-      image: AssetImage('$_boardsPath/blue2.jpg'),
-      coordinates: true,
-      orientation: Side.black,
-    ),
-    lastMove: HighlightDetails(solidColor: Color(0x809cc700)),
-    selected: HighlightDetails(solidColor: Color(0x6014551e)),
-    validMoves: Color(0x4014551e),
-    validPremoves: Color(0x40203085),
-    image: AssetImage('$_boardsPath/blue2.jpg'),
-  );
+  factory BoardColorScheme.blue2(BoardSize size) => BoardColorScheme.image(
+        boardSize: size,
+        lightSquare: const Color(0xff97b2c7),
+        darkSquare: const Color(0xff546f82),
+        lastMove: const HighlightDetails(solidColor: Color(0x809cc700)),
+        selected: const HighlightDetails(solidColor: Color(0x6014551e)),
+        validMoves: const Color(0x4014551e),
+        validPremoves: const Color(0x40203085),
+        image: const AssetImage('$_boardsPath/blue2.jpg'),
+      );
 
-  static const blue3 = BoardColorScheme(
-    lightSquare: Color(0xffd9e0e6),
-    darkSquare: Color(0xff315991),
-    whiteCoordBackground: ImageBackground(
-      lightSquare: Color(0xffd9e0e6),
-      darkSquare: Color(0xff315991),
-      image: AssetImage('$_boardsPath/blue3.jpg'),
-      coordinates: true,
-    ),
-    blackCoordBackground: ImageBackground(
-      lightSquare: Color(0xffd9e0e6),
-      darkSquare: Color(0xff315991),
-      image: AssetImage('$_boardsPath/blue3.jpg'),
-      coordinates: true,
-      orientation: Side.black,
-    ),
-    lastMove: HighlightDetails(solidColor: Color(0x809cc700)),
-    selected: HighlightDetails(solidColor: Color(0x6014551e)),
-    validMoves: Color(0x4014551e),
-    validPremoves: Color(0x40203085),
-    image: AssetImage('$_boardsPath/blue3.jpg'),
-  );
+  factory BoardColorScheme.blue3(BoardSize size) => BoardColorScheme.image(
+        boardSize: size,
+        lightSquare: const Color(0xffd9e0e6),
+        darkSquare: const Color(0xff315991),
+        lastMove: const HighlightDetails(solidColor: Color(0x809cc700)),
+        selected: const HighlightDetails(solidColor: Color(0x6014551e)),
+        validMoves: const Color(0x4014551e),
+        validPremoves: const Color(0x40203085),
+        image: const AssetImage('$_boardsPath/blue3.jpg'),
+      );
 
-  static const blueMarble = BoardColorScheme(
-    lightSquare: Color(0xffeae6dd),
-    darkSquare: Color(0xff7c7f87),
-    whiteCoordBackground: ImageBackground(
-      lightSquare: Color(0xffeae6dd),
-      darkSquare: Color(0xff7c7f87),
-      image: AssetImage('$_boardsPath/blue-marble.jpg'),
-      coordinates: true,
-    ),
-    blackCoordBackground: ImageBackground(
-      lightSquare: Color(0xffeae6dd),
-      darkSquare: Color(0xff7c7f87),
-      image: AssetImage('$_boardsPath/blue-marble.jpg'),
-      coordinates: true,
-      orientation: Side.black,
-    ),
-    lastMove: HighlightDetails(solidColor: Color(0x809cc700)),
-    selected: HighlightDetails(solidColor: Color(0x6014551e)),
-    validMoves: Color(0x4014551e),
-    validPremoves: Color(0x40203085),
-    image: AssetImage('$_boardsPath/blue-marble.jpg'),
-  );
+  factory BoardColorScheme.blueMarble(BoardSize size) => BoardColorScheme.image(
+        boardSize: size,
+        lightSquare: const Color(0xffeae6dd),
+        darkSquare: const Color(0xff7c7f87),
+        lastMove: const HighlightDetails(solidColor: Color(0x809cc700)),
+        selected: const HighlightDetails(solidColor: Color(0x6014551e)),
+        validMoves: const Color(0x4014551e),
+        validPremoves: const Color(0x40203085),
+        image: const AssetImage('$_boardsPath/blue-marble.jpg'),
+      );
 
-  static const canvas = BoardColorScheme(
-    lightSquare: Color(0xffd7daeb),
-    darkSquare: Color(0xff547388),
-    whiteCoordBackground: ImageBackground(
-      lightSquare: Color(0xffd7daeb),
-      darkSquare: Color(0xff547388),
-      image: AssetImage('$_boardsPath/canvas2.jpg'),
-      coordinates: true,
-    ),
-    blackCoordBackground: ImageBackground(
-      lightSquare: Color(0xffd7daeb),
-      darkSquare: Color(0xff547388),
-      image: AssetImage('$_boardsPath/canvas2.jpg'),
-      coordinates: true,
-      orientation: Side.black,
-    ),
-    lastMove: HighlightDetails(solidColor: Color(0x809cc700)),
-    selected: HighlightDetails(solidColor: Color(0x6014551e)),
-    validMoves: Color(0x4014551e),
-    validPremoves: Color(0x40203085),
-    image: AssetImage('$_boardsPath/canvas2.jpg'),
-  );
+  factory BoardColorScheme.canvas(BoardSize size) => BoardColorScheme.image(
+        boardSize: size,
+        lightSquare: const Color(0xffd7daeb),
+        darkSquare: const Color(0xff547388),
+        lastMove: const HighlightDetails(solidColor: Color(0x809cc700)),
+        selected: const HighlightDetails(solidColor: Color(0x6014551e)),
+        validMoves: const Color(0x4014551e),
+        validPremoves: const Color(0x40203085),
+        image: const AssetImage('$_boardsPath/canvas2.jpg'),
+      );
 
-  static const greenPlastic = BoardColorScheme(
-    lightSquare: Color(0xfff2f9bb),
-    darkSquare: Color(0xff59935d),
-    whiteCoordBackground: ImageBackground(
-      lightSquare: Color(0xfff2f9bb),
-      darkSquare: Color(0xff59935d),
-      image: AssetImage('$_boardsPath/green-plastic.png'),
-      coordinates: true,
-    ),
-    blackCoordBackground: ImageBackground(
-      lightSquare: Color(0xfff2f9bb),
-      darkSquare: Color(0xff59935d),
-      image: AssetImage('$_boardsPath/green-plastic.png'),
-      coordinates: true,
-      orientation: Side.black,
-    ),
-    lastMove: HighlightDetails(solidColor: Color.fromRGBO(0, 155, 199, 0.41)),
-    selected: HighlightDetails(solidColor: Color.fromRGBO(216, 85, 0, 0.3)),
-    validMoves: Color(0x4014551e),
-    validPremoves: Color(0x40203085),
-    image: AssetImage('$_boardsPath/green-plastic.png'),
-  );
+  factory BoardColorScheme.greenPlastic(BoardSize size) =>
+      BoardColorScheme.image(
+        boardSize: size,
+        lightSquare: const Color(0xfff2f9bb),
+        darkSquare: const Color(0xff59935d),
+        lastMove: const HighlightDetails(
+            solidColor: Color.fromRGBO(0, 155, 199, 0.41)),
+        selected:
+            const HighlightDetails(solidColor: Color.fromRGBO(216, 85, 0, 0.3)),
+        validMoves: const Color(0x4014551e),
+        validPremoves: const Color(0x40203085),
+        image: const AssetImage('$_boardsPath/green-plastic.png'),
+      );
 
-  static const grey = BoardColorScheme(
-    lightSquare: Color(0xffb8b8b8),
-    darkSquare: Color(0xff7d7d7d),
-    lastMove: HighlightDetails(solidColor: Color(0x809cc700)),
-    whiteCoordBackground: ImageBackground(
-      lightSquare: Color(0xffb8b8b8),
-      darkSquare: Color(0xff7d7d7d),
-      image: AssetImage('$_boardsPath/grey.jpg'),
-      coordinates: true,
-    ),
-    blackCoordBackground: ImageBackground(
-      lightSquare: Color(0xffb8b8b8),
-      darkSquare: Color(0xff7d7d7d),
-      image: AssetImage('$_boardsPath/grey.jpg'),
-      coordinates: true,
-      orientation: Side.black,
-    ),
-    selected: HighlightDetails(solidColor: Color(0x6014551e)),
-    validMoves: Color(0x4014551e),
-    validPremoves: Color(0x40203085),
-    image: AssetImage('$_boardsPath/grey.jpg'),
-  );
+  factory BoardColorScheme.grey(BoardSize size) => BoardColorScheme.image(
+        boardSize: size,
+        lightSquare: const Color(0xffb8b8b8),
+        darkSquare: const Color(0xff7d7d7d),
+        lastMove: const HighlightDetails(solidColor: Color(0x809cc700)),
+        selected: const HighlightDetails(solidColor: Color(0x6014551e)),
+        validMoves: const Color(0x4014551e),
+        validPremoves: const Color(0x40203085),
+        image: const AssetImage('$_boardsPath/grey.jpg'),
+      );
 
-  static const horsey = BoardColorScheme(
-    lightSquare: Color(0xfff0d9b5),
-    darkSquare: Color(0xff946f51),
-    whiteCoordBackground: ImageBackground(
-      lightSquare: Color(0xfff0d9b5),
-      darkSquare: Color(0xff946f51),
-      image: AssetImage('$_boardsPath/horsey.jpg'),
-      coordinates: true,
-    ),
-    blackCoordBackground: ImageBackground(
-      lightSquare: Color(0xfff0d9b5),
-      darkSquare: Color(0xff946f51),
-      image: AssetImage('$_boardsPath/horsey.jpg'),
-      coordinates: true,
-      orientation: Side.black,
-    ),
-    lastMove: HighlightDetails(
-      image: AssetImage(
-        '$_boardsPath/horsey.last-move.png',
-        package: 'chessground',
-      ),
-    ),
-    selected: HighlightDetails(
-      image: AssetImage(
-        '$_boardsPath/horsey.selected.png',
-        package: 'chessground',
-      ),
-    ),
-    validMoves: Color(0x4014551e),
-    validPremoves: Color(0x40203085),
-    image: AssetImage('$_boardsPath/horsey.jpg'),
-  );
+  factory BoardColorScheme.horsey(BoardSize size) => BoardColorScheme.image(
+        boardSize: size,
+        lightSquare: const Color(0xfff0d9b5),
+        darkSquare: const Color(0xff946f51),
+        lastMove: const HighlightDetails(
+          image: AssetImage(
+            '$_boardsPath/horsey.last-move.png',
+            package: 'chessground',
+          ),
+        ),
+        selected: const HighlightDetails(
+          image: AssetImage(
+            '$_boardsPath/horsey.selected.png',
+            package: 'chessground',
+          ),
+        ),
+        validMoves: const Color(0x4014551e),
+        validPremoves: const Color(0x40203085),
+        image: const AssetImage('$_boardsPath/horsey.jpg'),
+      );
 
-  static const leather = BoardColorScheme(
-    lightSquare: Color(0xffd1d1c9),
-    darkSquare: Color(0xffc28e16),
-    whiteCoordBackground: ImageBackground(
-      lightSquare: Color(0xffd1d1c9),
-      darkSquare: Color(0xffc28e16),
-      image: AssetImage('$_boardsPath/leather.jpg'),
-      coordinates: true,
-    ),
-    blackCoordBackground: ImageBackground(
-      lightSquare: Color(0xffd1d1c9),
-      darkSquare: Color(0xffc28e16),
-      image: AssetImage('$_boardsPath/leather.jpg'),
-      coordinates: true,
-      orientation: Side.black,
-    ),
-    lastMove: HighlightDetails(solidColor: Color(0x809cc700)),
-    selected: HighlightDetails(solidColor: Color(0x6014551e)),
-    validMoves: Color(0x4014551e),
-    validPremoves: Color(0x40203085),
-    image: AssetImage('$_boardsPath/leather.jpg'),
-  );
+  factory BoardColorScheme.leather(BoardSize size) => BoardColorScheme.image(
+        boardSize: size,
+        lightSquare: const Color(0xffd1d1c9),
+        darkSquare: const Color(0xffc28e16),
+        lastMove: const HighlightDetails(solidColor: Color(0x809cc700)),
+        selected: const HighlightDetails(solidColor: Color(0x6014551e)),
+        validMoves: const Color(0x4014551e),
+        validPremoves: const Color(0x40203085),
+        image: const AssetImage('$_boardsPath/leather.jpg'),
+      );
 
-  static const maple = BoardColorScheme(
-    lightSquare: Color(0xffe8ceab),
-    darkSquare: Color(0xffbc7944),
-    whiteCoordBackground: ImageBackground(
-      lightSquare: Color(0xffe8ceab),
-      darkSquare: Color(0xffbc7944),
-      image: AssetImage('$_boardsPath/maple.jpg'),
-      coordinates: true,
-    ),
-    blackCoordBackground: ImageBackground(
-      lightSquare: Color(0xffe8ceab),
-      darkSquare: Color(0xffbc7944),
-      image: AssetImage('$_boardsPath/maple.jpg'),
-      coordinates: true,
-      orientation: Side.black,
-    ),
-    lastMove: HighlightDetails(solidColor: Color(0x809cc700)),
-    selected: HighlightDetails(solidColor: Color(0x6014551e)),
-    validMoves: Color(0x4014551e),
-    validPremoves: Color(0x40203085),
-    image: AssetImage('$_boardsPath/maple.jpg'),
-  );
+  factory BoardColorScheme.maple(BoardSize size) => BoardColorScheme.image(
+        boardSize: size,
+        lightSquare: const Color(0xffe8ceab),
+        darkSquare: const Color(0xffbc7944),
+        lastMove: const HighlightDetails(solidColor: Color(0x809cc700)),
+        selected: const HighlightDetails(solidColor: Color(0x6014551e)),
+        validMoves: const Color(0x4014551e),
+        validPremoves: const Color(0x40203085),
+        image: const AssetImage('$_boardsPath/maple.jpg'),
+      );
 
-  static const maple2 = BoardColorScheme(
-    lightSquare: Color(0xffe2c89f),
-    darkSquare: Color(0xff996633),
-    whiteCoordBackground: ImageBackground(
-      lightSquare: Color(0xffe2c89f),
-      darkSquare: Color(0xff996633),
-      image: AssetImage('$_boardsPath/maple2.jpg'),
-      coordinates: true,
-    ),
-    blackCoordBackground: ImageBackground(
-      lightSquare: Color(0xffe2c89f),
-      darkSquare: Color(0xff996633),
-      image: AssetImage('$_boardsPath/maple2.jpg'),
-      coordinates: true,
-      orientation: Side.black,
-    ),
-    lastMove: HighlightDetails(solidColor: Color(0x809cc700)),
-    selected: HighlightDetails(solidColor: Color(0x6014551e)),
-    validMoves: Color(0x4014551e),
-    validPremoves: Color(0x40203085),
-    image: AssetImage('$_boardsPath/maple2.jpg'),
-  );
+  factory BoardColorScheme.maple2(BoardSize size) => BoardColorScheme.image(
+        boardSize: size,
+        lightSquare: const Color(0xffe2c89f),
+        darkSquare: const Color(0xff996633),
+        lastMove: const HighlightDetails(solidColor: Color(0x809cc700)),
+        selected: const HighlightDetails(solidColor: Color(0x6014551e)),
+        validMoves: const Color(0x4014551e),
+        validPremoves: const Color(0x40203085),
+        image: const AssetImage('$_boardsPath/maple2.jpg'),
+      );
 
-  static const marble = BoardColorScheme(
-    lightSquare: Color(0xff93ab91),
-    darkSquare: Color(0xff4f644e),
-    whiteCoordBackground: ImageBackground(
-      lightSquare: Color(0xff93ab91),
-      darkSquare: Color(0xff4f644e),
-      image: AssetImage('$_boardsPath/marble.jpg'),
-      coordinates: true,
-    ),
-    blackCoordBackground: ImageBackground(
-      lightSquare: Color(0xff93ab91),
-      darkSquare: Color(0xff4f644e),
-      image: AssetImage('$_boardsPath/marble.jpg'),
-      coordinates: true,
-      orientation: Side.black,
-    ),
-    lastMove: HighlightDetails(solidColor: Color.fromRGBO(0, 155, 199, 0.41)),
-    selected: HighlightDetails(solidColor: Color.fromRGBO(216, 85, 0, 0.3)),
-    validMoves: Color(0x4014551e),
-    validPremoves: Color(0x40203085),
-    image: AssetImage('$_boardsPath/marble.jpg'),
-  );
+  factory BoardColorScheme.marble(BoardSize size) => BoardColorScheme.image(
+        boardSize: size,
+        lightSquare: const Color(0xff93ab91),
+        darkSquare: const Color(0xff4f644e),
+        lastMove: const HighlightDetails(
+            solidColor: Color.fromRGBO(0, 155, 199, 0.41)),
+        selected:
+            const HighlightDetails(solidColor: Color.fromRGBO(216, 85, 0, 0.3)),
+        validMoves: const Color(0x4014551e),
+        validPremoves: const Color(0x40203085),
+        image: const AssetImage('$_boardsPath/marble.jpg'),
+      );
 
-  static const metal = BoardColorScheme(
-    lightSquare: Color(0xffc9c9c9),
-    darkSquare: Color(0xff727272),
-    whiteCoordBackground: ImageBackground(
-      lightSquare: Color(0xffc9c9c9),
-      darkSquare: Color(0xff727272),
-      image: AssetImage('$_boardsPath/metal.jpg'),
-      coordinates: true,
-    ),
-    blackCoordBackground: ImageBackground(
-      lightSquare: Color(0xffc9c9c9),
-      darkSquare: Color(0xff727272),
-      image: AssetImage('$_boardsPath/metal.jpg'),
-      coordinates: true,
-      orientation: Side.black,
-    ),
-    lastMove: HighlightDetails(solidColor: Color(0x809cc700)),
-    selected: HighlightDetails(solidColor: Color(0x6014551e)),
-    validMoves: Color(0x4014551e),
-    validPremoves: Color(0x40203085),
-    image: AssetImage('$_boardsPath/metal.jpg'),
-  );
+  factory BoardColorScheme.metal(BoardSize size) => BoardColorScheme.image(
+        boardSize: size,
+        lightSquare: const Color(0xffc9c9c9),
+        darkSquare: const Color(0xff727272),
+        lastMove: const HighlightDetails(solidColor: Color(0x809cc700)),
+        selected: const HighlightDetails(solidColor: Color(0x6014551e)),
+        validMoves: const Color(0x4014551e),
+        validPremoves: const Color(0x40203085),
+        image: const AssetImage('$_boardsPath/metal.jpg'),
+      );
 
-  static const newspaper = BoardColorScheme(
-    lightSquare: Color(0xffffffff),
-    darkSquare: Color(0xff8d8d8d),
-    whiteCoordBackground: ImageBackground(
-      lightSquare: Color(0xffffffff),
-      darkSquare: Color(0xff8d8d8d),
-      image: AssetImage('$_boardsPath/newspaper.png'),
-      coordinates: true,
-    ),
-    blackCoordBackground: ImageBackground(
-      lightSquare: Color(0xffffffff),
-      darkSquare: Color(0xff8d8d8d),
-      image: AssetImage('$_boardsPath/newspaper.png'),
-      coordinates: true,
-      orientation: Side.black,
-    ),
-    lastMove: HighlightDetails(solidColor: Color(0x809cc700)),
-    selected: HighlightDetails(solidColor: Color(0x6014551e)),
-    validMoves: Color(0x4014551e),
-    validPremoves: Color(0x40203085),
-    image: AssetImage('$_boardsPath/newspaper.png'),
-  );
+  factory BoardColorScheme.newspaper(BoardSize size) => BoardColorScheme.image(
+        boardSize: size,
+        lightSquare: const Color(0xffffffff),
+        darkSquare: const Color(0xff8d8d8d),
+        lastMove: const HighlightDetails(solidColor: Color(0x809cc700)),
+        selected: const HighlightDetails(solidColor: Color(0x6014551e)),
+        validMoves: const Color(0x4014551e),
+        validPremoves: const Color(0x40203085),
+        image: const AssetImage('$_boardsPath/newspaper.png'),
+      );
 
-  static const olive = BoardColorScheme(
-    lightSquare: Color(0xffb8b19f),
-    darkSquare: Color(0xff6d6655),
-    whiteCoordBackground: ImageBackground(
-      lightSquare: Color(0xffb8b19f),
-      darkSquare: Color(0xff6d6655),
-      image: AssetImage('$_boardsPath/olive.jpg'),
-      coordinates: true,
-    ),
-    blackCoordBackground: ImageBackground(
-      lightSquare: Color(0xffb8b19f),
-      darkSquare: Color(0xff6d6655),
-      image: AssetImage('$_boardsPath/olive.jpg'),
-      coordinates: true,
-      orientation: Side.black,
-    ),
-    lastMove: HighlightDetails(solidColor: Color(0x809cc700)),
-    selected: HighlightDetails(solidColor: Color(0x6014551e)),
-    validMoves: Color(0x4014551e),
-    validPremoves: Color(0x40203085),
-    image: AssetImage('$_boardsPath/olive.jpg'),
-  );
+  factory BoardColorScheme.olive(BoardSize size) => BoardColorScheme.image(
+        boardSize: size,
+        lightSquare: const Color(0xffb8b19f),
+        darkSquare: const Color(0xff6d6655),
+        lastMove: const HighlightDetails(solidColor: Color(0x809cc700)),
+        selected: const HighlightDetails(solidColor: Color(0x6014551e)),
+        validMoves: const Color(0x4014551e),
+        validPremoves: const Color(0x40203085),
+        image: const AssetImage('$_boardsPath/olive.jpg'),
+      );
 
-  static const pinkPyramid = BoardColorScheme(
-    lightSquare: Color(0xffe8e9b7),
-    darkSquare: Color(0xffed7272),
-    whiteCoordBackground: ImageBackground(
-      lightSquare: Color(0xffe8e9b7),
-      darkSquare: Color(0xffed7272),
-      image: AssetImage('$_boardsPath/pink-pyramid.png'),
-      coordinates: true,
-    ),
-    blackCoordBackground: ImageBackground(
-      lightSquare: Color(0xffe8e9b7),
-      darkSquare: Color(0xffed7272),
-      image: AssetImage('$_boardsPath/pink-pyramid.png'),
-      coordinates: true,
-      orientation: Side.black,
-    ),
-    lastMove: HighlightDetails(solidColor: Color(0x809cc700)),
-    selected: HighlightDetails(solidColor: Color(0x6014551e)),
-    validMoves: Color(0x4014551e),
-    validPremoves: Color(0x40203085),
-    image: AssetImage('$_boardsPath/pink-pyramid.png'),
-  );
+  factory BoardColorScheme.pinkPyramid(BoardSize size) =>
+      BoardColorScheme.image(
+        boardSize: size,
+        lightSquare: const Color(0xffe8e9b7),
+        darkSquare: const Color(0xffed7272),
+        lastMove: const HighlightDetails(solidColor: Color(0x809cc700)),
+        selected: const HighlightDetails(solidColor: Color(0x6014551e)),
+        validMoves: const Color(0x4014551e),
+        validPremoves: const Color(0x40203085),
+        image: const AssetImage('$_boardsPath/pink-pyramid.png'),
+      );
 
-  static const purpleDiag = BoardColorScheme(
-    lightSquare: Color(0xffe5daf0),
-    darkSquare: Color(0xff957ab0),
-    whiteCoordBackground: ImageBackground(
-      lightSquare: Color(0xffe5daf0),
-      darkSquare: Color(0xff957ab0),
-      image: AssetImage('$_boardsPath/purple-diag.png'),
-      coordinates: true,
-    ),
-    blackCoordBackground: ImageBackground(
-      lightSquare: Color(0xffe5daf0),
-      darkSquare: Color(0xff957ab0),
-      image: AssetImage('$_boardsPath/purple-diag.png'),
-      coordinates: true,
-      orientation: Side.black,
-    ),
-    lastMove: HighlightDetails(solidColor: Color(0x809cc700)),
-    selected: HighlightDetails(solidColor: Color(0x6014551e)),
-    validMoves: Color(0x4014551e),
-    validPremoves: Color(0x40203085),
-    image: AssetImage('$_boardsPath/purple-diag.png'),
-  );
+  factory BoardColorScheme.purpleDiag(BoardSize size) => BoardColorScheme.image(
+        boardSize: size,
+        lightSquare: const Color(0xffe5daf0),
+        darkSquare: const Color(0xff957ab0),
+        lastMove: const HighlightDetails(solidColor: Color(0x809cc700)),
+        selected: const HighlightDetails(solidColor: Color(0x6014551e)),
+        validMoves: const Color(0x4014551e),
+        validPremoves: const Color(0x40203085),
+        image: const AssetImage('$_boardsPath/purple-diag.png'),
+      );
 
-  static const wood = BoardColorScheme(
-    lightSquare: Color(0xffd8a45b),
-    darkSquare: Color(0xff9b4d0f),
-    whiteCoordBackground: ImageBackground(
-      lightSquare: Color(0xffd8a45b),
-      darkSquare: Color(0xff9b4d0f),
-      image: AssetImage('$_boardsPath/wood.jpg'),
-      coordinates: true,
-    ),
-    blackCoordBackground: ImageBackground(
-      lightSquare: Color(0xffd8a45b),
-      darkSquare: Color(0xff9b4d0f),
-      image: AssetImage('$_boardsPath/wood.jpg'),
-      coordinates: true,
-      orientation: Side.black,
-    ),
-    lastMove: HighlightDetails(solidColor: Color(0x809cc700)),
-    selected: HighlightDetails(solidColor: Color(0x6014551e)),
-    validMoves: Color(0x4014551e),
-    validPremoves: Color(0x40203085),
-    image: AssetImage('$_boardsPath/wood.jpg'),
-  );
+  factory BoardColorScheme.wood(BoardSize size) => BoardColorScheme.image(
+        boardSize: size,
+        lightSquare: const Color(0xffd8a45b),
+        darkSquare: const Color(0xff9b4d0f),
+        lastMove: const HighlightDetails(solidColor: Color(0x809cc700)),
+        selected: const HighlightDetails(solidColor: Color(0x6014551e)),
+        validMoves: const Color(0x4014551e),
+        validPremoves: const Color(0x40203085),
+        image: const AssetImage('$_boardsPath/wood.jpg'),
+      );
 
-  static const wood2 = BoardColorScheme(
-    lightSquare: Color(0xffa38b5d),
-    darkSquare: Color(0xff6c5017),
-    whiteCoordBackground: ImageBackground(
-      lightSquare: Color(0xffa38b5d),
-      darkSquare: Color(0xff6c5017),
-      image: AssetImage('$_boardsPath/wood2.jpg'),
-      coordinates: true,
-    ),
-    blackCoordBackground: ImageBackground(
-      lightSquare: Color(0xffa38b5d),
-      darkSquare: Color(0xff6c5017),
-      image: AssetImage('$_boardsPath/wood2.jpg'),
-      coordinates: true,
-      orientation: Side.black,
-    ),
-    lastMove: HighlightDetails(solidColor: Color(0x809cc700)),
-    selected: HighlightDetails(solidColor: Color(0x6014551e)),
-    validMoves: Color(0x4014551e),
-    validPremoves: Color(0x40203085),
-    image: AssetImage('$_boardsPath/wood2.jpg'),
-  );
+  factory BoardColorScheme.wood2(BoardSize size) => BoardColorScheme.image(
+        boardSize: size,
+        lightSquare: const Color(0xffa38b5d),
+        darkSquare: const Color(0xff6c5017),
+        lastMove: const HighlightDetails(solidColor: Color(0x809cc700)),
+        selected: const HighlightDetails(solidColor: Color(0x6014551e)),
+        validMoves: const Color(0x4014551e),
+        validPremoves: const Color(0x40203085),
+        image: const AssetImage('$_boardsPath/wood2.jpg'),
+      );
 
-  static const wood3 = BoardColorScheme(
-    lightSquare: Color(0xffd0ceca),
-    darkSquare: Color(0xff755839),
-    whiteCoordBackground: ImageBackground(
-      lightSquare: Color(0xffd0ceca),
-      darkSquare: Color(0xff755839),
-      image: AssetImage('$_boardsPath/wood3.jpg'),
-      coordinates: true,
-    ),
-    blackCoordBackground: ImageBackground(
-      lightSquare: Color(0xffd0ceca),
-      darkSquare: Color(0xff755839),
-      image: AssetImage('$_boardsPath/wood3.jpg'),
-      coordinates: true,
-      orientation: Side.black,
-    ),
-    lastMove: HighlightDetails(solidColor: Color(0x809cc700)),
-    selected: HighlightDetails(solidColor: Color(0x6014551e)),
-    validMoves: Color(0x4014551e),
-    validPremoves: Color(0x40203085),
-    image: AssetImage('$_boardsPath/wood3.jpg'),
-  );
+  factory BoardColorScheme.wood3(BoardSize size) => BoardColorScheme.image(
+        boardSize: size,
+        lightSquare: const Color(0xffd0ceca),
+        darkSquare: const Color(0xff755839),
+        lastMove: const HighlightDetails(solidColor: Color(0x809cc700)),
+        selected: const HighlightDetails(solidColor: Color(0x6014551e)),
+        validMoves: const Color(0x4014551e),
+        validPremoves: const Color(0x40203085),
+        image: const AssetImage('$_boardsPath/wood3.jpg'),
+      );
 
-  static const wood4 = BoardColorScheme(
-    lightSquare: Color(0xffcaaf7d),
-    darkSquare: Color(0xff7b5330),
-    whiteCoordBackground: ImageBackground(
-      lightSquare: Color(0xffcaaf7d),
-      darkSquare: Color(0xff7b5330),
-      image: AssetImage('$_boardsPath/wood4.jpg'),
-      coordinates: true,
-    ),
-    blackCoordBackground: ImageBackground(
-      lightSquare: Color(0xffcaaf7d),
-      darkSquare: Color(0xff7b5330),
-      image: AssetImage('$_boardsPath/wood4.jpg'),
-      coordinates: true,
-      orientation: Side.black,
-    ),
-    lastMove: HighlightDetails(solidColor: Color(0x809cc700)),
-    selected: HighlightDetails(solidColor: Color(0x6014551e)),
-    validMoves: Color(0x4014551e),
-    validPremoves: Color(0x40203085),
-    image: AssetImage('$_boardsPath/wood4.jpg'),
-  );
+  factory BoardColorScheme.wood4(BoardSize size) => BoardColorScheme.image(
+        boardSize: size,
+        lightSquare: const Color(0xffcaaf7d),
+        darkSquare: const Color(0xff7b5330),
+        lastMove: const HighlightDetails(solidColor: Color(0x809cc700)),
+        selected: const HighlightDetails(solidColor: Color(0x6014551e)),
+        validMoves: const Color(0x4014551e),
+        validPremoves: const Color(0x40203085),
+        image: const AssetImage('$_boardsPath/wood4.jpg'),
+      );
 }

@@ -2,6 +2,7 @@ import 'package:crea_chess/package/chessground/board_color_scheme.dart';
 import 'package:crea_chess/package/chessground/draw_shape_options.dart';
 import 'package:crea_chess/package/chessground/models.dart';
 import 'package:crea_chess/package/chessground/piece_set.dart';
+import 'package:crea_chess/package/dartchess/board.dart';
 import 'package:flutter/widgets.dart';
 
 /// BoardWidget settings that control the theme, behavior and purpose of the
@@ -34,7 +35,7 @@ class BoardSettings {
   });
 
   /// Theme of the board
-  final BoardColorScheme colorScheme;
+  final BoardColorScheme Function(BoardSize) colorScheme;
 
   /// CGPiece set
   final PieceAssets pieceAssets;
@@ -76,7 +77,7 @@ class BoardSettings {
   final DrawShapeOptions drawShape;
 
   BoardSettings copyWith({
-    BoardColorScheme? colorScheme,
+    BoardColorScheme Function(BoardSize)? colorScheme,
     PieceAssets? pieceAssets,
     bool? enableCoordinates,
     Duration? animationDuration,

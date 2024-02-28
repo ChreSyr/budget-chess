@@ -31,12 +31,13 @@ class Setup {
   ///   FEN fields.
   ///
   /// Throws a [FenError] if the provided FEN is not valid.
-  factory Setup.parseFen(String fen, BoardSize size) {
+  factory Setup.parseFen(String fen, {BoardSize? size}) {
     final parts = fen.split(RegExp(r'[\s_]+'));
     if (parts.isEmpty) throw const FenError('ERR_FEN');
 
     // board and pockets
     final boardPart = parts.removeAt(0);
+    size ??= BoardSize.fromFen(boardPart);
     Pockets? pockets;
     Board board;
     if (boardPart.endsWith(']')) {
@@ -44,16 +45,16 @@ class Setup {
       if (pocketStart == -1) {
         throw const FenError('ERR_FEN');
       }
-      board = Board.parseFen(boardPart.substring(0, pocketStart), size);
+      board = Board.parseFen(boardPart.substring(0, pocketStart), size: size);
       pockets = _parsePockets(
         boardPart.substring(pocketStart + 1, boardPart.length - 1),
       );
     } else {
       final pocketStart = _nthIndexOf(boardPart, '/', size.ranks - 1);
       if (pocketStart == -1) {
-        board = Board.parseFen(boardPart, size);
+        board = Board.parseFen(boardPart, size: size);
       } else {
-        board = Board.parseFen(boardPart.substring(0, pocketStart), size);
+        board = Board.parseFen(boardPart.substring(0, pocketStart), size: size);
         pockets = _parsePockets(boardPart.substring(pocketStart + 1));
       }
     }

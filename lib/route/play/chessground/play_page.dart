@@ -23,7 +23,7 @@ class PlayPage extends StatefulWidget {
 class _HomePageState extends State<PlayPage> {
   Position<Chess> position = Chess.initial;
   Side orientation = Side.white;
-  String fen = kInitialBoardFEN;
+  String fen = BoardSize.standardInitialBoardFEN;
   CGMove? lastMove;
   CGMove? premove;
   ValidMoves validMoves = IMap(const {});
@@ -195,7 +195,7 @@ class _HomePageState extends State<PlayPage> {
                           ? () => setState(() {
                                 position = lastPos!;
                                 fen = position.fen;
-                                validMoves = algebraicLegalMoves(position);
+                                validMoves = position.algebraicLegalMoves();
                                 lastPos = null;
                               })
                           : null,
@@ -212,7 +212,7 @@ class _HomePageState extends State<PlayPage> {
 
   @override
   void initState() {
-    validMoves = algebraicLegalMoves(position);
+    validMoves = position.algebraicLegalMoves();
     super.initState();
   }
 
@@ -224,12 +224,12 @@ class _HomePageState extends State<PlayPage> {
 
   void _onUserMoveFreePlay(CGMove move, {bool? isDrop, bool? isPremove}) {
     lastPos = position;
-    final m = Move.fromUci(move.uci)!;
+    final m = Move.fromUci(move.uci, position.board.size)!;
     setState(() {
       position = position.playUnchecked(m);
       lastMove = move;
       fen = position.fen;
-      validMoves = algebraicLegalMoves(position);
+      validMoves = position.algebraicLegalMoves();
     });
   }
 
@@ -239,7 +239,7 @@ class _HomePageState extends State<PlayPage> {
     bool? isPremove,
   }) async {
     lastPos = position;
-    final m = Move.fromUci(move.uci)!;
+    final m = Move.fromUci(move.uci, position.board.size)!;
     setState(() {
       position = position.playUnchecked(m);
       lastMove = move;
@@ -260,10 +260,12 @@ class _HomePageState extends State<PlayPage> {
         final mv = (allMoves..shuffle()).first;
         setState(() {
           position = position.playUnchecked(mv);
-          lastMove =
-              CGMove(from: toAlgebraic(mv.from), to: toAlgebraic(mv.to));
+          lastMove = CGMove(
+            from: position.board.size.algebraicOf(mv.from),
+            to: position.board.size.algebraicOf(mv.to),
+          );
           fen = position.fen;
-          validMoves = algebraicLegalMoves(position);
+          validMoves = position.algebraicLegalMoves();
         });
         lastPos = position;
       }

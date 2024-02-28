@@ -2,6 +2,7 @@ import 'package:crea_chess/package/atomic_design/dialog/setup/budget_exceeded.da
 import 'package:crea_chess/package/atomic_design/dialog/setup/incomplete_setup.dart';
 import 'package:crea_chess/package/atomic_design/dialog/setup/inventory_exceeded.dart';
 import 'package:crea_chess/package/atomic_design/dialog/setup/not_one_king.dart';
+import 'package:crea_chess/package/dartchess/export.dart';
 import 'package:crea_chess/route/play/game/game_cubit.dart';
 import 'package:crea_chess/route/play/setup/inventory_cubit.dart';
 import 'package:crea_chess/route/play/setup/setup_cubit.dart';
@@ -44,7 +45,7 @@ class SetupValidateButton extends StatelessWidget {
               }
 
               final board = setupCubit.fullboard;
-              final kingsCount = board.kings.size;
+              final kingsCount = board.kings.length;
               if (kingsCount != 1) {
                 return showNotOneKingDialog(
                   pageContext: context,

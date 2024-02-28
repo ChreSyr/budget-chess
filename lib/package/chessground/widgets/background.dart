@@ -27,7 +27,7 @@ class SolidColorBackground extends Background {
   const SolidColorBackground({
     required super.lightSquare,
     required super.darkSquare,
-    super.boardSize = BoardSize.standard,
+    required super.boardSize,
     super.coordinates,
     super.orientation,
     super.key,
@@ -73,7 +73,7 @@ class ImageBackground extends Background {
     required super.lightSquare,
     required super.darkSquare,
     required this.image,
-    super.boardSize = BoardSize.standard,
+    required super.boardSize,
     super.coordinates,
     super.orientation,
     super.key,

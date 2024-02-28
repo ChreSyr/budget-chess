@@ -15,7 +15,7 @@ class DrawShapesPage extends StatefulWidget {
 class _DrawShapesPageState extends State<DrawShapesPage> {
   Position<Chess> position = Chess.initial;
   Side orientation = Side.white;
-  String fen = kInitialBoardFEN;
+  String fen = BoardSize.standardInitialBoardFEN;
   CGMove? lastMove;
   ValidMoves validMoves = IMap(const {});
   Side sideToMove = Side.white;
@@ -112,7 +112,7 @@ class _DrawShapesPageState extends State<DrawShapesPage> {
 
   @override
   void initState() {
-    validMoves = algebraicLegalMoves(position);
+    validMoves = position.algebraicLegalMoves();
     super.initState();
   }
 
@@ -131,12 +131,12 @@ class _DrawShapesPageState extends State<DrawShapesPage> {
 
   void _onUserMoveFreePlay(CGMove move, {bool? isDrop, bool? isPremove}) {
     lastPos = position;
-    final m = Move.fromUci(move.uci)!;
+    final m = Move.fromUci(move.uci, position.board.size)!;
     setState(() {
       position = position.playUnchecked(m);
       lastMove = move;
       fen = position.fen;
-      validMoves = algebraicLegalMoves(position);
+      validMoves = position.algebraicLegalMoves();
     });
   }
 }

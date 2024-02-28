@@ -85,7 +85,10 @@ class GameCubit extends Cubit<GameState?> {
   }
 
   void onCGMove(CGMove move, {bool? isDrop, bool? isPremove}) {
-    final m = Move.fromUci(move.uci);
+    final m = Move.fromUci(
+      move.uci,
+      state?.position?.board.size ?? BoardSize.standard,
+    );
     if (m == null) return;
 
     onMove(m);
