@@ -12,10 +12,9 @@ class SetupCubit extends HydratedCubit<SetupModel> {
 
   final Side side;
 
-  Board get fullboard => Board.parseFen(
-        // TODO : dartchess BoardSize, then only give the fen here
-        '${state.boardSize.emptyFen}/${state.fenAs(side)}',
-      );
+  // TODO : from getter to final
+  Board get board =>
+      Board.parseFen(state.fenAs(side), size: state.boardSize);
 
   void onDrop(CGDropMove move) {
     final to = state.boardSize.parseSquare(move.squareId);
@@ -23,7 +22,7 @@ class SetupCubit extends HydratedCubit<SetupModel> {
     final role = Role.fromChar(move.role.char);
     if (role == null) return;
 
-    final newBoard = fullboard.setPieceAt(
+    final newBoard = board.setPieceAt(
       to,
       Piece(
         color: side == Side.white ? Side.white : Side.black,
@@ -38,9 +37,9 @@ class SetupCubit extends HydratedCubit<SetupModel> {
     final from = state.boardSize.parseSquare(move.from);
     final to = state.boardSize.parseSquare(move.to);
     if (from == null || to == null) return;
-    final piece = fullboard.pieceAt(from);
+    final piece = board.pieceAt(from);
     if (piece == null) return;
-    var newBoard = fullboard.removePieceAt(from);
+    var newBoard = board.removePieceAt(from);
     newBoard = newBoard.setPieceAt(to, piece);
 
     emit(state.copyWith(fen: newBoard.fen.substring(8)));
@@ -49,7 +48,7 @@ class SetupCubit extends HydratedCubit<SetupModel> {
   void onRemove(SquareId squareId) {
     final square = state.boardSize.parseSquare(squareId);
     if (square == null) return;
-    final newBoard = fullboard.removePieceAt(square);
+    final newBoard = board.removePieceAt(square);
 
     emit(state.copyWith(fen: newBoard.fen.substring(8)));
   }

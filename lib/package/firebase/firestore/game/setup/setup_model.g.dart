@@ -9,20 +9,12 @@ part of 'setup_model.dart';
 _$SetupModelImpl _$$SetupModelImplFromJson(Map<String, dynamic> json) =>
     _$SetupModelImpl(
       fen: json['fen'] as String,
-      boardSizeProtected:
-          _$JsonConverterFromJson<Map<String, dynamic>, BoardSize?>(
-              json['boardSizeProtected'], const BoardSizeConverter().fromJson),
+      boardSize: const BoardSizeConverter()
+          .fromJson(json['boardSize'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$SetupModelImplToJson(_$SetupModelImpl instance) =>
     <String, dynamic>{
       'fen': instance.fen,
-      'boardSizeProtected':
-          const BoardSizeConverter().toJson(instance.boardSizeProtected),
+      'boardSize': const BoardSizeConverter().toJson(instance.boardSize),
     };
-
-Value? _$JsonConverterFromJson<Json, Value>(
-  Object? json,
-  Value? Function(Json json) fromJson,
-) =>
-    json == null ? null : fromJson(json as Json);

@@ -9,13 +9,11 @@ part 'setup_model.g.dart';
 class SetupModel with _$SetupModel {
   const factory SetupModel({
     @protected required String fen,
-    @protected @BoardSizeConverter() BoardSize? boardSizeProtected,
+    @BoardSizeConverter() required BoardSize boardSize,
   }) = _SetupModel;
 
   /// Required for the override getter
   const SetupModel._();
-
-  BoardSize get boardSize => boardSizeProtected ?? BoardSize.standard;
 
   factory SetupModel.fromJson(Map<String, dynamic> json) =>
       _$SetupModelFromJson(json);
@@ -24,7 +22,7 @@ class SetupModel with _$SetupModel {
 
   /// Create an empty SetupModel with the given size
   factory SetupModel.fromBoardSize(BoardSize boardSize) =>
-      SetupModel(fen: boardSize.emptyFen, boardSizeProtected: boardSize);
+      SetupModel(fen: boardSize.emptyFen, boardSize: boardSize);
 
   String fenAs(Side color) =>
       color == Side.white ? fen.toUpperCase() : fen.toLowerCase();
@@ -32,10 +30,7 @@ class SetupModel with _$SetupModel {
   int get cost {
     var total = 0;
 
-    final board = Board.parseFen(
-      // TODO : dartchess BoardSize, then only give the fen here
-      '${boardSize.emptyFen}/$fen',
-    );
+    final board = Board.parseFen(fen, size: boardSize);
 
     for (final role in Role.values) {
       final amount = board.byRole(role).length;

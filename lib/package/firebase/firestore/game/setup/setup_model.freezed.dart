@@ -22,9 +22,8 @@ SetupModel _$SetupModelFromJson(Map<String, dynamic> json) {
 mixin _$SetupModel {
   @protected
   String get fen => throw _privateConstructorUsedError;
-  @protected
   @BoardSizeConverter()
-  BoardSize? get boardSizeProtected => throw _privateConstructorUsedError;
+  BoardSize get boardSize => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -38,9 +37,7 @@ abstract class $SetupModelCopyWith<$Res> {
           SetupModel value, $Res Function(SetupModel) then) =
       _$SetupModelCopyWithImpl<$Res, SetupModel>;
   @useResult
-  $Res call(
-      {@protected String fen,
-      @protected @BoardSizeConverter() BoardSize? boardSizeProtected});
+  $Res call({@protected String fen, @BoardSizeConverter() BoardSize boardSize});
 }
 
 /// @nodoc
@@ -57,17 +54,17 @@ class _$SetupModelCopyWithImpl<$Res, $Val extends SetupModel>
   @override
   $Res call({
     Object? fen = null,
-    Object? boardSizeProtected = freezed,
+    Object? boardSize = null,
   }) {
     return _then(_value.copyWith(
       fen: null == fen
           ? _value.fen
           : fen // ignore: cast_nullable_to_non_nullable
               as String,
-      boardSizeProtected: freezed == boardSizeProtected
-          ? _value.boardSizeProtected
-          : boardSizeProtected // ignore: cast_nullable_to_non_nullable
-              as BoardSize?,
+      boardSize: null == boardSize
+          ? _value.boardSize
+          : boardSize // ignore: cast_nullable_to_non_nullable
+              as BoardSize,
     ) as $Val);
   }
 }
@@ -80,9 +77,7 @@ abstract class _$$SetupModelImplCopyWith<$Res>
       __$$SetupModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {@protected String fen,
-      @protected @BoardSizeConverter() BoardSize? boardSizeProtected});
+  $Res call({@protected String fen, @BoardSizeConverter() BoardSize boardSize});
 }
 
 /// @nodoc
@@ -97,17 +92,17 @@ class __$$SetupModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? fen = null,
-    Object? boardSizeProtected = freezed,
+    Object? boardSize = null,
   }) {
     return _then(_$SetupModelImpl(
       fen: null == fen
           ? _value.fen
           : fen // ignore: cast_nullable_to_non_nullable
               as String,
-      boardSizeProtected: freezed == boardSizeProtected
-          ? _value.boardSizeProtected
-          : boardSizeProtected // ignore: cast_nullable_to_non_nullable
-              as BoardSize?,
+      boardSize: null == boardSize
+          ? _value.boardSize
+          : boardSize // ignore: cast_nullable_to_non_nullable
+              as BoardSize,
     ));
   }
 }
@@ -117,7 +112,7 @@ class __$$SetupModelImplCopyWithImpl<$Res>
 class _$SetupModelImpl extends _SetupModel {
   const _$SetupModelImpl(
       {@protected required this.fen,
-      @protected @BoardSizeConverter() this.boardSizeProtected})
+      @BoardSizeConverter() required this.boardSize})
       : super._();
 
   factory _$SetupModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -127,13 +122,12 @@ class _$SetupModelImpl extends _SetupModel {
   @protected
   final String fen;
   @override
-  @protected
   @BoardSizeConverter()
-  final BoardSize? boardSizeProtected;
+  final BoardSize boardSize;
 
   @override
   String toString() {
-    return 'SetupModel(fen: $fen, boardSizeProtected: $boardSizeProtected)';
+    return 'SetupModel(fen: $fen, boardSize: $boardSize)';
   }
 
   @override
@@ -142,13 +136,13 @@ class _$SetupModelImpl extends _SetupModel {
         (other.runtimeType == runtimeType &&
             other is _$SetupModelImpl &&
             (identical(other.fen, fen) || other.fen == fen) &&
-            (identical(other.boardSizeProtected, boardSizeProtected) ||
-                other.boardSizeProtected == boardSizeProtected));
+            (identical(other.boardSize, boardSize) ||
+                other.boardSize == boardSize));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, fen, boardSizeProtected);
+  int get hashCode => Object.hash(runtimeType, fen, boardSize);
 
   @JsonKey(ignore: true)
   @override
@@ -166,10 +160,9 @@ class _$SetupModelImpl extends _SetupModel {
 
 abstract class _SetupModel extends SetupModel {
   const factory _SetupModel(
-      {@protected required final String fen,
-      @protected
-      @BoardSizeConverter()
-      final BoardSize? boardSizeProtected}) = _$SetupModelImpl;
+          {@protected required final String fen,
+          @BoardSizeConverter() required final BoardSize boardSize}) =
+      _$SetupModelImpl;
   const _SetupModel._() : super._();
 
   factory _SetupModel.fromJson(Map<String, dynamic> json) =
@@ -179,9 +172,8 @@ abstract class _SetupModel extends SetupModel {
   @protected
   String get fen;
   @override
-  @protected
   @BoardSizeConverter()
-  BoardSize? get boardSizeProtected;
+  BoardSize get boardSize;
   @override
   @JsonKey(ignore: true)
   _$$SetupModelImplCopyWith<_$SetupModelImpl> get copyWith =>

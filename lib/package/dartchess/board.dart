@@ -7,7 +7,7 @@ import 'package:meta/meta.dart';
 
 // TODO : move this converter somewhere else
 class BoardSizeConverter
-    implements JsonConverter<BoardSize?, Map<String, dynamic>> {
+    implements JsonConverter<BoardSize, Map<String, dynamic>> {
   const BoardSizeConverter();
 
   @override
@@ -19,9 +19,9 @@ class BoardSizeConverter
   }
 
   @override
-  Map<String, dynamic> toJson(BoardSize? size) => {
-        'ranks': size?.ranks ?? 8,
-        'files': size?.files ?? 8,
+  Map<String, dynamic> toJson(BoardSize size) => {
+        'ranks': size.ranks,
+        'files': size.files,
       };
 }
 
@@ -170,7 +170,7 @@ class Board {
   /// Parse the board part of a FEN string and returns a Board.
   ///
   /// Throws a [FenError] if the provided FEN string is not valid.
-  factory Board.parseFen(String boardFen, {BoardSize? size}) {
+  factory Board.parseFen(String boardFen, {required BoardSize? size}) {
     size ??= BoardSize.fromFen(boardFen);
     var board = Board.empty(size);
     var rank = size.ranks - 1;

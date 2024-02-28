@@ -44,7 +44,7 @@ class SetupValidateButton extends StatelessWidget {
                 );
               }
 
-              final board = setupCubit.fullboard;
+              final board = setupCubit.board;
               final kingsCount = board.kings.length;
               if (kingsCount != 1) {
                 return showNotOneKingDialog(

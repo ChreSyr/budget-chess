@@ -20,7 +20,7 @@ _$ChallengeModelImpl _$$ChallengeModelImplFromJson(Map<String, dynamic> json) =>
       time: json['time'] as int? ?? 180,
       increment: json['increment'] as int? ?? 2,
       boardSizeProtected:
-          _$JsonConverterFromJson<Map<String, dynamic>, BoardSize?>(
+          _$JsonConverterFromJson<Map<String, dynamic>, BoardSize>(
               json['boardSizeProtected'], const BoardSizeConverter().fromJson),
       budget: json['budget'] as int? ?? 39,
     );
@@ -36,7 +36,8 @@ Map<String, dynamic> _$$ChallengeModelImplToJson(
       'time': instance.time,
       'increment': instance.increment,
       'boardSizeProtected':
-          const BoardSizeConverter().toJson(instance.boardSizeProtected),
+          _$JsonConverterToJson<Map<String, dynamic>, BoardSize>(
+              instance.boardSizeProtected, const BoardSizeConverter().toJson),
       'budget': instance.budget,
     };
 
@@ -56,3 +57,9 @@ Value? _$JsonConverterFromJson<Json, Value>(
   Value? Function(Json json) fromJson,
 ) =>
     json == null ? null : fromJson(json as Json);
+
+Json? _$JsonConverterToJson<Json, Value>(
+  Value? value,
+  Json? Function(Value value) toJson,
+) =>
+    value == null ? null : toJson(value);

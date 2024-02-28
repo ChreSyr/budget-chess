@@ -50,7 +50,9 @@ class GameCubit extends Cubit<GameState?> {
       );
     } else {
       final board = Board.parseFen(
+        // TODO : manage : odd ranks
         '${blackHalfFen.split('').reversed.join()}/$whiteHalfFen',
+        size: setup.boardSize,
       );
 
       game = oldState.game.copyWith(
