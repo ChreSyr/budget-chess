@@ -74,6 +74,7 @@ extension GameInDBExt on GameInDB {
     try {
       final board = Board.parseFen(
         '${blackHalfFen?.split('').reversed.join() ?? challenge!.boardSize.emptyHalfFen}${challenge!.boardSize.ranks.isEven ? '' : '8/'}/${whiteHalfFen ?? challenge!.boardSize.emptyHalfFen}',
+        size: challenge?.boardSize,
       );
       List<GameStep> steps;
       try {

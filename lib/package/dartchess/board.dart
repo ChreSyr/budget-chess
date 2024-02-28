@@ -202,7 +202,7 @@ class Board {
 
   factory Board.empty(BoardSize size) => Board._(
         size: size,
-        attacks: Attacks(size),
+        attacks: size.attacks,
         occupied: SquareMap.zero,
         promoted: SquareMap.zero,
         white: SquareMap.zero,
