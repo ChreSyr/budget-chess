@@ -52,47 +52,23 @@ enum CastlingSide {
 }
 
 enum Role {
-  pawn,
-  knight,
-  bishop,
-  rook,
-  king,
-  queen;
+  pawn('p'),
+  knight('n'),
+  bishop('b'),
+  rook('r'),
+  king('k'),
+  queen('q');
+
+  const Role(this.char);
+
+  final String char;
 
   static Role? fromChar(String ch) {
-    switch (ch.toLowerCase()) {
-      case 'p':
-        return Role.pawn;
-      case 'n':
-        return Role.knight;
-      case 'b':
-        return Role.bishop;
-      case 'r':
-        return Role.rook;
-      case 'q':
-        return Role.queen;
-      case 'k':
-        return Role.king;
-      default:
-        return null;
+    final chl = ch.toLowerCase();
+    for (final role in Role.values) {
+      if (role.char == chl) return role;
     }
-  }
-
-  String get char {
-    switch (this) {
-      case Role.pawn:
-        return 'p';
-      case Role.knight:
-        return 'n';
-      case Role.bishop:
-        return 'b';
-      case Role.rook:
-        return 'r';
-      case Role.queen:
-        return 'q';
-      case Role.king:
-        return 'k';
-    }
+    return null;
   }
 }
 

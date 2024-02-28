@@ -9,10 +9,19 @@ import 'package:meta/meta.dart';
 sealed class Move {
   const Move({
     required this.to,
+    required this.umn,
   });
 
   /// The target square of this move.
   final Square to;
+
+  /// The Universal Move Notation of this move.
+  ///
+  /// Exemples :
+  ///   `7:24` for a normal move,
+  ///   `49:57:q` for promotion to a queen.
+  ///   `q@34` for drop of a queen.
+  final String umn;
 
   /// Gets the UCI notation of this move.
   String uci(BoardSize size);
@@ -42,6 +51,34 @@ sealed class Move {
     return null;
   }
 
+  /// Constructs a [Move] from an UMN string.
+  ///
+  /// Returns `null` if UMN string is not valid.
+  static Move? fromUMN(String str) {
+    if (str.contains('@')) {
+      // DropMove
+      final splitted = str.split('@');
+      if (splitted.length == 2) {
+        final role = Role.fromChar(splitted.first);
+        final to = int.tryParse(splitted[1]);
+        if (role != null && to != null) return DropMove(to: to, role: role);
+      }
+    } else {
+      // NormalMove
+      final splitted = str.split(':');
+      if (splitted.length >= 2) {
+        final from = int.tryParse(splitted.first);
+        final to = int.tryParse(splitted[1]);
+        final promotion =
+            splitted.length == 3 ? Role.fromChar(splitted[2]) : null;
+        if (from != null && to != null) {
+          return NormalMove(from: from, to: to, promotion: promotion);
+        }
+      }
+    }
+    return null;
+  }
+
   @override
   String toString() {
     return 'Move($uci)';
@@ -51,11 +88,11 @@ sealed class Move {
 /// Represents a chess move, possibly a promotion.
 @immutable
 class NormalMove extends Move {
-  const NormalMove({
+  NormalMove({
     required this.from,
     required super.to,
     this.promotion,
-  });
+  }) : super(umn: '$from:$to${promotion == null ? '' : ':${promotion.char}'}');
 
   /// The origin square of this move.
   final Square from;
@@ -84,10 +121,10 @@ class NormalMove extends Move {
 /// Represents a drop move.
 @immutable
 class DropMove extends Move {
-  const DropMove({
+  DropMove({
     required super.to,
     required this.role,
-  });
+  }) : super(umn: '${role.char}@$to');
 
   final Role role;
 
