@@ -13,6 +13,7 @@ import 'package:crea_chess/route/play/setup/setup_budget_counter.dart';
 import 'package:crea_chess/route/play/setup/setup_cubit.dart';
 import 'package:crea_chess/route/play/setup/setup_opponent_tile.dart';
 import 'package:crea_chess/route/play/setup/setup_validate_button.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -39,7 +40,20 @@ class SetupBody extends StatelessWidget {
           create: (context) => SelectedRoleCubit(),
         ),
       ],
-      child: const _SetupBody(),
+      child: Column(
+        children: [
+          if (kDebugMode)
+            Builder(
+              builder: (context) {
+                return OutlinedButton(
+                  onPressed: context.read<SetupCubit>().resetFen,
+                  child: const Text('Reset'),
+                );
+              },
+            ),
+          const _SetupBody(),
+        ],
+      ),
     );
   }
 }
