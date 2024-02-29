@@ -13,8 +13,10 @@ class SetupCubit extends HydratedCubit<SetupModel> {
   final Side side;
 
   // TODO : from getter to final
-  Board get board =>
-      Board.parseFen(state.fenAs(side), size: state.boardSize);
+  Board get board => Board.parseFen(state.fenAs(side), size: state.boardSize);
+
+  // TODO : remove
+  void resetFen() => emit(state.copyWith(fen: state.boardSize.emptyFen));
 
   void onDrop(CGDropMove move) {
     final to = state.boardSize.parseSquare(move.squareId);
@@ -30,7 +32,7 @@ class SetupCubit extends HydratedCubit<SetupModel> {
       ),
     );
 
-    emit(state.copyWith(fen: newBoard.fen.substring(8)));
+    emit(state.copyWith(fen: newBoard.fen));
   }
 
   void onMove(CGMove move) {
@@ -42,7 +44,7 @@ class SetupCubit extends HydratedCubit<SetupModel> {
     var newBoard = board.removePieceAt(from);
     newBoard = newBoard.setPieceAt(to, piece);
 
-    emit(state.copyWith(fen: newBoard.fen.substring(8)));
+    emit(state.copyWith(fen: newBoard.fen));
   }
 
   void onRemove(SquareId squareId) {
@@ -50,7 +52,7 @@ class SetupCubit extends HydratedCubit<SetupModel> {
     if (square == null) return;
     final newBoard = board.removePieceAt(square);
 
-    emit(state.copyWith(fen: newBoard.fen.substring(8)));
+    emit(state.copyWith(fen: newBoard.fen));
   }
 
   @override
