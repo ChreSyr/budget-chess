@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:crea_chess/package/dartchess/board.dart';
+import 'package:crea_chess/package/dartchess/fen.dart';
 import 'package:crea_chess/package/dartchess/models.dart';
 import 'package:crea_chess/package/dartchess/square_map.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
@@ -136,6 +137,37 @@ class Setup {
       halfmoves: halfmoves,
       fullmoves: fullmoves,
       remainingChecks: remainingChecks,
+    );
+  }
+
+  factory Setup.fromHalfSetups({
+    required BoardSize size,
+    required String? whiteSetupFen,
+    required String? blackSetupFen,
+  }) {
+    whiteSetupFen ??= size.emptyHalfFen;
+    blackSetupFen ??= size.emptyHalfFen;
+
+    final (whiteFiles, whiteRanks) = FEN.getFilesRanksOf(whiteSetupFen);
+    final (blackFiles, blackRanks) = FEN.getFilesRanksOf(whiteSetupFen);
+    if (whiteFiles != size.files || blackFiles != size.files) {
+      throw const FenError("Files don't match");
+    }
+    if (whiteRanks + blackRanks + (size.ranks.isEven ? 0 : 1) != size.ranks) {
+      throw const FenError("Ranks don't match");
+    }
+
+    final board = Board.parseFen(
+      '${blackSetupFen.split('').reversed.join()}${size.ranks.isEven ? '' : '8/'}/$whiteSetupFen',
+      size: size,
+    );
+
+    return Setup(
+      board: board,
+      turn: Side.white,
+      unmovedRooks: board.rooks,
+      halfmoves: 0,
+      fullmoves: 0,
     );
   }
 

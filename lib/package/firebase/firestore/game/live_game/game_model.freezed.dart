@@ -24,11 +24,11 @@ mixin _$GameModel {
 
   /// Starting position of black pieces.
   /// null means black is seting up its pieces.
-  String? get blackHalfFen => throw _privateConstructorUsedError;
+  String? get blackSetupFen => throw _privateConstructorUsedError;
 
   /// Starting position of white pieces.
   /// null means white is seting up its pieces.
-  String? get whiteHalfFen => throw _privateConstructorUsedError;
+  String? get whiteSetupFen => throw _privateConstructorUsedError;
   List<GameStep> get steps => throw _privateConstructorUsedError;
   Side? get winner =>
       throw _privateConstructorUsedError; // if status is ended & winner is null : draw
@@ -50,8 +50,8 @@ abstract class $GameModelCopyWith<$Res> {
       String blackId,
       String whiteId,
       GameStatus status,
-      String? blackHalfFen,
-      String? whiteHalfFen,
+      String? blackSetupFen,
+      String? whiteSetupFen,
       List<GameStep> steps,
       Side? winner,
       GamePrefs? prefs});
@@ -78,8 +78,8 @@ class _$GameModelCopyWithImpl<$Res, $Val extends GameModel>
     Object? blackId = null,
     Object? whiteId = null,
     Object? status = null,
-    Object? blackHalfFen = freezed,
-    Object? whiteHalfFen = freezed,
+    Object? blackSetupFen = freezed,
+    Object? whiteSetupFen = freezed,
     Object? steps = null,
     Object? winner = freezed,
     Object? prefs = freezed,
@@ -105,13 +105,13 @@ class _$GameModelCopyWithImpl<$Res, $Val extends GameModel>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as GameStatus,
-      blackHalfFen: freezed == blackHalfFen
-          ? _value.blackHalfFen
-          : blackHalfFen // ignore: cast_nullable_to_non_nullable
+      blackSetupFen: freezed == blackSetupFen
+          ? _value.blackSetupFen
+          : blackSetupFen // ignore: cast_nullable_to_non_nullable
               as String?,
-      whiteHalfFen: freezed == whiteHalfFen
-          ? _value.whiteHalfFen
-          : whiteHalfFen // ignore: cast_nullable_to_non_nullable
+      whiteSetupFen: freezed == whiteSetupFen
+          ? _value.whiteSetupFen
+          : whiteSetupFen // ignore: cast_nullable_to_non_nullable
               as String?,
       steps: null == steps
           ? _value.steps
@@ -163,8 +163,8 @@ abstract class _$$GameModelImplCopyWith<$Res>
       String blackId,
       String whiteId,
       GameStatus status,
-      String? blackHalfFen,
-      String? whiteHalfFen,
+      String? blackSetupFen,
+      String? whiteSetupFen,
       List<GameStep> steps,
       Side? winner,
       GamePrefs? prefs});
@@ -191,8 +191,8 @@ class __$$GameModelImplCopyWithImpl<$Res>
     Object? blackId = null,
     Object? whiteId = null,
     Object? status = null,
-    Object? blackHalfFen = freezed,
-    Object? whiteHalfFen = freezed,
+    Object? blackSetupFen = freezed,
+    Object? whiteSetupFen = freezed,
     Object? steps = null,
     Object? winner = freezed,
     Object? prefs = freezed,
@@ -218,13 +218,13 @@ class __$$GameModelImplCopyWithImpl<$Res>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as GameStatus,
-      blackHalfFen: freezed == blackHalfFen
-          ? _value.blackHalfFen
-          : blackHalfFen // ignore: cast_nullable_to_non_nullable
+      blackSetupFen: freezed == blackSetupFen
+          ? _value.blackSetupFen
+          : blackSetupFen // ignore: cast_nullable_to_non_nullable
               as String?,
-      whiteHalfFen: freezed == whiteHalfFen
-          ? _value.whiteHalfFen
-          : whiteHalfFen // ignore: cast_nullable_to_non_nullable
+      whiteSetupFen: freezed == whiteSetupFen
+          ? _value.whiteSetupFen
+          : whiteSetupFen // ignore: cast_nullable_to_non_nullable
               as String?,
       steps: null == steps
           ? _value._steps
@@ -251,8 +251,8 @@ class _$GameModelImpl extends _GameModel {
       required this.blackId,
       required this.whiteId,
       required this.status,
-      this.blackHalfFen,
-      this.whiteHalfFen,
+      this.blackSetupFen,
+      this.whiteSetupFen,
       final List<GameStep> steps = const [],
       this.winner,
       this.prefs})
@@ -273,12 +273,12 @@ class _$GameModelImpl extends _GameModel {
   /// Starting position of black pieces.
   /// null means black is seting up its pieces.
   @override
-  final String? blackHalfFen;
+  final String? blackSetupFen;
 
   /// Starting position of white pieces.
   /// null means white is seting up its pieces.
   @override
-  final String? whiteHalfFen;
+  final String? whiteSetupFen;
   final List<GameStep> _steps;
   @override
   @JsonKey()
@@ -296,7 +296,7 @@ class _$GameModelImpl extends _GameModel {
 
   @override
   String toString() {
-    return 'GameModel(id: $id, challenge: $challenge, blackId: $blackId, whiteId: $whiteId, status: $status, blackHalfFen: $blackHalfFen, whiteHalfFen: $whiteHalfFen, steps: $steps, winner: $winner, prefs: $prefs)';
+    return 'GameModel(id: $id, challenge: $challenge, blackId: $blackId, whiteId: $whiteId, status: $status, blackSetupFen: $blackSetupFen, whiteSetupFen: $whiteSetupFen, steps: $steps, winner: $winner, prefs: $prefs)';
   }
 
   @override
@@ -310,10 +310,10 @@ class _$GameModelImpl extends _GameModel {
             (identical(other.blackId, blackId) || other.blackId == blackId) &&
             (identical(other.whiteId, whiteId) || other.whiteId == whiteId) &&
             (identical(other.status, status) || other.status == status) &&
-            (identical(other.blackHalfFen, blackHalfFen) ||
-                other.blackHalfFen == blackHalfFen) &&
-            (identical(other.whiteHalfFen, whiteHalfFen) ||
-                other.whiteHalfFen == whiteHalfFen) &&
+            (identical(other.blackSetupFen, blackSetupFen) ||
+                other.blackSetupFen == blackSetupFen) &&
+            (identical(other.whiteSetupFen, whiteSetupFen) ||
+                other.whiteSetupFen == whiteSetupFen) &&
             const DeepCollectionEquality().equals(other._steps, _steps) &&
             (identical(other.winner, winner) || other.winner == winner) &&
             (identical(other.prefs, prefs) || other.prefs == prefs));
@@ -327,8 +327,8 @@ class _$GameModelImpl extends _GameModel {
       blackId,
       whiteId,
       status,
-      blackHalfFen,
-      whiteHalfFen,
+      blackSetupFen,
+      whiteSetupFen,
       const DeepCollectionEquality().hash(_steps),
       winner,
       prefs);
@@ -347,8 +347,8 @@ abstract class _GameModel extends GameModel {
       required final String blackId,
       required final String whiteId,
       required final GameStatus status,
-      final String? blackHalfFen,
-      final String? whiteHalfFen,
+      final String? blackSetupFen,
+      final String? whiteSetupFen,
       final List<GameStep> steps,
       final Side? winner,
       final GamePrefs? prefs}) = _$GameModelImpl;
@@ -368,12 +368,12 @@ abstract class _GameModel extends GameModel {
 
   /// Starting position of black pieces.
   /// null means black is seting up its pieces.
-  String? get blackHalfFen;
+  String? get blackSetupFen;
   @override
 
   /// Starting position of white pieces.
   /// null means white is seting up its pieces.
-  String? get whiteHalfFen;
+  String? get whiteSetupFen;
   @override
   List<GameStep> get steps;
   @override

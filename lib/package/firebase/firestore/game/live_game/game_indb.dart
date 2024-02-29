@@ -65,11 +65,11 @@ class GameInDB with _$GameInDB {
 
     /// Starting position of black pieces.
     /// null means black is seting up its pieces.
-    String? blackHalfFen,
+    String? blackSetupFen,
 
     /// Starting position of white pieces.
     /// null means white is seting up its pieces.
-    String? whiteHalfFen,
+    String? whiteSetupFen,
     String? sanMoves, // san moves separated by ' '
     Side? winner, // if status is ended & winner is null : draw
     @GamePrefsConverter() GamePrefs? prefs,

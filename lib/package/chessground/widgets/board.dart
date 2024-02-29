@@ -1,15 +1,8 @@
 import 'dart:async';
 
-import 'package:crea_chess/package/chessground/board_data.dart';
-import 'package:crea_chess/package/chessground/board_settings.dart';
 import 'package:crea_chess/package/chessground/export.dart';
-import 'package:crea_chess/package/chessground/fen.dart';
-import 'package:crea_chess/package/chessground/models.dart';
-import 'package:crea_chess/package/chessground/premove.dart';
 import 'package:crea_chess/package/chessground/widgets/animation.dart';
 import 'package:crea_chess/package/chessground/widgets/board_annotation.dart';
-import 'package:crea_chess/package/chessground/widgets/highlight.dart';
-import 'package:crea_chess/package/chessground/widgets/piece.dart';
 import 'package:crea_chess/package/chessground/widgets/positioned_square.dart';
 import 'package:crea_chess/package/chessground/widgets/promotion.dart';
 import 'package:crea_chess/package/chessground/widgets/shape.dart';

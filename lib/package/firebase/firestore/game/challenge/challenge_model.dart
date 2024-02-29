@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, invalid_annotation_target
 
 import 'package:crea_chess/package/dartchess/export.dart';
+import 'package:crea_chess/package/firebase/firestore/game/board_size_converter.dart';
 import 'package:crea_chess/package/game/speed.dart';
 import 'package:crea_chess/package/game/time_control.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -25,20 +26,18 @@ class ChallengeModelConverter
 class ChallengeModel with _$ChallengeModel {
   factory ChallengeModel({
     required String id,
+    @BoardSizeConverter() required BoardSize boardSize,
     DateTime? createdAt,
     DateTime? acceptedAt,
     String? authorId,
     @Default(Rule.chess) Rule rule,
     @Default(180) int time, // in seconds
     @Default(2) int increment, // in seconds
-    @protected @BoardSizeConverter() BoardSize? boardSizeProtected,
     @Default(39) int budget,
   }) = _ChallengeModel;
 
   /// Required for the override getter
   const ChallengeModel._();
-
-  BoardSize get boardSize => boardSizeProtected ?? BoardSize.standard;
 
   factory ChallengeModel.fromJson(Map<String, dynamic> json) =>
       _$ChallengeModelFromJson(json);

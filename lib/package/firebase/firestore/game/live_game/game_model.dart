@@ -2,6 +2,7 @@ import 'package:crea_chess/package/dartchess/export.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/firebase/firestore/game/game/game.dart';
 import 'package:crea_chess/package/firebase/firestore/game/live_game/game_indb.dart';
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'game_model.freezed.dart';
@@ -18,11 +19,11 @@ class GameModel with _$GameModel {
 
     /// Starting position of black pieces.
     /// null means black is seting up its pieces.
-    String? blackHalfFen,
+    String? blackSetupFen,
 
     /// Starting position of white pieces.
     /// null means white is seting up its pieces.
-    String? whiteHalfFen,
+    String? whiteSetupFen,
     @Default([]) List<GameStep> steps,
     Side? winner, // if status is ended & winner is null : draw
     GamePrefs? prefs,
@@ -31,15 +32,65 @@ class GameModel with _$GameModel {
   /// Required for the override getter
   const GameModel._();
 
-  GameInDB toGameInDB() {
+  static GameModel? fromDB(GameInDB game) {
+    try {
+      List<GameStep> steps;
+      try {
+        var position = Position.setupPosition(
+          game.challenge!.rule,
+          Setup.fromHalfSetups(
+            size: game.challenge!.boardSize,
+            blackSetupFen: game.blackSetupFen,
+            whiteSetupFen: game.whiteSetupFen,
+          ),
+        );
+        steps = [GameStep(position: position)];
+
+        if (game.sanMoves!.isNotEmpty) {
+          for (final san in game.sanMoves!.split(' ')) {
+            final move = position.parseSan(san);
+            // assume firestore only sends correct moves
+            position = position.playUnchecked(move!);
+            steps.add(
+              GameStep(
+                sanMove: SanMove(san, move),
+                position: position,
+                diff: MaterialDiff.fromBoard(position.board),
+              ),
+            );
+          }
+        }
+      } on PositionError catch (_) {
+        steps = [];
+      }
+
+      return GameModel(
+        id: game.id!,
+        challenge: game.challenge!,
+        blackId: game.blackId!,
+        whiteId: game.whiteId!,
+        status: game.status!,
+        blackSetupFen: game.blackSetupFen,
+        whiteSetupFen: game.whiteSetupFen,
+        steps: steps,
+        winner: game.winner,
+        prefs: game.prefs,
+      );
+    } catch (e) {
+      debugPrint(e.toString());
+      return null;
+    }
+  }
+
+  GameInDB toDB() {
     return GameInDB(
       id: id,
       challenge: challenge,
       blackId: blackId,
       whiteId: whiteId,
       status: status,
-      blackHalfFen: blackHalfFen,
-      whiteHalfFen: whiteHalfFen,
+      blackSetupFen: blackSetupFen,
+      whiteSetupFen: whiteSetupFen,
       sanMoves: steps.map((e) => e.sanMove?.san).whereType<String>().join(' '),
       winner: winner,
       prefs: prefs,
@@ -58,71 +109,13 @@ class GameModel with _$GameModel {
       };
 
   bool sideHasSetup(Side side) => switch (side) {
-        Side.white => whiteHalfFen != null && whiteHalfFen!.isNotEmpty,
-        Side.black => blackHalfFen != null && blackHalfFen!.isNotEmpty,
+        Side.white => whiteSetupFen != null && whiteSetupFen!.isNotEmpty,
+        Side.black => blackSetupFen != null && blackSetupFen!.isNotEmpty,
       };
 
   Side? sideOf(String playerId) {
     if (playerId == whiteId) return Side.white;
     if (playerId == blackId) return Side.black;
     return null;
-  }
-}
-
-extension GameInDBExt on GameInDB {
-  GameModel? toGameModel() {
-    try {
-      final board = Board.parseFen(
-        '${blackHalfFen?.split('').reversed.join() ?? challenge!.boardSize.emptyHalfFen}${challenge!.boardSize.ranks.isEven ? '' : '8/'}/${whiteHalfFen ?? challenge!.boardSize.emptyHalfFen}',
-        size: challenge?.boardSize,
-      );
-      List<GameStep> steps;
-      try {
-        var position = Position.setupPosition(
-          challenge!.rule,
-          Setup(
-            board: board,
-            turn: Side.white,
-            unmovedRooks: board.rooks,
-            halfmoves: 0,
-            fullmoves: 0,
-          ),
-        );
-        steps = [GameStep(position: position)];
-
-        if (sanMoves!.isNotEmpty) {
-          for (final san in sanMoves!.split(' ')) {
-            final move = position.parseSan(san);
-            // assume firestore only sends correct moves
-            position = position.playUnchecked(move!);
-            steps.add(
-              GameStep(
-                sanMove: SanMove(san, move),
-                position: position,
-                diff: MaterialDiff.fromBoard(position.board),
-              ),
-            );
-          }
-        }
-      } on PositionError catch (_) {
-        steps = [];
-      }
-
-      return GameModel(
-        id: id!,
-        challenge: challenge!,
-        blackId: blackId!,
-        whiteId: whiteId!,
-        status: status!,
-        blackHalfFen: blackHalfFen,
-        whiteHalfFen: whiteHalfFen,
-        steps: steps,
-        winner: winner,
-        prefs: prefs,
-      );
-    } catch (e) {
-      print(e);
-      return null;
-    }
   }
 }

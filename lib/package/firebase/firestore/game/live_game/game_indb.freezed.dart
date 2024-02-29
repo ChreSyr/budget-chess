@@ -483,11 +483,11 @@ mixin _$GameInDB {
 
   /// Starting position of black pieces.
   /// null means black is seting up its pieces.
-  String? get blackHalfFen => throw _privateConstructorUsedError;
+  String? get blackSetupFen => throw _privateConstructorUsedError;
 
   /// Starting position of white pieces.
   /// null means white is seting up its pieces.
-  String? get whiteHalfFen => throw _privateConstructorUsedError;
+  String? get whiteSetupFen => throw _privateConstructorUsedError;
   String? get sanMoves =>
       throw _privateConstructorUsedError; // san moves separated by ' '
   Side? get winner =>
@@ -512,8 +512,8 @@ abstract class $GameInDBCopyWith<$Res> {
       String? blackId,
       String? whiteId,
       GameStatus? status,
-      String? blackHalfFen,
-      String? whiteHalfFen,
+      String? blackSetupFen,
+      String? whiteSetupFen,
       String? sanMoves,
       Side? winner,
       @GamePrefsConverter() GamePrefs? prefs});
@@ -540,8 +540,8 @@ class _$GameInDBCopyWithImpl<$Res, $Val extends GameInDB>
     Object? blackId = freezed,
     Object? whiteId = freezed,
     Object? status = freezed,
-    Object? blackHalfFen = freezed,
-    Object? whiteHalfFen = freezed,
+    Object? blackSetupFen = freezed,
+    Object? whiteSetupFen = freezed,
     Object? sanMoves = freezed,
     Object? winner = freezed,
     Object? prefs = freezed,
@@ -567,13 +567,13 @@ class _$GameInDBCopyWithImpl<$Res, $Val extends GameInDB>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as GameStatus?,
-      blackHalfFen: freezed == blackHalfFen
-          ? _value.blackHalfFen
-          : blackHalfFen // ignore: cast_nullable_to_non_nullable
+      blackSetupFen: freezed == blackSetupFen
+          ? _value.blackSetupFen
+          : blackSetupFen // ignore: cast_nullable_to_non_nullable
               as String?,
-      whiteHalfFen: freezed == whiteHalfFen
-          ? _value.whiteHalfFen
-          : whiteHalfFen // ignore: cast_nullable_to_non_nullable
+      whiteSetupFen: freezed == whiteSetupFen
+          ? _value.whiteSetupFen
+          : whiteSetupFen // ignore: cast_nullable_to_non_nullable
               as String?,
       sanMoves: freezed == sanMoves
           ? _value.sanMoves
@@ -629,8 +629,8 @@ abstract class _$$GameInDBImplCopyWith<$Res>
       String? blackId,
       String? whiteId,
       GameStatus? status,
-      String? blackHalfFen,
-      String? whiteHalfFen,
+      String? blackSetupFen,
+      String? whiteSetupFen,
       String? sanMoves,
       Side? winner,
       @GamePrefsConverter() GamePrefs? prefs});
@@ -657,8 +657,8 @@ class __$$GameInDBImplCopyWithImpl<$Res>
     Object? blackId = freezed,
     Object? whiteId = freezed,
     Object? status = freezed,
-    Object? blackHalfFen = freezed,
-    Object? whiteHalfFen = freezed,
+    Object? blackSetupFen = freezed,
+    Object? whiteSetupFen = freezed,
     Object? sanMoves = freezed,
     Object? winner = freezed,
     Object? prefs = freezed,
@@ -684,13 +684,13 @@ class __$$GameInDBImplCopyWithImpl<$Res>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as GameStatus?,
-      blackHalfFen: freezed == blackHalfFen
-          ? _value.blackHalfFen
-          : blackHalfFen // ignore: cast_nullable_to_non_nullable
+      blackSetupFen: freezed == blackSetupFen
+          ? _value.blackSetupFen
+          : blackSetupFen // ignore: cast_nullable_to_non_nullable
               as String?,
-      whiteHalfFen: freezed == whiteHalfFen
-          ? _value.whiteHalfFen
-          : whiteHalfFen // ignore: cast_nullable_to_non_nullable
+      whiteSetupFen: freezed == whiteSetupFen
+          ? _value.whiteSetupFen
+          : whiteSetupFen // ignore: cast_nullable_to_non_nullable
               as String?,
       sanMoves: freezed == sanMoves
           ? _value.sanMoves
@@ -717,8 +717,8 @@ class _$GameInDBImpl extends _GameInDB {
       this.blackId,
       this.whiteId,
       this.status,
-      this.blackHalfFen,
-      this.whiteHalfFen,
+      this.blackSetupFen,
+      this.whiteSetupFen,
       this.sanMoves,
       this.winner,
       @GamePrefsConverter() this.prefs})
@@ -742,12 +742,12 @@ class _$GameInDBImpl extends _GameInDB {
   /// Starting position of black pieces.
   /// null means black is seting up its pieces.
   @override
-  final String? blackHalfFen;
+  final String? blackSetupFen;
 
   /// Starting position of white pieces.
   /// null means white is seting up its pieces.
   @override
-  final String? whiteHalfFen;
+  final String? whiteSetupFen;
   @override
   final String? sanMoves;
 // san moves separated by ' '
@@ -760,7 +760,7 @@ class _$GameInDBImpl extends _GameInDB {
 
   @override
   String toString() {
-    return 'GameInDB(id: $id, challenge: $challenge, blackId: $blackId, whiteId: $whiteId, status: $status, blackHalfFen: $blackHalfFen, whiteHalfFen: $whiteHalfFen, sanMoves: $sanMoves, winner: $winner, prefs: $prefs)';
+    return 'GameInDB(id: $id, challenge: $challenge, blackId: $blackId, whiteId: $whiteId, status: $status, blackSetupFen: $blackSetupFen, whiteSetupFen: $whiteSetupFen, sanMoves: $sanMoves, winner: $winner, prefs: $prefs)';
   }
 
   @override
@@ -774,10 +774,10 @@ class _$GameInDBImpl extends _GameInDB {
             (identical(other.blackId, blackId) || other.blackId == blackId) &&
             (identical(other.whiteId, whiteId) || other.whiteId == whiteId) &&
             (identical(other.status, status) || other.status == status) &&
-            (identical(other.blackHalfFen, blackHalfFen) ||
-                other.blackHalfFen == blackHalfFen) &&
-            (identical(other.whiteHalfFen, whiteHalfFen) ||
-                other.whiteHalfFen == whiteHalfFen) &&
+            (identical(other.blackSetupFen, blackSetupFen) ||
+                other.blackSetupFen == blackSetupFen) &&
+            (identical(other.whiteSetupFen, whiteSetupFen) ||
+                other.whiteSetupFen == whiteSetupFen) &&
             (identical(other.sanMoves, sanMoves) ||
                 other.sanMoves == sanMoves) &&
             (identical(other.winner, winner) || other.winner == winner) &&
@@ -787,7 +787,7 @@ class _$GameInDBImpl extends _GameInDB {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, id, challenge, blackId, whiteId,
-      status, blackHalfFen, whiteHalfFen, sanMoves, winner, prefs);
+      status, blackSetupFen, whiteSetupFen, sanMoves, winner, prefs);
 
   @JsonKey(ignore: true)
   @override
@@ -810,8 +810,8 @@ abstract class _GameInDB extends GameInDB {
       final String? blackId,
       final String? whiteId,
       final GameStatus? status,
-      final String? blackHalfFen,
-      final String? whiteHalfFen,
+      final String? blackSetupFen,
+      final String? whiteSetupFen,
       final String? sanMoves,
       final Side? winner,
       @GamePrefsConverter() final GamePrefs? prefs}) = _$GameInDBImpl;
@@ -835,12 +835,12 @@ abstract class _GameInDB extends GameInDB {
 
   /// Starting position of black pieces.
   /// null means black is seting up its pieces.
-  String? get blackHalfFen;
+  String? get blackSetupFen;
   @override
 
   /// Starting position of white pieces.
   /// null means white is seting up its pieces.
-  String? get whiteHalfFen;
+  String? get whiteSetupFen;
   @override
   String? get sanMoves;
   @override // san moves separated by ' '

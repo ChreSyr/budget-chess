@@ -14,7 +14,7 @@ class LiveGameCRUD extends CollectionCRUD<GameModel> {
     try {
       final json = snapshot.data() ?? {};
       json['id'] = snapshot.id;
-      return GameInDB.fromJson(json).toGameModel();
+      return GameModel.fromDB(GameInDB.fromJson(json));
     } catch (_) {
       return null;
     }
@@ -22,7 +22,7 @@ class LiveGameCRUD extends CollectionCRUD<GameModel> {
 
   @override
   Map<String, Object?> modelToJson(GameModel? data, SetOptions? _) {
-    return (data?.toGameInDB().toJson()
+    return (data?.toDB().toJson()
           ?..removeWhere(
             (key, value) => key == 'id' || value == null,
           )) ??

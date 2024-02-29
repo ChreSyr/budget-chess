@@ -21,15 +21,14 @@ ChallengeModel _$ChallengeModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$ChallengeModel {
   String get id => throw _privateConstructorUsedError;
+  @BoardSizeConverter()
+  BoardSize get boardSize => throw _privateConstructorUsedError;
   DateTime? get createdAt => throw _privateConstructorUsedError;
   DateTime? get acceptedAt => throw _privateConstructorUsedError;
   String? get authorId => throw _privateConstructorUsedError;
   Rule get rule => throw _privateConstructorUsedError;
   int get time => throw _privateConstructorUsedError; // in seconds
   int get increment => throw _privateConstructorUsedError; // in seconds
-  @protected
-  @BoardSizeConverter()
-  BoardSize? get boardSizeProtected => throw _privateConstructorUsedError;
   int get budget => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -46,13 +45,13 @@ abstract class $ChallengeModelCopyWith<$Res> {
   @useResult
   $Res call(
       {String id,
+      @BoardSizeConverter() BoardSize boardSize,
       DateTime? createdAt,
       DateTime? acceptedAt,
       String? authorId,
       Rule rule,
       int time,
       int increment,
-      @protected @BoardSizeConverter() BoardSize? boardSizeProtected,
       int budget});
 }
 
@@ -70,13 +69,13 @@ class _$ChallengeModelCopyWithImpl<$Res, $Val extends ChallengeModel>
   @override
   $Res call({
     Object? id = null,
+    Object? boardSize = null,
     Object? createdAt = freezed,
     Object? acceptedAt = freezed,
     Object? authorId = freezed,
     Object? rule = null,
     Object? time = null,
     Object? increment = null,
-    Object? boardSizeProtected = freezed,
     Object? budget = null,
   }) {
     return _then(_value.copyWith(
@@ -84,6 +83,10 @@ class _$ChallengeModelCopyWithImpl<$Res, $Val extends ChallengeModel>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
+      boardSize: null == boardSize
+          ? _value.boardSize
+          : boardSize // ignore: cast_nullable_to_non_nullable
+              as BoardSize,
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -108,10 +111,6 @@ class _$ChallengeModelCopyWithImpl<$Res, $Val extends ChallengeModel>
           ? _value.increment
           : increment // ignore: cast_nullable_to_non_nullable
               as int,
-      boardSizeProtected: freezed == boardSizeProtected
-          ? _value.boardSizeProtected
-          : boardSizeProtected // ignore: cast_nullable_to_non_nullable
-              as BoardSize?,
       budget: null == budget
           ? _value.budget
           : budget // ignore: cast_nullable_to_non_nullable
@@ -130,13 +129,13 @@ abstract class _$$ChallengeModelImplCopyWith<$Res>
   @useResult
   $Res call(
       {String id,
+      @BoardSizeConverter() BoardSize boardSize,
       DateTime? createdAt,
       DateTime? acceptedAt,
       String? authorId,
       Rule rule,
       int time,
       int increment,
-      @protected @BoardSizeConverter() BoardSize? boardSizeProtected,
       int budget});
 }
 
@@ -152,13 +151,13 @@ class __$$ChallengeModelImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
+    Object? boardSize = null,
     Object? createdAt = freezed,
     Object? acceptedAt = freezed,
     Object? authorId = freezed,
     Object? rule = null,
     Object? time = null,
     Object? increment = null,
-    Object? boardSizeProtected = freezed,
     Object? budget = null,
   }) {
     return _then(_$ChallengeModelImpl(
@@ -166,6 +165,10 @@ class __$$ChallengeModelImplCopyWithImpl<$Res>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
+      boardSize: null == boardSize
+          ? _value.boardSize
+          : boardSize // ignore: cast_nullable_to_non_nullable
+              as BoardSize,
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -190,10 +193,6 @@ class __$$ChallengeModelImplCopyWithImpl<$Res>
           ? _value.increment
           : increment // ignore: cast_nullable_to_non_nullable
               as int,
-      boardSizeProtected: freezed == boardSizeProtected
-          ? _value.boardSizeProtected
-          : boardSizeProtected // ignore: cast_nullable_to_non_nullable
-              as BoardSize?,
       budget: null == budget
           ? _value.budget
           : budget // ignore: cast_nullable_to_non_nullable
@@ -207,13 +206,13 @@ class __$$ChallengeModelImplCopyWithImpl<$Res>
 class _$ChallengeModelImpl extends _ChallengeModel {
   _$ChallengeModelImpl(
       {required this.id,
+      @BoardSizeConverter() required this.boardSize,
       this.createdAt,
       this.acceptedAt,
       this.authorId,
       this.rule = Rule.chess,
       this.time = 180,
       this.increment = 2,
-      @protected @BoardSizeConverter() this.boardSizeProtected,
       this.budget = 39})
       : super._();
 
@@ -222,6 +221,9 @@ class _$ChallengeModelImpl extends _ChallengeModel {
 
   @override
   final String id;
+  @override
+  @BoardSizeConverter()
+  final BoardSize boardSize;
   @override
   final DateTime? createdAt;
   @override
@@ -240,16 +242,12 @@ class _$ChallengeModelImpl extends _ChallengeModel {
   final int increment;
 // in seconds
   @override
-  @protected
-  @BoardSizeConverter()
-  final BoardSize? boardSizeProtected;
-  @override
   @JsonKey()
   final int budget;
 
   @override
   String toString() {
-    return 'ChallengeModel(id: $id, createdAt: $createdAt, acceptedAt: $acceptedAt, authorId: $authorId, rule: $rule, time: $time, increment: $increment, boardSizeProtected: $boardSizeProtected, budget: $budget)';
+    return 'ChallengeModel(id: $id, boardSize: $boardSize, createdAt: $createdAt, acceptedAt: $acceptedAt, authorId: $authorId, rule: $rule, time: $time, increment: $increment, budget: $budget)';
   }
 
   @override
@@ -258,6 +256,8 @@ class _$ChallengeModelImpl extends _ChallengeModel {
         (other.runtimeType == runtimeType &&
             other is _$ChallengeModelImpl &&
             (identical(other.id, id) || other.id == id) &&
+            (identical(other.boardSize, boardSize) ||
+                other.boardSize == boardSize) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.acceptedAt, acceptedAt) ||
@@ -268,15 +268,13 @@ class _$ChallengeModelImpl extends _ChallengeModel {
             (identical(other.time, time) || other.time == time) &&
             (identical(other.increment, increment) ||
                 other.increment == increment) &&
-            (identical(other.boardSizeProtected, boardSizeProtected) ||
-                other.boardSizeProtected == boardSizeProtected) &&
             (identical(other.budget, budget) || other.budget == budget));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, createdAt, acceptedAt,
-      authorId, rule, time, increment, boardSizeProtected, budget);
+  int get hashCode => Object.hash(runtimeType, id, boardSize, createdAt,
+      acceptedAt, authorId, rule, time, increment, budget);
 
   @JsonKey(ignore: true)
   @override
@@ -296,13 +294,13 @@ class _$ChallengeModelImpl extends _ChallengeModel {
 abstract class _ChallengeModel extends ChallengeModel {
   factory _ChallengeModel(
       {required final String id,
+      @BoardSizeConverter() required final BoardSize boardSize,
       final DateTime? createdAt,
       final DateTime? acceptedAt,
       final String? authorId,
       final Rule rule,
       final int time,
       final int increment,
-      @protected @BoardSizeConverter() final BoardSize? boardSizeProtected,
       final int budget}) = _$ChallengeModelImpl;
   _ChallengeModel._() : super._();
 
@@ -311,6 +309,9 @@ abstract class _ChallengeModel extends ChallengeModel {
 
   @override
   String get id;
+  @override
+  @BoardSizeConverter()
+  BoardSize get boardSize;
   @override
   DateTime? get createdAt;
   @override
@@ -324,10 +325,6 @@ abstract class _ChallengeModel extends ChallengeModel {
   @override // in seconds
   int get increment;
   @override // in seconds
-  @protected
-  @BoardSizeConverter()
-  BoardSize? get boardSizeProtected;
-  @override
   int get budget;
   @override
   @JsonKey(ignore: true)

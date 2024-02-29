@@ -31,44 +31,25 @@ class GameCubit extends Cubit<GameState?> {
   bool startEndAnimation = false; // TODO : remove ?
 
   Future<void> submitSetup(SetupModel setup, {required Side forSide}) async {
-    final oldState = state;
-    if (oldState == null) return;
+    var game = state?.game;
+    if (game == null) return;
 
-    final GameModel game;
+    game = switch (forSide) {
+      Side.white => game.copyWith(whiteSetupFen: setup.fenAs(forSide)),
+      Side.black => game.copyWith(blackSetupFen: setup.fenAs(forSide)),
+    };
 
-    final whiteHalfFen = forSide == Side.white
-        ? setup.fenAs(forSide)
-        : oldState.game.whiteHalfFen;
-    final blackHalfFen = forSide == Side.black
-        ? setup.fenAs(forSide)
-        : oldState.game.blackHalfFen;
-
-    if (blackHalfFen == null || whiteHalfFen == null) {
-      game = oldState.game.copyWith(
-        whiteHalfFen: whiteHalfFen,
-        blackHalfFen: blackHalfFen,
-      );
-    } else {
-      final board = Board.parseFen(
-        // TODO : manage : odd ranks
-        '${blackHalfFen.split('').reversed.join()}/$whiteHalfFen',
-        size: setup.boardSize,
-      );
-
-      game = oldState.game.copyWith(
-        whiteHalfFen: whiteHalfFen,
-        blackHalfFen: blackHalfFen,
+    if (game.blackSetupFen != null && game.whiteSetupFen != null) {
+      game = game.copyWith(
         status: GameStatus.started,
         steps: [
           GameStep(
             position: Position.setupPosition(
-              oldState.game.challenge.rule,
-              Setup(
-                board: board,
-                turn: Side.white,
-                unmovedRooks: board.rooks,
-                halfmoves: 0,
-                fullmoves: 0,
+              game.challenge.rule,
+              Setup.fromHalfSetups(
+                size: game.challenge.boardSize,
+                whiteSetupFen: game.whiteSetupFen,
+                blackSetupFen: game.blackSetupFen,
               ),
             ),
           ),
@@ -82,7 +63,7 @@ class GameCubit extends Cubit<GameState?> {
     );
 
     return emit(
-      oldState.copyWith(game: game),
+      state?.copyWith(game: game),
     );
   }
 

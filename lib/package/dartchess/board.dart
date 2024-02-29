@@ -1,29 +1,9 @@
 import 'package:crea_chess/package/dartchess/attacks.dart';
+import 'package:crea_chess/package/dartchess/fen.dart';
 import 'package:crea_chess/package/dartchess/models.dart';
 import 'package:crea_chess/package/dartchess/square_map.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
-import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
-
-// TODO : move this converter somewhere else
-class BoardSizeConverter
-    implements JsonConverter<BoardSize, Map<String, dynamic>> {
-  const BoardSizeConverter();
-
-  @override
-  BoardSize fromJson(Map<String, dynamic> json) {
-    return BoardSize(
-      ranks: json['ranks'] as int,
-      files: json['files'] as int,
-    );
-  }
-
-  @override
-  Map<String, dynamic> toJson(BoardSize size) => {
-        'ranks': size.ranks,
-        'files': size.files,
-      };
-}
 
 /// The number of ranks and files of a chessboard
 @immutable
@@ -35,17 +15,8 @@ class BoardSize extends SquareMapSize {
         attacks = Attacks(SquareMapSize(files: files, ranks: ranks));
 
   factory BoardSize.fromFen(String fen) {
-    final ranks = fen.split('/');
-    final numRanks = ranks.length;
-    final numFiles = ranks
-        .map(
-          (rank) => rank
-              .split('')
-              .fold<int>(0, (acc, char) => acc + (int.tryParse(char) ?? 1)),
-        )
-        .reduce((max, value) => value > max ? value : max);
-
-    return BoardSize(files: numFiles, ranks: numRanks);
+    final (files, ranks) = FEN.getFilesRanksOf(fen);
+    return BoardSize(files: files, ranks: ranks);
   }
 
   factory BoardSize.fromPgn(String? value) {

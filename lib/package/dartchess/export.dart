@@ -1,6 +1,7 @@
 export 'attacks.dart';
 export 'board.dart';
 export 'debug.dart';
+export 'fen.dart';
 export 'models.dart';
 export 'move.dart';
 export 'pgn.dart';

@@ -42,8 +42,8 @@ _$GameInDBImpl _$$GameInDBImplFromJson(Map<String, dynamic> json) =>
       blackId: json['blackId'] as String?,
       whiteId: json['whiteId'] as String?,
       status: $enumDecodeNullable(_$GameStatusEnumMap, json['status']),
-      blackHalfFen: json['blackHalfFen'] as String?,
-      whiteHalfFen: json['whiteHalfFen'] as String?,
+      blackSetupFen: json['blackSetupFen'] as String?,
+      whiteSetupFen: json['whiteSetupFen'] as String?,
       sanMoves: json['sanMoves'] as String?,
       winner: $enumDecodeNullable(_$SideEnumMap, json['winner']),
       prefs: _$JsonConverterFromJson<Map<String, dynamic>, GamePrefs>(
@@ -58,8 +58,8 @@ Map<String, dynamic> _$$GameInDBImplToJson(_$GameInDBImpl instance) =>
       'blackId': instance.blackId,
       'whiteId': instance.whiteId,
       'status': _$GameStatusEnumMap[instance.status],
-      'blackHalfFen': instance.blackHalfFen,
-      'whiteHalfFen': instance.whiteHalfFen,
+      'blackSetupFen': instance.blackSetupFen,
+      'whiteSetupFen': instance.whiteSetupFen,
       'sanMoves': instance.sanMoves,
       'winner': _$SideEnumMap[instance.winner],
       'prefs': _$JsonConverterToJson<Map<String, dynamic>, GamePrefs>(

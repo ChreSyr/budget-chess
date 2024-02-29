@@ -1,4 +1,5 @@
 import 'package:crea_chess/package/dartchess/export.dart';
+import 'package:crea_chess/package/firebase/firestore/game/board_size_converter.dart';
 import 'package:crea_chess/route/play/setup/role.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
