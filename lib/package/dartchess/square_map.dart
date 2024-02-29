@@ -141,7 +141,7 @@ extension SquareMapExt on SquareMap {
   /// Technically, it returns the Number of Trailing Zeros in a BigInt (NTZ)
   int? get first {
     if (this == BigInt.zero) {
-      return -1;
+      return null;
     }
 
     var count = 0;
