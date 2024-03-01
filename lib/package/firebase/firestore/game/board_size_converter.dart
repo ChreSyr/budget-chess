@@ -1,4 +1,4 @@
-import 'package:crea_chess/package/dartchess/export.dart';
+import 'package:crea_chess/package/unichess/unichess.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 // TODO : move this converter somewhere else

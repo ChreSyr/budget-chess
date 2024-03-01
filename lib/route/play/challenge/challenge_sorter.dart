@@ -3,7 +3,7 @@ import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/widget/chip/menu_chip.dart';
 import 'package:crea_chess/package/atomic_design/widget/chip/select_chip.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
-import 'package:crea_chess/package/dartchess/export.dart';
+import 'package:crea_chess/package/unichess/unichess.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/game/speed.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';

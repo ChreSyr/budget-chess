@@ -1,7 +1,7 @@
 
 import 'package:crea_chess/package/atomic_design/widget/crown.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
-import 'package:crea_chess/package/dartchess/export.dart';
+import 'package:crea_chess/package/unichess/unichess.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/route/play/game/game_cubit.dart';
 import 'package:crea_chess/route/play/game/side.dart';

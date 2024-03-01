@@ -1,8 +1,11 @@
+// ignore_for_file: always_use_package_imports
 
-import 'package:crea_chess/package/dartchess/models.dart';
-import 'package:crea_chess/package/dartchess/square_map.dart';
+import 'models.dart';
+import 'square_map.dart';
 
+/// The calculator of piece attacks.
 class Attacks {
+  /// The calculator of piece attacks.
   Attacks(SquareMapSize size)
       : _size = size,
         _antiDiagRange = Attacks._generateAntiDiagRange(size),
@@ -22,6 +25,7 @@ class Attacks {
   final List<SquareMap> _knightAttacks;
   final Map<Side, List<SquareMap>> _pawnAttacks;
 
+  /// The calculator of piece attacks on a 8 x 8 board.
   static final standard = Attacks(SquareMapSize(files: 8, ranks: 8));
 
   static List<SquareMap> _generateAntiDiagRange(SquareMapSize size) =>
@@ -119,11 +123,11 @@ class Attacks {
         ),
         Side.black: _tabulate(
           (sq) => _computeRange(
-              sq,
-              [
-                [-1, -1],
-                [-1, 1],
-              ],
+            sq,
+            [
+              [-1, -1],
+              [-1, 1],
+            ],
             size,
           ),
           size,
@@ -169,8 +173,9 @@ class Attacks {
   /// Return a [SquareMap] with all the square a bishop attacks from this square
   SquareMap ofBishop(Square square, SquareMap occupied) {
     final map = SquareMapExt.fromSquare(square);
-    return _hyperbola(map, _diagRange[square], occupied, _size) ^
-        _hyperbola(map, _antiDiagRange[square], occupied, _size);
+    return (_hyperbola(map, _diagRange[square], occupied, _size) ^
+            _hyperbola(map, _antiDiagRange[square], occupied, _size)) &
+        _size.full;
   }
 
   /// Return a [SquareMap] with all the square a king attacks from this square
@@ -209,8 +214,8 @@ class Attacks {
     return SquareMap.zero;
   }
 
-  /// Gets all squares between `a` and `b` (bounds not included), or an empty set
-  /// if they are not on the same rank, file or diagonal.
+  /// Gets all squares between `a` and `b` (bounds not included), or an empty
+  /// set if they are not on the same rank, file or diagonal.
   SquareMap between(Square a, Square b) => ray(a, b)
       .intersect(_size.full.shl(a, _size).xor(_size.full.shl(b, _size)))
       .withoutFirst();

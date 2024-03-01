@@ -1,4 +1,4 @@
-import 'package:crea_chess/package/dartchess/export.dart';
+import 'package:crea_chess/package/unichess/unichess.dart';
 import 'package:crea_chess/package/firebase/firestore/game/game/converter.dart';
 import 'package:crea_chess/package/firebase/firestore/game/game/enum.dart';
 import 'package:crea_chess/package/firebase/firestore/game/game/player.dart';

@@ -6,7 +6,7 @@ import 'package:crea_chess/package/chessground/widgets/board_annotation.dart';
 import 'package:crea_chess/package/chessground/widgets/positioned_square.dart';
 import 'package:crea_chess/package/chessground/widgets/promotion.dart';
 import 'package:crea_chess/package/chessground/widgets/shape.dart';
-import 'package:crea_chess/package/dartchess/export.dart';
+import 'package:crea_chess/package/unichess/unichess.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';

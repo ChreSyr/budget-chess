@@ -1,5 +1,5 @@
 import 'package:crea_chess/package/chessground/models.dart';
-import 'package:crea_chess/package/dartchess/export.dart';
+import 'package:crea_chess/package/unichess/unichess.dart';
 
 /// Returns the set of squares that the piece on [squareId] can potentially
 /// premove to.

@@ -1,6 +1,6 @@
 import 'package:crea_chess/package/chessground/models.dart';
 import 'package:crea_chess/package/chessground/widgets/piece.dart';
-import 'package:crea_chess/package/dartchess/export.dart';
+import 'package:crea_chess/package/unichess/unichess.dart';
 import 'package:flutter/widgets.dart';
 
 class PieceTranslation extends StatefulWidget {

@@ -1,4 +1,6 @@
-import 'package:crea_chess/package/dartchess/models.dart';
+// ignore_for_file: always_use_package_imports, public_member_api_docs
+
+import 'models.dart';
 
 /// An object used to interpet a BigInt as a [SquareMap] where each square is a
 /// [Square].
@@ -129,9 +131,9 @@ extension SquareMapExt on SquareMap {
       size.firstRank << (size.files * rank);
 
   /// Creates a [SquareMap] with a single square.
-  static SquareMap fromSquare(int square) => (BigInt.one << square);
+  static SquareMap fromSquare(int square) => BigInt.one << square;
 
-  /// Creates a [SquareSet] from several [Square]s.
+  /// Creates a [SquareMap] from several [Square]s.
   static SquareMap fromSquares(Iterable<Square> squares) => squares
       .map((square) => BigInt.one << square)
       .fold(BigInt.zero, (bi1, bi2) => bi1 | bi2);

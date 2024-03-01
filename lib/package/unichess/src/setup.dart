@@ -1,11 +1,15 @@
+// ignore_for_file: always_use_package_imports, public_member_api_docs
+
 import 'dart:math' as math;
 
-import 'package:crea_chess/package/dartchess/board.dart';
-import 'package:crea_chess/package/dartchess/fen.dart';
-import 'package:crea_chess/package/dartchess/models.dart';
-import 'package:crea_chess/package/dartchess/square_map.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:meta/meta.dart';
+
+import 'board.dart';
+import 'fen.dart';
+import 'models.dart';
+import 'position.dart';
+import 'square_map.dart';
 
 /// A not necessarily legal position.
 @immutable
@@ -37,28 +41,29 @@ class Setup {
     if (parts.isEmpty) throw const FenError('ERR_FEN');
 
     // board and pockets
-    final boardPart = parts.removeAt(0);
-    size ??= BoardSize.fromFen(boardPart);
+    final boardPocketsPart = parts.removeAt(0);
+    final String boardPart;
     Pockets? pockets;
-    Board board;
-    if (boardPart.endsWith(']')) {
-      final pocketStart = boardPart.indexOf('[');
+    if (boardPocketsPart.endsWith(']')) {
+      final pocketStart = boardPocketsPart.indexOf('[');
       if (pocketStart == -1) {
         throw const FenError('ERR_FEN');
       }
-      board = Board.parseFen(boardPart.substring(0, pocketStart), size: size);
+      boardPart = boardPocketsPart.substring(0, pocketStart);
       pockets = _parsePockets(
-        boardPart.substring(pocketStart + 1, boardPart.length - 1),
+        boardPocketsPart.substring(
+          pocketStart + 1,
+          boardPocketsPart.length - 1,
+        ),
       );
     } else {
-      final pocketStart = _nthIndexOf(boardPart, '/', size.ranks - 1);
-      if (pocketStart == -1) {
-        board = Board.parseFen(boardPart, size: size);
-      } else {
-        board = Board.parseFen(boardPart.substring(0, pocketStart), size: size);
-        pockets = _parsePockets(boardPart.substring(pocketStart + 1));
-      }
+      boardPart = boardPocketsPart;
     }
+    if (size == null) {
+      final (files, ranks) = FEN.getFilesRanksOf(boardPart);
+      size = BoardSize(files: files, ranks: ranks);
+    }
+    final board = Board.parseFen(boardPart, size: size);
 
     // turn
     Side turn;

@@ -1,4 +1,4 @@
-import 'package:crea_chess/package/dartchess/export.dart';
+import 'package:crea_chess/package/unichess/unichess.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 class MoveConverter implements JsonConverter<Move, String> {

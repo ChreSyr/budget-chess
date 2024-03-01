@@ -1,6 +1,9 @@
-import 'package:crea_chess/package/dartchess/board.dart';
-import 'package:crea_chess/package/dartchess/models.dart';
+// ignore_for_file: always_use_package_imports
+
 import 'package:meta/meta.dart';
+
+import 'board.dart';
+import 'models.dart';
 
 /// Base class for a chess move.
 ///
@@ -54,7 +57,7 @@ sealed class Move {
   /// Constructs a [Move] from an UMN string.
   ///
   /// Returns `null` if UMN string is not valid.
-  static Move? fromUMN(String str) {
+  static Move? fromUmn(String str) {
     if (str.contains('@')) {
       // DropMove
       final splitted = str.split('@');
@@ -81,13 +84,14 @@ sealed class Move {
 
   @override
   String toString() {
-    return 'Move($uci)';
+    return 'Move($umn)';
   }
 }
 
 /// Represents a chess move, possibly a promotion.
 @immutable
 class NormalMove extends Move {
+  /// Represents a chess move, possibly a promotion.
   NormalMove({
     required this.from,
     required super.to,
@@ -121,11 +125,13 @@ class NormalMove extends Move {
 /// Represents a drop move.
 @immutable
 class DropMove extends Move {
+  /// Represents a drop move.
   DropMove({
     required super.to,
     required this.role,
   }) : super(umn: '${role.char}@$to');
 
+  /// The role of the dropped piece.
   final Role role;
 
   /// Gets UCI notation of the drop, like `Q@f7`.

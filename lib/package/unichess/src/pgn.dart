@@ -1,13 +1,14 @@
-// ignore_for_file: lines_longer_than_80_chars, prefer_asserts_with_message
+// ignore_for_file: always_use_package_imports, lines_longer_than_80_chars, prefer_asserts_with_message, public_member_api_docs
 
 import 'dart:math' as math;
 
-import 'package:crea_chess/package/dartchess/board.dart';
-import 'package:crea_chess/package/dartchess/models.dart';
-import 'package:crea_chess/package/dartchess/position.dart';
-import 'package:crea_chess/package/dartchess/setup.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:meta/meta.dart';
+
+import 'board.dart';
+import 'models.dart';
+import 'position.dart';
+import 'setup.dart';
 
 typedef PgnHeaders = Map<String, String>;
 

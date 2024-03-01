@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:crea_chess/package/chessground/export.dart';
-import 'package:crea_chess/package/dartchess/export.dart';
+import 'package:crea_chess/package/unichess/unichess.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/firebase/firestore/game/game/game.dart';
 import 'package:crea_chess/package/firebase/firestore/game/live_game/game_indb.dart';

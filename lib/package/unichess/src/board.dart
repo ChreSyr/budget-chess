@@ -1,24 +1,27 @@
-import 'package:crea_chess/package/dartchess/attacks.dart';
-import 'package:crea_chess/package/dartchess/fen.dart';
-import 'package:crea_chess/package/dartchess/models.dart';
-import 'package:crea_chess/package/dartchess/square_map.dart';
+// ignore_for_file: always_use_package_imports
+
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:meta/meta.dart';
 
-/// The number of ranks and files of a chessboard
+import 'attacks.dart';
+import 'fen.dart';
+import 'models.dart';
+import 'position.dart';
+import 'square_map.dart';
+
+/// The number of ranks and files of a chessboard.
 @immutable
 class BoardSize extends SquareMapSize {
+  /// The number of ranks and files of a chessboard.
   BoardSize({required super.files, required super.ranks})
       : rankIds = _generateRankIds(ranks),
         fileIds = _generateFileIds(files),
         allSquareIds = _generateAllSquareIds(files, ranks),
         attacks = Attacks(SquareMapSize(files: files, ranks: ranks));
 
-  factory BoardSize.fromFen(String fen) {
-    final (files, ranks) = FEN.getFilesRanksOf(fen);
-    return BoardSize(files: files, ranks: ranks);
-  }
-
+  /// The number of ranks and files of a chessboard.
+  ///
+  /// The value is the content of the pgn section BoardSize.
   factory BoardSize.fromPgn(String? value) {
     try {
       var splitter = 'x';
@@ -38,8 +41,19 @@ class BoardSize extends SquareMapSize {
     }
   }
 
+  /// The list of human readable ids of ranks.
+  ///
+  /// Ex : ['1', '2', '3', ...]
   final List<String> rankIds;
+
+  /// The list of human readable ids of files.
+  ///
+  /// Ex : ['a', 'b', 'c', ...]
   final List<String> fileIds;
+
+  /// The list of human readable squares of a board with this size.
+  ///
+  /// Ex : ['a1', 'a2', 'a3', ...]
   final List<SquareId> allSquareIds;
 
   /// An attacks calculator
@@ -75,32 +89,42 @@ class BoardSize extends SquareMapSize {
         ),
       );
 
+  /// The number of ranks and files of the standard chessboard (8 x 8).
   static final BoardSize standard = BoardSize(ranks: 8, files: 8);
 
-  /// The board part of the initial position in the FEN format.
+  /// The board part of the initial position in the FEN format,
+  /// for standard chess (8 x 8).
   static const standardInitialBoardFEN =
       'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR';
 
-  /// Initial position in the Extended Position Description format.
+  /// Initial position in the Extended Position Description format,
+  /// for standard chess (8 x 8).
   static const standardInitialEPD = '$standardInitialBoardFEN w KQkq -';
 
-  /// Initial position in the FEN format.
+  /// Initial position in the FEN format,
+  /// for standard chess (8 x 8).
   static const standardInitialFEN = '$standardInitialEPD 0 1';
 
-  /// Empty board part in the FEN format.
+  /// Empty board part in the FEN format,
+  /// for standard chess (8 x 8).
   static const standardEmptyBoardFEN = '8/8/8/8/8/8/8/8';
 
-  /// Empty board in the EPD format.
+  /// Empty board in the EPD format,
+  /// for standard chess (8 x 8).
   static const standardEmptyEPD = '$standardEmptyBoardFEN w - -';
 
-  /// Empty board in the FEN format.
+  /// Empty board in the FEN format,
+  /// for standard chess (8 x 8).
   static const standardEmptyFEN = '$standardEmptyEPD 0 1';
 
   @override
   String toString() => 'BoardSize(files:$files, ranks:$ranks)';
 
+  /// Empty board part in the FEN format.
   String get emptyFen => List.generate(ranks, (_) => files).join('/');
 
+  /// Empty board part in the FEN format,
+  /// for a board with half the number of ranks.
   String get emptyHalfFen => List.generate(ranks ~/ 2, (_) => files).join('/');
 
   /// Returns the algebraic coordinate notation of the [Square].
@@ -142,7 +166,10 @@ class Board {
   ///
   /// Throws a [FenError] if the provided FEN string is not valid.
   factory Board.parseFen(String boardFen, {required BoardSize? size}) {
-    size ??= BoardSize.fromFen(boardFen);
+    if (size == null) {
+      final (files, ranks) = FEN.getFilesRanksOf(boardFen);
+      size = BoardSize(files: files, ranks: ranks);
+    }
     var board = Board.empty(size);
     var rank = size.ranks - 1;
     var file = 0;
@@ -171,6 +198,7 @@ class Board {
     return board;
   }
 
+  /// An empty board represented by several square sets for each piece.
   factory Board.empty(BoardSize size) => Board._(
         size: size,
         attacks: size.attacks,
@@ -272,7 +300,10 @@ class Board {
     kings: SquareMap.parse('0x1000000000000000'),
   );
 
+  /// All squares occupied by rooks and queens.
   SquareMap get rooksAndQueens => rooks | queens;
+
+  /// All squares occupied by bishops and queens.
   SquareMap get bishopsAndQueens => bishops | queens;
 
   /// Board part of the Forsyth-Edwards-Notation.
@@ -388,13 +419,13 @@ class Board {
   /// Finds the squares who are attacking `square` by the `attacker` [Side].
   SquareMap attacksTo(Square square, Side attacker, {SquareMap? occupied}) =>
       bySide(attacker) &
-          (size.attacks.ofRook(square, occupied ?? this.occupied) &
+      ((size.attacks.ofRook(square, occupied ?? this.occupied) &
               rooksAndQueens) |
       (size.attacks.ofBishop(square, occupied ?? this.occupied) &
           bishopsAndQueens) |
       (size.attacks.ofKnight(square) & knights) |
       (size.attacks.ofKing(square) & kings) |
-      (size.attacks.ofPawn(attacker.opposite, square) & pawns);
+          (size.attacks.ofPawn(attacker.opposite, square) & pawns));
 
   /// Puts a [Piece] on a [Square] overriding the existing one, if any.
   Board setPieceAt(Square square, Piece piece) {
@@ -438,6 +469,7 @@ class Board {
         : this;
   }
 
+  /// Tags the pieces positioned in the [SquareMap] as promoted.
   Board withPromoted(SquareMap promoted) {
     return _copyWith(promoted: promoted);
   }

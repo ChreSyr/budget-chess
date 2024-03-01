@@ -1,5 +1,5 @@
 import 'package:crea_chess/package/chessground/models.dart';
-import 'package:crea_chess/package/dartchess/export.dart';
+import 'package:crea_chess/package/unichess/unichess.dart';
 import 'package:flutter/widgets.dart';
 
 /// Parse the board part of a FEN string.

@@ -1,3 +1,6 @@
+// ignore_for_file: always_use_package_imports
+// ignore_for_file: public_member_api_docs
+
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:meta/meta.dart';
 
@@ -72,6 +75,7 @@ enum Role {
   }
 }
 
+// TODO : remove
 /// All the squares on the board.
 abstract class StandardSquares {
   static const a1 = 0;

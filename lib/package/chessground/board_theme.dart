@@ -1,5 +1,5 @@
 import 'package:crea_chess/package/chessground/board_color_scheme.dart';
-import 'package:crea_chess/package/dartchess/export.dart';
+import 'package:crea_chess/package/unichess/unichess.dart';
 
 /// The chessboard theme.
 enum BoardTheme {

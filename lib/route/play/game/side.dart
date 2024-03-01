@@ -1,5 +1,5 @@
 import 'package:crea_chess/package/chessground/export.dart';
-import 'package:crea_chess/package/dartchess/export.dart';
+import 'package:crea_chess/package/unichess/unichess.dart';
 
 extension SideExt on Side {
   InteractableSide get interactable => switch (this) {

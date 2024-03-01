@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:crea_chess/package/chessground/export.dart';
-import 'package:crea_chess/package/dartchess/export.dart';
+import 'package:crea_chess/package/unichess/unichess.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
 

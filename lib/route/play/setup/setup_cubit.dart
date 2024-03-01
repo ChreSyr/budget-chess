@@ -1,6 +1,6 @@
 import 'package:crea_chess/package/chessground/export.dart';
 import 'package:crea_chess/package/chessground/widgets/setup_board.dart';
-import 'package:crea_chess/package/dartchess/export.dart';
+import 'package:crea_chess/package/unichess/unichess.dart';
 import 'package:crea_chess/package/firebase/firestore/game/setup/setup_model.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 

@@ -1,20 +1,24 @@
-// ignore_for_file: lines_longer_than_80_chars
+// ignore_for_file: always_use_package_imports, public_member_api_docs
 
 import 'dart:math' as math;
 
-import 'package:crea_chess/package/dartchess/board.dart';
-import 'package:crea_chess/package/dartchess/models.dart';
-import 'package:crea_chess/package/dartchess/move.dart';
-import 'package:crea_chess/package/dartchess/setup.dart';
-import 'package:crea_chess/package/dartchess/square_map.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:meta/meta.dart';
+
+import 'board.dart';
+import 'models.dart';
+import 'move.dart';
+import 'setup.dart';
+import 'square_map.dart';
 
 /// A base class for playable chess or chess variant positions.
 ///
 /// See [Chess] for a concrete implementation of standard rules.
 @immutable
 abstract class Position<T extends Position<T>> {
+  /// A base class for playable chess or chess variant positions.
+  ///
+  /// See [Chess] for a concrete implementation of standard rules.
   const Position({
     required this.board,
     required this.turn,
@@ -571,7 +575,9 @@ abstract class Position<T extends Position<T>> {
             newBoard = newBoard.removePieceAt(epCaptureTarget);
           }
           final delta = from - to;
-          if (delta.abs() == 16 && from >= 8 && from <= 55) {
+          if (delta.abs() == board.size.files * 2 &&
+              from >= board.size.files &&
+              from <= (board.size.capacity - board.size.files - 1)) {
             newEpSquare = (from + to) >>> 1;
           }
         } else if (piece.role == Role.rook) {
@@ -582,7 +588,9 @@ abstract class Position<T extends Position<T>> {
             if (rookFrom != null) {
               final rook = board.pieceAt(rookFrom);
               newBoard = newBoard.removePieceAt(rookFrom).setPieceAt(
-                  _kingCastlesTo(turn, castlingSide, board.size), piece);
+                    _kingCastlesTo(turn, castlingSide, board.size),
+                    piece,
+                  );
               if (rook != null) {
                 newBoard = newBoard.setPieceAt(
                   _rookCastlesTo(turn, castlingSide, board.size),
@@ -738,6 +746,7 @@ abstract class Position<T extends Position<T>> {
 
   @override
   String toString() {
+    // ignore: lines_longer_than_80_chars
     return '$T(board: $board, turn: $turn, castles: $castles, halfmoves: $halfmoves, fullmoves: $fullmoves)';
   }
 
@@ -845,9 +854,14 @@ abstract class Position<T extends Position<T>> {
               if (others.isNotEmpty) {
                 var row = false;
                 var column = others.isIntersected(
-                    SquareMapExt.fromRank(board.size.rankOf(from), board.size));
-                if (others.isIntersected(SquareMapExt.fromFile(
-                    board.size.fileOf(from), board.size))) {
+                  SquareMapExt.fromRank(board.size.rankOf(from), board.size),
+                );
+                if (others.isIntersected(
+                  SquareMapExt.fromFile(
+                    board.size.fileOf(from),
+                    board.size,
+                  ),
+                )) {
                   row = true;
                 } else {
                   column = true;
@@ -889,14 +903,18 @@ abstract class Position<T extends Position<T>> {
 
     SquareMap pseudo;
     SquareMap? legalEpSquare;
+    // TODO : switch
     if (piece.role == Role.pawn) {
       pseudo = board.attacks.ofPawn(turn, square) & board.bySide(turn.opposite);
-      final delta = turn == Side.white ? 8 : -8;
+      final delta = turn == Side.white ? board.size.files : -board.size.files;
       final step = square + delta;
-      if (0 <= step && step < 64 && !board.occupied.has(step)) {
+      if (0 <= step &&
+          step < board.size.capacity &&
+          !board.occupied.has(step)) {
         pseudo = pseudo.withSquare(step);
-        final canDoubleStep =
-            turn == Side.white ? square < 16 : square >= 64 - 16;
+        final canDoubleStep = turn == Side.white
+            ? square < board.size.files * 2
+            : square >= board.size.capacity - board.size.files * 2;
         final doubleStep = step + delta;
         if (canDoubleStep && !board.occupied.has(doubleStep)) {
           pseudo = pseudo.withSquare(doubleStep);
@@ -933,7 +951,6 @@ abstract class Position<T extends Position<T>> {
             .union(_castlingMove(CastlingSide.queen, ctx))
             .union(_castlingMove(CastlingSide.king, ctx));
       }
-
       if (ctx.checkers.isNotEmpty) {
         final checker = ctx.checkers.singleSquare;
         if (checker == null) return SquareMap.zero;
@@ -1105,6 +1122,7 @@ abstract class Position<T extends Position<T>> {
 /// A standard chess position.
 @immutable
 class Chess extends Position<Chess> {
+  /// A standard chess position.
   const Chess({
     required super.board,
     required super.turn,
@@ -1132,6 +1150,7 @@ class Chess extends Position<Chess> {
   @override
   Rule get rule => Rule.chess;
 
+  /// The initial position of standard chess
   static final initial = Chess._initial();
 
   @override
@@ -1165,6 +1184,8 @@ class Chess extends Position<Chess> {
 /// A variant of chess where you lose all your pieces or get stalemated to win.
 @immutable
 class Antichess extends Position<Antichess> {
+  /// A variant of chess where you lose all your pieces or get stalemated to
+  /// win.
   const Antichess({
     required super.board,
     required super.turn,
@@ -1192,6 +1213,7 @@ class Antichess extends Position<Antichess> {
   @override
   Rule get rule => Rule.antichess;
 
+  /// The initial position of standard antichess
   static final initial = Antichess(
     board: Board.standard,
     turn: Side.white,
@@ -1303,9 +1325,12 @@ class Antichess extends Position<Antichess> {
   }
 }
 
-/// A variant of chess where captures cause an explosion to the surrounding pieces.
+/// A variant of chess where captures cause an explosion to the surrounding
+/// pieces.
 @immutable
 class Atomic extends Position<Atomic> {
+  /// A variant of chess where captures cause an explosion to the surrounding
+  /// pieces.
   const Atomic({
     required super.board,
     required super.turn,
@@ -1333,6 +1358,7 @@ class Atomic extends Position<Atomic> {
   @override
   Rule get rule => Rule.atomic;
 
+  /// The initial position of standard atomic chess
   static final initial = Atomic._initial();
 
   @override
@@ -1521,9 +1547,12 @@ class Atomic extends Position<Atomic> {
   }
 }
 
-/// A variant where captured pieces can be dropped back on the board instead of moving a piece.
+/// A variant where captured pieces can be dropped back on the board instead
+/// of moving a piece.
 @immutable
 class Crazyhouse extends Position<Crazyhouse> {
+  /// A variant where captured pieces can be dropped back on the board instead
+  /// of moving a piece.
   const Crazyhouse({
     required super.board,
     required super.turn,
@@ -1557,6 +1586,7 @@ class Crazyhouse extends Position<Crazyhouse> {
   @override
   Rule get rule => Rule.crazyhouse;
 
+  /// The initial position of standard crazyhouse chess
   static final initial = Crazyhouse(
     board: Board.standard,
     pockets: Pockets.empty,
@@ -1646,10 +1676,12 @@ class Crazyhouse extends Position<Crazyhouse> {
   }
 }
 
-/// A variant similar to standard chess, where you win by putting your king on the center
-/// of the board.
+/// A variant similar to standard chess, where you win by putting your king on
+/// the center of the board.
 @immutable
 class KingOfTheHill extends Position<KingOfTheHill> {
+  /// A variant similar to standard chess, where you win by putting your king on
+  /// the center of the board.
   const KingOfTheHill({
     required super.board,
     required super.turn,
@@ -1677,6 +1709,7 @@ class KingOfTheHill extends Position<KingOfTheHill> {
   @override
   Rule get rule => Rule.kingofthehill;
 
+  /// The initial position of standard KOTH
   static final initial = KingOfTheHill._initial();
 
   @override
@@ -1717,10 +1750,12 @@ class KingOfTheHill extends Position<KingOfTheHill> {
   }
 }
 
-/// A variant similar to standard chess, where you can win if you put your opponent king
-/// into the third check.
+/// A variant similar to standard chess, where you can win if you put your
+/// opponent king into the third check.
 @immutable
 class ThreeCheck extends Position<ThreeCheck> {
+  /// A variant similar to standard chess, where you can win if you put your
+  /// opponent king into the third check.
   const ThreeCheck({
     required super.board,
     required super.turn,
@@ -1764,6 +1799,7 @@ class ThreeCheck extends Position<ThreeCheck> {
   /// Number of remainingChecks for white (`item1`) and black (`item2`).
   final (int, int) remainingChecks;
 
+  /// The initial position of standard threecheck chess
   static final initial = ThreeCheck._initial();
 
   static const _defaultRemainingChecks = (3, 3);
@@ -1842,6 +1878,7 @@ class ThreeCheck extends Position<ThreeCheck> {
 /// A variant where the goal is to put your king on the eigth rank
 @immutable
 class RacingKings extends Position<RacingKings> {
+  /// A variant where the goal is to put your king on the eigth rank
   const RacingKings({
     required super.board,
     required super.turn,
@@ -1882,9 +1919,13 @@ class RacingKings extends Position<RacingKings> {
   @override
   Rule get rule => Rule.racingKings;
 
+  /// The initial position of standard racing kings.
   static final initial = RacingKings._initial();
+
+  /// The king's squares to reach to win the game.
   SquareMap get goal => board.size.lastRank;
 
+  /// Return true if black king is a move away from his goal.
   bool get blackCanReachGoal {
     final blackKing = board.kingOf(Side.black);
     return blackKing != null &&
@@ -1902,8 +1943,11 @@ class RacingKings extends Position<RacingKings> {
         }).isNotEmpty;
   }
 
+  /// Return true if black king reached his goal.
   bool get blackInGoal =>
       board.black.intersect(goal).intersect(board.kings).isNotEmpty;
+
+  /// Return true if white king reached his goal.
   bool get whiteInGoal =>
       board.white.intersect(goal).intersect(board.kings).isNotEmpty;
 
@@ -1972,8 +2016,12 @@ class RacingKings extends Position<RacingKings> {
   }
 }
 
+/// A variant where the black goal is to eat all the white pawns, and the
+/// white goal is to checkmate black
 @immutable
 class Horde extends Position<Horde> {
+  /// A variant where the black goal is to eat all the white pawns, and the
+  /// white goal is to checkmate black
   const Horde({
     required super.board,
     required super.turn,
@@ -1995,6 +2043,11 @@ class Horde extends Position<Horde> {
           fullmoves: 1,
         );
 
+  /// Set up a playable [RacingKings] position.
+  ///
+  /// Throws a [PositionError] if the [Setup] does not meet basic validity
+  /// requirements. Optionnaly pass a ignoreImpossibleCheck boolean if you want
+  /// to skip that requirement.
   factory Horde.fromSetup(Setup setup, {bool? ignoreImpossibleCheck}) {
     final pos = Horde(
       board: setup.board,
@@ -2009,6 +2062,7 @@ class Horde extends Position<Horde> {
   @override
   Rule get rule => Rule.horde;
 
+  /// The initial position of standard horde chess.
   static final initial = Horde._initial();
 
   @override
@@ -2140,7 +2194,8 @@ class Horde extends Position<Horde> {
             _hordeBishops(side.opposite, SquareColor.light) >= 2 ||
             _hordeBishops(side, SquareColor.dark) >= 2);
       } else if (hordeMap[Role.pawn] == 1) {
-        // Promote the pawn to a queen or a knight and check whether white can mate.
+        // Promote the pawn to a queen or a knight and check whether white can
+        // mate.
         final pawnSquare = board.piecesOf(side, Role.pawn).last;
 
         final promoteToQueen = _copyWith();
@@ -2640,7 +2695,7 @@ class Castles {
 
   @override
   String toString() {
-    return 'Castles(unmovedRooks: $unmovedRooks)';
+    return 'Castles(unmovedRooks: ${unmovedRooks.readable})';
   }
 
   @override
@@ -2706,16 +2761,16 @@ class _Context {
 
 Square _rookCastlesTo(Side side, CastlingSide cs, SquareMapSize size) {
   return side == Side.white
-      ? (cs == CastlingSide.queen ? 3 : size.files - 2) // standard : d1 / f1
+      ? (cs == CastlingSide.queen ? 3 : size.files - 3) // standard : d1 / f1
       : size.capacity -
-          (cs == CastlingSide.queen ? size.files - 3 : 2); // standard : d8 / f8
+          (cs == CastlingSide.queen ? size.files - 3 : 3); // standard : d8 / f8
 }
 
 Square _kingCastlesTo(Side side, CastlingSide cs, SquareMapSize size) {
   return side == Side.white
-      ? (cs == CastlingSide.queen ? 2 : size.files - 1) // standard : c1 / g1
+      ? (cs == CastlingSide.queen ? 2 : size.files - 2) // standard : c1 / g1
       : size.capacity -
-          (cs == CastlingSide.queen ? size.files - 2 : 1); // standard : c8 / g8
+          (cs == CastlingSide.queen ? size.files - 2 : 2); // standard : c8 / g8
 }
 
 Square? _validEpSquare(Setup setup) {
