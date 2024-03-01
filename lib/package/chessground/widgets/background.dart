@@ -182,6 +182,8 @@ class _BackgroundPainter extends CustomPainter {
   Future<void> paint(Canvas canvas, Size size) async {
     final squareSize = boardWidth / boardSize.files;
     final boardHeight = squareSize * boardSize.ranks;
+
+    // The board assets are 8x8 boards
     final imageSize = squareSize * 8;
 
     final paint = Paint();
@@ -191,8 +193,20 @@ class _BackgroundPainter extends CustomPainter {
       for (var top = 0.0; top < boardHeight; top += imageSize) {
         final height = min(imageSize, boardHeight - top);
 
-        final source = Rect.fromLTWH(0, 0, width, height);
-        final dest = Rect.fromLTWH(left, top, width, height);
+        // The ceil and floor method avoid the blank pixels under and at the
+        // bottom of the image
+        final source = Rect.fromLTWH(
+          0,
+          0,
+          width.floor().toDouble(),
+          height.floor().toDouble(),
+        );
+        final dest = Rect.fromLTWH(
+          left,
+          top,
+          width.ceil().toDouble(),
+          height.ceil().toDouble(),
+        );
         canvas.drawImageRect(image, source, dest, paint);
       }
     }
