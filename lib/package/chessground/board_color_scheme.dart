@@ -22,7 +22,7 @@ class BoardColorScheme {
     required this.selected,
     required this.validMoves,
     required this.validPremoves,
-    this.image,
+    required this.background,
   });
 
   factory BoardColorScheme.image({
@@ -58,7 +58,12 @@ class BoardColorScheme {
         selected: selected,
         validMoves: validMoves,
         validPremoves: validPremoves,
-        image: image,
+        background: ImageBackground(
+          lightSquare: lightSquare,
+          darkSquare: darkSquare,
+          boardSize: boardSize,
+          image: image,
+        ),
       );
 
   factory BoardColorScheme.solid({
@@ -91,6 +96,11 @@ class BoardColorScheme {
         selected: selected,
         validMoves: validMoves,
         validPremoves: validPremoves,
+        background: SolidColorBackground(
+          lightSquare: lightSquare,
+          darkSquare: darkSquare,
+          boardSize: boardSize,
+        ),
       );
 
   /// Size of the board
@@ -122,23 +132,8 @@ class BoardColorScheme {
   /// Color of squares occupied with valid premoves dots
   final Color validPremoves;
 
-  /// An optionnal image for the background
-  final AssetImage? image;
-
   /// BoardWidget background that defines light and dark square colors
-  Background background(double boardWidth) => image == null
-      ? SolidColorBackground(
-          lightSquare: lightSquare,
-          darkSquare: darkSquare,
-          boardSize: boardSize,
-        )
-      : ImageBackground(
-          lightSquare: lightSquare,
-          darkSquare: darkSquare,
-          boardWidth: boardWidth,
-          boardSize: boardSize,
-          image: image!,
-        );
+  final Background background;
 
   factory BoardColorScheme.brown(BoardSize size) => BoardColorScheme.solid(
         boardSize: size,

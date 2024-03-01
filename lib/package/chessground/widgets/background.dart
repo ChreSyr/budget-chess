@@ -2,6 +2,8 @@ import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:crea_chess/package/unichess/unichess.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
@@ -50,6 +52,7 @@ class SolidColorBackground extends Background {
                     color: (rank + file).isEven ? lightSquare : darkSquare,
                     child: coordinates
                         ? Coordinate(
+                            boardSize: boardSize,
                             rank: rank,
                             file: file,
                             orientation: orientation,
@@ -77,11 +80,9 @@ class ImageBackground extends Background {
     super.coordinates,
     super.orientation,
     super.key,
-    this.boardWidth = 300, // TODO
   });
 
   final AssetImage image;
-  final double boardWidth;
 
   SolidColorBackground get solid => SolidColorBackground(
         lightSquare: lightSquare,
@@ -93,69 +94,75 @@ class ImageBackground extends Background {
 
   @override
   Widget build(BuildContext context) {
-    // final boardSize = BoardSize(files: 19, ranks: 9);
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final boardWidth = constraints.maxWidth;
+        final squareSize = boardWidth / boardSize.files;
+        final boardHeight = squareSize * boardSize.ranks;
 
-    final squareSize = boardWidth / boardSize.files;
-    final boardHeight = squareSize * boardSize.ranks;
-
-    return SizedBox.expand(
-      child: Stack(
-        children: [
-          FutureBuilder<ui.Image>(
-            future: _loadBackground(
-              assetPath: image.assetName,
-              squareSize: squareSize,
-            ),
-            builder: (context, snapshot) {
-              switch (snapshot.connectionState) {
-                case ConnectionState.waiting:
-                  return solid;
-                // ignore: no_default_cases
-                default:
-                  if (snapshot.hasError) {
-                    return solid;
-                  } else {
-                    return CustomPaint(
-                      painter: _BackgroundPainter(
-                        image: snapshot.data!,
-                        boardWidth: boardWidth,
-                        boardSize: boardSize,
-                      ),
-                      child: SizedBox(
-                        width: boardWidth,
-                        height: boardHeight,
-                      ),
-                    );
+        return SizedBox.expand(
+          child: Stack(
+            children: [
+              FutureBuilder<ui.Image>(
+                future: _loadBackground(
+                  assetPath: image.assetName,
+                  squareSize: squareSize,
+                  boardSize: boardSize,
+                ),
+                builder: (context, snapshot) {
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.waiting:
+                      return solid;
+                    // ignore: no_default_cases
+                    default:
+                      if (snapshot.hasError) {
+                        return solid;
+                      } else {
+                        return CustomPaint(
+                          painter: _BackgroundPainter(
+                            image: snapshot.data!,
+                            boardWidth: boardWidth,
+                            boardSize: boardSize,
+                          ),
+                          child: SizedBox(
+                            width: boardWidth,
+                            height: boardHeight,
+                          ),
+                        );
+                      }
                   }
-              }
-            },
-          ),
-          if (coordinates)
-            Column(
-              children: List.generate(
-                boardSize.ranks,
-                (rank) => Expanded(
-                  child: Row(
-                    children: List.generate(
-                      boardSize.files,
-                      (file) => Expanded(
-                        child: SizedBox.expand(
-                          child: Coordinate(
-                            rank: rank,
-                            file: file,
-                            orientation: orientation,
-                            color:
-                                (rank + file).isEven ? darkSquare : lightSquare,
+                },
+              ),
+              if (coordinates)
+                Column(
+                  children: List.generate(
+                    boardSize.ranks,
+                    (rank) => Expanded(
+                      child: Row(
+                        children: List.generate(
+                          boardSize.files,
+                          (file) => Expanded(
+                            child: SizedBox.expand(
+                              child: Coordinate(
+                                boardSize: boardSize,
+                                rank: rank,
+                                file: file,
+                                orientation: orientation,
+                                color: (rank + file).isEven
+                                    ? darkSquare
+                                    : lightSquare,
+                              ),
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              ),
-            ),
-        ],
-      ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
@@ -198,12 +205,13 @@ class _BackgroundPainter extends CustomPainter {
 Future<ui.Image> _loadBackground({
   required String assetPath,
   required double squareSize,
+  required BoardSize boardSize,
 }) async {
   final data = await rootBundle.load(assetPath);
   final codec = await ui.instantiateImageCodec(
     data.buffer.asUint8List(),
-    targetHeight: (squareSize * 8).toInt(),
-    targetWidth: (squareSize * 8).toInt(),
+    targetHeight: (squareSize * boardSize.ranks).toInt(),
+    targetWidth: (squareSize * boardSize.files).toInt(),
   );
   final frame = await codec.getNextFrame();
   return frame.image;
@@ -211,6 +219,7 @@ Future<ui.Image> _loadBackground({
 
 class Coordinate extends StatelessWidget {
   const Coordinate({
+    required this.boardSize,
     required this.rank,
     required this.file,
     required this.color,
@@ -218,6 +227,7 @@ class Coordinate extends StatelessWidget {
     super.key,
   });
 
+  final BoardSize boardSize;
   final int rank;
   final int file;
   final Color color;
@@ -233,21 +243,23 @@ class Coordinate extends StatelessWidget {
     );
     return Stack(
       children: [
-        if (file == 7)
+        if (file == boardSize.files - 1)
           Align(
             alignment: Alignment.topRight,
             child: Text(
-              orientation == Side.white ? '${8 - rank}' : '${rank + 1}',
+              orientation == Side.white
+                  ? '${boardSize.ranks - rank}'
+                  : '${rank + 1}',
               style: coordStyle,
             ),
           ),
-        if (rank == 7)
+        if (rank == boardSize.ranks - 1)
           Align(
             alignment: Alignment.bottomLeft,
             child: Text(
               orientation == Side.white
                   ? String.fromCharCode(97 + file)
-                  : String.fromCharCode(97 + 7 - file),
+                  : String.fromCharCode(97 + boardSize.files - file),
               style: coordStyle,
             ),
           ),

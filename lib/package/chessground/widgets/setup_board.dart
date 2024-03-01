@@ -88,8 +88,6 @@ class _BoardState extends State<SetupBoard> {
   SquareId? _dragOrigin;
   SquareId? _dropTarget;
   List<SquareId> dragTargets = [];
-  // background out of the build loop so that it doesn't get refreshed
-  late Widget background;
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +95,7 @@ class _BoardState extends State<SetupBoard> {
 
     final Widget board = Stack(
       children: [
-        background,
+        colorScheme.background,
         if (_dragOrigin != null && _dragAvatar != null)
           PositionedSquare(
             key: ValueKey('${_dragOrigin!}-dragOrigin'),
@@ -205,7 +203,6 @@ class _BoardState extends State<SetupBoard> {
   void initState() {
     super.initState();
     colorScheme = widget.settings.colorScheme(widget.size);
-    background = colorScheme.background(widget.width);
     pieces = readFen(fen: widget.fen, boardSize: widget.size);
     for (var rank = 0; rank < widget.size.ranks; rank++) {
       for (var file = 0; file < widget.size.files; file++) {
