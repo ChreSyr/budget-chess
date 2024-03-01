@@ -120,7 +120,8 @@ class SquareMapSize {
   SquareMap backrankOf(Side side) => side == Side.white ? firstRank : lastRank;
 }
 
-/// This extension helps to visualize the BigInt as a square map for chess boards.
+/// This extension helps to visualize the BigInt as a square map for chess
+/// boards.
 extension SquareMapExt on SquareMap {
   /// Create a [SquareMap] containing all squares of the given file.
   static SquareMap fromFile(int file, SquareMapSize size) =>

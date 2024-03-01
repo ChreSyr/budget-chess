@@ -6,7 +6,7 @@ class MoveConverter implements JsonConverter<Move, String> {
 
   // assume we are serializing only valid uci strings
   @override
-  Move fromJson(String json) => Move.fromUMN(json)!;
+  Move fromJson(String json) => Move.fromUmn(json)!;
 
   @override
   String toJson(Move object) => object.umn;

@@ -8,6 +8,7 @@ void showInventoryExceededDialog({
     pageContext: pageContext,
     title: 'Oups !', // TODO : l10n
     content: const Text(
+      // ignore: lines_longer_than_80_chars
       'Votre inventaire ne contient pas assez de pièces pour produire ce setup. Retirez simplement les pièces en trop !',
     ),
   );

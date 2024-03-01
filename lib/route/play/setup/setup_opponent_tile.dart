@@ -33,6 +33,7 @@ class SetupOpponentTile extends StatelessWidget {
               : youValidatedSetup
                   ? Text('Waiting for ${opponent?.username ?? 'opponent'}...')
                   : Text(
+                      // ignore: lines_longer_than_80_chars
                       '${opponent?.username ?? 'Opponent'} is choosing a setup...',
                     ),
         );

@@ -1,7 +1,6 @@
 import 'package:crea_chess/package/unichess/unichess.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/widgets.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 
 /// The side that can interact with the board.
 enum InteractableSide { both, none, white, black }

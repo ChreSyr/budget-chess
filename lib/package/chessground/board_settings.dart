@@ -2,7 +2,7 @@ import 'package:crea_chess/package/chessground/board_color_scheme.dart';
 import 'package:crea_chess/package/chessground/draw_shape_options.dart';
 import 'package:crea_chess/package/chessground/models.dart';
 import 'package:crea_chess/package/chessground/piece_set.dart';
-import 'package:crea_chess/package/dartchess/board.dart';
+import 'package:crea_chess/package/unichess/unichess.dart';
 import 'package:flutter/widgets.dart';
 
 /// BoardWidget settings that control the theme, behavior and purpose of the

@@ -19,9 +19,10 @@ class SetupBudgetCounter extends StatelessWidget {
     return OutlinedButton.icon(
       onPressed: () => Modal.show(
         context: context,
-        title: "Le budget, c'est quoi ?",
+        title: "Le budget, c'est quoi ?", // TODO : l10n
         sections: [
           const Text(
+            // ignore: lines_longer_than_80_chars
             "Chaque partie accorde un budget. Cela signifie que chaque joueur peut disposer ses pièces sur l'échiquier comme bon lui semble, tant que la valeur totale des pièces ne dépasse pas le budget.",
           ),
           CCGap.small,

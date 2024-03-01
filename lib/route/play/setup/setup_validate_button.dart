@@ -58,7 +58,9 @@ class SetupValidateButton extends StatelessWidget {
 
               if (challenge.budget > setupCost) {
                 return showIncompleteSetupDialog(
-                    pageContext: context, onYes: submit);
+                  pageContext: context,
+                  onYes: submit,
+                );
               }
 
               submit();

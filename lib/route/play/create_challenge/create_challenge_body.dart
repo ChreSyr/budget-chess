@@ -3,12 +3,12 @@ import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/snack_bar.dart';
 import 'package:crea_chess/package/atomic_design/text_style.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
-import 'package:crea_chess/package/unichess/unichess.dart';
 import 'package:crea_chess/package/firebase/authentication/authentication_crud.dart';
 import 'package:crea_chess/package/game/speed.dart';
 import 'package:crea_chess/package/game/time_control.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/package/lichess/rule.dart';
+import 'package:crea_chess/package/unichess/unichess.dart';
 import 'package:crea_chess/route/play/create_challenge/create_challenge_cubit.dart';
 import 'package:crea_chess/route/play/create_challenge/create_challenge_form.dart';
 import 'package:crea_chess/route/play/create_challenge/create_challenge_status.dart';
@@ -196,6 +196,7 @@ class _CreateChallengeBody extends StatelessWidget {
                   //   },
                   // ),
                   child: Text(
+                    // ignore: lines_longer_than_80_chars
                     '${form.boardSize.value.ranks} x ${form.boardSize.value.files}',
                   ),
                 ),

@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, invalid_annotation_target
 
-import 'package:crea_chess/package/unichess/unichess.dart';
 import 'package:crea_chess/package/firebase/export.dart';
+import 'package:crea_chess/package/unichess/unichess.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'past_game_model.freezed.dart';

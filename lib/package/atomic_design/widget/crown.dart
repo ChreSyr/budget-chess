@@ -1,7 +1,7 @@
 import 'dart:math';
 
-import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/animation/fireworks.dart';
+import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:flutter/material.dart';
 
 class Crown extends StatefulWidget {

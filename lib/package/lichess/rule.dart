@@ -1,6 +1,6 @@
-import 'package:crea_chess/package/unichess/unichess.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/package/lichess/lichess_icons.dart';
+import 'package:crea_chess/package/unichess/unichess.dart';
 import 'package:flutter/material.dart';
 import 'package:recase/recase.dart';
 

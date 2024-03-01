@@ -165,7 +165,8 @@ class BoardColorScheme {
         lightSquare: const Color(0xffffffdd),
         darkSquare: const Color(0xff86a666),
         lastMove: const HighlightDetails(
-            solidColor: Color.fromRGBO(0, 155, 199, 0.41)),
+          solidColor: Color.fromRGBO(0, 155, 199, 0.41),
+        ),
         selected:
             const HighlightDetails(solidColor: Color.fromRGBO(216, 85, 0, 0.3)),
         validMoves: const Color.fromRGBO(0, 0, 0, 0.20),
@@ -222,7 +223,8 @@ class BoardColorScheme {
         lightSquare: const Color(0xfff2f9bb),
         darkSquare: const Color(0xff59935d),
         lastMove: const HighlightDetails(
-            solidColor: Color.fromRGBO(0, 155, 199, 0.41)),
+          solidColor: Color.fromRGBO(0, 155, 199, 0.41),
+        ),
         selected:
             const HighlightDetails(solidColor: Color.fromRGBO(216, 85, 0, 0.3)),
         validMoves: const Color(0x4014551e),
@@ -300,7 +302,8 @@ class BoardColorScheme {
         lightSquare: const Color(0xff93ab91),
         darkSquare: const Color(0xff4f644e),
         lastMove: const HighlightDetails(
-            solidColor: Color.fromRGBO(0, 155, 199, 0.41)),
+          solidColor: Color.fromRGBO(0, 155, 199, 0.41),
+        ),
         selected:
             const HighlightDetails(solidColor: Color.fromRGBO(216, 85, 0, 0.3)),
         validMoves: const Color(0x4014551e),

@@ -42,6 +42,7 @@ class MyChallenges extends StatelessWidget {
                           CCGap.small,
                           // TODO : l10n
                           Text(
+                            // ignore: lines_longer_than_80_chars
                             'You have ${gamesInProgress.length} games in progress.',
                           ),
                           CCGap.small,

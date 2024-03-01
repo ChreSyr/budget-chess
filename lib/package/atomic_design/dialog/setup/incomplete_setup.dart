@@ -9,6 +9,7 @@ void showIncompleteSetupDialog({
     pageContext: pageContext,
     title: 'Attention !', // TODO : l10n
     content: const Text(
+      // ignore: lines_longer_than_80_chars
       'Il vous reste encore un peu de budget pour placer vos pièces.\n\nVoulez-vous valider ce setup malgré tout ?',
     ),
     onYes: onYes,

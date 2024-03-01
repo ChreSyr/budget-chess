@@ -435,16 +435,6 @@ String _makeRemainingChecks((int, int) checks) {
 int? _parseSmallUint(String str) =>
     RegExp(r'^\d{1,4}$').hasMatch(str) ? int.parse(str) : null;
 
-int _nthIndexOf(String haystack, String needle, int nth) {
-  var index = haystack.indexOf(needle);
-  var n = nth;
-  while (n-- > 0) {
-    if (index == -1) break;
-    index = haystack.indexOf(needle, index + needle.length);
-  }
-  return index;
-}
-
 const ByRole<int> _emptyPocket = IMapConst({
   Role.pawn: 0,
   Role.knight: 0,
