@@ -68,7 +68,9 @@ String humanReadableBoard(Board board) {
       final col = p != null ? p.fenChar : '.';
       buffer
         ..write(col)
-        ..write(x < 7 ? (col.length < 2 ? ' ' : '') : '\n');
+        ..write(
+          x < (board.size.files - 1) ? (col.length < 2 ? ' ' : '') : '\n',
+        );
     }
   }
   return buffer.toString();

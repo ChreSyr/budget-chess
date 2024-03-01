@@ -1,4 +1,4 @@
-// ignore_for_file: always_use_package_imports, public_member_api_docs
+// ignore_for_file: public_member_api_docs
 
 import 'dart:math' as math;
 
@@ -566,7 +566,8 @@ abstract class Position<T extends Position<T>> {
           return _copyWith();
         }
         final castlingSide = _getCastlingSide(move);
-        final epCaptureTarget = to + (turn == Side.white ? -8 : 8);
+        final epCaptureTarget =
+            to + (turn == Side.white ? -board.size.files : board.size.files);
         Square? newEpSquare;
         var newBoard = board.removePieceAt(from);
         var newCastles = castles;
@@ -784,8 +785,8 @@ abstract class Position<T extends Position<T>> {
       if (epSquare != null) {
         // The pushed pawn must be the only checker, or it has uncovered
         // check by a single sliding piece.
-        final pushedTo = epSquare! ^ 8;
-        final pushedFrom = epSquare! ^ 24;
+        final pushedTo = epSquare! ^ board.size.files;
+        final pushedFrom = epSquare! ^ (board.size.files * 3);
         if (checkers.moreThanOne ||
             (checkers.first != pushedTo &&
                 board
@@ -1102,14 +1103,22 @@ abstract class Position<T extends Position<T>> {
             from == board.kingOf(turn) &&
             board.size.fileOf(entry.key) == 4) {
           if (dests.contains(0)) {
-            destSet.add('c1');
+            // c1 in standard chess
+            destSet.add(board.size.algebraicOf(2));
           } else if (dests.contains(56)) {
-            destSet.add('c8');
+            // c8 in standard chess
+            destSet.add(
+              board.size.algebraicOf(
+                board.size.capacity - board.size.files + 2,
+              ),
+            );
           }
-          if (dests.contains(7)) {
-            destSet.add('g1');
+          if (dests.contains(board.size.files - 1)) {
+            // g1 in standard chess
+            destSet.add(board.size.algebraicOf(board.size.files - 2));
           } else if (dests.contains(63)) {
-            destSet.add('g8');
+            // g8 in standard chess
+            destSet.add(board.size.algebraicOf(board.size.capacity - 2));
           }
         }
         result[board.size.algebraicOf(from)] = ISet(destSet);
@@ -2777,7 +2786,9 @@ Square? _validEpSquare(Setup setup) {
   // TODO : change ? can make two moves from any starting square ?
   if (setup.epSquare == null) return null;
   final epRank = setup.turn == Side.white ? setup.board.size.ranks - 3 : 2;
-  final forward = setup.turn == Side.white ? 8 : -8;
+  final forward = setup.turn == Side.white
+      ? setup.board.size.files
+      : -setup.board.size.files;
   if (setup.board.size.rankOf(setup.epSquare!) != epRank) return null;
   if (setup.board.occupied.has(setup.epSquare! + forward)) return null;
   final pawn = setup.epSquare! - forward;

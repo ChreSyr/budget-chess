@@ -1,4 +1,4 @@
-// ignore_for_file: always_use_package_imports, public_member_api_docs
+// ignore_for_file: public_member_api_docs
 
 import 'dart:math' as math;
 
@@ -163,7 +163,7 @@ class Setup {
     }
 
     final board = Board.parseFen(
-      '${blackSetupFen.split('').reversed.join()}${size.ranks.isEven ? '' : '8/'}/$whiteSetupFen',
+      '${blackSetupFen.split('').reversed.join()}${size.ranks.isEven ? '' : '${size.files}/'}/$whiteSetupFen',
       size: size,
     );
 
