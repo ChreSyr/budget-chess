@@ -37,8 +37,6 @@ class _HomePageState extends State<PlayPage> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-
     return Scaffold(
       appBar: AppBar(
         title: playMode == Mode.botPlay
@@ -95,7 +93,6 @@ class _HomePageState extends State<PlayPage> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             BoardWidget(
-              width: screenWidth,
               size: BoardSize(ranks: 8, files: 8),
               settings: BoardSettings(
                 pieceAssets: pieceSet?.assets ?? pieceAssets,

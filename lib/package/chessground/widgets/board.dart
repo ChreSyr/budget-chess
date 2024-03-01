@@ -17,7 +17,6 @@ import 'package:flutter/widgets.dart';
 /// shows a live game, or a full user interactable board.
 class BoardWidget extends StatefulWidget {
   const BoardWidget({
-    required this.width,
     required this.size,
     required this.data,
     super.key,
@@ -25,9 +24,6 @@ class BoardWidget extends StatefulWidget {
     this.onMove,
     this.onPremove,
   });
-
-  /// Visal size of the board
-  final double width;
 
   /// Number of ranks & files of the board
   final BoardSize size;
@@ -46,9 +42,7 @@ class BoardWidget extends StatefulWidget {
   /// If the callback is null, the board will not allow premoves.
   final void Function(CGMove?)? onPremove;
 
-  double get squareSize => width / size.files;
-
-  Coord? localOffset2Coord(Offset offset) {
+  Coord? localOffset2Coord(Offset offset, double squareSize) {
     final x = (offset.dx / squareSize).floor();
     final y = (offset.dy / squareSize).floor();
     final orientX = x;
@@ -63,8 +57,8 @@ class BoardWidget extends StatefulWidget {
     }
   }
 
-  SquareId? localOffset2SquareId(Offset offset) {
-    final coord = localOffset2Coord(offset);
+  SquareId? localOffset2SquareId(Offset offset, double squareSize) {
+    final coord = localOffset2Coord(offset, squareSize);
     return coord?.squareId;
   }
 
@@ -74,6 +68,7 @@ class BoardWidget extends StatefulWidget {
 }
 
 class _BoardState extends State<BoardWidget> {
+  double squareSize = 0;
   Pieces pieces = {};
   late BoardColorScheme colorScheme;
   Map<String, (PositionedPiece, PositionedPiece)> translatingPieces = {};
@@ -101,219 +96,227 @@ class _BoardState extends State<BoardWidget> {
     final annotations = widget.data.annotations ?? _emptyAnnotations;
     final checkSquare = widget.data.isCheck ?? false ? _getKingSquare() : null;
     final premove = widget.data.premove;
-    final Widget board = Stack(
-      children: [
-        if (widget.settings.enableCoordinates)
-          widget.data.orientation == Side.white
-              ? colorScheme.whiteCoordBackground
-              : colorScheme.blackCoordBackground
-        else
-          colorScheme.background,
-        if (widget.settings.showLastMove && widget.data.lastMove != null)
-          for (final squareId in widget.data.lastMove!.squares)
-            if (premove == null || !premove.hasSquare(squareId))
+        
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final boardWidth = constraints.maxWidth;
+        squareSize = boardWidth / widget.size.files;
+
+        final Widget board = Stack(
+          children: [
+            if (widget.settings.enableCoordinates)
+              widget.data.orientation == Side.white
+                  ? colorScheme.whiteCoordBackground
+                  : colorScheme.blackCoordBackground
+            else
+              colorScheme.background,
+            if (widget.settings.showLastMove && widget.data.lastMove != null)
+              for (final squareId in widget.data.lastMove!.squares)
+                if (premove == null || !premove.hasSquare(squareId))
+                  PositionedSquare(
+                    key: ValueKey('$squareId-lastMove'),
+                    size: squareSize,
+                    orientation: widget.data.orientation,
+                    coord: Coord.fromSquareId(squareId, boardSize: widget.size),
+                    child: Highlight(
+                      size: squareSize,
+                      details: colorScheme.lastMove,
+                    ),
+                  ),
+            if (premove != null &&
+                widget.data.interactableSide != InteractableSide.none)
+              for (final squareId in premove.squares)
+                PositionedSquare(
+                  key: ValueKey('$squareId-premove'),
+                  size: squareSize,
+                  orientation: widget.data.orientation,
+                  coord: Coord.fromSquareId(squareId, boardSize: widget.size),
+                  child: Highlight(
+                    size: squareSize,
+                    details:
+                        HighlightDetails(solidColor: colorScheme.validPremoves),
+                  ),
+                ),
+            if (selected != null)
               PositionedSquare(
-                key: ValueKey('$squareId-lastMove'),
-                size: widget.squareSize,
+                key: ValueKey('${selected!}-selected'),
+                size: squareSize,
                 orientation: widget.data.orientation,
-                coord: Coord.fromSquareId(squareId, boardSize: widget.size),
+                coord: Coord.fromSquareId(selected!, boardSize: widget.size),
                 child: Highlight(
-                  size: widget.squareSize,
-                  details: colorScheme.lastMove,
+                  size: squareSize,
+                  details: colorScheme.selected,
                 ),
               ),
-        if (premove != null &&
-            widget.data.interactableSide != InteractableSide.none)
-          for (final squareId in premove.squares)
-            PositionedSquare(
-              key: ValueKey('$squareId-premove'),
-              size: widget.squareSize,
-              orientation: widget.data.orientation,
-              coord: Coord.fromSquareId(squareId, boardSize: widget.size),
-              child: Highlight(
-                size: widget.squareSize,
-                details:
-                    HighlightDetails(solidColor: colorScheme.validPremoves),
+            for (final dest in moveDests)
+              PositionedSquare(
+                key: ValueKey('$dest-dest'),
+                size: squareSize,
+                orientation: widget.data.orientation,
+                coord: Coord.fromSquareId(dest, boardSize: widget.size),
+                child: MoveDest(
+                  size: squareSize,
+                  color: colorScheme.validMoves,
+                  occupied: pieces.containsKey(dest),
+                ),
               ),
-            ),
-        if (selected != null)
-          PositionedSquare(
-            key: ValueKey('${selected!}-selected'),
-            size: widget.squareSize,
-            orientation: widget.data.orientation,
-            coord: Coord.fromSquareId(selected!, boardSize: widget.size),
-            child: Highlight(
-              size: widget.squareSize,
-              details: colorScheme.selected,
-            ),
-          ),
-        for (final dest in moveDests)
-          PositionedSquare(
-            key: ValueKey('$dest-dest'),
-            size: widget.squareSize,
-            orientation: widget.data.orientation,
-            coord: Coord.fromSquareId(dest, boardSize: widget.size),
-            child: MoveDest(
-              size: widget.squareSize,
-              color: colorScheme.validMoves,
-              occupied: pieces.containsKey(dest),
-            ),
-          ),
-        for (final dest in premoveDests)
-          PositionedSquare(
-            key: ValueKey('$dest-premove-dest'),
-            size: widget.squareSize,
-            orientation: widget.data.orientation,
-            coord: Coord.fromSquareId(dest, boardSize: widget.size),
-            child: MoveDest(
-              size: widget.squareSize,
-              color: colorScheme.validPremoves,
-              occupied: pieces.containsKey(dest),
-            ),
-          ),
-        if (checkSquare != null)
-          PositionedSquare(
-            key: ValueKey('$checkSquare-check'),
-            size: widget.squareSize,
-            orientation: widget.data.orientation,
-            coord: Coord.fromSquareId(checkSquare, boardSize: widget.size),
-            child: CheckHighlight(size: widget.squareSize),
-          ),
-        for (final entry in fadingPieces.entries)
-          PositionedSquare(
-            key: ValueKey('${entry.key}-${entry.value.kind.name}-fading'),
-            size: widget.squareSize,
-            orientation: widget.data.orientation,
-            coord: Coord.fromSquareId(entry.key, boardSize: widget.size),
-            child: PieceFadeOut(
-              duration: widget.settings.animationDuration,
-              piece: entry.value,
-              size: widget.squareSize,
-              pieceAssets: widget.settings.pieceAssets,
-              blindfoldMode: widget.settings.blindfoldMode,
-              onComplete: () {
-                fadingPieces.remove(entry.key);
-              },
-            ),
-          ),
-        for (final entry in pieces.entries)
-          if (!translatingPieces.containsKey(entry.key) &&
-              entry.key != _dragOrigin)
-            PositionedSquare(
-              key: ValueKey('${entry.key}-${entry.value.kind.name}'),
-              size: widget.squareSize,
-              orientation: widget.data.orientation,
-              coord: Coord.fromSquareId(entry.key, boardSize: widget.size),
-              child: PieceWidget(
-                piece: entry.value,
-                size: widget.squareSize,
-                pieceAssets: widget.settings.pieceAssets,
-                blindfoldMode: widget.settings.blindfoldMode,
+            for (final dest in premoveDests)
+              PositionedSquare(
+                key: ValueKey('$dest-premove-dest'),
+                size: squareSize,
+                orientation: widget.data.orientation,
+                coord: Coord.fromSquareId(dest, boardSize: widget.size),
+                child: MoveDest(
+                  size: squareSize,
+                  color: colorScheme.validPremoves,
+                  occupied: pieces.containsKey(dest),
+                ),
               ),
-            ),
-        for (final entry in translatingPieces.entries)
-          PositionedSquare(
-            key: ValueKey('${entry.key}-${entry.value.$1.piece.kind.name}'),
-            size: widget.squareSize,
-            orientation: widget.data.orientation,
-            coord: Coord.fromSquareId(entry.key, boardSize: widget.size),
-            child: PieceTranslation(
-              fromCoord: entry.value.$1.coord,
-              toCoord: entry.value.$2.coord,
-              orientation: widget.data.orientation,
-              duration: widget.settings.animationDuration,
-              onComplete: () {
-                translatingPieces.remove(entry.key);
-              },
-              child: PieceWidget(
-                piece: entry.value.$1.piece,
-                size: widget.squareSize,
-                pieceAssets: widget.settings.pieceAssets,
-                blindfoldMode: widget.settings.blindfoldMode,
+            if (checkSquare != null)
+              PositionedSquare(
+                key: ValueKey('$checkSquare-check'),
+                size: squareSize,
+                orientation: widget.data.orientation,
+                coord: Coord.fromSquareId(checkSquare, boardSize: widget.size),
+                child: CheckHighlight(size: squareSize),
               ),
-            ),
-          ),
-        for (final entry in annotations.entries)
-          BoardAnnotation(
-            key: ValueKey(
-              '${entry.key}-${entry.value.symbol}-${entry.value.color}',
-            ),
-            squareSize: widget.squareSize,
-            orientation: widget.data.orientation,
-            squareId: entry.key,
-            boardSize: widget.size,
-            annotation: entry.value,
-          ),
-        for (final shape in shapes)
-          ShapeWidget(
-            shape: shape,
-            boardSize: widget.size,
-            boardSquareSize: widget.squareSize,
-            orientation: widget.data.orientation,
-          ),
-        if (_shapeAvatar != null)
-          ShapeWidget(
-            shape: _shapeAvatar!,
-            boardSize: widget.size,
-            boardSquareSize: widget.squareSize,
-            orientation: widget.data.orientation,
-          ),
-      ],
-    );
+            for (final entry in fadingPieces.entries)
+              PositionedSquare(
+                key: ValueKey('${entry.key}-${entry.value.kind.name}-fading'),
+                size: squareSize,
+                orientation: widget.data.orientation,
+                coord: Coord.fromSquareId(entry.key, boardSize: widget.size),
+                child: PieceFadeOut(
+                  duration: widget.settings.animationDuration,
+                  piece: entry.value,
+                  size: squareSize,
+                  pieceAssets: widget.settings.pieceAssets,
+                  blindfoldMode: widget.settings.blindfoldMode,
+                  onComplete: () {
+                    fadingPieces.remove(entry.key);
+                  },
+                ),
+              ),
+            for (final entry in pieces.entries)
+              if (!translatingPieces.containsKey(entry.key) &&
+                  entry.key != _dragOrigin)
+                PositionedSquare(
+                  key: ValueKey('${entry.key}-${entry.value.kind.name}'),
+                  size: squareSize,
+                  orientation: widget.data.orientation,
+                  coord: Coord.fromSquareId(entry.key, boardSize: widget.size),
+                  child: PieceWidget(
+                    piece: entry.value,
+                    size: squareSize,
+                    pieceAssets: widget.settings.pieceAssets,
+                    blindfoldMode: widget.settings.blindfoldMode,
+                  ),
+                ),
+            for (final entry in translatingPieces.entries)
+              PositionedSquare(
+                key: ValueKey('${entry.key}-${entry.value.$1.piece.kind.name}'),
+                size: squareSize,
+                orientation: widget.data.orientation,
+                coord: Coord.fromSquareId(entry.key, boardSize: widget.size),
+                child: PieceTranslation(
+                  fromCoord: entry.value.$1.coord,
+                  toCoord: entry.value.$2.coord,
+                  orientation: widget.data.orientation,
+                  duration: widget.settings.animationDuration,
+                  onComplete: () {
+                    translatingPieces.remove(entry.key);
+                  },
+                  child: PieceWidget(
+                    piece: entry.value.$1.piece,
+                    size: squareSize,
+                    pieceAssets: widget.settings.pieceAssets,
+                    blindfoldMode: widget.settings.blindfoldMode,
+                  ),
+                ),
+              ),
+            for (final entry in annotations.entries)
+              BoardAnnotation(
+                key: ValueKey(
+                  '${entry.key}-${entry.value.symbol}-${entry.value.color}',
+                ),
+                squareSize: squareSize,
+                orientation: widget.data.orientation,
+                squareId: entry.key,
+                boardSize: widget.size,
+                annotation: entry.value,
+              ),
+            for (final shape in shapes)
+              ShapeWidget(
+                shape: shape,
+                boardSize: widget.size,
+                boardSquareSize: squareSize,
+                orientation: widget.data.orientation,
+              ),
+            if (_shapeAvatar != null)
+              ShapeWidget(
+                shape: _shapeAvatar!,
+                boardSize: widget.size,
+                boardSquareSize: squareSize,
+                orientation: widget.data.orientation,
+              ),
+          ],
+        );
 
-    return SizedBox(
-      width: widget.width,
-      height: widget.squareSize * widget.size.ranks,
-      child: Stack(
-        children: [
-          // Consider using Listener instead as we don't control the drag start
-          // threshold with
-          // GestureDetector (TODO)
-          if (widget.data.interactableSide != InteractableSide.none &&
-              !widget.settings.drawShape
-                  .enable) // Disable moving pieces when drawing is enabled
-            GestureDetector(
-              // registering onTapDown is needed to prevent the panStart event
-              // to win the competition too early there is no need to implement
-              // the callback since we handle the selection login in onPanDown;
-              // plus this way we avoid the timeout before onTapDown is called
-              onTapDown: (TapDownDetails? details) {},
-              onTapUp: _onTapUpPiece,
-              onPanDown: _onPanDownPiece,
-              onPanStart: _onPanStartPiece,
-              onPanUpdate: _onPanUpdatePiece,
-              onPanEnd: _onPanEndPiece,
-              onPanCancel: _onPanCancelPiece,
-              dragStartBehavior: DragStartBehavior.down,
-              child: board,
-            )
-          else if (widget.settings.drawShape.enable)
-            GestureDetector(
-              onTapDown: (TapDownDetails? details) {},
-              onTapUp: _onTapUpShape,
-              onPanDown: _onPanDownShape,
-              onPanStart: _onPanStartShape,
-              onPanUpdate: _onPanUpdateShape,
-              onPanEnd: _onPanEndShape,
-              onPanCancel: _onPanCancelShape,
-              dragStartBehavior: DragStartBehavior.down,
-              child: board,
-            )
-          else
-            board,
-          if (_promotionMove != null && widget.data.sideToMove != null)
-            PromotionSelector(
-              pieceAssets: widget.settings.pieceAssets,
-              move: _promotionMove!,
-              boardSize: widget.size,
-              squareSize: widget.squareSize,
-              color: widget.data.sideToMove!,
-              orientation: widget.data.orientation,
-              onSelect: _onPromotionSelect,
-              onCancel: _onPromotionCancel,
-            ),
-        ],
-      ),
+        return SizedBox(
+          width: boardWidth,
+          height: squareSize * widget.size.ranks,
+          child: Stack(
+            children: [
+              // Consider using Listener instead as we don't control the drag start
+              // threshold with
+              // GestureDetector (TODO)
+              if (widget.data.interactableSide != InteractableSide.none &&
+                  !widget.settings.drawShape
+                      .enable) // Disable moving pieces when drawing is enabled
+                GestureDetector(
+                  // registering onTapDown is needed to prevent the panStart event
+                  // to win the competition too early there is no need to implement
+                  // the callback since we handle the selection login in onPanDown;
+                  // plus this way we avoid the timeout before onTapDown is called
+                  onTapDown: (TapDownDetails details) {},
+                  onTapUp: _onTapUpPiece,
+                  onPanDown: _onPanDownPiece,
+                  onPanStart: _onPanStartPiece,
+                  onPanUpdate: _onPanUpdatePiece,
+                  onPanEnd: _onPanEndPiece,
+                  onPanCancel: _onPanCancelPiece,
+                  dragStartBehavior: DragStartBehavior.down,
+                  child: board,
+                )
+              else if (widget.settings.drawShape.enable)
+                GestureDetector(
+                  onTapDown: (TapDownDetails? details) {},
+                  onTapUp: _onTapUpShape,
+                  onPanDown: _onPanDownShape,
+                  onPanStart: _onPanStartShape,
+                  onPanUpdate: _onPanUpdateShape,
+                  onPanEnd: _onPanEndShape,
+                  onPanCancel: _onPanCancelShape,
+                  dragStartBehavior: DragStartBehavior.down,
+                  child: board,
+                )
+              else
+                board,
+              if (_promotionMove != null && widget.data.sideToMove != null)
+                PromotionSelector(
+                  pieceAssets: widget.settings.pieceAssets,
+                  move: _promotionMove!,
+                  boardSize: widget.size,
+                  squareSize: squareSize,
+                  color: widget.data.sideToMove!,
+                  orientation: widget.data.orientation,
+                  onSelect: _onPromotionSelect,
+                  onCancel: _onPromotionCancel,
+                ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -419,22 +422,22 @@ class _BoardState extends State<BoardWidget> {
 
   // returns the position of the square target during drag as a global offset
   Offset? _squareTargetGlobalOffset(Offset localPosition) {
-    final coord = widget.localOffset2Coord(localPosition);
+    final coord = widget.localOffset2Coord(localPosition, squareSize);
     if (coord == null) return null;
-    final localOffset =
-        coord.offset(widget.data.orientation, widget.squareSize);
+    final localOffset = coord.offset(widget.data.orientation, squareSize);
     final box = context.findRenderObject()! as RenderBox;
     final tmpOffset = box.localToGlobal(localOffset);
     return Offset(
-      tmpOffset.dx - widget.squareSize / 2,
-      tmpOffset.dy - widget.squareSize / 2,
+      tmpOffset.dx - squareSize / 2,
+      tmpOffset.dy - squareSize / 2,
     );
   }
 
-  void _onPanDownPiece(DragDownDetails? details) {
-    if (details == null) return;
-
-    final squareId = widget.localOffset2SquareId(details.localPosition);
+  void _onPanDownPiece(DragDownDetails details) {
+    final squareId = widget.localOffset2SquareId(
+      details.localPosition,
+      squareSize,
+    );
     if (squareId == null) return;
 
     // if a movable piece is already selected, we want to allow castling by
@@ -469,12 +472,13 @@ class _BoardState extends State<BoardWidget> {
     }
   }
 
-  void _onPanStartPiece(DragStartDetails? details) {
-    if (details == null) return;
-
-    final squareId = widget.localOffset2SquareId(details.localPosition);
+  void _onPanStartPiece(DragStartDetails details) {
+    final squareId = widget.localOffset2SquareId(
+      details.localPosition,
+      squareSize,
+    );
     final piece = squareId != null ? pieces[squareId] : null;
-    final feedbackSize = widget.squareSize * widget.settings.dragFeedbackSize;
+    final feedbackSize = squareSize * widget.settings.dragFeedbackSize;
     if (squareId != null &&
         piece != null &&
         (_isMovable(squareId) || _isPremovable(squareId))) {
@@ -488,8 +492,8 @@ class _BoardState extends State<BoardWidget> {
         initialPosition: details.globalPosition,
         initialTargetPosition: squareTargetOffset,
         squareTargetFeedback: Container(
-          width: widget.squareSize * 2,
-          height: widget.squareSize * 2,
+          width: squareSize * 2,
+          height: squareSize * 2,
           decoration: const BoxDecoration(
             color: Color(0x33000000),
             shape: BoxShape.circle,
@@ -518,11 +522,14 @@ class _BoardState extends State<BoardWidget> {
     _dragAvatar?.updateSquareTarget(squareTargetOffset);
   }
 
-  void _onPanEndPiece(DragEndDetails? details) {
+  void _onPanEndPiece(_) {
     if (_dragAvatar != null) {
       final box = context.findRenderObject()! as RenderBox;
       final localPos = box.globalToLocal(_dragAvatar!._position);
-      final squareId = widget.localOffset2SquareId(localPos);
+      final squareId = widget.localOffset2SquareId(
+        localPos,
+        squareSize,
+      );
       if (squareId != null && squareId != selected) {
         _tryMoveTo(squareId, drop: true);
       }
@@ -542,9 +549,11 @@ class _BoardState extends State<BoardWidget> {
     });
   }
 
-  void _onTapUpPiece(TapUpDetails? details) {
-    if (details == null) return;
-    final squareId = widget.localOffset2SquareId(details.localPosition);
+  void _onTapUpPiece(TapUpDetails details) {
+    final squareId = widget.localOffset2SquareId(
+      details.localPosition,
+      squareSize,
+    );
     if (squareId != null && squareId != selected) {
       _tryMoveTo(squareId);
     } else if (squareId != null &&
@@ -558,9 +567,12 @@ class _BoardState extends State<BoardWidget> {
     }
   }
 
-  void _onPanDownShape(DragDownDetails? details) {
-    if (details == null || widget.settings.drawShape.enable == false) return;
-    final squareId = widget.localOffset2SquareId(details.localPosition);
+  void _onPanDownShape(DragDownDetails details) {
+    if (widget.settings.drawShape.enable == false) return;
+    final squareId = widget.localOffset2SquareId(
+      details.localPosition,
+      squareSize,
+    );
     if (squareId == null) return;
     setState(() {
       // Initialize shapeAvatar on tap down (Analogous to website)
@@ -571,11 +583,13 @@ class _BoardState extends State<BoardWidget> {
     });
   }
 
-  void _onPanStartShape(DragStartDetails? details) {
-    if (details == null ||
-        _shapeAvatar == null ||
+  void _onPanStartShape(DragStartDetails details) {
+    if (_shapeAvatar == null ||
         widget.settings.drawShape.enable == false) return;
-    final squareId = widget.localOffset2SquareId(details.localPosition);
+    final squareId = widget.localOffset2SquareId(
+      details.localPosition,
+      squareSize,
+    );
     if (squareId == null) return;
     setState(() {
       // Update shapeAvatar on starting pan
@@ -585,11 +599,13 @@ class _BoardState extends State<BoardWidget> {
     });
   }
 
-  void _onPanUpdateShape(DragUpdateDetails? details) {
-    if (details == null ||
-        _shapeAvatar == null ||
+  void _onPanUpdateShape(DragUpdateDetails details) {
+    if (_shapeAvatar == null ||
         widget.settings.drawShape.enable == false) return;
-    final squareId = widget.localOffset2SquareId(details.localPosition);
+    final squareId = widget.localOffset2SquareId(
+      details.localPosition,
+      squareSize,
+    );
     if (squareId == null ||
         (_shapeAvatar! is Arrow &&
             squareId == (_shapeAvatar! as Arrow).dest.squareId)) {
@@ -603,7 +619,7 @@ class _BoardState extends State<BoardWidget> {
     });
   }
 
-  void _onPanEndShape(DragEndDetails? details) {
+  void _onPanEndShape(_) {
     if (_shapeAvatar == null || widget.settings.drawShape.enable == false) {
       return;
     }
@@ -619,9 +635,12 @@ class _BoardState extends State<BoardWidget> {
     });
   }
 
-  void _onTapUpShape(TapUpDetails? details) {
-    if (details == null || widget.settings.drawShape.enable == false) return;
-    final squareId = widget.localOffset2SquareId(details.localPosition);
+  void _onTapUpShape(TapUpDetails details) {
+    if (widget.settings.drawShape.enable == false) return;
+    final squareId = widget.localOffset2SquareId(
+      details.localPosition,
+      squareSize,
+    );
     if (squareId == null) return;
     widget.settings.drawShape.onCompleteShape?.call(
       Circle(

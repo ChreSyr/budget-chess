@@ -80,53 +80,55 @@ class _SetupBody extends StatelessWidget {
 
     final settings = context.watch<BoardSettingsCubit>().state;
 
-    return Column(
-      children: [
-        BlocBuilder<SelectedRoleCubit, Role?>(
-          builder: (context, selectedRole) {
-            return SetupBoard(
-              width: CCSize.boardSizeOf(context),
-              setup: setup,
-              color: side,
-              onAdd: selectedRole == null
-                  ? null
-                  : (squareId) => setupCubit.onDrop(
-                        CGDropMove(
-                          role: selectedRole,
-                          squareId: squareId,
+    return SizedBox(
+      width: CCSize.boardSizeOf(context),
+      child: Column(
+        children: [
+          BlocBuilder<SelectedRoleCubit, Role?>(
+            builder: (context, selectedRole) {
+              return SetupBoard(
+                setup: setup,
+                color: side,
+                onAdd: selectedRole == null
+                    ? null
+                    : (squareId) => setupCubit.onDrop(
+                          CGDropMove(
+                            role: selectedRole,
+                            squareId: squareId,
+                          ),
                         ),
-                      ),
-              onDrop: setupCubit.onDrop,
-              onMove: setupCubit.onMove,
-              onRemove: setupCubit.onRemove,
-              settings: settings,
-              interactable: !validatedSetup,
-            );
-          },
-        ),
-        CCGap.small,
-        Inventory(
-          color: side,
-          settings: settings,
-          interactable: !validatedSetup,
-        ),
-        CCGap.small,
-        const Divider(height: 0),
-        CCPadding.allSmall(
-          child: Row(
-            children: [
-              SetupBudgetCounter(
-                budget: challenge.budget,
-                cost: setup.cost,
-              ),
-              const Expanded(child: SizedBox.shrink()),
-              SetupValidateButton(validated: validatedSetup),
-            ],
+                onDrop: setupCubit.onDrop,
+                onMove: setupCubit.onMove,
+                onRemove: setupCubit.onRemove,
+                settings: settings,
+                interactable: !validatedSetup,
+              );
+            },
           ),
-        ),
-        CCGap.medium,
-        SetupOpponentTile(game: game),
-      ],
+          CCGap.small,
+          Inventory(
+            color: side,
+            settings: settings,
+            interactable: !validatedSetup,
+          ),
+          CCGap.small,
+          const Divider(height: 0),
+          CCPadding.allSmall(
+            child: Row(
+              children: [
+                SetupBudgetCounter(
+                  budget: challenge.budget,
+                  cost: setup.cost,
+                ),
+                const Expanded(child: SizedBox.shrink()),
+                SetupValidateButton(validated: validatedSetup),
+              ],
+            ),
+          ),
+          CCGap.medium,
+          SetupOpponentTile(game: game),
+        ],
+      ),
     );
   }
 }

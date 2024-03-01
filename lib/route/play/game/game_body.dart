@@ -83,7 +83,6 @@ class _GameBody extends StatelessWidget {
             winner: game.winner,
           ),
           BoardWidget(
-            width: MediaQuery.of(context).size.width,
             size: game.challenge.boardSize,
             settings: boardSettings,
             data: BoardData(

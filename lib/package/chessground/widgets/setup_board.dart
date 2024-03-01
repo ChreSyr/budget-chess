@@ -12,7 +12,6 @@ import 'package:flutter/widgets.dart';
 /// shows a live game, or a full user interactable board.
 class SetupBoard extends StatefulWidget {
   SetupBoard({
-    required this.width,
     required SetupModel setup,
     required this.color,
     super.key,
@@ -24,9 +23,6 @@ class SetupBoard extends StatefulWidget {
     this.interactable = true,
   })  : size = setup.boardSize,
         fen = setup.fenAs(Side.white);
-
-  /// Visal size of the board
-  final double width;
 
   /// Number of ranks & files of the board
   final BoardSize size;
@@ -54,25 +50,23 @@ class SetupBoard extends StatefulWidget {
 
   final bool interactable;
 
-  double get squareSize => width / size.files;
-
-  Coord? localOffset2Coord(Offset offset) {
+  Coord? localOffset2Coord(Offset offset, double squareSize) {
     final x = (offset.dx / squareSize).floor();
     final y = (offset.dy / squareSize).floor();
     final orientX = x;
-    final orientY = (size.ranks - 1) - y;
+    final orientY = size.files - 1 - y;
     if (orientX >= 0 &&
         orientX <= (size.files - 1) &&
         orientY >= 0 &&
-        orientY <= (size.ranks - 1)) {
+        orientY <= (size.files - 1)) {
       return Coord(x: orientX, y: orientY, boardSize: size);
     } else {
       return null;
     }
   }
 
-  SquareId? localOffset2SquareId(Offset offset) {
-    final coord = localOffset2Coord(offset);
+  SquareId? localOffset2SquareId(Offset offset, double squareSize) {
+    final coord = localOffset2Coord(offset, squareSize);
     return coord?.squareId;
   }
 
@@ -82,6 +76,7 @@ class SetupBoard extends StatefulWidget {
 }
 
 class _BoardState extends State<SetupBoard> {
+  double squareSize = 0;
   Pieces pieces = {};
   late BoardColorScheme colorScheme;
   _DragAvatar? _dragAvatar;
@@ -93,109 +88,116 @@ class _BoardState extends State<SetupBoard> {
   Widget build(BuildContext context) {
     const orientation = Side.white;
 
-    final Widget board = Stack(
-      children: [
-        colorScheme.background,
-        if (_dragOrigin != null && _dragAvatar != null)
-          PositionedSquare(
-            key: ValueKey('${_dragOrigin!}-dragOrigin'),
-            size: widget.squareSize,
-            orientation: orientation,
-            squareId: _dragOrigin!,
-            boardSize: widget.size,
-            child: Highlight(
-              size: widget.squareSize,
-              details: colorScheme.selected,
-            ),
-          ),
-        for (final entry in pieces.entries)
-          if (entry.key != _dragOrigin)
-            PositionedSquare(
-              key: ValueKey('${entry.key}-${entry.value.kind.name}'),
-              size: widget.squareSize,
-              orientation: orientation,
-              squareId: entry.key,
-              boardSize: widget.size,
-              child: PieceWidget(
-                piece: entry.value,
-                size: widget.squareSize,
-                pieceAssets: widget.settings.pieceAssets,
-              ),
-            ),
-        for (final squareId in dragTargets)
-          PositionedSquare(
-            size: widget.squareSize,
-            orientation: orientation,
-            squareId: squareId,
-            boardSize: widget.size,
-            child: DragTarget<Role>(
-              onAccept: (role) {
-                _onDrop(squareId, role);
-                setState(() {
-                  _dropTarget = null;
-                });
-              },
-              builder: (context, candidateData, rejectedData) =>
-                  const SizedBox.shrink(),
-              onMove: (_) => _dropTarget == squareId
-                  ? null
-                  : setState(() {
-                      _dropTarget = squareId;
-                    }),
-              onLeave: (_) => _dropTarget != squareId
-                  ? null
-                  : setState(() {
-                      _dropTarget = null;
-                    }),
-            ),
-          ),
-        if (_dropTarget != null)
-          Builder(
-            builder: (context) {
-              final coord = Coord.fromSquareId(
-                _dropTarget!,
-                boardSize: widget.size,
-              );
-              final pos = _dropTargetLocalOffsetFromCoord(coord);
-              if (pos == null) return CCGap.zero;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final boardWidth = constraints.maxWidth;
+        squareSize = boardWidth / widget.size.files;
 
-              return Positioned(
-                left: pos.dx,
-                top: pos.dy,
-                child: IgnorePointer(
-                  child: Container(
-                    width: widget.squareSize * 2,
-                    height: widget.squareSize * 2,
-                    decoration: const BoxDecoration(
-                      color: Color(0x33000000),
-                      shape: BoxShape.circle,
-                    ),
+        final Widget board = Stack(
+          children: [
+            colorScheme.background,
+            if (_dragOrigin != null && _dragAvatar != null)
+              PositionedSquare(
+                key: ValueKey('${_dragOrigin!}-dragOrigin'),
+                size: squareSize,
+                orientation: orientation,
+                squareId: _dragOrigin!,
+                boardSize: widget.size,
+                child: Highlight(
+                  size: squareSize,
+                  details: colorScheme.selected,
+                ),
+              ),
+            for (final entry in pieces.entries)
+              if (entry.key != _dragOrigin)
+                PositionedSquare(
+                  key: ValueKey('${entry.key}-${entry.value.kind.name}'),
+                  size: squareSize,
+                  orientation: orientation,
+                  squareId: entry.key,
+                  boardSize: widget.size,
+                  child: PieceWidget(
+                    piece: entry.value,
+                    size: squareSize,
+                    pieceAssets: widget.settings.pieceAssets,
                   ),
                 ),
-              );
-            },
-          ),
-      ],
-    );
+            for (final squareId in dragTargets)
+              PositionedSquare(
+                size: squareSize,
+                orientation: orientation,
+                squareId: squareId,
+                boardSize: widget.size,
+                child: DragTarget<Role>(
+                  onAccept: (role) {
+                    _onDrop(squareId, role);
+                    setState(() {
+                      _dropTarget = null;
+                    });
+                  },
+                  builder: (context, candidateData, rejectedData) =>
+                      const SizedBox.shrink(),
+                  onMove: (_) => _dropTarget == squareId
+                      ? null
+                      : setState(() {
+                          _dropTarget = squareId;
+                        }),
+                  onLeave: (_) => _dropTarget != squareId
+                      ? null
+                      : setState(() {
+                          _dropTarget = null;
+                        }),
+                ),
+              ),
+            if (_dropTarget != null)
+              Builder(
+                builder: (context) {
+                  final coord = Coord.fromSquareId(
+                    _dropTarget!,
+                    boardSize: widget.size,
+                  );
+                  final pos = _dropTargetLocalOffsetFromCoord(coord);
+                  if (pos == null) return CCGap.zero;
 
-    return SizedBox(
-      width: widget.width,
-      height: widget.squareSize * widget.size.ranks,
-      child: Stack(
-        children: [
-          if (widget.interactable)
-            GestureDetector(
-              onPanDown: _onPanDownPiece,
-              onPanUpdate: _onPanUpdatePiece,
-              onPanEnd: _onPanEndPiece,
-              onPanCancel: _onPanCancelPiece,
-              dragStartBehavior: DragStartBehavior.down,
-              child: board,
-            )
-          else
-            board,
-        ],
-      ),
+                  return Positioned(
+                    left: pos.dx,
+                    top: pos.dy,
+                    child: IgnorePointer(
+                      child: Container(
+                        width: squareSize * 2,
+                        height: squareSize * 2,
+                        decoration: const BoxDecoration(
+                          color: Color(0x33000000),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+          ],
+        );
+
+        return SizedBox(
+          width: boardWidth,
+          height: squareSize * widget.size.ranks,
+          child: Stack(
+            children: [
+              if (widget.interactable)
+                GestureDetector(
+                  onPanDown: _onPanDownPiece,
+                  onPanUpdate: _onPanUpdatePiece,
+                  onPanEnd: _onPanEndPiece,
+                  onPanCancel: _onPanCancelPiece,
+                  dragStartBehavior: DragStartBehavior.down,
+                  child: board,
+                )
+              else
+                board,
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -233,23 +235,23 @@ class _BoardState extends State<SetupBoard> {
 
   // returns the position of the square target during drag as a global offset
   Offset? _squareTargetGlobalOffset(Offset localPosition) {
-    final coord = widget.localOffset2Coord(localPosition);
+    final coord = widget.localOffset2Coord(localPosition, squareSize);
     if (coord == null) return null;
-    final localOffset = coord.offset(Side.white, widget.squareSize);
+    final localOffset = coord.offset(Side.white, squareSize);
     final box = context.findRenderObject()! as RenderBox;
     final tmpOffset = box.localToGlobal(localOffset);
     return Offset(
-      tmpOffset.dx - widget.squareSize / 2,
-      tmpOffset.dy - widget.squareSize / 2,
+      tmpOffset.dx - squareSize / 2,
+      tmpOffset.dy - squareSize / 2,
     );
   }
 
   Offset? _dropTargetLocalOffsetFromCoord(Coord? coord) {
     if (coord == null) return null;
-    final localOffset = coord.offset(Side.white, widget.squareSize);
+    final localOffset = coord.offset(Side.white, squareSize);
     return Offset(
-      localOffset.dx - widget.squareSize / 2,
-      localOffset.dy - widget.squareSize / 2,
+      localOffset.dx - squareSize / 2,
+      localOffset.dy - squareSize / 2,
     );
   }
 
@@ -265,13 +267,16 @@ class _BoardState extends State<SetupBoard> {
   void _onPanDownPiece(DragDownDetails? details) {
     if (details == null) return;
 
-    final squareId = widget.localOffset2SquareId(details.localPosition);
+    final squareId = widget.localOffset2SquareId(
+      details.localPosition,
+      squareSize,
+    );
     if (squareId == null) return; // should never happen
 
     final piece = pieces[squareId];
     if (piece == null) return widget.onAdd?.call(squareId);
 
-    final feedbackSize = widget.squareSize * widget.settings.dragFeedbackSize;
+    final feedbackSize = squareSize * widget.settings.dragFeedbackSize;
     if (_isMovable(squareId)) {
       setState(() {
         _dragOrigin = squareId;
@@ -283,8 +288,8 @@ class _BoardState extends State<SetupBoard> {
         initialPosition: details.globalPosition,
         initialTargetPosition: squareTargetOffset,
         squareTargetFeedback: Container(
-          width: widget.squareSize * 2,
-          height: widget.squareSize * 2,
+          width: squareSize * 2,
+          height: squareSize * 2,
           decoration: const BoxDecoration(
             color: Color(0x33000000),
             shape: BoxShape.circle,
@@ -311,7 +316,7 @@ class _BoardState extends State<SetupBoard> {
     _dragAvatar?.update(details);
     final box = context.findRenderObject()! as RenderBox;
     final localPos = box.globalToLocal(_dragAvatar!._position);
-    final dest = widget.localOffset2SquareId(localPos);
+    final dest = widget.localOffset2SquareId(localPos, squareSize);
     if (_dragOrigin != null && dest != null && _canMove(_dragOrigin!, dest)) {
       _dragAvatar?.updateSquareTarget(squareTargetOffset);
     } else {
@@ -323,7 +328,7 @@ class _BoardState extends State<SetupBoard> {
     if (_dragAvatar != null) {
       final box = context.findRenderObject()! as RenderBox;
       final localPos = box.globalToLocal(_dragAvatar!._position);
-      final squareId = widget.localOffset2SquareId(localPos);
+      final squareId = widget.localOffset2SquareId(localPos, squareSize);
       if (squareId == _dragOrigin) {
         // back to where it was
       } else if (squareId != null && _canMove(_dragOrigin!, squareId)) {

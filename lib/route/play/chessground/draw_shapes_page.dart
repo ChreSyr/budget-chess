@@ -29,8 +29,6 @@ class _DrawShapesPageState extends State<DrawShapesPage> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Draw Shapes'),
@@ -40,7 +38,6 @@ class _DrawShapesPageState extends State<DrawShapesPage> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             BoardWidget(
-              width: screenWidth,
               size: BoardSize(ranks: 8, files: 8),
               settings: BoardSettings(
                 pieceAssets: pieceSet.assets,
