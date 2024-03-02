@@ -154,7 +154,7 @@ Widget getUserTile(BuildContext context, UserModel user) {
           case RelationshipStatus.requestedByLast:
             final canAccept = relationship.isRequestedBy(userId);
             return canAccept
-                ? SimpleIconButtonBadge(
+                ? SimpleBadge(
                     child: IconButton(
                       onPressed: () => showAnswerFriendRequestDialog(
                         context,
