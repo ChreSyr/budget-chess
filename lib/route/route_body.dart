@@ -1,6 +1,4 @@
-import 'package:crea_chess/package/atomic_design/dialog/relationship/answer_friend_request.dart';
 import 'package:crea_chess/package/atomic_design/dialog/user/delete_account.dart';
-import 'package:crea_chess/package/atomic_design/widget/simple_badge.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
@@ -58,61 +56,6 @@ abstract class SideRouteBody extends RouteBody {
   @override
   List<Widget> getActions(BuildContext context) {
     return [
-      BlocBuilder<UserCubit, UserModel?>(
-        builder: (context, user) {
-          if (user == null) return Container();
-          return StreamBuilder<Iterable<RelationshipModel>>(
-            stream: relationshipCRUD.requestsAbout(user.id),
-            builder: (context, snapshot) {
-              final requests = snapshot.data ?? [];
-              final requestsTo =
-                  requests.where((e) => !e.isRequestedBy(user.id));
-              return MenuAnchor(
-                builder: (
-                  BuildContext context,
-                  MenuController controller,
-                  Widget? _,
-                ) {
-                  final iconButton = IconButton(
-                    onPressed: () => controller.isOpen
-                        ? controller.close()
-                        : controller.open(),
-                    icon: const Icon(Icons.notifications),
-                  );
-                  if (requestsTo.isEmpty) {
-                    return iconButton;
-                  } else {
-                    return SimpleIconButtonBadge(child: iconButton);
-                  }
-                },
-                menuChildren: requestsTo.isEmpty
-                    ? [
-                        MenuItemButton(
-                          leadingIcon: const Icon(Icons.done_all),
-                          onPressed: () {},
-                          child: Text(context.l10n.notificationsEmpty),
-                        ),
-                      ]
-                    : requestsTo
-                        .map(
-                          (e) => MenuItemButton(
-                            leadingIcon: const Icon(Icons.mail),
-                            onPressed: () {
-                              final requester = e.requester;
-                              return showAnswerFriendRequestDialog(
-                                context,
-                                requester,
-                              );
-                            },
-                            child: Text(context.l10n.friendRequest),
-                          ),
-                        )
-                        .toList(),
-              );
-            },
-          );
-        },
-      ),
       BlocBuilder<AuthenticationCubit, User?>(
         builder: (context, auth) {
           final isLoggedOut = auth == null;
