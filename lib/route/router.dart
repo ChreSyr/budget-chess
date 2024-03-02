@@ -11,6 +11,7 @@ import 'package:crea_chess/route/hub/chessground/chessground_body.dart';
 import 'package:crea_chess/route/hub/create_challenge/create_challenge_body.dart';
 import 'package:crea_chess/route/hub/game/game_body.dart';
 import 'package:crea_chess/route/hub/hub_body.dart';
+import 'package:crea_chess/route/missions/missions_body.dart';
 import 'package:crea_chess/route/nav_notif_cubit.dart';
 import 'package:crea_chess/route/route_scaffold.dart';
 import 'package:crea_chess/route/settings/settings_body.dart';
@@ -27,6 +28,8 @@ import 'package:go_router/go_router.dart';
 // private navigators
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorHubKey = GlobalKey<NavigatorState>(debugLabel: 'shellHub');
+final _shellNavigatorMissionsKey =
+    GlobalKey<NavigatorState>(debugLabel: 'shellMissions');
 final _shellNavigatorFriendsKey =
     GlobalKey<NavigatorState>(debugLabel: 'shellFriends');
 final _shellNavigatorCKey = GlobalKey<NavigatorState>(debugLabel: 'shellC');
@@ -76,6 +79,17 @@ final router = GoRouter(
                   ),
                 ),
               ],
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          navigatorKey: _shellNavigatorMissionsKey,
+          routes: [
+            // top route inside branch
+            GoRoute(
+              path: '/missions',
+              builder: (context, state) =>
+                  const RouteScaffold(body: MissionsBody()),
             ),
           ],
         ),
@@ -164,6 +178,7 @@ final router = GoRouter(
 
 final mainRouteBodies = [
   const HubBody(),
+  const MissionsBody(),
   const FriendsBody(),
   const SettingsBody(),
 ];
