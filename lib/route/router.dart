@@ -2,7 +2,9 @@
 // LATER : responsive scaffold
 
 import 'package:badges/badges.dart' as badges;
+import 'package:crea_chess/package/atomic_design/border.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
+import 'package:crea_chess/package/atomic_design/widget/nav_bar.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/route/nav_notif_cubit.dart';
 import 'package:crea_chess/route/play/chessground/chessground_body.dart';
@@ -226,20 +228,48 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
           ? null
           : BlocBuilder<NavNotifCubit, Map<String, Set<String>>>(
               builder: (context, notifs) {
-                return NavigationBar(
+                return CCNavigationBar(
                   height: CCWidgetSize.xxsmall,
                   selectedIndex: selectedIndex,
-                  destinations: mainRouteBodies
-                      .map(
-                        (e) => NavigationDestination(
-                          icon: notifs[e.id]?.isNotEmpty ?? false
-                              ? badges.Badge(child: Icon(e.icon))
-                              : Icon(e.icon),
-                          label: e.getTitle(context.l10n),
+                  destinations: mainRouteBodies.map(
+                    (e) {
+                      final icon = (notifs[e.id]?.isNotEmpty ?? false)
+                          ? badges.Badge(
+                              badgeContent: Text(
+                                notifs[e.id]!.length.toString(),
+                              ),
+                              child: Icon(e.icon),
+                            )
+                          : Icon(e.icon);
+                      return CCNavigationDestination(
+                        // icon: icon,
+                        icon: SizedBox.square(
+                          dimension: CCSize.xxxlarge,
+                          child: icon,
                         ),
-                      )
-                      .toList(),
+                        selectedIcon: SizedBox.square(
+                          dimension: CCSize.xxxlarge,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              icon,
+                              Text(e.getTitle(context.l10n)),
+                            ],
+                          ),
+                        ),
+                        label: e.getTitle(context.l10n),
+                      );
+                    },
+                  ).toList(),
                   onDestinationSelected: _goBranch,
+                  labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+                  indicatorSize: const Size(86, 54),
+                  indicatorShape: const RoundedRectangleBorder(
+                    borderRadius: CCBorderRadiusCircular.medium,
+                  ),
+                  overlayColor: MaterialStateColor.resolveWith(
+                    (states) => Colors.transparent,
+                  ),
                 );
               },
             ),
