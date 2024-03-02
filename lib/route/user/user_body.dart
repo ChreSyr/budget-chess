@@ -5,7 +5,6 @@ import 'package:crea_chess/package/atomic_design/widget/user/user_profile.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_sections.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
-import 'package:crea_chess/route/nav_notif_cubit.dart';
 import 'package:crea_chess/route/route_body.dart';
 import 'package:crea_chess/route/router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -34,7 +33,7 @@ class UserBody extends RouteBody {
   Widget build(BuildContext context) {
     return AuthVerifier(
       builder: (context, authUid) {
-        return IncompleteProfileNotifier(
+        return BlocBuilder<UserCubit, UserModel?>(
           builder: (context, currentUser) {
             // creating or deleting the user
             if (currentUser == null) return const LinearProgressIndicator();
@@ -111,16 +110,6 @@ class AuthVerifier extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AuthenticationCubit, User?>(
       builder: (context, auth) {
-        if (auth != null && !auth.isVerified) {
-          context
-              .read<NavNotifCubit>()
-              .add(UserBody.routeId, UserBody.notifEmailNotVerified);
-        } else {
-          context
-              .read<NavNotifCubit>()
-              .remove(UserBody.routeId, UserBody.notifEmailNotVerified);
-        }
-
         if (auth == null) {
           return const NotConnectedScreen();
         } else if (!auth.isVerified) {
@@ -155,51 +144,6 @@ class NotConnectedScreen extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class IncompleteProfileNotifier extends StatelessWidget {
-  const IncompleteProfileNotifier({required this.builder, super.key});
-
-  final Widget Function(BuildContext, UserModel?) builder;
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocConsumer<UserCubit, UserModel?>(
-      listener: (context, user) {
-        // Notifications management center
-        if (user == null) {
-          // Here, the email is not verified. Notif is managed by AuthVerifier.
-          // While it is not verified, no other notification should appear.
-          context
-              .read<NavNotifCubit>()
-              .remove(UserBody.routeId, UserBody.notifPhotoEmpty);
-          context
-              .read<NavNotifCubit>()
-              .remove(UserBody.routeId, UserBody.notifNameEmpty);
-        } else {
-          if ((user.photo ?? '').isEmpty) {
-            context
-                .read<NavNotifCubit>()
-                .add(UserBody.routeId, UserBody.notifPhotoEmpty);
-          } else {
-            context
-                .read<NavNotifCubit>()
-                .remove(UserBody.routeId, UserBody.notifPhotoEmpty);
-          }
-          if (user.username.isEmpty || user.username == user.id) {
-            context
-                .read<NavNotifCubit>()
-                .add(UserBody.routeId, UserBody.notifNameEmpty);
-          } else {
-            context
-                .read<NavNotifCubit>()
-                .remove(UserBody.routeId, UserBody.notifNameEmpty);
-          }
-        }
-      },
-      builder: builder,
     );
   }
 }

@@ -1,4 +1,4 @@
-// Code from : https://codewithandrea.com/articles/flutter-bottom-navigation-bar-nested-routes-gorouter/
+// StatefulShellRoute code from : https://codewithandrea.com/articles/flutter-bottom-navigation-bar-nested-routes-gorouter/
 // LATER : responsive scaffold
 
 import 'package:badges/badges.dart' as badges;
@@ -13,7 +13,7 @@ import 'package:crea_chess/route/hub/game/game_body.dart';
 import 'package:crea_chess/route/hub/hub_body.dart';
 import 'package:crea_chess/route/messages/messages_body.dart';
 import 'package:crea_chess/route/missions/missions_body.dart';
-import 'package:crea_chess/route/nav_notif_cubit.dart';
+import 'package:crea_chess/route/nav_notifier.dart';
 import 'package:crea_chess/route/route_scaffold.dart';
 import 'package:crea_chess/route/settings/settings_body.dart';
 import 'package:crea_chess/route/side_routes.dart';
@@ -286,26 +286,31 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
       body: navigationShell,
       bottomNavigationBar: selectedIndex >= mainRouteDatas.length
           ? null
-          : BlocBuilder<NavNotifCubit, Map<String, Set<String>>>(
+          : BlocBuilder<NavNotifCubit, NavNotifs>(
               builder: (context, notifs) {
                 return CCNavigationBar(
                   height: CCWidgetSize.xxsmall,
                   selectedIndex: selectedIndex,
                   destinations: mainRouteDatas.map(
-                    (e) {
-                      final icon = (notifs[e.id]?.isNotEmpty ?? false)
-                          ? badges.Badge(
-                              badgeContent: Text(
-                                notifs[e.id]!.length.toString(),
-                              ),
-                              child: Icon(e.icon),
-                            )
-                          : Icon(e.icon);
+                    (route) {
+                      final notifCount = notifs.count(routeId: route.id);
+                      final icon = badges.Badge(
+                        badgeContent: Text(
+                          notifCount.toString(),
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                        position:
+                            badges.BadgePosition.topEnd(top: -20, end: -20),
+                        badgeAnimation:
+                            const badges.BadgeAnimation.fade(toAnimate: false),
+                        showBadge: notifCount > 0,
+                        child: Icon(route.icon),
+                      );
                       return CCNavigationDestination(
                         // icon: icon,
                         icon: SizedBox.square(
                           dimension: CCSize.xxxlarge,
-                          child: icon,
+                          child: Center(child: icon),
                         ),
                         selectedIcon: SizedBox.square(
                           dimension: CCSize.xxxlarge,
@@ -313,11 +318,11 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               icon,
-                              Text(e.getTitle(context.l10n)),
+                              Text(route.getTitle(context.l10n)),
                             ],
                           ),
                         ),
-                        label: e.getTitle(context.l10n),
+                        label: route.getTitle(context.l10n),
                       );
                     },
                   ).toList(),
