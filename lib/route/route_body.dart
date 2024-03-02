@@ -200,7 +200,5 @@ class MainRouteData {
 
   final String id;
   final IconData icon;
-
-  // TODO : l10n.routeTitle(id)
   final String Function(AppLocalizations l10n) getTitle;
 }

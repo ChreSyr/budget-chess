@@ -267,17 +267,15 @@ class _BoardState extends State<BoardWidget> {
           height: squareSize * widget.size.ranks,
           child: Stack(
             children: [
-              // Consider using Listener instead as we don't control the drag start
-              // threshold with
-              // GestureDetector (TODO)
               if (widget.data.interactableSide != InteractableSide.none &&
                   !widget.settings.drawShape
                       .enable) // Disable moving pieces when drawing is enabled
                 GestureDetector(
-                  // registering onTapDown is needed to prevent the panStart event
-                  // to win the competition too early there is no need to implement
-                  // the callback since we handle the selection login in onPanDown;
-                  // plus this way we avoid the timeout before onTapDown is called
+                  // registering onTapDown is needed to prevent the panStart
+                  // event to win the competition too early there is no need to
+                  // implement the callback since we handle the selection login
+                  // in onPanDown; plus this way we avoid the timeout before
+                  //onTapDown is called
                   onTapDown: (TapDownDetails details) {},
                   onTapUp: _onTapUpPiece,
                   onPanDown: _onPanDownPiece,

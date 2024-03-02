@@ -45,11 +45,6 @@ class CCColor {
   static Color secondaryContainer(BuildContext context) =>
       Theme.of(context).colorScheme.secondaryContainer;
 
-  // TODO : check
-  static Color surfaceTintColor(BuildContext context) =>
-      CardTheme.of(context).surfaceTintColor ??
-      Theme.of(context).colorScheme.error;
-
   static Color surfaceVariant(BuildContext context) =>
       Theme.of(context).colorScheme.surfaceVariant;
   
