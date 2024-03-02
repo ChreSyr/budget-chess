@@ -1,7 +1,10 @@
 import 'package:crea_chess/package/atomic_design/border.dart';
 import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
+import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
+import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
+import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/route/route_body.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +33,37 @@ class SideRoutes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final showSideRoutes = context.watch<SideRoutesCubit>().state;
+    final backgroundColor = CCColor.background(context);
+    final currentTheme = Theme.of(context);
+    final newTheme = ThemeData(
+      useMaterial3: true,
+      colorScheme: ColorScheme.fromSeed(
+        brightness: switch (currentTheme.brightness) {
+          Brightness.dark => Brightness.light,
+          Brightness.light => Brightness.dark,
+        },
+        seedColor: currentTheme.primaryColor,
+        primary: currentTheme.primaryColor,
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: ButtonStyle(
+          iconColor: MaterialStateColor.resolveWith(
+            (states) => backgroundColor,
+          ),
+          foregroundColor: MaterialStateColor.resolveWith(
+            (states) => backgroundColor,
+          ),
+        ),
+      ),
+      // outlinedButtonTheme: OutlinedButtonThemeData(
+      //   style: ButtonStyle(
+      //     side: MaterialStateProperty.all(
+      //       BorderSide(color: backgroundColor),
+      //     ),
+      //   ),
+      // ),
+      dividerTheme: DividerThemeData(color: backgroundColor),
+    );
 
     return Material(
       child: Stack(
@@ -41,14 +75,32 @@ class SideRoutes extends StatelessWidget {
           ),
           Align(
             alignment: Alignment.topRight,
-            child: CCPadding.allLarge(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  CCGap.xxxlarge,
-                  ...sideRouteDatas.map(SideRouteButton.new),
-                ],
+            child: SizedBox(
+              width: CCWidgetSize.large2,
+              child: CCPadding.allLarge(
+                child: Theme(
+                  data: newTheme,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CCGap.xxxlarge,
+                      TextButton.icon(
+                        onPressed: () {
+                          context.push('/user');
+                          context.read<SideRoutesCubit>().reset();
+                        },
+                        icon: UserPhoto(
+                          photo: context.watch<UserCubit>().state?.photo,
+                        ),
+                        label: const Text('Voir mon profil'), // TODO : l10n
+                      ),
+                      CCGap.small,
+                      const Divider(),
+                      ...sideRouteDatas.map(SideRouteButton.new),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
@@ -93,14 +145,6 @@ class SideRouteButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton.icon(
-      style: ButtonStyle(
-        iconColor: MaterialStateColor.resolveWith(
-          (states) => CCColor.background(context),
-        ),
-        foregroundColor: MaterialStateColor.resolveWith(
-          (states) => CCColor.background(context),
-        ),
-      ),
       onPressed: () {
         context.push('/${routeData.id}');
         context.read<SideRoutesCubit>().reset();
