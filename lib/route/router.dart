@@ -6,11 +6,12 @@ import 'package:crea_chess/package/atomic_design/border.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/widget/nav_bar.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
-import 'package:crea_chess/route/nav_notif_cubit.dart';
+import 'package:crea_chess/route/friends/friends_body.dart';
 import 'package:crea_chess/route/hub/chessground/chessground_body.dart';
 import 'package:crea_chess/route/hub/create_challenge/create_challenge_body.dart';
 import 'package:crea_chess/route/hub/game/game_body.dart';
 import 'package:crea_chess/route/hub/hub_body.dart';
+import 'package:crea_chess/route/nav_notif_cubit.dart';
 import 'package:crea_chess/route/route_scaffold.dart';
 import 'package:crea_chess/route/settings/settings_body.dart';
 import 'package:crea_chess/route/sso/email_verification_body.dart';
@@ -25,10 +26,13 @@ import 'package:go_router/go_router.dart';
 
 // private navigators
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
-final _shellNavigatorAKey = GlobalKey<NavigatorState>(debugLabel: 'shellA');
-final _shellNavigatorBKey = GlobalKey<NavigatorState>(debugLabel: 'shellB');
+final _shellNavigatorHubKey = GlobalKey<NavigatorState>(debugLabel: 'shellHub');
+final _shellNavigatorFriendsKey =
+    GlobalKey<NavigatorState>(debugLabel: 'shellFriends');
 final _shellNavigatorCKey = GlobalKey<NavigatorState>(debugLabel: 'shellC');
 final _shellNavigatorSSOKey = GlobalKey<NavigatorState>(debugLabel: 'shellSSO');
+final _shellNavigatorUserKey =
+    GlobalKey<NavigatorState>(debugLabel: 'shellUser');
 
 // the one and only GoRouter instance
 final router = GoRouter(
@@ -45,7 +49,7 @@ final router = GoRouter(
       },
       branches: [
         StatefulShellBranch(
-          navigatorKey: _shellNavigatorAKey,
+          navigatorKey: _shellNavigatorHubKey,
           routes: [
             // top route inside branch
             GoRoute(
@@ -76,29 +80,13 @@ final router = GoRouter(
           ],
         ),
         StatefulShellBranch(
-          navigatorKey: _shellNavigatorBKey,
+          navigatorKey: _shellNavigatorFriendsKey,
           routes: [
             // top route inside branch
             GoRoute(
-              path: '/user',
+              path: '/friends',
               builder: (context, state) =>
-                  const RouteScaffold(body: UserBody()),
-              routes: [
-                // child routes
-                GoRoute(
-                  path: 'modify_name',
-                  builder: (context, state) =>
-                      const RouteScaffold(body: ModifyUsernameBody()),
-                ),
-                GoRoute(
-                  path: '@:usernameOrId',
-                  builder: (context, state) => RouteScaffold(
-                    body: UserBody(
-                      usernameOrId: state.pathParameters['usernameOrId'],
-                    ),
-                  ),
-                ),
-              ],
+                  const RouteScaffold(body: FriendsBody()),
             ),
           ],
         ),
@@ -142,6 +130,33 @@ final router = GoRouter(
             ),
           ],
         ),
+        StatefulShellBranch(
+          navigatorKey: _shellNavigatorUserKey,
+          routes: [
+            // top route inside branch
+            GoRoute(
+              path: '/user',
+              builder: (context, state) =>
+                  const RouteScaffold(body: UserBody()),
+              routes: [
+                // child routes
+                GoRoute(
+                  path: 'modify_name',
+                  builder: (context, state) =>
+                      const RouteScaffold(body: ModifyUsernameBody()),
+                ),
+                GoRoute(
+                  path: '@:usernameOrId',
+                  builder: (context, state) => RouteScaffold(
+                    body: UserBody(
+                      usernameOrId: state.pathParameters['usernameOrId'],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ],
     ),
   ],
@@ -149,7 +164,7 @@ final router = GoRouter(
 
 final mainRouteBodies = [
   const HubBody(),
-  const UserBody(),
+  const FriendsBody(),
   const SettingsBody(),
 ];
 

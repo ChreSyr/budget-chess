@@ -7,7 +7,7 @@ import 'package:crea_chess/route/nav_notif_cubit.dart';
 import 'package:crea_chess/route/hub/game/game_prefs_cubit.dart';
 import 'package:crea_chess/route/hub/setup/board_settings_cubit.dart';
 import 'package:crea_chess/route/router.dart';
-import 'package:crea_chess/route/user/search_friend/search_friend_body.dart';
+import 'package:crea_chess/route/friends/search_friend/search_friend_body.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

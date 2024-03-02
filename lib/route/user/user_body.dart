@@ -16,11 +16,9 @@ import 'package:go_router/go_router.dart';
 // LATER: welcome and connect page when it is the first opening of the app
 // LATER: App Check
 
-class UserBody extends MainRouteBody {
+class UserBody extends RouteBody {
   const UserBody({this.usernameOrId, super.key})
       : super(
-          id: routeId,
-          icon: Icons.person,
           centered: false,
           padded: false,
           scrolled: false,
