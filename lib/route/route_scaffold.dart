@@ -14,6 +14,7 @@ class RouteScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget wrap(
+      // TODO : remove
       Widget child, {
       required bool centered,
       required bool padded,
@@ -30,12 +31,7 @@ class RouteScaffold extends StatelessWidget {
         title: Text(body.getTitle(context.l10n)),
         actions: body.getActions(context),
       ),
-      body: wrap(
-        body,
-        centered: body.centered,
-        padded: body.padded,
-        scrolled: body.scrolled,
-      ),
+      body: body,
     );
   }
 }

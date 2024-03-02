@@ -13,12 +13,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class GameBody extends RouteBody {
-  const GameBody({required this.gameId, super.key})
-      : super(
-          padded: false,
-          centered: false,
-          scrolled: true,
-        );
+  const GameBody({required this.gameId, super.key});
 
   // TODO : remove ? rework ?
   factory GameBody.games() => const GameBody(gameId: 'none');

@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FriendsBody extends MainRouteBody {
-  const FriendsBody({super.key})
-      : super(
-          id: 'friends',
-          icon: Icons.people,
-        );
+  const FriendsBody({super.key});
+
+  static final MainRouteData data = MainRouteData(
+    id: 'friends',
+    icon: Icons.people,
+    getTitle: (l10n) => l10n.friends,
+  );
 
   @override
   String getTitle(AppLocalizations l10n) {

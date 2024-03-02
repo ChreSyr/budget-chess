@@ -13,7 +13,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class SettingsBody extends SideRouteBody {
-  const SettingsBody({super.key}) : super(id: 'settings', icon: Icons.settings);
+  const SettingsBody({super.key});
+
+  static final MainRouteData data = MainRouteData(
+    id: 'settings',
+    icon: Icons.settings,
+    getTitle: (l10n) => l10n.settings,
+  );
 
   @override
   String getTitle(AppLocalizations l10n) {

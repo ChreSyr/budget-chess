@@ -8,13 +8,13 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
 class HubBody extends MainRouteBody {
-  const HubBody({super.key})
-      : super(
-          id: 'hub',
-          icon: Icons.home,
-          padded: false,
-          scrolled: false,
-        );
+  const HubBody({super.key});
+
+  static final MainRouteData data = MainRouteData(
+    id: 'hub',
+    icon: Icons.home,
+    getTitle: (l10n) => l10n.hub,
+  );
 
   @override
   String getTitle(AppLocalizations l10n) {

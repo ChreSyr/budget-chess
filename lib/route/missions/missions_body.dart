@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MissionsBody extends MainRouteBody {
-  const MissionsBody({super.key})
-      : super(
-          id: 'misions',
-          icon: Icons.stars,
-        );
+  const MissionsBody({super.key});
+
+  static final MainRouteData data = MainRouteData(
+    id: 'misions',
+    icon: Icons.stars,
+    getTitle: (l10n) => 'Missions', // TODO : l10n
+  );
 
   @override
   String getTitle(AppLocalizations l10n) {

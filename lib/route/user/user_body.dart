@@ -17,12 +17,7 @@ import 'package:go_router/go_router.dart';
 // LATER: App Check
 
 class UserBody extends RouteBody {
-  const UserBody({this.usernameOrId, super.key})
-      : super(
-          centered: false,
-          padded: false,
-          scrolled: false,
-        );
+  const UserBody({this.usernameOrId, super.key});
 
   /// Can be a user id or usernameLowercase
   final String? usernameOrId;
@@ -47,34 +42,33 @@ class UserBody extends RouteBody {
             if (usernameOrId != null &&
                 usernameOrId != currentUser.usernameLowercase) {
               Widget builder(BuildContext context, UserModel user) {
-
-                  final relationshipWidget = StreamBuilder<RelationshipModel?>(
-                    stream: relationshipCRUD.stream(
+                final relationshipWidget = StreamBuilder<RelationshipModel?>(
+                  stream: relationshipCRUD.stream(
                     documentId: relationshipCRUD.getId(authUid, user.id),
-                    ),
-                    builder: (context, snapshot) {
-                      final streaming =
-                          snapshot.connectionState == ConnectionState.active;
+                  ),
+                  builder: (context, snapshot) {
+                    final streaming =
+                        snapshot.connectionState == ConnectionState.active;
                     final relation = snapshot.data;
 
                     return (streaming && (user.id) != authUid
-                              ? getRelationshipButton(context, relation)
-                              : null) ??
-                          Container();
-                    },
-                  );
+                            ? getRelationshipButton(context, relation)
+                            : null) ??
+                        Container();
+                  },
+                );
 
-                  return UserProfile(
-                    header: UserHeader(
+                return UserProfile(
+                  header: UserHeader(
                     userId: user.id,
-                      banner: user.banner,
-                      photo: user.photo,
-                      username: user.username,
-                      editable: false,
-                    ),
-                    relationshipWidget: relationshipWidget,
+                    banner: user.banner,
+                    photo: user.photo,
+                    username: user.username,
+                    editable: false,
+                  ),
+                  relationshipWidget: relationshipWidget,
                   tabSections: UserSection.getSections(authUid, user.id),
-                  );
+                );
               }
 
               return UserStreamBuilder(

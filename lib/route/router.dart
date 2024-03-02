@@ -36,10 +36,15 @@ final _shellNavigatorMessagesKey =
     GlobalKey<NavigatorState>(debugLabel: 'shellMesssages');
 final _shellNavigatorFriendsKey =
     GlobalKey<NavigatorState>(debugLabel: 'shellFriends');
-final _shellNavigatorCKey = GlobalKey<NavigatorState>(debugLabel: 'shellC');
+final _shellNavigatorSettingsKey =
+    GlobalKey<NavigatorState>(debugLabel: 'shellSettings');
 final _shellNavigatorSSOKey = GlobalKey<NavigatorState>(debugLabel: 'shellSSO');
 final _shellNavigatorUserKey =
     GlobalKey<NavigatorState>(debugLabel: 'shellUser');
+
+final _sideRouteDatas = [
+            SettingsBody.data,
+          ];
 
 // the one and only GoRouter instance
 final router = GoRouter(
@@ -53,18 +58,19 @@ final router = GoRouter(
       builder: (context, state, navigationShell) {
         // the UI shell
         return SideRoutes(
+          sideRouteDatas: _sideRouteDatas,
           child: ScaffoldWithNestedNavigation(navigationShell: navigationShell),
         );
       },
       branches: [
+        // Hub
         StatefulShellBranch(
           navigatorKey: _shellNavigatorHubKey,
           routes: [
             // top route inside branch
             GoRoute(
               path: '/hub',
-              builder: (context, state) =>
-                  const RouteScaffold(body: HubBody()),
+              builder: (context, state) => const RouteScaffold(body: HubBody()),
               routes: [
                 // child routes
                 GoRoute(
@@ -88,6 +94,7 @@ final router = GoRouter(
             ),
           ],
         ),
+        // Missions
         StatefulShellBranch(
           navigatorKey: _shellNavigatorMissionsKey,
           routes: [
@@ -99,6 +106,7 @@ final router = GoRouter(
             ),
           ],
         ),
+        // Messages
         StatefulShellBranch(
           navigatorKey: _shellNavigatorMessagesKey,
           routes: [
@@ -110,6 +118,7 @@ final router = GoRouter(
             ),
           ],
         ),
+        // Friends
         StatefulShellBranch(
           navigatorKey: _shellNavigatorFriendsKey,
           routes: [
@@ -121,8 +130,10 @@ final router = GoRouter(
             ),
           ],
         ),
+        // TODO : make the following routes not statefull
+        // Settings
         StatefulShellBranch(
-          navigatorKey: _shellNavigatorCKey,
+          navigatorKey: _shellNavigatorSettingsKey,
           routes: [
             // top route inside branch
             GoRoute(
@@ -132,6 +143,7 @@ final router = GoRouter(
             ),
           ],
         ),
+        // SSO
         StatefulShellBranch(
           navigatorKey: _shellNavigatorSSOKey,
           routes: [
@@ -161,6 +173,7 @@ final router = GoRouter(
             ),
           ],
         ),
+        // User
         StatefulShellBranch(
           navigatorKey: _shellNavigatorUserKey,
           routes: [
@@ -192,14 +205,6 @@ final router = GoRouter(
     ),
   ],
 );
-
-final mainRouteBodies = [
-  const HubBody(),
-  const MissionsBody(),
-  const MessagesBody(),
-  const FriendsBody(),
-  const SettingsBody(),
-];
 
 class ErrorPage extends StatelessWidget {
   const ErrorPage({required this.exception, super.key});
@@ -254,6 +259,13 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
 
   final StatefulNavigationShell navigationShell;
 
+  static final mainRouteDatas = [
+    HubBody.data,
+    MissionsBody.data,
+    MessagesBody.data,
+    FriendsBody.data,
+  ];
+
   void _goBranch(int index) {
     navigationShell.goBranch(
       index,
@@ -272,14 +284,14 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
 
     return Scaffold(
       body: navigationShell,
-      bottomNavigationBar: selectedIndex >= mainRouteBodies.length
+      bottomNavigationBar: selectedIndex >= mainRouteDatas.length
           ? null
           : BlocBuilder<NavNotifCubit, Map<String, Set<String>>>(
               builder: (context, notifs) {
                 return CCNavigationBar(
                   height: CCWidgetSize.xxsmall,
                   selectedIndex: selectedIndex,
-                  destinations: mainRouteBodies.map(
+                  destinations: mainRouteDatas.map(
                     (e) {
                       final icon = (notifs[e.id]?.isNotEmpty ?? false)
                           ? badges.Badge(
