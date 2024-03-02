@@ -1,6 +1,7 @@
 import 'package:crea_chess/package/atomic_design/dialog/relationship/answer_friend_request.dart';
 import 'package:crea_chess/package/atomic_design/dialog/user/delete_account.dart';
 import 'package:crea_chess/package/atomic_design/widget/simple_badge.dart';
+import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -57,8 +58,8 @@ enum _MenuChoices {
   }
 }
 
-abstract class MainRouteBody extends RouteBody {
-  const MainRouteBody({
+abstract class SideRouteBody extends RouteBody {
+  const SideRouteBody({
     required this.id,
     required this.icon,
     super.padded,
@@ -73,8 +74,6 @@ abstract class MainRouteBody extends RouteBody {
   @override
   List<Widget> getActions(BuildContext context) {
     return [
-      Row(
-        children: [
           BlocBuilder<UserCubit, UserModel?>(
             builder: (context, user) {
               if (user == null) return Container();
@@ -186,8 +185,32 @@ abstract class MainRouteBody extends RouteBody {
               );
             },
           ),
-        ],
-      ),
+          
     ];
+  }
+}
+
+abstract class MainRouteBody extends SideRouteBody {
+  const MainRouteBody({
+    required super.id,
+    required super.icon,
+    super.padded,
+    super.centered,
+    super.scrolled,
+    super.key,
+  });
+
+  @override
+  List<Widget> getActions(BuildContext context) {
+    return super.getActions(context)
+      ..add(
+        BlocBuilder<UserCubit, UserModel?>(
+          builder: (context, user) {
+            return UserPhoto(
+              photo: user?.photo,
+            );
+          },
+        ),
+      );
   }
 }

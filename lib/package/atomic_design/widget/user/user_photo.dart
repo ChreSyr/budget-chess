@@ -30,6 +30,7 @@ class UserPhoto extends StatelessWidget {
     required this.photo,
     this.backgroundColor,
     this.radius,
+    this.onTap,
     super.key,
   });
 
@@ -41,34 +42,33 @@ class UserPhoto extends StatelessWidget {
   }) {
     return StreamBuilder<UserModel?>(
       stream: userCRUD.stream(documentId: userId),
-      builder: (context, snapshot) {
-        final user = snapshot.data;
-        final photo = UserPhoto(
-          photo: user?.photo,
-          backgroundColor: backgroundColor,
-          radius: radius,
-        );
-        return onTap == null
-            ? photo
-            : GestureDetector(
-                onTap: onTap,
-                child: photo,
-              );
-      },
+      builder: (context, snapshot) => UserPhoto(
+        photo: snapshot.data?.photo,
+        backgroundColor: backgroundColor,
+        radius: radius,
+        onTap: onTap,
+      ),
     );
   }
 
   final String? photo;
   final Color? backgroundColor;
   final double? radius;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return CircleAvatar(
+    final avatar = CircleAvatar(
       backgroundColor: backgroundColor ?? Colors.transparent,
       backgroundImage: _getPhotoAsset(photo),
       radius: radius,
     );
+    return onTap == null
+        ? avatar
+        : GestureDetector(
+            onTap: onTap,
+            child: avatar,
+          );
   }
 }
 
