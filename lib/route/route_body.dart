@@ -4,6 +4,7 @@ import 'package:crea_chess/package/atomic_design/widget/simple_badge.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
+import 'package:crea_chess/route/side_routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -208,6 +209,7 @@ abstract class MainRouteBody extends SideRouteBody {
           builder: (context, user) {
             return UserPhoto(
               photo: user?.photo,
+              onTap: context.read<SideRoutesCubit>().toggle,
             );
           },
         ),

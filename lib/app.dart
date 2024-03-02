@@ -3,11 +3,12 @@ import 'package:crea_chess/package/firebase/firestore/game/live_game/live_games_
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/package/preferences/preferences_cubit.dart';
 import 'package:crea_chess/package/preferences/preferences_state.dart';
-import 'package:crea_chess/route/nav_notif_cubit.dart';
+import 'package:crea_chess/route/friends/search_friend/search_friend_body.dart';
 import 'package:crea_chess/route/hub/game/game_prefs_cubit.dart';
 import 'package:crea_chess/route/hub/setup/board_settings_cubit.dart';
+import 'package:crea_chess/route/nav_notif_cubit.dart';
 import 'package:crea_chess/route/router.dart';
-import 'package:crea_chess/route/friends/search_friend/search_friend_body.dart';
+import 'package:crea_chess/route/side_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -22,30 +23,15 @@ class CreaChessApp extends StatelessWidget {
         BlocProvider(
           create: (context) => authenticationCRUD.authProviderStatusCubit,
         ),
-        BlocProvider(
-          create: (context) => AuthenticationCubit(),
-        ),
-        BlocProvider(
-          create: (context) => userCRUD.userCubit,
-        ),
-        BlocProvider(
-          create: (context) => NavNotifCubit(),
-        ),
-        BlocProvider(
-          create: (context) => PreferencesCubit(),
-        ),
-        BlocProvider(
-          create: (context) => QueriedUsersCubit(),
-        ),
-        BlocProvider(
-          create: (context) => BoardSettingsCubit(),
-        ),
-        BlocProvider(
-          create: (context) => GamePrefsCubit(),
-        ),
-        BlocProvider(
-          create: (context) => LiveGamesCubit(),
-        ),
+        BlocProvider(create: (context) => AuthenticationCubit()),
+        BlocProvider(create: (context) => userCRUD.userCubit),
+        BlocProvider(create: (context) => SideRoutesCubit()),
+        BlocProvider(create: (context) => NavNotifCubit()),
+        BlocProvider(create: (context) => PreferencesCubit()),
+        BlocProvider(create: (context) => QueriedUsersCubit()),
+        BlocProvider(create: (context) => BoardSettingsCubit()),
+        BlocProvider(create: (context) => GamePrefsCubit()),
+        BlocProvider(create: (context) => LiveGamesCubit()),
       ],
       child: BlocBuilder<PreferencesCubit, PreferencesState>(
         builder: (context, preferences) {

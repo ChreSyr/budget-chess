@@ -16,6 +16,7 @@ import 'package:crea_chess/route/missions/missions_body.dart';
 import 'package:crea_chess/route/nav_notif_cubit.dart';
 import 'package:crea_chess/route/route_scaffold.dart';
 import 'package:crea_chess/route/settings/settings_body.dart';
+import 'package:crea_chess/route/side_routes.dart';
 import 'package:crea_chess/route/sso/email_verification_body.dart';
 import 'package:crea_chess/route/sso/sign_methods_body.dart';
 import 'package:crea_chess/route/sso/signin_body.dart';
@@ -51,7 +52,9 @@ final router = GoRouter(
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
         // the UI shell
-        return ScaffoldWithNestedNavigation(navigationShell: navigationShell);
+        return SideRoutes(
+          child: ScaffoldWithNestedNavigation(navigationShell: navigationShell),
+        );
       },
       branches: [
         StatefulShellBranch(
