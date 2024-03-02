@@ -3,9 +3,9 @@ import 'package:crea_chess/package/atomic_design/dialog/setup/incomplete_setup.d
 import 'package:crea_chess/package/atomic_design/dialog/setup/inventory_exceeded.dart';
 import 'package:crea_chess/package/atomic_design/dialog/setup/not_one_king.dart';
 import 'package:crea_chess/package/unichess/unichess.dart';
-import 'package:crea_chess/route/play/game/game_cubit.dart';
-import 'package:crea_chess/route/play/setup/inventory_cubit.dart';
-import 'package:crea_chess/route/play/setup/setup_cubit.dart';
+import 'package:crea_chess/route/hub/game/game_cubit.dart';
+import 'package:crea_chess/route/hub/setup/inventory_cubit.dart';
+import 'package:crea_chess/route/hub/setup/setup_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

@@ -3,7 +3,7 @@ import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/lichess/rule.dart';
-import 'package:crea_chess/route/play/challenge/card_tile.dart';
+import 'package:crea_chess/route/hub/challenge/card_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -48,7 +48,7 @@ class ChallengeTile extends StatelessWidget {
           if (challenge.isAccepted)
             IconButton(
               icon: const Icon(Icons.login),
-              onPressed: () => context.go('/play/${challenge.id}'),
+              onPressed: () => context.go('/hub/${challenge.id}'),
             )
           else if (authUid == authorId)
             IconButton(

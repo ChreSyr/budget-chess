@@ -3,8 +3,8 @@ import 'package:crea_chess/package/form/input/input_int.dart';
 import 'package:crea_chess/package/form/input/input_select.dart';
 import 'package:crea_chess/package/game/time_control.dart';
 import 'package:crea_chess/package/unichess/unichess.dart';
-import 'package:crea_chess/route/play/create_challenge/create_challenge_form.dart';
-import 'package:crea_chess/route/play/create_challenge/create_challenge_status.dart';
+import 'package:crea_chess/route/hub/create_challenge/create_challenge_form.dart';
+import 'package:crea_chess/route/hub/create_challenge/create_challenge_status.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CreateChallengeCubit extends Cubit<CreateChallengeForm> {

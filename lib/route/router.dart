@@ -7,10 +7,10 @@ import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/widget/nav_bar.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/route/nav_notif_cubit.dart';
-import 'package:crea_chess/route/play/chessground/chessground_body.dart';
-import 'package:crea_chess/route/play/create_challenge/create_challenge_body.dart';
-import 'package:crea_chess/route/play/game/game_body.dart';
-import 'package:crea_chess/route/play/play_body.dart';
+import 'package:crea_chess/route/hub/chessground/chessground_body.dart';
+import 'package:crea_chess/route/hub/create_challenge/create_challenge_body.dart';
+import 'package:crea_chess/route/hub/game/game_body.dart';
+import 'package:crea_chess/route/hub/hub_body.dart';
 import 'package:crea_chess/route/route_scaffold.dart';
 import 'package:crea_chess/route/settings/settings_body.dart';
 import 'package:crea_chess/route/sso/email_verification_body.dart';
@@ -32,7 +32,7 @@ final _shellNavigatorSSOKey = GlobalKey<NavigatorState>(debugLabel: 'shellSSO');
 
 // the one and only GoRouter instance
 final router = GoRouter(
-  initialLocation: '/play',
+  initialLocation: '/hub',
   navigatorKey: _rootNavigatorKey,
   errorBuilder: (context, state) => ErrorPage(exception: state.error),
   routes: [
@@ -49,9 +49,9 @@ final router = GoRouter(
           routes: [
             // top route inside branch
             GoRoute(
-              path: '/play',
+              path: '/hub',
               builder: (context, state) =>
-                  const RouteScaffold(body: HomeBody()),
+                  const RouteScaffold(body: HubBody()),
               routes: [
                 // child routes
                 GoRoute(
@@ -148,7 +148,7 @@ final router = GoRouter(
 );
 
 final mainRouteBodies = [
-  const HomeBody(),
+  const HubBody(),
   const UserBody(),
   const SettingsBody(),
 ];
@@ -187,7 +187,7 @@ class ErrorBody extends StatelessWidget {
                 }
               } catch (_) {
                 debugPrint('ERROR : Invalid route path');
-                context.go('/play');
+                context.go('/hub');
               }
             },
             child: Text(context.l10n.back),

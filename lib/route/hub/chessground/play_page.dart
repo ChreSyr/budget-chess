@@ -2,7 +2,7 @@ import 'package:crea_chess/frenzy_piece_set.dart';
 import 'package:crea_chess/package/atomic_design/dialog/enum_choice.dart';
 import 'package:crea_chess/package/chessground/export.dart';
 import 'package:crea_chess/package/unichess/unichess.dart';
-import 'package:crea_chess/route/play/chessground/draw_shapes_page.dart';
+import 'package:crea_chess/route/hub/chessground/draw_shapes_page.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

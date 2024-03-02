@@ -1,10 +1,9 @@
-
 import 'package:crea_chess/package/atomic_design/widget/crown.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/unichess/unichess.dart';
-import 'package:crea_chess/route/play/game/game_cubit.dart';
-import 'package:crea_chess/route/play/game/side.dart';
+import 'package:crea_chess/route/hub/game/game_cubit.dart';
+import 'package:crea_chess/route/hub/game/side.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -25,7 +24,7 @@ class PlayerTile extends StatelessWidget {
 
     // TODO : loading
     if (gameState == null) return const SizedBox.shrink();
-    
+
     final game = gameState.game;
     final position = gameState.position;
 

@@ -4,7 +4,7 @@ import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/firebase/firestore/game/live_game/live_games_cubit.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
-import 'package:crea_chess/route/play/challenge/challenge_tile.dart';
+import 'package:crea_chess/route/hub/challenge/challenge_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -75,7 +75,7 @@ class MyChallenges extends StatelessWidget {
             ],
             CCGap.medium,
             FilledButton.icon(
-              onPressed: () => context.go('/play/create_challenge'),
+              onPressed: () => context.go('/hub/create_challenge'),
               icon: const Icon(Icons.add),
               label: Text(context.l10n.challengeCreate),
             ),

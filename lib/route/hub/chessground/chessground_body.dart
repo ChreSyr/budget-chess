@@ -1,4 +1,4 @@
-import 'package:crea_chess/route/play/chessground/play_page.dart';
+import 'package:crea_chess/route/hub/chessground/play_page.dart';
 import 'package:crea_chess/route/route_body.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';

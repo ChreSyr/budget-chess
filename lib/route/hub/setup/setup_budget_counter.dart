@@ -1,7 +1,7 @@
 import 'package:crea_chess/package/atomic_design/modal/modal.dart';
 import 'package:crea_chess/package/atomic_design/text_style.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
-import 'package:crea_chess/route/play/setup/role.dart';
+import 'package:crea_chess/route/hub/setup/role.dart';
 import 'package:flutter/material.dart';
 
 class SetupBudgetCounter extends StatelessWidget {

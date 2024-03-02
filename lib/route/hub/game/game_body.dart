@@ -1,11 +1,11 @@
 import 'package:crea_chess/package/chessground/export.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/unichess/unichess.dart';
-import 'package:crea_chess/route/play/game/game_cubit.dart';
-import 'package:crea_chess/route/play/game/player_tile.dart';
-import 'package:crea_chess/route/play/game/side.dart';
-import 'package:crea_chess/route/play/setup/board_settings_cubit.dart';
-import 'package:crea_chess/route/play/setup/setup_body.dart';
+import 'package:crea_chess/route/hub/game/game_cubit.dart';
+import 'package:crea_chess/route/hub/game/player_tile.dart';
+import 'package:crea_chess/route/hub/game/side.dart';
+import 'package:crea_chess/route/hub/setup/board_settings_cubit.dart';
+import 'package:crea_chess/route/hub/setup/setup_body.dart';
 import 'package:crea_chess/route/route_body.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
@@ -88,8 +88,7 @@ class _GameBody extends StatelessWidget {
             data: BoardData(
               interactableSide:
                   game.playable ? interactableSide : InteractableSide.none,
-              validMoves: game.playable &&
-                      side?.toDartchess == position.turn
+              validMoves: game.playable && side?.toDartchess == position.turn
                   ? position.algebraicLegalMoves()
                   : IMap(const {}),
               orientation: orientation,

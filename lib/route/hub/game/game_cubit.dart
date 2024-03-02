@@ -5,7 +5,7 @@ import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/firebase/firestore/game/game/game.dart';
 import 'package:crea_chess/package/firebase/firestore/game/live_game/game_indb.dart';
 import 'package:crea_chess/package/unichess/unichess.dart';
-import 'package:crea_chess/route/play/game/game_state.dart';
+import 'package:crea_chess/route/hub/game/game_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class GameCubit extends Cubit<GameState?> {
