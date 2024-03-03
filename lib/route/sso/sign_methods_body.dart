@@ -90,8 +90,8 @@ class SignMethodsBody extends RouteBody {
 
             // google + facebook sign in buttons
             AuthProviderButton.google(),
-            CCGap.large,
-            AuthProviderButton.facebook(),
+            // CCGap.large,
+            // AuthProviderButton.facebook(),
           ],
         ),
       ),
