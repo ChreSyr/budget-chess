@@ -1,6 +1,5 @@
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/route/friends/friends_body.dart';
-import 'package:crea_chess/route/router.dart';
 import 'package:crea_chess/route/user/user_body.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -21,8 +20,10 @@ extension NavNotifsExt on NavNotifs {
 class NavNotifCubit extends Cubit<NavNotifs> {
   NavNotifCubit()
       : super({
-          for (var e
-              in ScaffoldWithNestedNavigation.mainRouteDatas.map((e) => e.id))
+          for (var e in [
+            FriendsBody.data,
+            UserBody.data,
+          ].map((e) => e.id))
             e: {},
         });
 
@@ -51,7 +52,7 @@ class NavNotifier extends StatelessWidget {
     return BlocListener<AuthenticationCubit, User?>(
       listener: (context, auth) {
         context.read<NavNotifCubit>().set(
-              routeId: UserBody.routeId,
+              routeId: UserBody.data.id,
               notifId: UserBody.notifEmailNotVerified,
               count: auth != null && !auth.isVerified ? 1 : 0,
             );
@@ -63,12 +64,12 @@ class NavNotifier extends StatelessWidget {
           // email is not verified, no profile notification should appear.
           context.read<NavNotifCubit>()
             ..set(
-              routeId: UserBody.routeId,
+              routeId: UserBody.data.id,
               notifId: UserBody.notifPhotoEmpty,
               count: user != null && (user.photo ?? '').isEmpty ? 1 : 0,
             )
             ..set(
-              routeId: UserBody.routeId,
+              routeId: UserBody.data.id,
               notifId: UserBody.notifNameEmpty,
               count: user != null &&
                       (user.username.isEmpty || user.username == user.id)

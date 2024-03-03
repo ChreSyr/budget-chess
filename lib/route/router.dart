@@ -1,9 +1,9 @@
 // StatefulShellRoute code from : https://codewithandrea.com/articles/flutter-bottom-navigation-bar-nested-routes-gorouter/
 // LATER : responsive scaffold
 
-import 'package:badges/badges.dart' as badges;
 import 'package:crea_chess/package/atomic_design/border.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
+import 'package:crea_chess/package/atomic_design/widget/badge.dart';
 import 'package:crea_chess/package/atomic_design/widget/nav_bar.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/route/friends/friends_body.dart';
@@ -259,7 +259,7 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
 
   final StatefulNavigationShell navigationShell;
 
-  static final mainRouteDatas = [
+  static final _mainRouteDatas = [
     HubBody.data,
     MissionsBody.data,
     MessagesBody.data,
@@ -284,26 +284,18 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
 
     return Scaffold(
       body: navigationShell,
-      bottomNavigationBar: selectedIndex >= mainRouteDatas.length
+      bottomNavigationBar: selectedIndex >= _mainRouteDatas.length
           ? null
           : BlocBuilder<NavNotifCubit, NavNotifs>(
               builder: (context, notifs) {
                 return CCNavigationBar(
                   height: CCWidgetSize.xxsmall,
                   selectedIndex: selectedIndex,
-                  destinations: mainRouteDatas.map(
+                  destinations: _mainRouteDatas.map(
                     (route) {
                       final notifCount = notifs.count(routeId: route.id);
-                      final icon = badges.Badge(
-                        badgeContent: Text(
-                          notifCount.toString(),
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                        position:
-                            badges.BadgePosition.topEnd(top: -20, end: -20),
-                        badgeAnimation:
-                            const badges.BadgeAnimation.fade(toAnimate: false),
-                        showBadge: notifCount > 0,
+                      final icon = CountBadge(
+                        count: notifCount,
                         child: Icon(route.icon),
                       );
                       return CCNavigationDestination(

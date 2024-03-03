@@ -2,11 +2,14 @@ import 'package:crea_chess/package/atomic_design/border.dart';
 import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
+import 'package:crea_chess/package/atomic_design/widget/badge.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
+import 'package:crea_chess/route/nav_notifier.dart';
 import 'package:crea_chess/route/route_body.dart';
+import 'package:crea_chess/route/user/user_body.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -55,13 +58,6 @@ class SideRoutes extends StatelessWidget {
           ),
         ),
       ),
-      // outlinedButtonTheme: OutlinedButtonThemeData(
-      //   style: ButtonStyle(
-      //     side: MaterialStateProperty.all(
-      //       BorderSide(color: backgroundColor),
-      //     ),
-      //   ),
-      // ),
       dividerTheme: DividerThemeData(color: backgroundColor),
     );
 
@@ -80,25 +76,26 @@ class SideRoutes extends StatelessWidget {
               child: CCPadding.allLarge(
                 child: Theme(
                   data: newTheme,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      CCGap.xxxlarge,
-                      TextButton.icon(
-                        onPressed: () {
-                          context.push('/user');
-                          context.read<SideRoutesCubit>().reset();
-                        },
-                        icon: UserPhoto(
-                          photo: context.watch<UserCubit>().state?.photo,
-                        ),
-                        label: const Text('Voir mon profil'), // TODO : l10n
-                      ),
-                      CCGap.small,
-                      const Divider(),
-                      ...sideRouteDatas.map(SideRouteButton.new),
-                    ],
+                  child: BlocBuilder<NavNotifCubit, NavNotifs>(
+                    builder: (context, navNotifs) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          CCGap.xxxlarge,
+                          CountBadge(
+                            count: navNotifs.count(
+                              routeId: UserBody.data.id,
+                            ),
+                            child: const ProfileButton(),
+                            offset: const Offset(-10, -10),
+                          ),
+                          CCGap.small,
+                          const Divider(),
+                          ...sideRouteDatas.map(SideRouteButton.new),
+                        ],
+                      );
+                    },
                   ),
                 ),
               ),
@@ -133,6 +130,24 @@ class SideRoutes extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class ProfileButton extends StatelessWidget {
+  const ProfileButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton.icon(
+      onPressed: () {
+        context.push('/user');
+        context.read<SideRoutesCubit>().reset();
+      },
+      icon: UserPhoto(
+        photo: context.watch<UserCubit>().state?.photo,
+      ),
+      label: const Text('Voir mon profil'), // TODO : l10n
     );
   }
 }

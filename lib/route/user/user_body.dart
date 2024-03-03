@@ -24,7 +24,11 @@ class UserBody extends RouteBody {
   @override
   String getTitle(AppLocalizations l10n) => l10n.profile;
 
-  static const routeId = 'user';
+  static final data = MainRouteData(
+    id: 'user',
+    icon: Icons.person,
+    getTitle: (l10n) => 'Voir mon profil',
+  );
   static const notifEmailNotVerified = 'email-not-verified';
   static const notifPhotoEmpty = 'photo-empty';
   static const notifNameEmpty = 'name-empty';

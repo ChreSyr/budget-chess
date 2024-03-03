@@ -4,7 +4,7 @@ import 'package:crea_chess/package/atomic_design/dialog/relationship/answer_frie
 import 'package:crea_chess/package/atomic_design/dialog/relationship/cancel_friend_request.dart';
 import 'package:crea_chess/package/atomic_design/dialog/relationship/unblock_user.dart';
 import 'package:crea_chess/package/atomic_design/snack_bar.dart';
-import 'package:crea_chess/package/atomic_design/widget/simple_badge.dart';
+import 'package:crea_chess/package/atomic_design/widget/badge.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
