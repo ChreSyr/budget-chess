@@ -25,5 +25,9 @@ class UserModel with _$UserModel {
 
   // ---
 
-  bool get profileCompleted => username.isNotEmpty && username != id;
+  bool get profileCompleted =>
+      username.isNotEmpty &&
+      username != id &&
+      photo != null &&
+      photo!.isNotEmpty;
 }

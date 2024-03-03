@@ -1,7 +1,9 @@
+import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/field/input_decoration.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/snack_bar.dart';
+import 'package:crea_chess/package/atomic_design/text_style.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/form/form_error.dart';
@@ -34,9 +36,11 @@ enum ProfileFormStatus {
 }
 
 enum ProfileFormStep {
-  start,
-  username,
-  photo;
+  start(0),
+  username(1),
+  photo(2);
+
+  const ProfileFormStep(this.value);
 
   factory ProfileFormStep.init(UserModel user) {
     if (user.username.isEmpty || user.username == user.id) {
@@ -48,6 +52,8 @@ enum ProfileFormStep {
       return username;
     }
   }
+
+  final int value;
 }
 
 @freezed
@@ -113,15 +119,24 @@ class ProfileFormCubit extends Cubit<ProfileForm> {
     emit(state.copyWith(name: state.photo.copyWith(string: photo)));
   }
 
+  void tempReset() => emit(state.copyWith(step: ProfileFormStep.start));
+
+  void submitStart() => emit(state.copyWith(step: ProfileFormStep.username));
+
   Future<void> submitName() async {
     var newUsername = state.name.value;
     if (newUsername.startsWith('@')) newUsername = newUsername.substring(1);
 
     if (newUsername == initialUser.username) {
-      return emit(state.copyWith(status: ProfileFormStatus.success));
+      return emit(
+        state.copyWith(
+          status: ProfileFormStatus.success,
+          step: ProfileFormStep.photo,
+        ),
+      );
     }
 
-    if (state.isNotValid) {
+    if (state.name.isNotValid) {
       return emit(state.copyWith(status: ProfileFormStatus.editError));
     }
 
@@ -134,7 +149,12 @@ class ProfileFormCubit extends Cubit<ProfileForm> {
       }
 
       await userCRUD.userCubit.setUsername(username: newUsername);
-      emit(state.copyWith(status: ProfileFormStatus.success));
+      emit(
+        state.copyWith(
+          status: ProfileFormStatus.success,
+          step: ProfileFormStep.photo,
+        ),
+      );
     } catch (_) {
       emit(state.copyWith(status: ProfileFormStatus.unexpectedError));
     }
@@ -170,6 +190,8 @@ class _ProfileCompleter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final profileFormCubit = context.read<ProfileFormCubit>();
+    var oldStep = profileFormCubit.state.step;
+    final scrollController = ScrollController();
 
     return BlocConsumer<ProfileFormCubit, ProfileForm>(
       listener: (context, form) {
@@ -188,29 +210,81 @@ class _ProfileCompleter extends StatelessWidget {
           case _:
             break;
         }
+        if (oldStep != form.step) {
+          print('-------------------');
+          print('form.step');
+          print(form.step);
+          print('-------------------');
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            // Delay the scroll to give TextField enough time to complete
+            // autofocus
+            Future.delayed(const Duration(milliseconds: 500), () {
+              scrollController.animateTo(
+                scrollController.position.maxScrollExtent,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+              );
+            });
+          });
+          oldStep = form.step;
+        }
       },
       builder: (context, form) {
-        return CCPadding.allXxlarge(
-          child: SizedBox(
-            width: CCWidgetSize.large4,
-            child: Column(
-              children: [
-                if (form.status == ProfileFormStatus.waiting)
-                  const LinearProgressIndicator(),
-
-                const UsernameField(),
-
-                CCGap.xlarge,
-
-                // sign in button
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: FilledButton(
-                    onPressed: profileFormCubit.submitName,
-                    child: Text(context.l10n.save),
+        return SingleChildScrollView(
+          controller: scrollController,
+          child: CCPadding.horizontalXxlarge(
+            child: SizedBox(
+              width: CCWidgetSize.large4,
+              child: Column(
+                children: [
+                  ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(CCSize.xlarge),
+                      topRight: Radius.circular(CCSize.xlarge),
+                      bottomLeft: Radius.circular(CCSize.xlarge),
+                      bottomRight: Radius.circular(CCWidgetSize.xlarge),
+                    ),
+                    child: Stack(
+                      children: [
+                        Image.asset('assets/images/signin.jpg'),
+                        CCPadding.allMedium(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Welcome to', // TODO : l10n
+                                style:
+                                    CCTextStyle.displaySmall(context)?.copyWith(
+                                  color: CCColor.background(context),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                'Budget Chess', // TODO : l10n
+                                style:
+                                    CCTextStyle.titleLarge(context)?.copyWith(
+                                  color: CCColor.background(context),
+                                  // fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                  CCGap.xxlarge,
+                  OutlinedButton(
+                    onPressed: profileFormCubit.submitStart,
+                    // TODO : l10n
+                    child: const Text("Let's start by creating your profile !"),
+                  ),
+                  CCGap.xxlarge,
+                  CCGap.xxlarge,
+                  const UsernameField(),
+                  const PhotoField(),
+                ],
+              ),
             ),
           ),
         );
@@ -230,23 +304,33 @@ class UsernameField extends StatelessWidget {
 
     return BlocBuilder<ProfileFormCubit, ProfileForm>(
       builder: (context, form) {
+        if (form.step.value < ProfileFormStep.username.value) {
+          return CCGap.zero;
+        }
+
         if (textController.text != form.name.value) {
           textController.text = form.name.value;
         }
 
         return Column(
           children: [
-            Row(
+            Column(
               children: [
-                Expanded(child: Text(context.l10n.chooseGoodUsername)),
+                if (form.status == ProfileFormStatus.waiting &&
+                    form.step == ProfileFormStep.username)
+                  const LinearProgressIndicator(),
                 const Text(
                   '👀',
-                  style: TextStyle(fontSize: CCWidgetSize.xxsmall),
+                  style: TextStyle(fontSize: CCSize.xxlarge),
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  context.l10n.chooseGoodUsername,
                   textAlign: TextAlign.center,
                 ),
               ],
             ),
-            CCGap.small,
+            CCGap.large,
             TextFormField(
               autofocus: true,
               controller: textController,
@@ -260,6 +344,78 @@ class UsernameField extends StatelessWidget {
               ),
               onChanged: cubit.setName,
             ),
+            CCGap.xxlarge,
+            FilledButton(
+              onPressed: cubit.submitName,
+              child: Text(context.l10n.next),
+            ),
+            CCGap.xxlarge,
+            CCGap.xxlarge,
+          ],
+        );
+      },
+    );
+  }
+}
+
+class PhotoField extends StatelessWidget {
+  const PhotoField({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final cubit = context.read<ProfileFormCubit>();
+    final textController =
+        TextEditingController(text: cubit.initialUser.username);
+
+    return BlocBuilder<ProfileFormCubit, ProfileForm>(
+      builder: (context, form) {
+        if (form.step.value < ProfileFormStep.photo.value) {
+          return CCGap.zero;
+        }
+
+        if (textController.text != form.name.value) {
+          textController.text = form.name.value;
+        }
+
+        return Column(
+          children: [
+            Column(
+              children: [
+                if (form.status == ProfileFormStatus.waiting &&
+                    form.step == ProfileFormStep.photo)
+                  const LinearProgressIndicator(),
+                const Text(
+                  '🧑',
+                  style: TextStyle(fontSize: CCSize.xxlarge),
+                  textAlign: TextAlign.center,
+                ),
+                const Text(
+                  'Photo',
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+            CCGap.large,
+            TextFormField(
+              autofocus: true,
+              controller: textController,
+              decoration: CCInputDecoration(
+                labelText: 'Photo', // TODO : l10n
+                errorText: form.errorMessage(form.photo, context.l10n),
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: () => cubit.setPhoto(''),
+                ),
+              ),
+              onChanged: cubit.setName,
+            ),
+            CCGap.xxlarge,
+            FilledButton(
+              onPressed: null,
+              child: Text(context.l10n.save),
+            ),
+            CCGap.xxlarge,
+            CCGap.xxlarge,
           ],
         );
       },
