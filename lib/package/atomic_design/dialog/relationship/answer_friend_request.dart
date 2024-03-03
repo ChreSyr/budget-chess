@@ -8,9 +8,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 void showAnswerFriendRequestDialog(
   BuildContext pageContext,
-  String? fromUserId,
+  String? requesterId,
 ) {
-  if (fromUserId == null) return;
+  if (requesterId == null) return;
   final currentUserId = pageContext.read<UserCubit>().state?.id;
   if (currentUserId == null) return; // should never happen
   showDialog<AlertDialog>(
@@ -19,7 +19,7 @@ void showAnswerFriendRequestDialog(
       return AlertDialog(
         title: Text(pageContext.l10n.friendRequestNew),
         content: FutureBuilder<UserModel?>(
-          future: userCRUD.read(documentId: fromUserId),
+          future: userCRUD.read(documentId: requesterId),
           builder: (context, snapshot) {
             final friend = snapshot.data;
             return ListTile(
@@ -32,11 +32,12 @@ void showAnswerFriendRequestDialog(
           ElevatedButton.icon(
             icon: const Icon(Icons.close),
             onPressed: () {
-              relationshipCRUD.delete(
-                documentId: relationshipCRUD.getId(fromUserId, currentUserId),
+              relationshipCRUD.refuseFriendRequest(
+                refuserId: currentUserId,
+                requesterId: requesterId,
               );
               popDialog(dialogContext);
-              showBlockUserDialog(pageContext, fromUserId);
+              showBlockUserDialog(pageContext, requesterId);
             },
             label: Text(pageContext.l10n.decline),
           ),
@@ -44,7 +45,7 @@ void showAnswerFriendRequestDialog(
             icon: const Icon(Icons.check),
             onPressed: () {
               popDialog(dialogContext);
-              relationshipCRUD.makeFriends(fromUserId, currentUserId);
+              relationshipCRUD.makeFriends(requesterId, currentUserId);
               // LATER: fiest animation on new friend
             },
             label: Text(pageContext.l10n.accept),

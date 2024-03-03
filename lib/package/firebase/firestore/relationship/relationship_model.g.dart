@@ -10,34 +10,34 @@ _$RelationshipModelImpl _$$RelationshipModelImplFromJson(
         Map<String, dynamic> json) =>
     _$RelationshipModelImpl(
       id: json['id'] as String,
-      userIds:
-          (json['userIds'] as List<dynamic>).map((e) => e as String).toList(),
-      status:
-          $enumDecodeNullable(_$RelationshipStatusEnumMap, json['status']) ??
-              RelationshipStatus.canceled,
-      createdAt: const TimestampToDateTimeConverter()
-          .fromJson(json['createdAt'] as Timestamp?),
-      updatedAt: const TimestampToDateTimeConverter()
-          .fromJson(json['updatedAt'] as Timestamp?),
+      users: (json['users'] as Map<String, dynamic>).map(
+        (k, e) =>
+            MapEntry(k, $enumDecode(_$UserInRelationshipStatusEnumMap, e)),
+      ),
+      lastUserStatusUpdate: const TimestampToDateTimeConverter()
+          .fromJson(json['lastUserStatusUpdate'] as Timestamp?),
     );
 
 Map<String, dynamic> _$$RelationshipModelImplToJson(
         _$RelationshipModelImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'userIds': instance.userIds,
-      'status': _$RelationshipStatusEnumMap[instance.status]!,
-      'createdAt':
-          const TimestampToDateTimeConverter().toJson(instance.createdAt),
-      'updatedAt':
-          const TimestampToDateTimeConverter().toJson(instance.updatedAt),
+      'users': instance.users
+          .map((k, e) => MapEntry(k, _$UserInRelationshipStatusEnumMap[e]!)),
+      'lastUserStatusUpdate': const TimestampToDateTimeConverter()
+          .toJson(instance.lastUserStatusUpdate),
     };
 
-const _$RelationshipStatusEnumMap = {
-  RelationshipStatus.requestedByFirst: 'requestedByFirst',
-  RelationshipStatus.requestedByLast: 'requestedByLast',
-  RelationshipStatus.friends: 'friends',
-  RelationshipStatus.canceled: 'canceled',
-  RelationshipStatus.blockedByFirst: 'blockedByFirst',
-  RelationshipStatus.blockedByLast: 'blockedByLast',
+const _$UserInRelationshipStatusEnumMap = {
+  UserInRelationshipStatus.none: 'none',
+  UserInRelationshipStatus.requests: 'requests',
+  UserInRelationshipStatus.isRequested: 'isRequested',
+  UserInRelationshipStatus.refuses: 'refuses',
+  UserInRelationshipStatus.isRefused: 'isRefused',
+  UserInRelationshipStatus.open: 'open',
+  UserInRelationshipStatus.cancels: 'cancels',
+  UserInRelationshipStatus.isCanceled: 'isCanceled',
+  UserInRelationshipStatus.blocks: 'blocks',
+  UserInRelationshipStatus.isBlocked: 'isBlocked',
+  UserInRelationshipStatus.hasDeletedAccount: 'hasDeletedAccount',
 };

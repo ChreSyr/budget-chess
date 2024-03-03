@@ -33,39 +33,40 @@ class _RelationshipCRUD extends CollectionCRUD<RelationshipModel> {
     required String toBlockId,
   }) async {
     final sortedUsers = [blockerId, toBlockId]..sort();
-
-    final RelationshipStatus newStatus;
-    if (blockerId == sortedUsers.first) {
-      newStatus = RelationshipStatus.blockedByFirst;
-    } else if (blockerId == sortedUsers.last) {
-      newStatus = RelationshipStatus.blockedByLast;
-    } else {
-      return;
-    }
-
     final relationshipId = sortedUsers.join();
-
     final relationship = await read(documentId: relationshipId);
+
     if (relationship == null) {
       return create(
         documentId: relationshipId,
         data: RelationshipModel(
           id: relationshipId,
-          userIds: sortedUsers,
-          status: newStatus,
+          users: {
+            blockerId: UserInRelationshipStatus.blocks,
+            toBlockId: UserInRelationshipStatus.isBlocked,
+          },
+          lastUserStatusUpdate: DateTime.now(),
         ),
       );
     }
 
-    if ([RelationshipStatus.blockedByFirst, RelationshipStatus.blockedByLast]
-        .contains(relationship.status)) return;
+    if (relationship.statusOf(blockerId) == UserInRelationshipStatus.blocks) {
+      return;
+    }
 
     await update(
       documentId: relationshipId,
-      data: relationship.copyWith(status: newStatus),
+      data: relationship.copyWith(
+        users: {
+          blockerId: UserInRelationshipStatus.blocks,
+          toBlockId: UserInRelationshipStatus.isBlocked,
+        },
+        lastUserStatusUpdate: DateTime.now(),
+      ),
     );
   }
 
+  /// Only effective if the canceler status was open
   Future<void> cancel({
     required String cancelerId,
     required String otherId,
@@ -74,11 +75,19 @@ class _RelationshipCRUD extends CollectionCRUD<RelationshipModel> {
     final relationship = await read(documentId: relationshipId);
     if (relationship == null) return;
 
-    if (relationship.status != RelationshipStatus.friends) return;
+    if (relationship.statusOf(cancelerId) != UserInRelationshipStatus.open) {
+      return;
+    }
 
     await update(
       documentId: relationshipId,
-      data: relationship.copyWith(status: RelationshipStatus.canceled),
+      data: relationship.copyWith(
+        users: {
+          cancelerId: UserInRelationshipStatus.cancels,
+          otherId: UserInRelationshipStatus.isCanceled,
+        },
+        lastUserStatusUpdate: DateTime.now(),
+      ),
     );
   }
 
@@ -90,14 +99,24 @@ class _RelationshipCRUD extends CollectionCRUD<RelationshipModel> {
     final relationship = await read(documentId: relationshipId);
     if (relationship == null || relationship.requester != cancelerId) return;
 
-    await delete(documentId: relationshipId);
+    final newUsers = relationship.copyOfUsers;
+    newUsers[cancelerId] = UserInRelationshipStatus.none;
+
+    await update(
+      documentId: relationshipId,
+      data: relationship.copyWith(
+        users: newUsers,
+        lastUserStatusUpdate: DateTime.now(),
+      ),
+    );
   }
 
-  Stream<Iterable<RelationshipModel>> friendsOf(String? userId) {
+  Stream<Iterable<RelationshipModel>> friendshipsOf(String? userId) {
     return streamFiltered(
-      filter: (collection) => collection
-          .where('userIds', arrayContains: userId)
-          .where('status', isEqualTo: RelationshipStatus.friends.name),
+      filter: (collection) => collection.where(
+        'users.$userId',
+        isEqualTo: UserInRelationshipStatus.open.name,
+      ),
     );
   }
 
@@ -112,48 +131,76 @@ class _RelationshipCRUD extends CollectionCRUD<RelationshipModel> {
     final relation = await read(documentId: relationshipId);
 
     // A friendship starts with a friend request
-    if (relation == null ||
-        ![
-          RelationshipStatus.requestedByFirst,
-          RelationshipStatus.requestedByLast,
-        ].contains(relation.status)) return;
+    if (relation == null || relation.requester == null) return;
 
-    await super.update(
+    await update(
       documentId: relationshipId,
       data: relation.copyWith(
-        createdAt: DateTime.now(),
-        status: RelationshipStatus.friends,
+        users: {
+          user1: UserInRelationshipStatus.open,
+          user2: UserInRelationshipStatus.open,
+        },
+        lastUserStatusUpdate: DateTime.now(),
       ),
     );
   }
 
-  /// Delete the relationships of this user
-  Future<void> onAccountDeletion({required String? userId}) async {
+  /// Close the relationships of this user
+  Future<void> onAccountDeletion({required String userId}) async {
     final relationships = await readFiltered(
-      filter: (collection) =>
-          collection.where('userIds', arrayContains: userId),
+      filter: (collection) => collection.orderBy('users.$userId'),
     );
     for (final relationship in relationships) {
+      final newUsers = relationship.copyOfUsers;
+      newUsers[userId] = UserInRelationshipStatus.none;
+
+      final otherId = relationship.otherUser(userId);
+      if (otherId == null) continue; // should never happen
+      if (relationship.statusOf(otherId) == UserInRelationshipStatus.open) {
+        newUsers[otherId] = UserInRelationshipStatus.isCanceled;
+      } else if (relationship.statusOf(otherId) ==
+          UserInRelationshipStatus.requests) {
+        newUsers[otherId] = UserInRelationshipStatus.isRefused;
+      }
+
+      await update(
+        documentId: relationship.id,
+        data: relationship.copyWith(
+          users: newUsers,
+          lastUserStatusUpdate: DateTime.now(),
+        ),
+      );
       await delete(documentId: relationship.id);
     }
   }
 
+  Future<void> refuseFriendRequest({
+    required String refuserId,
+    required String requesterId,
+  }) async {
+    final relationshipId = getId(refuserId, requesterId);
+    final relationship = await read(documentId: relationshipId);
+    if (relationship == null || relationship.requester != requesterId) return;
+
+    await update(
+      documentId: relationshipId,
+      data: relationship.copyWith(
+        users: {
+          refuserId: UserInRelationshipStatus.refuses,
+          requesterId: UserInRelationshipStatus.isRefused,
+        },
+        lastUserStatusUpdate: DateTime.now(),
+      ),
+    );
+  }
+
   /// Return the relationships waiting for an answer, from or to userId
-  Stream<Iterable<RelationshipModel>> requestsAbout(String userId) {
+  Stream<Iterable<RelationshipModel>> requestsTo(String userId) {
     return streamFiltered(
-      filter: (collection) =>
-          collection.where('userIds', arrayContains: userId).where(
-                Filter.or(
-                  Filter(
-                    'status',
-                    isEqualTo: RelationshipStatus.requestedByFirst.name,
-                  ),
-                  Filter(
-                    'status',
-                    isEqualTo: RelationshipStatus.requestedByLast.name,
-                  ),
-                ),
-              ),
+      filter: (collection) => collection.where(
+        'users.$userId',
+        isEqualTo: UserInRelationshipStatus.isRequested,
+      ),
     );
   }
 
@@ -167,20 +214,62 @@ class _RelationshipCRUD extends CollectionCRUD<RelationshipModel> {
     final relationshipId = sortedUsers.join();
 
     final relation = await read(documentId: relationshipId);
-    if (relation != null && relation.status != RelationshipStatus.canceled) {
-      return;
+
+    if (relation == null) {
+      return create(
+        documentId: relationshipId,
+        data: RelationshipModel(
+          id: relationshipId,
+          users: {
+            fromUserId: UserInRelationshipStatus.requests,
+            toUserId: UserInRelationshipStatus.isRequested,
+          },
+          lastUserStatusUpdate: DateTime.now(),
+        ),
+      );
     }
 
-    final status = fromUserId == sortedUsers[0]
-        ? RelationshipStatus.requestedByFirst
-        : RelationshipStatus.requestedByLast;
+    // Can't send friend request if :
+    //   - the requester status is :
+    //     - requests
+    //     - isBlocked
+    //     - hasAccountDeleted
+    switch (relation.statusOf(fromUserId)) {
+      case UserInRelationshipStatus.requests:
+      case UserInRelationshipStatus.isBlocked:
+      case UserInRelationshipStatus.hasDeletedAccount:
+        return;
+      // ignore: no_default_cases
+      default:
+    }
 
-    await super.create(
+    // Can't send friend request if :
+    //   - the other user's status is :
+    //     - isRequested
+    //     - blocks
+    //     - hasAccountDeleted
+    switch (relation.statusOf(toUserId)) {
+      case UserInRelationshipStatus.isRequested:
+      case UserInRelationshipStatus.blocks:
+      case UserInRelationshipStatus.hasDeletedAccount:
+        return;
+      // ignore: no_default_cases
+      default:
+    }
+
+    if (relation.statusOf(toUserId) == UserInRelationshipStatus.requests) {
+      return makeFriends(toUserId, fromUserId);
+    }
+
+    await update(
       documentId: relationshipId,
       data: RelationshipModel(
         id: '', // will not be stored in firebase
-        userIds: sortedUsers,
-        status: status,
+        users: {
+          fromUserId: UserInRelationshipStatus.requests,
+          toUserId: UserInRelationshipStatus.isRequested,
+        },
+        lastUserStatusUpdate: DateTime.now(),
       ),
     );
   }
@@ -197,7 +286,13 @@ class _RelationshipCRUD extends CollectionCRUD<RelationshipModel> {
 
     await update(
       documentId: relationshipId,
-      data: relationship.copyWith(status: RelationshipStatus.canceled),
+      data: relationship.copyWith(
+        users: {
+          blockerId: UserInRelationshipStatus.none,
+          toUnblockId: UserInRelationshipStatus.none,
+        },
+        lastUserStatusUpdate: DateTime.now(),
+      ),
     );
   }
 }

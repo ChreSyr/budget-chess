@@ -7,25 +7,57 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'relationship_model.freezed.dart';
 part 'relationship_model.g.dart';
 
-enum RelationshipStatus {
-  requestedByFirst,
-  requestedByLast,
-  friends,
-  canceled,
-  blockedByFirst,
-  blockedByLast,
+typedef RelationshipUsers = Map<String, UserInRelationshipStatus>;
+
+// Needs :
+//   - easily query all friend request
+//   - easily query all friendships
+
+enum UserInRelationshipStatus {
+  /// This user never pronounced himself, or canceled the relation
+  none,
+
+  /// This user requested someone else to start a relation
+  requests,
+
+  /// This user is asked to join a relation
+  isRequested,
+
+  /// This user was asked to join a relation, and he refused
+  refuses,
+
+  /// This user asked for a relation, and it got refused
+  isRefused,
+
+  /// This user is in a relationship with the other user
+  open,
+
+  /// This user canceled the relation
+  cancels,
+
+  /// The other user canceled the relation, intentionnally or by closing its
+  /// account
+  isCanceled,
+
+  /// This user desn't want to be in this relation anymore
+  blocks,
+
+  /// This user can't be in this relation anymore
+  isBlocked,
+
+  /// This user deleted his account, the relation can't evolve anymore
+  hasDeletedAccount,
 }
 
 @freezed
 class RelationshipModel with _$RelationshipModel {
   factory RelationshipModel({
     required String id,
-    required List<String> userIds,
-    @Default(RelationshipStatus.canceled) RelationshipStatus status,
-    /// Date of friendship start
-    @TimestampToDateTimeConverter() DateTime? createdAt,
-    /// Last time a message was sent or a game got updated
-    @TimestampToDateTimeConverter() DateTime? updatedAt,
+    @protected required RelationshipUsers users,
+
+    /// Last time the status of one of the users changes. Used to determine the
+    /// duration of a frienship.
+    @TimestampToDateTimeConverter() DateTime? lastUserStatusUpdate,
   }) = _RelationshipModel;
 
   /// Required for the override getter
@@ -36,43 +68,40 @@ class RelationshipModel with _$RelationshipModel {
 
   // ---
 
+  RelationshipUsers get copyOfUsers => RelationshipUsers.from(users);
+  UserInRelationshipStatus? statusOf(String userId) => users[userId];
+
   String? get blocker {
-    if (userIds.isEmpty) return null;
-    if (status == RelationshipStatus.blockedByFirst) {
-      return userIds.first;
-    } else if (status == RelationshipStatus.blockedByLast) {
-      return userIds.last;
-    } else {
-      return null;
-    }
+    return users.entries
+        .where(
+          (entry) => entry.value == UserInRelationshipStatus.blocks,
+        )
+        .firstOrNull
+        ?.key;
   }
 
   String? get requester {
-    if (userIds.isEmpty) return null;
-    if (status == RelationshipStatus.requestedByFirst) {
-      return userIds.first;
-    } else if (status == RelationshipStatus.requestedByLast) {
-      return userIds.last;
-    } else {
-      return null;
-    }
+    return users.entries
+        .where(
+          (entry) => entry.value == UserInRelationshipStatus.requests,
+        )
+        .firstOrNull
+        ?.key;
   }
 
   bool isBlockedBy(String userId) {
-    if (userIds.isEmpty) return false;
-    return status == RelationshipStatus.blockedByFirst &&
-            userId == userIds.first ||
-        status == RelationshipStatus.blockedByLast && userId == userIds.last;
+    return users[userId] == UserInRelationshipStatus.blocks;
   }
 
   bool isRequestedBy(String userId) {
-    if (userIds.isEmpty) return false;
-    return status == RelationshipStatus.requestedByFirst &&
-            userId == userIds.first ||
-        status == RelationshipStatus.requestedByLast && userId == userIds.last;
+    return users[userId] == UserInRelationshipStatus.requests;
   }
 
+  /// Only works for relations of 2 users. If userId is not one of the users,
+  /// returns null.
   String? otherUser(String user1) {
+    final userIds = users.keys;
+    assert(userIds.length == 2);
     if (userIds.isEmpty) return null;
     if (user1 == userIds.first) {
       return userIds.last;
