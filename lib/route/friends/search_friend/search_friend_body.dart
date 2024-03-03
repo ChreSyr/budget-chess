@@ -192,7 +192,7 @@ Widget getUserTile(BuildContext context, UserModel user) {
         leading: UserPhoto(photo: user.photo),
         title: Text(user.username),
         trailing: trailing,
-        onTap: () => context.go('/user/@${user.usernameLowercase}'),
+        onTap: () => context.push('/user/@${user.usernameLowercase}'),
       );
     },
   );

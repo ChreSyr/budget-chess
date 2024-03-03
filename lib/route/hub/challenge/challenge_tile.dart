@@ -48,7 +48,7 @@ class ChallengeTile extends StatelessWidget {
           if (challenge.isAccepted)
             IconButton(
               icon: const Icon(Icons.login),
-              onPressed: () => context.go('/hub/${challenge.id}'),
+              onPressed: () => context.push('/hub/${challenge.id}'),
             )
           else if (authUid == authorId)
             IconButton(

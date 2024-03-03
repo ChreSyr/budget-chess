@@ -25,7 +25,7 @@ class HubBody extends RouteBody {
   List<Widget> getActions(BuildContext context) {
     return [
       FilledButton(
-        onPressed: () => context.go('/hub/chessground'),
+        onPressed: () => context.push('/hub/chessground'),
         child: const Text('Play'), // TODO : remove
       ),
       ...super.getActions(context),

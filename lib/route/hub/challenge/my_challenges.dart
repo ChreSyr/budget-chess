@@ -75,7 +75,7 @@ class MyChallenges extends StatelessWidget {
             ],
             CCGap.medium,
             FilledButton.icon(
-              onPressed: () => context.go('/hub/create_challenge'),
+              onPressed: () => context.push('/hub/create_challenge'),
               icon: const Icon(Icons.add),
               label: Text(context.l10n.challengeCreate),
             ),
