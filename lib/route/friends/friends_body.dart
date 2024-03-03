@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:crea_chess/package/atomic_design/dialog/relationship/block_user.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/text_style.dart';
@@ -54,7 +55,7 @@ class FriendsBody extends RouteBody {
   String getTitle(AppLocalizations l10n) {
     return l10n.friends;
   }
-  
+
   static const notifFriendRequests = 'friend-requests';
 
   @override
@@ -66,7 +67,14 @@ class FriendsBody extends RouteBody {
             builder: (context, requests) {
               return Column(
                 mainAxisSize: MainAxisSize.min,
-                children: requests.map(FriendRequestCard.new).toList(),
+                children: requests
+                    .map(
+                      (request) => FriendRequestCard(
+                        request,
+                        context,
+                      ),
+                    )
+                    .toList(),
               );
             },
           ),
@@ -78,15 +86,23 @@ class FriendsBody extends RouteBody {
 }
 
 class FriendRequestCard extends StatelessWidget {
-  const FriendRequestCard(this.request, {super.key});
+  const FriendRequestCard(this.request, this.parentContext, {super.key});
 
-  // Assumes this friend request is effecti
   final RelationshipModel request;
+  // Dirty, isn'it ? It's needed for the snack bars, who need a context even if
+  // this card doesn't exist anymore
+  final BuildContext parentContext;
 
   @override
   Widget build(BuildContext context) {
+    final authUid = context.watch<AuthenticationCubit>().state?.uid;
+
     final requester = request.requester;
     if (requester == null) return CCGap.zero;
+
+    if (authUid == null || request.otherUser(requester) != authUid) {
+      return const SizedBox.shrink();
+    }
 
     return Card(
       child: CCPadding.allMedium(
@@ -125,7 +141,10 @@ class FriendRequestCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: FilledButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                      relationshipCRUD.delete(documentId: request.id);
+                      showBlockUserDialog(parentContext, requester);
+                    },
                     icon: const Icon(Icons.close),
                     label: Text(context.l10n.decline), // TODO : refuse
                   ),
@@ -133,7 +152,8 @@ class FriendRequestCard extends StatelessWidget {
                 CCGap.medium,
                 Expanded(
                   child: FilledButton.icon(
-                    onPressed: () {},
+                    onPressed: () =>
+                        relationshipCRUD.makeFriends(requester, authUid),
                     icon: const Icon(Icons.check),
                     label: Text(context.l10n.accept),
                   ),
