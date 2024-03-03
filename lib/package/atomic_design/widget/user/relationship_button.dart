@@ -35,7 +35,7 @@ class RelationshipButton extends StatelessWidget {
             return ElevatedButton.icon(
               onPressed: () => showCancelFriendRequestDialog(context, userId),
               icon: const Icon(Icons.send),
-              label: Text(context.l10n.friendRequestSend),
+              label: Text(context.l10n.friendRequestSent),
             );
           case UserInRelationshipStatus.isRequested:
             return FilledButton.icon(
