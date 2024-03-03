@@ -45,8 +45,8 @@ class BoardWidget extends StatefulWidget {
   Coord? localOffset2Coord(Offset offset, double squareSize) {
     final x = (offset.dx / squareSize).floor();
     final y = (offset.dy / squareSize).floor();
-    final orientX = x;
-    final orientY = size.ranks - 1 - y;
+    final orientX = data.orientation == Side.black ? size.files - 1 - x : x;
+    final orientY = data.orientation == Side.black ? y : size.ranks - 1 - y;
     if (orientX >= 0 &&
         orientX <= (size.files - 1) &&
         orientY >= 0 &&
