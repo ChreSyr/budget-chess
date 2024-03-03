@@ -33,7 +33,6 @@ class _UserCRUD extends CollectionCRUD<UserModel> {
 
   Future<void> onSignIn({required String authUid}) async {
     final user = await read(documentId: authUid);
-    print('onSignIn user: $user');
     if (user == null) return;
     await update(documentId: authUid, data: user.copyWith(isConnected: true));
   }

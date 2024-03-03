@@ -24,4 +24,6 @@ class UserModel with _$UserModel {
       _$UserModelFromJson(json);
 
   // ---
+
+  bool get profileCompleted => username.isNotEmpty && username != id;
 }
