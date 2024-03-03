@@ -1,4 +1,5 @@
 import 'package:crea_chess/package/atomic_design/dialog/user/delete_account.dart';
+import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/route/side_routes.dart';
@@ -119,7 +120,9 @@ abstract class MainRouteBody extends SideRouteBody {
 
   @override
   List<Widget> getActions(BuildContext context) {
-    return super.getActions(context)..add(const OpenSideRoutesButton());
+    return super.getActions(context)
+      ..add(const OpenSideRoutesButton())
+      ..add(CCGap.small);
   }
 }
 
