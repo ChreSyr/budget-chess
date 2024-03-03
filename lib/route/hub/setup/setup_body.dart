@@ -107,7 +107,6 @@ class _SetupBody extends StatelessWidget {
           ),
           CCGap.small,
           Inventory(
-            color: side,
             settings: settings,
             interactable: !validatedSetup,
           ),

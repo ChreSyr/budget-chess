@@ -14,7 +14,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Inventory extends StatelessWidget {
   const Inventory({
-    required this.color,
+    this.color = Side.white,
     this.settings = const BoardSettings(),
     this.interactable = true,
     super.key,
@@ -32,7 +32,6 @@ class Inventory extends StatelessWidget {
 
     final budget = context.read<GameCubit>().state?.game.challenge.budget;
 
-    // TODO : loading
     if (budget == null) return const SizedBox.shrink();
 
     final setupCost = setup.cost;
