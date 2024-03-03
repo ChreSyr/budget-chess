@@ -11,7 +11,6 @@ import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/route/route_body.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -65,6 +64,7 @@ class FriendsBody extends RouteBody {
     return CCPadding.horizontalMedium(
       child: Column(
         children: [
+          // Friendship requests
           BlocBuilder<FriendRequestsCubit, Iterable<RelationshipModel>>(
             builder: (context, requests) {
               return Column(
@@ -80,7 +80,29 @@ class FriendsBody extends RouteBody {
               );
             },
           ),
-          const Center(child: Text('Friends page')),
+          CCGap.medium,
+          // Friend previews
+          Center(
+            child: BlocBuilder<AuthenticationCubit, User?>(
+              builder: (context, auth) {
+                final authUid = auth?.uid;
+                if (authUid == null) return CCGap.zero;
+                return StreamBuilder<Iterable<RelationshipModel>>(
+                  stream: relationshipCRUD.friendsOf(authUid),
+                  builder: (context, snapshot) {
+                    final friendships = snapshot.data ?? [];
+                    return Wrap(
+                      children: friendships.map((e) {
+                        final friendId = e.otherUser(authUid);
+                        if (friendId == null) return CCGap.zero;
+                        return FriendPreview(friendId);
+                      }).toList(),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
         ],
       ),
     );
@@ -168,6 +190,48 @@ class FriendRequestCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class FriendPreview extends StatelessWidget {
+  const FriendPreview(this.friendId, {super.key});
+
+  final String friendId;
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<UserModel?>(
+      stream: userCRUD.stream(documentId: friendId),
+      builder: (context, snapshot) {
+        final friend = snapshot.data;
+        if (friend == null) return CCGap.zero;
+
+        return SizedBox(
+          width: CCWidgetSize.medium,
+          child: CCPadding.allXsmall(
+            child: GestureDetector(
+              onTap: () => context.push('/user/@${friend.username}'),
+              child: Column(
+                children: [
+                  CCPadding.allXsmall(
+                    child: UserPhoto(
+                      photo: friend.photo,
+                      radius: CCSize.xlarge,
+                    ),
+                  ),
+                  Text(
+                    friend.username,
+                    maxLines: 2,
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

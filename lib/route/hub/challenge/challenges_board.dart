@@ -21,8 +21,6 @@ class ChallengesBoard extends StatelessWidget {
         return StreamBuilder<Iterable<RelationshipModel>>(
           stream: relationshipCRUD.friendsOf(authUid),
           builder: (context, snapshot) {
-            // friendIds uses the state of FriendshipCubit,
-            // so we need to place a BlocBuilder above
             final friendships = snapshot.data;
             final friendIds = (authUid == null || friendships == null)
                 ? <String>[]
