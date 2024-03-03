@@ -214,10 +214,18 @@ class FriendPreview extends StatelessWidget {
               onTap: () => context.push('/user/@${friend.username}'),
               child: Column(
                 children: [
-                  CCPadding.allXsmall(
-                    child: UserPhoto(
-                      photo: friend.photo,
-                      radius: CCSize.xlarge,
+                  DecoratedBox(
+                    decoration: friend.isConnected == true
+                        ? const BoxDecoration(
+                            color: Colors.green,
+                            shape: BoxShape.circle,
+                          )
+                        : const BoxDecoration(),
+                    child: CCPadding.allXsmall(
+                      child: UserPhoto(
+                        photo: friend.photo,
+                        radius: CCSize.xlarge,
+                      ),
                     ),
                   ),
                   Text(

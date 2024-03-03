@@ -5,6 +5,7 @@ import 'package:crea_chess/package/atomic_design/dialog/relationship/cancel_rela
 import 'package:crea_chess/package/atomic_design/modal/modal.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/widget/edit_button.dart';
+import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_banner.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/firebase/export.dart';
@@ -22,6 +23,7 @@ class UserHeader extends StatelessWidget {
     required this.banner,
     required this.photo,
     required this.username,
+    required this.isConnected,
     required this.editable,
     super.key,
   });
@@ -31,6 +33,7 @@ class UserHeader extends StatelessWidget {
         banner: null,
         photo: null,
         username: null,
+        isConnected: null,
         editable: false,
       );
 
@@ -38,6 +41,7 @@ class UserHeader extends StatelessWidget {
   final String? banner;
   final String? photo;
   final String? username;
+  final bool? isConnected;
   final bool editable;
 
   @override
@@ -92,7 +96,17 @@ class UserHeader extends StatelessWidget {
         // username
         ListTile(
           leading: const Icon(Icons.alternate_email),
-          title: Text(username ?? ''),
+          title: Row(
+            children: [
+              Text(username ?? ''),
+              CCGap.medium,
+              CircleAvatar(
+                backgroundColor:
+                    isConnected == true ? Colors.green : Colors.grey,
+                radius: CCSize.xsmall,
+              ),
+            ],
+          ),
           trailing: editable
               ? EditButton(
                   onPressed: editable

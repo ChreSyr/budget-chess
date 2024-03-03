@@ -1,4 +1,6 @@
+import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/widget/crown.dart';
+import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/unichess/unichess.dart';
@@ -6,6 +8,7 @@ import 'package:crea_chess/route/hub/game/game_cubit.dart';
 import 'package:crea_chess/route/hub/game/side.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class PlayerTile extends StatelessWidget {
   const PlayerTile({
@@ -40,11 +43,26 @@ class PlayerTile extends StatelessWidget {
       builder: (context, snapshot) {
         final user = snapshot.data;
 
-        final username = Text(user?.username ?? '');
+        final username = Row(
+          children: [
+            Text(user?.username ?? ''),
+            CCGap.small,
+            CircleAvatar(
+              backgroundColor:
+                  user?.isConnected == true ? Colors.green : Colors.grey,
+              radius: CCSize.xsmall,
+            ),
+          ],
+        );
         final won = side != null && side == winner;
 
         return ListTile(
-          leading: UserPhoto(photo: user?.photo),
+          leading: UserPhoto(
+            photo: user?.photo,
+            onTap: user == null
+                ? null
+                : () => context.push('/user/@${user.username}'),
+          ),
           title: won
               ? Stack(
                   clipBehavior: Clip.none,
