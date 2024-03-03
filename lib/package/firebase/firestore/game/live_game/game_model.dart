@@ -103,6 +103,12 @@ class GameModel with _$GameModel {
   bool get aborted => status == GameStatus.aborted;
   bool get finished => status.value >= GameStatus.mate.value;
 
+  String? otherPlayer(String playerId) {
+    if (playerId == whiteId) return blackId;
+    if (playerId == blackId) return whiteId;
+    return null;
+  }
+
   String playerId(Side side) => switch (side) {
         Side.white => whiteId,
         Side.black => blackId,

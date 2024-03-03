@@ -47,8 +47,7 @@ class MyChallenges extends StatelessWidget {
                           ),
                           CCGap.small,
                           ...gamesInProgress
-                              .map((e) => e.challenge)
-                              .map(ChallengeTile.new),
+                              .map(GameChallengeTile.new),
                         ],
                       );
               },
