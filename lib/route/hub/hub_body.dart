@@ -1,3 +1,4 @@
+import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/route/hub/challenge/challenges_board.dart';
@@ -24,10 +25,11 @@ class HubBody extends RouteBody {
   @override
   List<Widget> getActions(BuildContext context) {
     return [
-      FilledButton(
+      OutlinedButton(
         onPressed: () => context.push('/hub/chessground'),
-        child: const Text('Play'), // TODO : remove
+        child: const Text('Test'), // TODO : remove
       ),
+      CCGap.medium,
       ...super.getActions(context),
     ];
   }
