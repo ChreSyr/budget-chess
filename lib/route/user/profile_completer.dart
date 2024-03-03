@@ -1,19 +1,23 @@
 import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/field/input_decoration.dart';
+import 'package:crea_chess/package/atomic_design/modal/user/photo.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/snack_bar.dart';
 import 'package:crea_chess/package/atomic_design/text_style.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
+import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/form/form_error.dart';
 import 'package:crea_chess/package/form/input/input_string.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:regexpattern/regexpattern.dart';
 
 part 'profile_completer.freezed.dart';
@@ -115,8 +119,24 @@ class ProfileFormCubit extends Cubit<ProfileForm> {
     emit(state.copyWith(name: state.name.copyWith(string: name)));
   }
 
+  Future<void> waitPhoto(Future<void> Function() getPhoto) async {
+    emit(
+      state.copyWith(
+        status: ProfileFormStatus.waiting,
+        step: ProfileFormStep.photo,
+      ),
+    );
+    await getPhoto();
+    emit(
+      state.copyWith(
+        status: ProfileFormStatus.inProgress,
+        step: ProfileFormStep.photo,
+      ),
+    );
+  }
+
   void setPhoto(String photo) {
-    emit(state.copyWith(name: state.photo.copyWith(string: photo)));
+    emit(state.copyWith(photo: state.photo.copyWith(string: photo)));
   }
 
   void tempReset() => emit(state.copyWith(step: ProfileFormStep.start));
@@ -137,10 +157,20 @@ class ProfileFormCubit extends Cubit<ProfileForm> {
     }
 
     if (state.name.isNotValid) {
-      return emit(state.copyWith(status: ProfileFormStatus.editError));
+      return emit(
+        state.copyWith(
+          status: ProfileFormStatus.editError,
+          step: ProfileFormStep.username,
+        ),
+      );
     }
 
-    emit(state.copyWith(status: ProfileFormStatus.waiting));
+    emit(
+      state.copyWith(
+        status: ProfileFormStatus.waiting,
+        step: ProfileFormStep.username,
+      ),
+    );
 
     try {
       if (await userCRUD.usernameIsTaken(newUsername)) {
@@ -153,6 +183,43 @@ class ProfileFormCubit extends Cubit<ProfileForm> {
         state.copyWith(
           status: ProfileFormStatus.success,
           step: ProfileFormStep.photo,
+        ),
+      );
+    } catch (_) {
+      emit(state.copyWith(status: ProfileFormStatus.unexpectedError));
+    }
+  }
+
+  Future<void> submitPhoto() async {
+    final newPhoto = state.photo.value;
+
+    if (newPhoto == initialUser.photo) {
+      return emit(
+        state.copyWith(
+          status: ProfileFormStatus.success,
+        ),
+      );
+    }
+
+    if (state.photo.isNotValid) {
+      return emit(
+        state.copyWith(
+          status: ProfileFormStatus.editError,
+        ),
+      );
+    }
+
+    emit(
+      state.copyWith(
+        status: ProfileFormStatus.waiting,
+      ),
+    );
+
+    try {
+      await userCRUD.userCubit.setPhoto(photo: newPhoto);
+      emit(
+        state.copyWith(
+          status: ProfileFormStatus.success,
         ),
       );
     } catch (_) {
@@ -211,10 +278,6 @@ class _ProfileCompleter extends StatelessWidget {
             break;
         }
         if (oldStep != form.step) {
-          print('-------------------');
-          print('form.step');
-          print(form.step);
-          print('-------------------');
           WidgetsBinding.instance.addPostFrameCallback((_) {
             // Delay the scroll to give TextField enough time to complete
             // autofocus
@@ -314,25 +377,21 @@ class UsernameField extends StatelessWidget {
 
         return Column(
           children: [
-            Column(
-              children: [
-                if (form.status == ProfileFormStatus.waiting &&
-                    form.step == ProfileFormStep.username)
-                  const LinearProgressIndicator(),
-                const Text(
-                  '👀',
-                  style: TextStyle(fontSize: CCSize.xxlarge),
-                  textAlign: TextAlign.center,
-                ),
-                Text(
-                  context.l10n.chooseGoodUsername,
-                  textAlign: TextAlign.center,
-                ),
-              ],
+            if (form.status == ProfileFormStatus.waiting &&
+                form.step == ProfileFormStep.username)
+              const LinearProgressIndicator(),
+            const Text(
+              '👀',
+              style: TextStyle(fontSize: CCSize.xxlarge),
+              textAlign: TextAlign.center,
+            ),
+            Text(
+              context.l10n.chooseGoodUsername,
+              textAlign: TextAlign.center,
             ),
             CCGap.large,
             TextFormField(
-              autofocus: true,
+              autofocus: form.step == ProfileFormStep.username,
               controller: textController,
               decoration: CCInputDecoration(
                 labelText: 'Username', // TODO : l10n
@@ -343,10 +402,16 @@ class UsernameField extends StatelessWidget {
                 ),
               ),
               onChanged: cubit.setName,
+              onFieldSubmitted: (_) => cubit.submitName(),
             ),
             CCGap.xxlarge,
             FilledButton(
-              onPressed: cubit.submitName,
+              onPressed: form.name.isValid
+                  ? () {
+                      cubit.submitName();
+                      FocusScope.of(context).unfocus();
+                    }
+                  : null,
               child: Text(context.l10n.next),
             ),
             CCGap.xxlarge,
@@ -363,62 +428,80 @@ class PhotoField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cubit = context.read<ProfileFormCubit>();
-    final textController =
-        TextEditingController(text: cubit.initialUser.username);
+    final cubit = context.watch<ProfileFormCubit>();
+    final form = cubit.state;
 
-    return BlocBuilder<ProfileFormCubit, ProfileForm>(
-      builder: (context, form) {
-        if (form.step.value < ProfileFormStep.photo.value) {
-          return CCGap.zero;
-        }
+    if (form.step.value < ProfileFormStep.photo.value) {
+      return CCGap.zero;
+    }
 
-        if (textController.text != form.name.value) {
-          textController.text = form.name.value;
-        }
-
-        return Column(
-          children: [
-            Column(
-              children: [
-                if (form.status == ProfileFormStatus.waiting &&
-                    form.step == ProfileFormStep.photo)
-                  const LinearProgressIndicator(),
-                const Text(
-                  '🧑',
-                  style: TextStyle(fontSize: CCSize.xxlarge),
-                  textAlign: TextAlign.center,
-                ),
-                const Text(
-                  'Photo',
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-            CCGap.large,
-            TextFormField(
-              autofocus: true,
-              controller: textController,
-              decoration: CCInputDecoration(
-                labelText: 'Photo', // TODO : l10n
-                errorText: form.errorMessage(form.photo, context.l10n),
-                suffixIcon: IconButton(
-                  icon: const Icon(Icons.close),
-                  onPressed: () => cubit.setPhoto(''),
-                ),
-              ),
-              onChanged: cubit.setName,
-            ),
-            CCGap.xxlarge,
-            FilledButton(
-              onPressed: null,
-              child: Text(context.l10n.save),
-            ),
-            CCGap.xxlarge,
-            CCGap.xxlarge,
-          ],
-        );
-      },
+    return Column(
+      children: [
+        if (form.status == ProfileFormStatus.waiting &&
+            form.step == ProfileFormStep.photo)
+          const LinearProgressIndicator(),
+        UserPhoto(
+          photo: form.photo.value,
+          radius: CCSize.xxxlarge,
+        ),
+        CCGap.medium,
+        const Text(
+          // TODO : l10n
+          'Choississez un avatar ou une de vos photo !',
+          textAlign: TextAlign.center,
+        ),
+        CCGap.large,
+        if (!kIsWeb)
+          ListTile(
+            leading: const Icon(Icons.add_a_photo),
+            title: Text(context.l10n.pictureTake),
+            onTap: () {
+              cubit.waitPhoto(() async {
+                final photoRef = await uploadProfilePhoto(
+                  ImageSource.camera,
+                  cubit.initialUser.id,
+                );
+                if (photoRef == null) return;
+                cubit.setPhoto(await photoRef.getDownloadURL());
+              });
+            },
+          ),
+        ListTile(
+          leading: const Icon(Icons.drive_folder_upload),
+          title: Text(context.l10n.pictureImport),
+          onTap: () {
+            cubit.waitPhoto(() async {
+              final photoRef = await uploadProfilePhoto(
+                ImageSource.gallery,
+                cubit.initialUser.id,
+              );
+              if (photoRef == null) return;
+              cubit.setPhoto(await photoRef.getDownloadURL());
+            });
+          },
+        ),
+        ListTile(
+          leading: const Icon(Icons.person),
+          title: Text(context.l10n.avatarChoose),
+          onTap: () {
+            showAvatarModal(
+              context,
+              (avatarName) => cubit.setPhoto('avatar-$avatarName'),
+            );
+          },
+        ),
+        CCGap.xxlarge,
+        FilledButton(
+          onPressed: form.photo.isValid ? cubit.submitPhoto : null,
+          child: Text(context.l10n.save),
+        ),
+        CCGap.xxlarge,
+        CCGap.xxlarge,
+        CCGap.xxlarge,
+        CCGap.xxlarge,
+        CCGap.xxlarge,
+        CCGap.xxlarge,
+      ],
     );
   }
 }

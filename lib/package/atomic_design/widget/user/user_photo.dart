@@ -1,30 +1,6 @@
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:flutter/material.dart';
 
-const avatarNames = [
-  'antoine',
-  'cassandra',
-  'catherine',
-  'charles',
-  'claude',
-  'gabrielle',
-  'hugo',
-  'ines',
-  'lea',
-  'leo',
-  'lucas',
-  'madeleine',
-  'maeva',
-  'manu',
-  'mathis',
-  'nathan',
-  'nick',
-  'orion',
-  'ricardo',
-  'victor',
-  'yannick',
-];
-
 class UserPhoto extends StatelessWidget {
   const UserPhoto({
     required this.photo,
@@ -59,7 +35,9 @@ class UserPhoto extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final avatar = CircleAvatar(
-      backgroundColor: backgroundColor ?? Colors.transparent,
+      backgroundColor: (photo ?? '').isEmpty
+          ? Colors.red[100]
+          : backgroundColor ?? Colors.transparent,
       backgroundImage: _getPhotoAsset(photo),
       radius: radius,
     );
