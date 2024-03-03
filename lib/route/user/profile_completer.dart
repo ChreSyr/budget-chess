@@ -379,7 +379,6 @@ class UsernameField extends StatelessWidget {
             ),
             CCGap.large,
             TextFormField(
-              autofocus: form.step == ProfileFormStep.username,
               controller: textController,
               decoration: CCInputDecoration(
                 labelText: 'Username', // TODO : l10n
