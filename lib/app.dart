@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/firebase/firestore/game/live_game/live_games_cubit.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
@@ -13,10 +15,45 @@ import 'package:crea_chess/route/side_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class CreaChessApp extends StatelessWidget {
-  const CreaChessApp({super.key});
+class BudgetChess extends StatefulWidget {
+  const BudgetChess({super.key});
 
-  // This widget is the root of your application.
+  @override
+  State<BudgetChess> createState() => _BudgetChessState();
+}
+
+class _BudgetChessState extends State<BudgetChess> {
+  late final AppLifecycleListener _listener;
+
+  @override
+  void initState() {
+    super.initState();
+    _listener = AppLifecycleListener(
+      onStateChange: (state) {
+        final profile = userCRUD.userCubit.state;
+        if (profile == null) return;
+        if (state == AppLifecycleState.resumed && profile.isConnected != true) {
+          userCRUD.update(
+            documentId: profile.id,
+            data: profile.copyWith(isConnected: true),
+          );
+        } else if (state != AppLifecycleState.resumed &&
+            profile.isConnected == true) {
+          userCRUD.update(
+            documentId: profile.id,
+            data: profile.copyWith(isConnected: false),
+          );
+        }
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _listener.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(

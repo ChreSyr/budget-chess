@@ -21,5 +21,5 @@ Future<void> main() async {
   
   // await FirebaseAppCheck.instance.activate();
 
-  runApp(const CreaChessApp());
+  runApp(const BudgetChess());
 }

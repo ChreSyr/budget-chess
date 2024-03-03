@@ -16,7 +16,7 @@ _$UserModelImpl _$$UserModelImplFromJson(Map<String, dynamic> json) =>
       usernameLowercase: json['usernameLowercase'] as String?,
       photo: json['photo'] as String?,
       banner: json['banner'] as String?,
-      isConnected: json['isConnected'] as bool? ?? false,
+      isConnected: json['isConnected'] as bool?,
     );
 
 Map<String, dynamic> _$$UserModelImplToJson(_$UserModelImpl instance) =>

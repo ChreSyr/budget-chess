@@ -17,8 +17,9 @@ class UserCubit extends Cubit<UserModel?> {
 
   void _fromAuth(User? auth) {
     _userStream?.cancel();
-    
+
     if (auth == null || !auth.isVerified) {
+      signedOut = true;
       emit(null);
       return;
     }
@@ -45,11 +46,11 @@ class UserCubit extends Cubit<UserModel?> {
               createdAt: DateTime.now(),
               username: username,
               photo: auth.photoURL,
+              isConnected: true,
             ),
           );
 
           challengeFilterCRUD.onAccountCreation(auth.uid);
-          
         } catch (e) {
           debugPrint(e.toString());
         }
@@ -57,12 +58,18 @@ class UserCubit extends Cubit<UserModel?> {
         return;
       }
 
+      if (signedOut && user != null) {
+        await userCRUD.onSignIn(authUid: user.id);
+      }
+      signedOut = user == null;
+
       emit(user);
     });
   }
 
   StreamSubscription<UserModel?>? _userStream;
   late StreamSubscription<User?> _authStream;
+  bool signedOut = true;
 
   @override
   Future<void> close() {

@@ -26,7 +26,7 @@ mixin _$UserModel {
   String? get usernameLowercase => throw _privateConstructorUsedError;
   String? get photo => throw _privateConstructorUsedError;
   String? get banner => throw _privateConstructorUsedError;
-  bool get isConnected => throw _privateConstructorUsedError;
+  bool? get isConnected => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -46,7 +46,7 @@ abstract class $UserModelCopyWith<$Res> {
       String? usernameLowercase,
       String? photo,
       String? banner,
-      bool isConnected});
+      bool? isConnected});
 }
 
 /// @nodoc
@@ -68,7 +68,7 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
     Object? usernameLowercase = freezed,
     Object? photo = freezed,
     Object? banner = freezed,
-    Object? isConnected = null,
+    Object? isConnected = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -95,10 +95,10 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
           ? _value.banner
           : banner // ignore: cast_nullable_to_non_nullable
               as String?,
-      isConnected: null == isConnected
+      isConnected: freezed == isConnected
           ? _value.isConnected
           : isConnected // ignore: cast_nullable_to_non_nullable
-              as bool,
+              as bool?,
     ) as $Val);
   }
 }
@@ -118,7 +118,7 @@ abstract class _$$UserModelImplCopyWith<$Res>
       String? usernameLowercase,
       String? photo,
       String? banner,
-      bool isConnected});
+      bool? isConnected});
 }
 
 /// @nodoc
@@ -138,7 +138,7 @@ class __$$UserModelImplCopyWithImpl<$Res>
     Object? usernameLowercase = freezed,
     Object? photo = freezed,
     Object? banner = freezed,
-    Object? isConnected = null,
+    Object? isConnected = freezed,
   }) {
     return _then(_$UserModelImpl(
       id: null == id
@@ -165,10 +165,10 @@ class __$$UserModelImplCopyWithImpl<$Res>
           ? _value.banner
           : banner // ignore: cast_nullable_to_non_nullable
               as String?,
-      isConnected: null == isConnected
+      isConnected: freezed == isConnected
           ? _value.isConnected
           : isConnected // ignore: cast_nullable_to_non_nullable
-              as bool,
+              as bool?,
     ));
   }
 }
@@ -183,7 +183,7 @@ class _$UserModelImpl extends _UserModel {
       this.usernameLowercase,
       this.photo,
       this.banner,
-      this.isConnected = false})
+      this.isConnected})
       : super._();
 
   factory _$UserModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -203,8 +203,7 @@ class _$UserModelImpl extends _UserModel {
   @override
   final String? banner;
   @override
-  @JsonKey()
-  final bool isConnected;
+  final bool? isConnected;
 
   @override
   String toString() {
@@ -256,7 +255,7 @@ abstract class _UserModel extends UserModel {
       final String? usernameLowercase,
       final String? photo,
       final String? banner,
-      final bool isConnected}) = _$UserModelImpl;
+      final bool? isConnected}) = _$UserModelImpl;
   _UserModel._() : super._();
 
   factory _UserModel.fromJson(Map<String, dynamic> json) =
@@ -275,7 +274,7 @@ abstract class _UserModel extends UserModel {
   @override
   String? get banner;
   @override
-  bool get isConnected;
+  bool? get isConnected;
   @override
   @JsonKey(ignore: true)
   _$$UserModelImplCopyWith<_$UserModelImpl> get copyWith =>

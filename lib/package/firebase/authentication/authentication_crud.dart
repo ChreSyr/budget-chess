@@ -213,6 +213,10 @@ class _AuthenticationCRUD {
 
   /// SingOut current User
   Future<void> signOut() async {
+    // Modify isConnected.
+    await userCRUD.onSignOut(authUid: _firebaseAuth.currentUser?.uid);
+
+    // Sign out
     await _firebaseAuth.signOut();
 
     // Sign out to force the account chooser next time

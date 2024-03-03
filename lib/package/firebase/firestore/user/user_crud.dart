@@ -31,6 +31,20 @@ class _UserCRUD extends CollectionCRUD<UserModel> {
         {};
   }
 
+  Future<void> onSignIn({required String authUid}) async {
+    final user = await read(documentId: authUid);
+    print('onSignIn user: $user');
+    if (user == null) return;
+    await update(documentId: authUid, data: user.copyWith(isConnected: true));
+  }
+
+  Future<void> onSignOut({required String? authUid}) async {
+    if (authUid == null) return;
+    final user = await read(documentId: authUid);
+    if (user == null) return;
+    await update(documentId: authUid, data: user.copyWith(isConnected: false));
+  }
+
   @override
   Future<void> create({required UserModel data, String? documentId}) {
     return super.create(
