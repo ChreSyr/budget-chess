@@ -13,6 +13,15 @@ abstract class CCTextStyle {
   static TextStyle? bodyLarge(BuildContext context) =>
       Theme.of(context).textTheme.bodyLarge;
 
+  static TextStyle? displaySmall(BuildContext context) =>
+      Theme.of(context).textTheme.displaySmall;
+
+  static TextStyle? displayMedium(BuildContext context) =>
+      Theme.of(context).textTheme.displayMedium;
+
+  static TextStyle? displayLarge(BuildContext context) =>
+      Theme.of(context).textTheme.displayLarge;
+
   static TextStyle? titleSmall(BuildContext context) =>
       Theme.of(context).textTheme.titleSmall;
 

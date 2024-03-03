@@ -72,6 +72,7 @@ flutter:
     - assets/boards/
     - assets/chat/
     - assets/icon/
+    - assets/images/
     - assets/piece_sets/frenzy/
     
   fonts:

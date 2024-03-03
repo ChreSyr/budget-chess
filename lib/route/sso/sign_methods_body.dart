@@ -3,6 +3,7 @@ import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/snack_bar.dart';
+import 'package:crea_chess/package/atomic_design/text_style.dart';
 import 'package:crea_chess/package/atomic_design/widget/divider.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/authentication/authentication_crud.dart';
@@ -26,80 +27,113 @@ class SignMethodsBody extends RouteBody {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return CCPadding.allLarge(
       child: SizedBox(
-        width: CCWidgetSize.large2,
-        child: CCPadding.allLarge(
-          child: BlocListener<AuthenticationCubit, User?>(
-            listener: (context, user) {
-              if (user != null && context.canPop()) context.pop();
-            },
-            child: SizedBox(
-              width: CCWidgetSize.large4,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // google or facebook loading animation
-                  CCGap.medium,
-                  BlocConsumer<AuthProviderStatusCubit, AuthProviderStatus>(
-                    listener: (context, status) {
-                      if (status == AuthProviderStatus.error) {
-                        snackBarError(context, context.l10n.errorOccurred);
-                      }
-                    },
-                    builder: (context, status) {
-                      if (status == AuthProviderStatus.waiting) {
-                        return const Column(
-                          children: [
-                            LinearProgressIndicator(),
-                            CCGap.medium,
-                          ],
-                        );
-                      }
-                      return Container();
-                    },
-                  ),
-                  // google + facebook sign in buttons
-                  AuthProviderButton.google(),
-                  // CCGap.large,
-                  // AuthProviderButton.facebook(),
-
-                  CCGap.xlarge,
-
-                  // or continue with
-                  Row(
-                    children: [
-                      Expanded(child: CCDivider.xthin),
-                      CCGap.small,
-                      const Text('Ou'), // TODO : l10n
-                      CCGap.small,
-                      Expanded(child: CCDivider.xthin),
-                    ],
-                  ),
-
-                  CCGap.xlarge,
-                  SizedBox(
-                    width: CCWidgetSize.xlarge,
-                    child: ListView(
-                      shrinkWrap: true,
-                      children: [
-                        // sign in button
-                        FilledButton(
-                          onPressed: () => context.push('/sso/signin'),
-                          child: Text(context.l10n.signin),
-                        ),
-                        CCGap.medium,
-                        // sign up button
-                        FilledButton(
-                          onPressed: () => context.push('/sso/signup'),
-                          child: Text(context.l10n.signup),
-                        ),
-                      ],
+        width: CCWidgetSize.large4,
+        child: BlocListener<AuthenticationCubit, User?>(
+          listener: (context, user) {
+            if (user != null && context.canPop()) context.pop();
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(CCSize.xlarge),
+                  topRight: Radius.circular(CCSize.xlarge),
+                  bottomLeft: Radius.circular(CCSize.xlarge),
+                  bottomRight: Radius.circular(CCWidgetSize.xlarge),
+                ),
+                child: Stack(
+                  children: [
+                    Image.asset('assets/images/signin.jpg'),
+                    CCPadding.allMedium(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Welcome to', // TODO : l10n
+                            style: CCTextStyle.displaySmall(context)?.copyWith(
+                              color: CCColor.background(context),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            'Budget Chess', // TODO : l10n
+                            style: CCTextStyle.titleLarge(context)?.copyWith(
+                              color: CCColor.background(context),
+                              // fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
+                  ],
+                ),
+              ),
+    
+              // google or facebook loading animation
+              const Expanded(child: CCGap.medium),
+              BlocConsumer<AuthProviderStatusCubit, AuthProviderStatus>(
+                listener: (context, status) {
+                  if (status == AuthProviderStatus.error) {
+                    snackBarError(context, context.l10n.errorOccurred);
+                  }
+                },
+                builder: (context, status) {
+                  if (status == AuthProviderStatus.waiting) {
+                    return const Column(
+                      children: [
+                        LinearProgressIndicator(),
+                        CCGap.medium,
+                      ],
+                    );
+                  }
+                  return Container();
+                },
+              ),
+              // google + facebook sign in buttons
+              AuthProviderButton.google(),
+              // CCGap.large,
+              // AuthProviderButton.facebook(),
+
+              CCGap.xlarge,
+
+              // or continue with
+              Row(
+                children: [
+                  Expanded(child: CCDivider.xthin),
+                  CCGap.small,
+                  const Text('Ou'), // TODO : l10n
+                  CCGap.small,
+                  Expanded(child: CCDivider.xthin),
                 ],
               ),
-            ),
+
+              CCGap.xlarge,
+              SizedBox(
+                width: CCWidgetSize.xlarge,
+                child: ListView(
+                  shrinkWrap: true,
+                  children: [
+                    // sign in button
+                    FilledButton(
+                      onPressed: () => context.push('/sso/signin'),
+                      child: Text(context.l10n.signin),
+                    ),
+                    CCGap.medium,
+                    // sign up button
+                    FilledButton(
+                      onPressed: () => context.push('/sso/signup'),
+                      child: Text(context.l10n.signup),
+                    ),
+                  ],
+                ),
+              ),
+           
+              const Expanded(child: CCGap.medium),
+            ],
           ),
         ),
       ),
