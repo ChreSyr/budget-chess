@@ -21,6 +21,9 @@ class SignMethodsBody extends RouteBody {
   String getTitle(AppLocalizations l10n) => '';
 
   @override
+  List<Widget> getActions(BuildContext context) => [];
+
+  @override
   Widget build(BuildContext context) {
     return BlocListener<AuthenticationCubit, User?>(
       listener: (context, user) {
@@ -115,7 +118,6 @@ class AuthProviderButton extends StatelessWidget {
       height: 40,
       child: BlocBuilder<PreferencesCubit, PreferencesState>(
         builder: (context, preferences) {
-
           final String? imageAsset;
           final VoidCallback? onPressed;
           switch (provider) {
@@ -145,8 +147,7 @@ class AuthProviderButton extends StatelessWidget {
                       width: .5,
                     ),
             ),
-            backgroundColor:
-                preferences.isDarkMode
+            backgroundColor: preferences.isDarkMode
                 ? const Color.fromARGB(255, 28, 28, 32)
                 : null,
             padding: const EdgeInsets.only(
