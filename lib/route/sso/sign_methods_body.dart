@@ -1,5 +1,6 @@
 import 'package:crea_chess/package/atomic_design/border.dart';
 import 'package:crea_chess/package/atomic_design/color.dart';
+import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/snack_bar.dart';
 import 'package:crea_chess/package/atomic_design/widget/divider.dart';
@@ -10,7 +11,6 @@ import 'package:crea_chess/package/preferences/preferences_cubit.dart';
 import 'package:crea_chess/package/preferences/preferences_state.dart';
 import 'package:crea_chess/route/route_body.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -26,74 +26,81 @@ class SignMethodsBody extends RouteBody {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AuthenticationCubit, User?>(
-      listener: (context, user) {
-        if (user != null && context.canPop()) context.pop();
-      },
+    return Center(
       child: SizedBox(
-        width: CCWidgetSize.large4,
-        child: Column(
-          children: [
-            SizedBox(
-              width: CCWidgetSize.xlarge,
-              child: ListView(
-                shrinkWrap: true,
+        width: CCWidgetSize.large2,
+        child: CCPadding.allLarge(
+          child: BlocListener<AuthenticationCubit, User?>(
+            listener: (context, user) {
+              if (user != null && context.canPop()) context.pop();
+            },
+            child: SizedBox(
+              width: CCWidgetSize.large4,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  // sign in button
-                  FilledButton(
-                    onPressed: () => context.push('/sso/signin'),
-                    child: Text(context.l10n.signin),
-                  ),
+                  // google or facebook loading animation
                   CCGap.medium,
-                  // sign up button
-                  FilledButton(
-                    onPressed: () => context.push('/sso/signup'),
-                    child: Text(context.l10n.signup),
+                  BlocConsumer<AuthProviderStatusCubit, AuthProviderStatus>(
+                    listener: (context, status) {
+                      if (status == AuthProviderStatus.error) {
+                        snackBarError(context, context.l10n.errorOccurred);
+                      }
+                    },
+                    builder: (context, status) {
+                      if (status == AuthProviderStatus.waiting) {
+                        return const Column(
+                          children: [
+                            LinearProgressIndicator(),
+                            CCGap.medium,
+                          ],
+                        );
+                      }
+                      return Container();
+                    },
+                  ),
+                  // google + facebook sign in buttons
+                  AuthProviderButton.google(),
+                  // CCGap.large,
+                  // AuthProviderButton.facebook(),
+
+                  CCGap.xlarge,
+
+                  // or continue with
+                  Row(
+                    children: [
+                      Expanded(child: CCDivider.xthin),
+                      CCGap.small,
+                      const Text('Ou'), // TODO : l10n
+                      CCGap.small,
+                      Expanded(child: CCDivider.xthin),
+                    ],
+                  ),
+
+                  CCGap.xlarge,
+                  SizedBox(
+                    width: CCWidgetSize.xlarge,
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: [
+                        // sign in button
+                        FilledButton(
+                          onPressed: () => context.push('/sso/signin'),
+                          child: Text(context.l10n.signin),
+                        ),
+                        CCGap.medium,
+                        // sign up button
+                        FilledButton(
+                          onPressed: () => context.push('/sso/signup'),
+                          child: Text(context.l10n.signup),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
-
-            CCGap.xlarge,
-
-            // or continue with
-            Row(
-              children: [
-                Expanded(child: CCDivider.xthin),
-                CCGap.small,
-                Text(context.l10n.orContinueWith),
-                CCGap.small,
-                Expanded(child: CCDivider.xthin),
-              ],
-            ),
-
-            // google or facebook loading animation
-            CCGap.medium,
-            BlocConsumer<AuthProviderStatusCubit, AuthProviderStatus>(
-              listener: (context, status) {
-                if (status == AuthProviderStatus.error) {
-                  snackBarError(context, context.l10n.errorOccurred);
-                }
-              },
-              builder: (context, status) {
-                if (status == AuthProviderStatus.waiting) {
-                  return const Column(
-                    children: [
-                      LinearProgressIndicator(),
-                      CCGap.medium,
-                    ],
-                  );
-                }
-                return Container();
-              },
-            ),
-            CCGap.medium,
-
-            // google + facebook sign in buttons
-            AuthProviderButton.google(),
-            // CCGap.large,
-            // AuthProviderButton.facebook(),
-          ],
+          ),
         ),
       ),
     );
