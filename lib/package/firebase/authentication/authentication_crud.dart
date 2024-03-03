@@ -36,6 +36,7 @@ class _AuthenticationCRUD {
 
       // Delete user.
       await userCRUD.delete(documentId: user.uid);
+      await challengeFilterCRUD.deleteAll(parentDocumentId: user.uid);
 
       // Delete relationships of user.
       await relationshipCRUD.onAccountDeletion(userId: user.uid);
@@ -175,7 +176,7 @@ class _AuthenticationCRUD {
   /// SignIn with Google, deprecated on web
   Future<void> signInWithGoogle() async {
     authProviderStatusCubit.waiting();
-        
+
     try {
       await _signInWithGoogleUser(await _googleAuth.signIn());
     } catch (e) {

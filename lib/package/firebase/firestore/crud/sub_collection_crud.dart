@@ -101,4 +101,11 @@ abstract class SubCollectionCRUD<T> {
   }) async {
     await _collection(parentDocumentId).doc(documentId).delete();
   }
+
+  Future<void> deleteAll({required String parentDocumentId}) async {
+    for (final documentSnapshot
+        in (await _collection(parentDocumentId).get()).docs) {
+      await documentSnapshot.reference.delete();
+    }
+  }
 }
