@@ -27,15 +27,13 @@ class UserCubit extends Cubit<UserModel?> {
     _userStream = userCRUD.stream(documentId: auth.uid).listen((user) async {
       if (user == null && auth.displayName != accountBeingDeleted) {
         // Create user
-        var username = auth.displayName ?? auth.uid;
+        var username = auth.displayName ?? '';
         username = removeDiacritics(username.replaceAll(' ', '_'));
         if (!RegExp(RegexPattern.usernameV2).hasMatch(username)) {
-          username = auth.uid;
+          username = '';
         }
-        if (username != auth.uid) {
-          if (await userCRUD.usernameIsTaken(username)) {
-            username = auth.uid;
-          }
+        if (await userCRUD.usernameIsTaken(username)) {
+          username = '';
         }
 
         try {
