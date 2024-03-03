@@ -89,6 +89,40 @@ class RelationshipModel with _$RelationshipModel {
         ?.key;
   }
 
+  bool canSendFriendRequest(String requesterId) {
+    final requestedId = otherUser(requesterId);
+    if (requestedId == null) return false;
+
+    // Can't send friend request if :
+    //   - the requester status is :
+    //     - requests
+    //     - isBlocked
+    //     - hasAccountDeleted
+    switch (statusOf(requesterId)) {
+      case UserInRelationshipStatus.requests:
+      case UserInRelationshipStatus.isBlocked:
+      case UserInRelationshipStatus.hasDeletedAccount:
+        return false;
+      // ignore: no_default_cases
+      default:
+    }
+
+    // Can't send friend request if :
+    //   - the other user's status is :
+    //     - isRequested
+    //     - blocks
+    //     - hasAccountDeleted
+    switch (statusOf(requestedId)) {
+      case UserInRelationshipStatus.isRequested:
+      case UserInRelationshipStatus.blocks:
+      case UserInRelationshipStatus.hasDeletedAccount:
+        return false;
+      // ignore: no_default_cases
+      default:
+        return true;
+    }
+  }
+
   bool isBlockedBy(String userId) {
     return users[userId] == UserInRelationshipStatus.blocks;
   }

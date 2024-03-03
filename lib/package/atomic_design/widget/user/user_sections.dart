@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/snack_bar.dart';
+import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/chat/flutter_chat_types/flutter_chat_types.dart'
     as types;
@@ -73,14 +74,14 @@ class UserSectionFriends extends UserSection {
     return SingleChildScrollView(
       child: CCPadding.allMedium(
         child: StreamBuilder<Iterable<RelationshipModel>>(
-          stream: relationshipCRUD.friendsOf(userId),
+          stream: relationshipCRUD.friendshipsOf(userId),
           builder: (context, snapshot) {
             final relations = snapshot.data;
             const radius = CCSize.xlarge;
             final friendsPreviews = (relations ?? []).map(
               (relationship) {
-                final friendId =
-                    relationship.userIds.where((id) => id != userId).first;
+                final friendId = relationship.otherUser(userId);
+                if (friendId == null) return CCGap.zero;
                 return UserPhoto.fromId(
                   userId: friendId,
                   radius: radius,

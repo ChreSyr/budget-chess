@@ -5,6 +5,7 @@ import 'package:crea_chess/package/atomic_design/dialog/relationship/cancel_frie
 import 'package:crea_chess/package/atomic_design/dialog/relationship/unblock_user.dart';
 import 'package:crea_chess/package/atomic_design/snack_bar.dart';
 import 'package:crea_chess/package/atomic_design/widget/badge.dart';
+import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
@@ -147,42 +148,52 @@ Widget getUserTile(BuildContext context, UserModel user) {
         );
 
         if (relationship == null) return sendRequestButton;
-        switch (relationship.status) {
-          case RelationshipStatus.canceled:
-            return sendRequestButton;
-          case RelationshipStatus.requestedByFirst:
-          case RelationshipStatus.requestedByLast:
-            final canAccept = relationship.isRequestedBy(userId);
-            return canAccept
-                ? SimpleBadge(
-                    child: IconButton(
-                      onPressed: () => showAnswerFriendRequestDialog(
-                        context,
-                        relationship.requester,
-                      ),
-                      icon: const Icon(Icons.mail),
-                    ),
-                  )
-                : IconButton(
-                    onPressed: () => showCancelFriendRequestDialog(
-                      context,
-                      userId,
-                    ),
-                    icon: const Icon(Icons.send),
-                  );
-          case RelationshipStatus.friends:
+
+        switch (relationship.statusOf(currentUserId)) {
+          case UserInRelationshipStatus.requests:
+            return IconButton(
+              onPressed: () => showCancelFriendRequestDialog(
+                context,
+                userId,
+              ),
+              icon: const Icon(Icons.send),
+            );
+          case UserInRelationshipStatus.isRequested:
+            return SimpleBadge(
+              child: IconButton(
+                onPressed: () => showAnswerFriendRequestDialog(
+                  context,
+                  relationship.requester,
+                ),
+                icon: const Icon(Icons.mail),
+              ),
+            );
+          case UserInRelationshipStatus.open:
             return const IconButton(
-              icon: Icon(Icons.check),
+              icon: Icon(Icons.check), // TODO : change
               onPressed: null,
             );
-          case RelationshipStatus.blockedByFirst:
-          case RelationshipStatus.blockedByLast:
+          case UserInRelationshipStatus.isBlocked:
+            return const IconButton(
+              icon: Icon(Icons.block),
+              onPressed: null,
+            );
+          case UserInRelationshipStatus.blocks:
             return IconButton(
               icon: const Icon(Icons.block),
-              onPressed: relationship.isBlockedBy(userId)
-                  ? null
-                  : () => showUnblockUserDialog(context, userId),
+              onPressed: () => showUnblockUserDialog(context, userId),
             );
+          case null:
+          case UserInRelationshipStatus.none:
+          case UserInRelationshipStatus.refuses:
+          case UserInRelationshipStatus.isRefused:
+          case UserInRelationshipStatus.cancels:
+          case UserInRelationshipStatus.isCanceled:
+            return relationship.canSendFriendRequest(currentUserId)
+                ? sendRequestButton
+                : CCGap.zero;
+          case UserInRelationshipStatus.hasDeletedAccount:
+            return CCGap.zero;
         }
       }
 

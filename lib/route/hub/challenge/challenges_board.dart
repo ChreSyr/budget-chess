@@ -19,7 +19,7 @@ class ChallengesBoard extends StatelessWidget {
       builder: (context, auth) {
         final authUid = auth?.uid;
         return StreamBuilder<Iterable<RelationshipModel>>(
-          stream: relationshipCRUD.friendsOf(authUid),
+          stream: relationshipCRUD.friendshipsOf(authUid),
           builder: (context, snapshot) {
             final friendships = snapshot.data;
             final friendIds = (authUid == null || friendships == null)

@@ -27,41 +27,43 @@ class RelationshipButton extends StatelessWidget {
 
         if (relation == null) return SendFriendRequestButton(userId: userId);
 
-        switch (relation.status) {
-          case RelationshipStatus.canceled:
-            return SendFriendRequestButton(userId: userId);
-          case RelationshipStatus.friends:
+        switch (relation.statusOf(authUid)) {
+          case UserInRelationshipStatus.open:
+          case UserInRelationshipStatus.hasDeletedAccount:
             return CCGap.zero;
-          case RelationshipStatus.requestedByFirst:
-          case RelationshipStatus.requestedByLast:
-            if (relation.requester == userId) {
-              return FilledButton.icon(
-                onPressed: () => showAnswerFriendRequestDialog(context, userId),
-                icon: const Icon(Icons.mail),
-                label: const Text('Vous demande en ami !'), // TODO : l10n
-              );
-            } else {
-              return ElevatedButton.icon(
-                onPressed: () => showCancelFriendRequestDialog(context, userId),
-                icon: const Icon(Icons.send),
-                label: Text(context.l10n.friendRequestSend),
-              );
-            }
-          case RelationshipStatus.blockedByFirst:
-          case RelationshipStatus.blockedByLast:
-            if (relation.blocker == authUid) {
-              return ElevatedButton.icon(
-                onPressed: () => showUnblockUserDialog(context, userId),
-                icon: const Icon(Icons.block),
-                label: Text(context.l10n.blockedUserVerbose),
-              );
-            } else {
-              return ElevatedButton.icon(
-                onPressed: null,
-                icon: const Icon(Icons.block),
-                label: Text(context.l10n.blockedByUser),
-              );
-            }
+          case UserInRelationshipStatus.requests:
+            return ElevatedButton.icon(
+              onPressed: () => showCancelFriendRequestDialog(context, userId),
+              icon: const Icon(Icons.send),
+              label: Text(context.l10n.friendRequestSend),
+            );
+          case UserInRelationshipStatus.isRequested:
+            return FilledButton.icon(
+              onPressed: () => showAnswerFriendRequestDialog(context, userId),
+              icon: const Icon(Icons.mail),
+              label: const Text('Vous demande en ami !'), // TODO : l10n
+            );
+          case UserInRelationshipStatus.blocks:
+            return ElevatedButton.icon(
+              onPressed: () => showUnblockUserDialog(context, userId),
+              icon: const Icon(Icons.block),
+              label: Text(context.l10n.blockedUserVerbose),
+            );
+          case UserInRelationshipStatus.isBlocked:
+            return ElevatedButton.icon(
+              onPressed: null,
+              icon: const Icon(Icons.block),
+              label: Text(context.l10n.blockedByUser),
+            );
+          case null:
+          case UserInRelationshipStatus.none:
+          case UserInRelationshipStatus.refuses:
+          case UserInRelationshipStatus.isRefused:
+          case UserInRelationshipStatus.cancels:
+          case UserInRelationshipStatus.isCanceled:
+            return relation.canSendFriendRequest(authUid)
+            ? SendFriendRequestButton(userId: userId)
+            : CCGap.zero;
         }
       },
     );

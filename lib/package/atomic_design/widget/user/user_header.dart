@@ -145,7 +145,8 @@ class UserHeader extends StatelessWidget {
           ),
           builder: (modalContext, snapshot) {
             final relationship = snapshot.data;
-            if (relationship?.status == RelationshipStatus.friends) {
+            if (relationship?.statusOf(currentUserId) ==
+                UserInRelationshipStatus.open) {
               return ListTile(
                 leading: const Icon(Icons.person_remove),
                 title: Text(context.l10n.friendRemove),

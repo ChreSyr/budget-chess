@@ -199,7 +199,7 @@ class _RelationshipCRUD extends CollectionCRUD<RelationshipModel> {
     return streamFiltered(
       filter: (collection) => collection.where(
         'users.$userId',
-        isEqualTo: UserInRelationshipStatus.isRequested,
+        isEqualTo: UserInRelationshipStatus.isRequested.name,
       ),
     );
   }
@@ -229,33 +229,7 @@ class _RelationshipCRUD extends CollectionCRUD<RelationshipModel> {
       );
     }
 
-    // Can't send friend request if :
-    //   - the requester status is :
-    //     - requests
-    //     - isBlocked
-    //     - hasAccountDeleted
-    switch (relation.statusOf(fromUserId)) {
-      case UserInRelationshipStatus.requests:
-      case UserInRelationshipStatus.isBlocked:
-      case UserInRelationshipStatus.hasDeletedAccount:
-        return;
-      // ignore: no_default_cases
-      default:
-    }
-
-    // Can't send friend request if :
-    //   - the other user's status is :
-    //     - isRequested
-    //     - blocks
-    //     - hasAccountDeleted
-    switch (relation.statusOf(toUserId)) {
-      case UserInRelationshipStatus.isRequested:
-      case UserInRelationshipStatus.blocks:
-      case UserInRelationshipStatus.hasDeletedAccount:
-        return;
-      // ignore: no_default_cases
-      default:
-    }
+    if (!relation.canSendFriendRequest(fromUserId)) return;
 
     if (relation.statusOf(toUserId) == UserInRelationshipStatus.requests) {
       return makeFriends(toUserId, fromUserId);

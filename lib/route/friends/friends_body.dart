@@ -27,9 +27,7 @@ class FriendRequestsCubit extends Cubit<Iterable<RelationshipModel>> {
       return;
     }
 
-    _relationsStream = relationshipCRUD.requestsAbout(auth.uid).listen(
-          (requests) => emit(requests.where((e) => !e.isRequestedBy(auth.uid))),
-        );
+    _relationsStream = relationshipCRUD.requestsTo(auth.uid).listen(emit);
   }
 
   StreamSubscription<Iterable<RelationshipModel>>? _relationsStream;
@@ -88,7 +86,7 @@ class FriendsBody extends RouteBody {
                 final authUid = auth?.uid;
                 if (authUid == null) return CCGap.zero;
                 return StreamBuilder<Iterable<RelationshipModel>>(
-                  stream: relationshipCRUD.friendsOf(authUid),
+                  stream: relationshipCRUD.friendshipsOf(authUid),
                   builder: (context, snapshot) {
                     final friendships = snapshot.data ?? [];
                     return Wrap(
@@ -169,7 +167,10 @@ class FriendRequestCard extends StatelessWidget {
                 Expanded(
                   child: FilledButton.icon(
                     onPressed: () {
-                      relationshipCRUD.delete(documentId: request.id);
+                      relationshipCRUD.refuseFriendRequest(
+                        refuserId: authUid,
+                        requesterId: requester,
+                      );
                       showBlockUserDialog(parentContext, requester);
                     },
                     icon: const Icon(Icons.close),
