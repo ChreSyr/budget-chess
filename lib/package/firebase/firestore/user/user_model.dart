@@ -14,6 +14,7 @@ class UserModel with _$UserModel {
     String? usernameLowercase,
     String? photo,
     String? banner,
+    @Default(false) bool isConnected,
   }) = _UserModel;
 
   /// Required for the override getter

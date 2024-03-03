@@ -26,6 +26,7 @@ mixin _$UserModel {
   String? get usernameLowercase => throw _privateConstructorUsedError;
   String? get photo => throw _privateConstructorUsedError;
   String? get banner => throw _privateConstructorUsedError;
+  bool get isConnected => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -44,7 +45,8 @@ abstract class $UserModelCopyWith<$Res> {
       DateTime? createdAt,
       String? usernameLowercase,
       String? photo,
-      String? banner});
+      String? banner,
+      bool isConnected});
 }
 
 /// @nodoc
@@ -66,6 +68,7 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
     Object? usernameLowercase = freezed,
     Object? photo = freezed,
     Object? banner = freezed,
+    Object? isConnected = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -92,6 +95,10 @@ class _$UserModelCopyWithImpl<$Res, $Val extends UserModel>
           ? _value.banner
           : banner // ignore: cast_nullable_to_non_nullable
               as String?,
+      isConnected: null == isConnected
+          ? _value.isConnected
+          : isConnected // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -110,7 +117,8 @@ abstract class _$$UserModelImplCopyWith<$Res>
       DateTime? createdAt,
       String? usernameLowercase,
       String? photo,
-      String? banner});
+      String? banner,
+      bool isConnected});
 }
 
 /// @nodoc
@@ -130,6 +138,7 @@ class __$$UserModelImplCopyWithImpl<$Res>
     Object? usernameLowercase = freezed,
     Object? photo = freezed,
     Object? banner = freezed,
+    Object? isConnected = null,
   }) {
     return _then(_$UserModelImpl(
       id: null == id
@@ -156,6 +165,10 @@ class __$$UserModelImplCopyWithImpl<$Res>
           ? _value.banner
           : banner // ignore: cast_nullable_to_non_nullable
               as String?,
+      isConnected: null == isConnected
+          ? _value.isConnected
+          : isConnected // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -169,7 +182,8 @@ class _$UserModelImpl extends _UserModel {
       this.createdAt,
       this.usernameLowercase,
       this.photo,
-      this.banner})
+      this.banner,
+      this.isConnected = false})
       : super._();
 
   factory _$UserModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -188,10 +202,13 @@ class _$UserModelImpl extends _UserModel {
   final String? photo;
   @override
   final String? banner;
+  @override
+  @JsonKey()
+  final bool isConnected;
 
   @override
   String toString() {
-    return 'UserModel(id: $id, username: $username, createdAt: $createdAt, usernameLowercase: $usernameLowercase, photo: $photo, banner: $banner)';
+    return 'UserModel(id: $id, username: $username, createdAt: $createdAt, usernameLowercase: $usernameLowercase, photo: $photo, banner: $banner, isConnected: $isConnected)';
   }
 
   @override
@@ -207,13 +224,15 @@ class _$UserModelImpl extends _UserModel {
             (identical(other.usernameLowercase, usernameLowercase) ||
                 other.usernameLowercase == usernameLowercase) &&
             (identical(other.photo, photo) || other.photo == photo) &&
-            (identical(other.banner, banner) || other.banner == banner));
+            (identical(other.banner, banner) || other.banner == banner) &&
+            (identical(other.isConnected, isConnected) ||
+                other.isConnected == isConnected));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, id, username, createdAt, usernameLowercase, photo, banner);
+  int get hashCode => Object.hash(runtimeType, id, username, createdAt,
+      usernameLowercase, photo, banner, isConnected);
 
   @JsonKey(ignore: true)
   @override
@@ -236,7 +255,8 @@ abstract class _UserModel extends UserModel {
       final DateTime? createdAt,
       final String? usernameLowercase,
       final String? photo,
-      final String? banner}) = _$UserModelImpl;
+      final String? banner,
+      final bool isConnected}) = _$UserModelImpl;
   _UserModel._() : super._();
 
   factory _UserModel.fromJson(Map<String, dynamic> json) =
@@ -254,6 +274,8 @@ abstract class _UserModel extends UserModel {
   String? get photo;
   @override
   String? get banner;
+  @override
+  bool get isConnected;
   @override
   @JsonKey(ignore: true)
   _$$UserModelImplCopyWith<_$UserModelImpl> get copyWith =>
