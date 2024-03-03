@@ -19,6 +19,7 @@ mixin _$ProfileForm {
   InputString get name => throw _privateConstructorUsedError;
   InputString get photo => throw _privateConstructorUsedError;
   ProfileFormStatus get status => throw _privateConstructorUsedError;
+  ProfileFormStep get step => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $ProfileFormCopyWith<ProfileForm> get copyWith =>
@@ -31,7 +32,11 @@ abstract class $ProfileFormCopyWith<$Res> {
           ProfileForm value, $Res Function(ProfileForm) then) =
       _$ProfileFormCopyWithImpl<$Res, ProfileForm>;
   @useResult
-  $Res call({InputString name, InputString photo, ProfileFormStatus status});
+  $Res call(
+      {InputString name,
+      InputString photo,
+      ProfileFormStatus status,
+      ProfileFormStep step});
 }
 
 /// @nodoc
@@ -50,6 +55,7 @@ class _$ProfileFormCopyWithImpl<$Res, $Val extends ProfileForm>
     Object? name = null,
     Object? photo = null,
     Object? status = null,
+    Object? step = null,
   }) {
     return _then(_value.copyWith(
       name: null == name
@@ -64,6 +70,10 @@ class _$ProfileFormCopyWithImpl<$Res, $Val extends ProfileForm>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as ProfileFormStatus,
+      step: null == step
+          ? _value.step
+          : step // ignore: cast_nullable_to_non_nullable
+              as ProfileFormStep,
     ) as $Val);
   }
 }
@@ -76,7 +86,11 @@ abstract class _$$ProfileFormImplCopyWith<$Res>
       __$$ProfileFormImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({InputString name, InputString photo, ProfileFormStatus status});
+  $Res call(
+      {InputString name,
+      InputString photo,
+      ProfileFormStatus status,
+      ProfileFormStep step});
 }
 
 /// @nodoc
@@ -93,6 +107,7 @@ class __$$ProfileFormImplCopyWithImpl<$Res>
     Object? name = null,
     Object? photo = null,
     Object? status = null,
+    Object? step = null,
   }) {
     return _then(_$ProfileFormImpl(
       name: null == name
@@ -107,6 +122,10 @@ class __$$ProfileFormImplCopyWithImpl<$Res>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as ProfileFormStatus,
+      step: null == step
+          ? _value.step
+          : step // ignore: cast_nullable_to_non_nullable
+              as ProfileFormStep,
     ));
   }
 }
@@ -115,7 +134,10 @@ class __$$ProfileFormImplCopyWithImpl<$Res>
 
 class _$ProfileFormImpl extends _ProfileForm {
   _$ProfileFormImpl(
-      {required this.name, required this.photo, required this.status})
+      {required this.name,
+      required this.photo,
+      required this.status,
+      required this.step})
       : super._();
 
   @override
@@ -124,10 +146,12 @@ class _$ProfileFormImpl extends _ProfileForm {
   final InputString photo;
   @override
   final ProfileFormStatus status;
+  @override
+  final ProfileFormStep step;
 
   @override
   String toString() {
-    return 'ProfileForm(name: $name, photo: $photo, status: $status)';
+    return 'ProfileForm(name: $name, photo: $photo, status: $status, step: $step)';
   }
 
   @override
@@ -137,11 +161,12 @@ class _$ProfileFormImpl extends _ProfileForm {
             other is _$ProfileFormImpl &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.photo, photo) || other.photo == photo) &&
-            (identical(other.status, status) || other.status == status));
+            (identical(other.status, status) || other.status == status) &&
+            (identical(other.step, step) || other.step == step));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, name, photo, status);
+  int get hashCode => Object.hash(runtimeType, name, photo, status, step);
 
   @JsonKey(ignore: true)
   @override
@@ -154,7 +179,8 @@ abstract class _ProfileForm extends ProfileForm {
   factory _ProfileForm(
       {required final InputString name,
       required final InputString photo,
-      required final ProfileFormStatus status}) = _$ProfileFormImpl;
+      required final ProfileFormStatus status,
+      required final ProfileFormStep step}) = _$ProfileFormImpl;
   _ProfileForm._() : super._();
 
   @override
@@ -163,6 +189,8 @@ abstract class _ProfileForm extends ProfileForm {
   InputString get photo;
   @override
   ProfileFormStatus get status;
+  @override
+  ProfileFormStep get step;
   @override
   @JsonKey(ignore: true)
   _$$ProfileFormImplCopyWith<_$ProfileFormImpl> get copyWith =>

@@ -1,6 +1,7 @@
 import 'package:crea_chess/package/atomic_design/field/input_decoration.dart';
+import 'package:crea_chess/package/atomic_design/padding.dart';
+import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/snack_bar.dart';
-import 'package:crea_chess/package/atomic_design/widget/body_template.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/form/form_error.dart';
@@ -32,12 +33,30 @@ enum ProfileFormStatus {
   success,
 }
 
+enum ProfileFormStep {
+  start,
+  username,
+  photo;
+
+  factory ProfileFormStep.init(UserModel user) {
+    if (user.username.isEmpty || user.username == user.id) {
+      return start;
+    } else if (user.photo == null || user.photo!.isEmpty) {
+      return photo;
+    } else {
+      // the profile is already completed
+      return username;
+    }
+  }
+}
+
 @freezed
 class ProfileForm with FormzMixin, _$ProfileForm {
   factory ProfileForm({
     required InputString name,
     required InputString photo,
     required ProfileFormStatus status,
+    required ProfileFormStep step,
   }) = _ProfileForm;
 
   /// Required for the override getter
@@ -76,6 +95,7 @@ class ProfileFormCubit extends Cubit<ProfileForm> {
               isRequired: true,
             ),
             status: ProfileFormStatus.inProgress,
+            step: ProfileFormStep.init(initialUser),
           ),
         );
 
@@ -93,7 +113,7 @@ class ProfileFormCubit extends Cubit<ProfileForm> {
     emit(state.copyWith(name: state.photo.copyWith(string: photo)));
   }
 
-  Future<void> submit() async {
+  Future<void> submitName() async {
     var newUsername = state.name.value;
     if (newUsername.startsWith('@')) newUsername = newUsername.substring(1);
 
@@ -131,6 +151,7 @@ class ProfileCompleter extends StatelessWidget {
     final user = context.watch<UserCubit>().state;
     if (user != null && user.profileCompleted == false) {
       return Scaffold(
+        appBar: AppBar(),
         body: BlocProvider(
           create: (context) => ProfileFormCubit(user),
           child: _ProfileCompleter(user),
@@ -149,7 +170,6 @@ class _ProfileCompleter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final profileFormCubit = context.read<ProfileFormCubit>();
-    final textController = TextEditingController(text: user.username);
 
     return BlocConsumer<ProfileFormCubit, ProfileForm>(
       listener: (context, form) {
@@ -170,38 +190,75 @@ class _ProfileCompleter extends StatelessWidget {
         }
       },
       builder: (context, form) {
+        return CCPadding.allXxlarge(
+          child: SizedBox(
+            width: CCWidgetSize.large4,
+            child: Column(
+              children: [
+                if (form.status == ProfileFormStatus.waiting)
+                  const LinearProgressIndicator(),
+
+                const UsernameField(),
+
+                CCGap.xlarge,
+
+                // sign in button
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: FilledButton(
+                    onPressed: profileFormCubit.submitName,
+                    child: Text(context.l10n.save),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class UsernameField extends StatelessWidget {
+  const UsernameField({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final cubit = context.read<ProfileFormCubit>();
+    final textController =
+        TextEditingController(text: cubit.initialUser.username);
+
+    return BlocBuilder<ProfileFormCubit, ProfileForm>(
+      builder: (context, form) {
         if (textController.text != form.name.value) {
           textController.text = form.name.value;
         }
 
-        return BodyTemplate(
-          loading: form.status == ProfileFormStatus.waiting,
-          emoji: '👀',
-          title: context.l10n.chooseGoodUsername,
+        return Column(
           children: [
-            // mail field
+            Row(
+              children: [
+                Expanded(child: Text(context.l10n.chooseGoodUsername)),
+                const Text(
+                  '👀',
+                  style: TextStyle(fontSize: CCWidgetSize.xxsmall),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+            CCGap.small,
             TextFormField(
               autofocus: true,
               controller: textController,
               decoration: CCInputDecoration(
+                labelText: 'Username', // TODO : l10n
                 errorText: form.errorMessage(form.name, context.l10n),
                 suffixIcon: IconButton(
                   icon: const Icon(Icons.close),
-                  onPressed: () => profileFormCubit.setName(''),
+                  onPressed: () => cubit.setName(''),
                 ),
               ),
-              onChanged: profileFormCubit.setName,
-            ),
-
-            CCGap.xlarge,
-
-            // sign in button
-            Align(
-              alignment: Alignment.centerRight,
-              child: FilledButton(
-                onPressed: profileFormCubit.submit,
-                child: Text(context.l10n.save),
-              ),
+              onChanged: cubit.setName,
             ),
           ],
         );
