@@ -11,6 +11,7 @@ import 'package:crea_chess/route/nav_notifier.dart';
 import 'package:crea_chess/route/route_body.dart';
 import 'package:crea_chess/route/settings/settings_body.dart';
 import 'package:crea_chess/route/user/user_body.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -20,7 +21,38 @@ class OpenSideRoutesButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return BlocBuilder<AuthenticationCubit, User?>(
+      builder: (context, auth) {
+        if (auth == null) {
+          return FilledButton(
+            onPressed: () => context.push('/sso'),
+            child: Text(context.l10n.signin),
+          );
+        }
+        return BlocBuilder<NavNotifCubit, NavNotifs>(
+          builder: (context, navNotifs) {
+            final hasNotif = navNotifs.keys
+                .map(
+                  (routeId) => SideRoutes.allRouteDataIds.contains(routeId)
+                      ? navNotifs.count(routeId: routeId)
+                      : 0,
+                )
+                .any((count) => count > 0);
+            return SimpleBadge(
+              showBadge: hasNotif,
+              child: BlocBuilder<UserCubit, UserModel?>(
+                builder: (context, user) {
+                  return UserPhoto(
+                    photo: user?.photo,
+                    onTap: context.read<SideRoutesCubit>().toggle,
+                  );
+                },
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 }
 

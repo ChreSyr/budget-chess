@@ -1,9 +1,6 @@
 import 'package:crea_chess/package/atomic_design/dialog/user/delete_account.dart';
-import 'package:crea_chess/package/atomic_design/widget/badge.dart';
-import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
-import 'package:crea_chess/route/nav_notifier.dart';
 import 'package:crea_chess/route/side_routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -122,31 +119,7 @@ abstract class MainRouteBody extends SideRouteBody {
 
   @override
   List<Widget> getActions(BuildContext context) {
-    return super.getActions(context)
-      ..add(
-        BlocBuilder<NavNotifCubit, NavNotifs>(
-          builder: (context, navNotifs) {
-            final hasNotif = navNotifs.keys
-                .map(
-                  (routeId) => SideRoutes.allRouteDataIds.contains(routeId)
-                      ? navNotifs.count(routeId: routeId)
-                      : 0,
-                )
-                .any((count) => count > 0);
-            return SimpleBadge(
-              showBadge: hasNotif,
-              child: BlocBuilder<UserCubit, UserModel?>(
-                builder: (context, user) {
-                  return UserPhoto(
-                    photo: user?.photo,
-                    onTap: context.read<SideRoutesCubit>().toggle,
-                  );
-                },
-              ),
-            );
-          },
-        ),
-      );
+    return super.getActions(context)..add(const OpenSideRoutesButton());
   }
 }
 
