@@ -44,22 +44,6 @@ class UserBody extends RouteBody {
             if (usernameOrId != null &&
                 usernameOrId != currentUser.usernameLowercase) {
               Widget builder(BuildContext context, UserModel user) {
-                final relationshipWidget = StreamBuilder<RelationshipModel?>(
-                  stream: relationshipCRUD.stream(
-                    documentId: relationshipCRUD.getId(authUid, user.id),
-                  ),
-                  builder: (context, snapshot) {
-                    final streaming =
-                        snapshot.connectionState == ConnectionState.active;
-                    final relation = snapshot.data;
-
-                    return (streaming && (user.id) != authUid
-                            ? getRelationshipButton(context, relation)
-                            : null) ??
-                        Container();
-                  },
-                );
-
                 return UserProfile(
                   header: UserHeader(
                     userId: user.id,
@@ -68,7 +52,7 @@ class UserBody extends RouteBody {
                     username: user.username,
                     editable: false,
                   ),
-                  relationshipWidget: relationshipWidget,
+                  relationshipWidget: RelationshipButton(userId: user.id),
                   tabSections: UserSection.getSections(authUid, user.id),
                 );
               }
