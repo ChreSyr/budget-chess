@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
-class HubBody extends MainRouteBody {
+class HubBody extends RouteBody {
   const HubBody({super.key});
 
   static final MainRouteData data = MainRouteData(

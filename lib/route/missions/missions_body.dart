@@ -2,7 +2,7 @@ import 'package:crea_chess/route/route_body.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class MissionsBody extends MainRouteBody {
+class MissionsBody extends RouteBody {
   const MissionsBody({super.key});
 
   static final MainRouteData data = MainRouteData(

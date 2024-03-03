@@ -15,7 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class SettingsBody extends SideRouteBody {
+class SettingsBody extends RouteBody {
   const SettingsBody({super.key});
 
   static final MainRouteData data = MainRouteData(

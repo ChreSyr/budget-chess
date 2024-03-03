@@ -10,17 +10,6 @@ abstract class RouteBody extends StatelessWidget {
 
   String getTitle(AppLocalizations l10n);
 
-  List<Widget>? getActions(BuildContext context) => null;
-}
-
-abstract class SideRouteBody extends RouteBody {
-  const SideRouteBody({super.key});
-}
-
-abstract class MainRouteBody extends SideRouteBody {
-  const MainRouteBody({super.key});
-
-  @override
   List<Widget> getActions(BuildContext context) {
     return [
       const OpenSideRoutesButton(),
