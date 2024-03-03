@@ -10,8 +10,8 @@ void showCancelRelationshipDialog(
   BuildContext pageContext,
   String relatedUserId,
 ) {
-  final currentUserId = pageContext.read<UserCubit>().state?.id;
-  if (currentUserId == null) return; // should never happen
+  final authUid = pageContext.read<AuthenticationCubit>().state?.uid;
+  if (authUid == null) return; // should never happen
 
   showYesNoDialog(
     pageContext: pageContext,
@@ -28,7 +28,7 @@ void showCancelRelationshipDialog(
     ),
     onYes: () {
       relationshipCRUD.cancel(
-        cancelerId: currentUserId,
+        cancelerId: authUid,
         otherId: relatedUserId,
       );
       snackBarNotify(pageContext, pageContext.l10n.friendRemoved);

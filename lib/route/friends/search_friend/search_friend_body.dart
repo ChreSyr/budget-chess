@@ -126,10 +126,10 @@ class FriendSearchDelegate extends SearchDelegate<String?> {
 }
 
 Widget getUserTile(BuildContext context, UserModel user) {
-  final currentUserId = context.read<UserCubit>().state?.id;
-  if (currentUserId == null) return Container(); // should never happen
+  final authUid = context.read<AuthenticationCubit>().state?.uid;
+  if (authUid == null) return Container(); // should never happen
   final userId = user.id;
-  final relationshipId = relationshipCRUD.getId(currentUserId, userId);
+  final relationshipId = relationshipCRUD.getId(authUid, userId);
 
   return StreamBuilder<RelationshipModel?>(
     stream: relationshipCRUD.stream(documentId: relationshipId),
@@ -140,7 +140,7 @@ Widget getUserTile(BuildContext context, UserModel user) {
           icon: const Icon(Icons.person_add),
           onPressed: () {
             relationshipCRUD.sendFriendRequest(
-              fromUserId: currentUserId,
+              fromUserId: authUid,
               toUserId: userId,
             );
             snackBarNotify(context, context.l10n.friendRequestSent);
@@ -149,7 +149,7 @@ Widget getUserTile(BuildContext context, UserModel user) {
 
         if (relationship == null) return sendRequestButton;
 
-        switch (relationship.statusOf(currentUserId)) {
+        switch (relationship.statusOf(authUid)) {
           case UserInRelationshipStatus.requests:
             return IconButton(
               onPressed: () => showCancelFriendRequestDialog(
@@ -189,7 +189,7 @@ Widget getUserTile(BuildContext context, UserModel user) {
           case UserInRelationshipStatus.isRefused:
           case UserInRelationshipStatus.cancels:
           case UserInRelationshipStatus.isCanceled:
-            return relationship.canSendFriendRequest(currentUserId)
+            return relationship.canSendFriendRequest(authUid)
                 ? sendRequestButton
                 : CCGap.zero;
           case UserInRelationshipStatus.hasDeletedAccount:

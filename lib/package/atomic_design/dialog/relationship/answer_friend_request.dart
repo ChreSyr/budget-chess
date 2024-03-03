@@ -11,8 +11,8 @@ void showAnswerFriendRequestDialog(
   String? requesterId,
 ) {
   if (requesterId == null) return;
-  final currentUserId = pageContext.read<UserCubit>().state?.id;
-  if (currentUserId == null) return; // should never happen
+  final authUid = pageContext.read<AuthenticationCubit>().state?.uid;
+  if (authUid == null) return; // should never happen
   showDialog<AlertDialog>(
     context: pageContext,
     builder: (BuildContext dialogContext) {
@@ -33,7 +33,7 @@ void showAnswerFriendRequestDialog(
             icon: const Icon(Icons.close),
             onPressed: () {
               relationshipCRUD.refuseFriendRequest(
-                refuserId: currentUserId,
+                refuserId: authUid,
                 requesterId: requesterId,
               );
               popDialog(dialogContext);
@@ -45,7 +45,7 @@ void showAnswerFriendRequestDialog(
             icon: const Icon(Icons.check),
             onPressed: () {
               popDialog(dialogContext);
-              relationshipCRUD.makeFriends(requesterId, currentUserId);
+              relationshipCRUD.makeFriends(requesterId, authUid);
               // LATER: fiest animation on new friend
             },
             label: Text(pageContext.l10n.accept),

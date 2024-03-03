@@ -125,8 +125,8 @@ class UserHeader extends StatelessWidget {
   }
 
   void showUserActionsModal(BuildContext context) {
-    final currentUserId = context.read<UserCubit>().state?.id;
-    if (currentUserId == null) return; // should never happen
+  final authUid = context.read<AuthenticationCubit>().state?.uid;
+    if (authUid == null) return; // should never happen
 
     return Modal.show(
       context: context,
@@ -141,11 +141,11 @@ class UserHeader extends StatelessWidget {
         ),
         StreamBuilder<RelationshipModel?>(
           stream: relationshipCRUD.stream(
-            documentId: relationshipCRUD.getId(currentUserId, userId),
+            documentId: relationshipCRUD.getId(authUid, userId),
           ),
           builder: (modalContext, snapshot) {
             final relationship = snapshot.data;
-            if (relationship?.statusOf(currentUserId) ==
+            if (relationship?.statusOf(authUid) ==
                 UserInRelationshipStatus.open) {
               return ListTile(
                 leading: const Icon(Icons.person_remove),

@@ -10,8 +10,8 @@ void showBlockUserDialog(
   BuildContext pageContext,
   String toBlockId,
 ) {
-  final currentUserId = pageContext.read<UserCubit>().state?.id;
-  if (currentUserId == null) return; // should never happen
+  final authUid = pageContext.read<AuthenticationCubit>().state?.uid;
+  if (authUid == null) return; // should never happen
 
   showYesNoDialog(
     pageContext: pageContext,
@@ -28,7 +28,7 @@ void showBlockUserDialog(
     ),
     onYes: () {
       relationshipCRUD.block(
-        blockerId: currentUserId,
+        blockerId: authUid,
         toBlockId: toBlockId,
       );
       snackBarNotify(pageContext, pageContext.l10n.blockedUser);
