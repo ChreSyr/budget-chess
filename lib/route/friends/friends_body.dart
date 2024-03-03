@@ -8,6 +8,7 @@ import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
+import 'package:crea_chess/route/friends/search_friend/search_friend_body.dart';
 import 'package:crea_chess/route/route_body.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -62,6 +63,25 @@ class FriendsBody extends RouteBody {
     return CCPadding.horizontalMedium(
       child: Column(
         children: [
+          // Search bar
+          Card(
+            clipBehavior: Clip.hardEdge,
+            child: InkWell(
+              onTap: () => searchFriend(context),
+              child: CCPadding.allSmall(
+                child: Row(
+                  children: [
+                    Text(
+                      'Rechercher un joueur',
+                      style: CCTextStyle.bodyLarge(context),
+                    ),
+                    const Expanded(child: CCGap.medium),
+                    const Icon(Icons.search),
+                  ],
+                ),
+              ),
+            ),
+          ),
           // Friendship requests
           BlocBuilder<FriendRequestsCubit, Iterable<RelationshipModel>>(
             builder: (context, requests) {
