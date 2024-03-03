@@ -1,4 +1,5 @@
 import 'package:crea_chess/package/atomic_design/border.dart';
+import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/snack_bar.dart';
 import 'package:crea_chess/package/atomic_design/widget/divider.dart';
@@ -114,60 +115,54 @@ class AuthProviderButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 40,
-      child: BlocBuilder<PreferencesCubit, PreferencesState>(
-        builder: (context, preferences) {
-          final String? imageAsset;
-          final VoidCallback? onPressed;
-          switch (provider) {
-            case 'facebook':
-              imageAsset = 'assets/icon/facebook_icon.png';
-              onPressed = authenticationCRUD.signInWithFacebook;
-            case 'google':
-              // LATER : why is this not working ?
-              // if (kIsWeb) {
-              //   return authenticationCRUD.getGoogleSignInButton(
-              //     darkMode: preferences.isDarkMode,
-              //   );
-              // }
-              imageAsset = 'assets/icon/google_icon.png';
-              onPressed = authenticationCRUD.signInWithGoogle;
-            default:
-              imageAsset = null;
-              onPressed = null;
-          }
+    return BlocBuilder<PreferencesCubit, PreferencesState>(
+      builder: (context, preferences) {
+        final String? imageAsset;
+        final VoidCallback? onPressed;
+        switch (provider) {
+          case 'facebook':
+            imageAsset = 'assets/icon/facebook_icon.png';
+            onPressed = authenticationCRUD.signInWithFacebook;
+          case 'google':
+            // LATER : why is this not working ?
+            // if (kIsWeb) {
+            //   return authenticationCRUD.getGoogleSignInButton(
+            //     darkMode: preferences.isDarkMode,
+            //   );
+            // }
+            imageAsset = 'assets/icon/google_icon.png';
+            onPressed = authenticationCRUD.signInWithGoogle;
+          default:
+            imageAsset = null;
+            onPressed = null;
+        }
 
-          return ActionChip(
-            shape: RoundedRectangleBorder(
-              borderRadius: CCBorderRadiusCircular.xsmall,
-              side: preferences.isDarkMode
-                  ? const BorderSide(color: Colors.transparent)
-                  : const BorderSide(
-                      color: Color.fromARGB(255, 209, 209, 209),
-                      width: .5,
-                    ),
+        return ActionChip(
+          shape: RoundedRectangleBorder(
+            borderRadius: CCBorderRadiusCircular.medium,
+            side: BorderSide(
+              color: CCColor.onBackground(context),
+              width: .5,
             ),
-            backgroundColor: preferences.isDarkMode
-                ? const Color.fromARGB(255, 28, 28, 32)
-                : null,
-            padding: const EdgeInsets.only(
-              left: 12,
-              top: 12,
-              right: 8,
-              bottom: 12,
-            ),
-            avatar: imageAsset == null
-                ? null
-                : Image.asset(
-                    imageAsset,
-                    height: CCSize.large,
-                  ),
-            label: Text(context.l10n.signWithProvider(provider)),
-            onPressed: onPressed,
-          );
-        },
-      ),
+          ),
+          padding: const EdgeInsets.only(
+            left: 24,
+            top: 24,
+            right: 16,
+            bottom: 24,
+          ),
+          elevation: 5,
+          shadowColor: Colors.black,
+          avatar: imageAsset == null
+              ? null
+              : Image.asset(
+                  imageAsset,
+                  height: CCSize.large,
+                ),
+          label: Text(context.l10n.signWithProvider(provider)),
+          onPressed: onPressed,
+        );
+      },
     );
   }
 }
