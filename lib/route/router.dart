@@ -42,10 +42,6 @@ final _shellNavigatorSSOKey = GlobalKey<NavigatorState>(debugLabel: 'shellSSO');
 final _shellNavigatorUserKey =
     GlobalKey<NavigatorState>(debugLabel: 'shellUser');
 
-final _sideRouteDatas = [
-            SettingsBody.data,
-          ];
-
 // the one and only GoRouter instance
 final router = GoRouter(
   initialLocation: '/hub',
@@ -58,7 +54,6 @@ final router = GoRouter(
       builder: (context, state, navigationShell) {
         // the UI shell
         return SideRoutes(
-          sideRouteDatas: _sideRouteDatas,
           child: ScaffoldWithNestedNavigation(navigationShell: navigationShell),
         );
       },

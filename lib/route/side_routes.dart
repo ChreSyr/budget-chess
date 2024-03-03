@@ -9,6 +9,7 @@ import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/route/nav_notifier.dart';
 import 'package:crea_chess/route/route_body.dart';
+import 'package:crea_chess/route/settings/settings_body.dart';
 import 'package:crea_chess/route/user/user_body.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,14 +25,17 @@ class SideRoutesCubit extends Cubit<bool> {
 
 class SideRoutes extends StatelessWidget {
   const SideRoutes({
-    required this.sideRouteDatas,
     required this.child,
     super.key,
   });
 
   final Widget child;
 
-  final Iterable<MainRouteData> sideRouteDatas;
+  static final allRouteDatas = [
+    UserBody.data,
+    SettingsBody.data,
+  ];
+  static final allRouteDataIds = allRouteDatas.map((data) => data.id);
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +96,9 @@ class SideRoutes extends StatelessWidget {
                           ),
                           CCGap.small,
                           const Divider(),
-                          ...sideRouteDatas.map(SideRouteButton.new),
+                          ...[
+                            SettingsBody.data,
+                          ].map(SideRouteButton.new),
                         ],
                       );
                     },

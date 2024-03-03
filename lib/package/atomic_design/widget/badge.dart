@@ -3,9 +3,13 @@
 import 'package:badges/badges.dart' as badges;
 import 'package:flutter/material.dart';
 
-Widget SimpleBadge({required Widget child}) {
+Widget SimpleBadge({
+  required Widget child,
+  bool showBadge = true,
+}) {
   return badges.Badge(
     position: badges.BadgePosition.topEnd(top: 3, end: 3),
+    showBadge: showBadge,
     child: child,
   );
 }
