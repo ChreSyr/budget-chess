@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:crea_chess/package/atomic_design/dialog/user/email_verification.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/snack_bar.dart';
@@ -21,17 +20,10 @@ import 'package:go_router/go_router.dart';
 abstract class UserSection extends StatelessWidget {
   const UserSection({super.key});
 
-  static List<UserSection> getNotVerifiedSections() {
-    return [
-      const UserSectionDetails(isVerified: false),
-    ];
-  }
-
   static List<UserSection> getSections(String current, String other) {
     if (current == other) {
       return [
         UserSectionFriends(userId: other),
-        const UserSectionDetails(),
         UserSectionGames(userId: other),
       ];
     } else {
@@ -122,31 +114,6 @@ class UserSectionFriends extends UserSection {
               children: friendsPreviews,
             );
           },
-        ),
-      ),
-    );
-  }
-}
-
-class UserSectionDetails extends UserSection {
-  const UserSectionDetails({this.isVerified = true, super.key});
-
-  final bool isVerified;
-
-  @override
-  String getTitle(AppLocalizations l10n) => l10n.details;
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: CCPadding.allMedium(
-        child: ListTile(
-          leading: const Icon(Icons.email),
-          title: Text(context.read<AuthenticationCubit>().state?.email ?? ''),
-          trailing: isVerified
-              ? null
-              : const Icon(Icons.priority_high, color: Colors.red),
-          onTap: isVerified ? null : () => showEmailVerificationDialog(context),
         ),
       ),
     );

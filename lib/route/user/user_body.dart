@@ -120,7 +120,7 @@ class AuthVerifier extends StatelessWidget {
           // If the email is not verified yet
           return UserProfile(
             header: UserHeader.notVerified(authId: auth.uid),
-            tabSections: UserSection.getNotVerifiedSections(),
+            tabSections: [],
           );
         } else {
           return builder(context, auth.uid);

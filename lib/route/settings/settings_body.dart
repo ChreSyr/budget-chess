@@ -1,6 +1,7 @@
 import 'package:crea_chess/package/atomic_design/button/filled_circle_button.dart';
 import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/dialog/user/delete_account.dart';
+import 'package:crea_chess/package/atomic_design/dialog/user/email_verification.dart';
 import 'package:crea_chess/package/atomic_design/modal/modal.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/text_style.dart';
@@ -107,12 +108,16 @@ class SettingsBody extends RouteBody {
               children: [
                 CCGap.large,
                 ListTile(
-                  leading: const Icon(Icons.mail),
-                  title: Text(context.l10n.email),
-                  trailing: Text(
-                    auth.email ?? '',
-                    style: CCTextStyle.bodyLarge(context),
+                  leading: const Icon(Icons.email),
+                  title: Text(
+                    context.read<AuthenticationCubit>().state?.email ?? '',
                   ),
+                  trailing: auth.isVerified
+                      ? null
+                      : const Icon(Icons.priority_high, color: Colors.red),
+                  onTap: auth.isVerified
+                      ? null
+                      : () => showEmailVerificationDialog(context),
                 ),
                 CCGap.large,
                 OutlinedButton.icon(
