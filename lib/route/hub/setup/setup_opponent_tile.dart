@@ -3,6 +3,7 @@ import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class SetupOpponentTile extends StatelessWidget {
   const SetupOpponentTile({required this.game, super.key});
@@ -27,8 +28,14 @@ class SetupOpponentTile extends StatelessWidget {
         final opponent = snapshot.data;
 
         return ListTile(
-          leading: UserPhoto(photo: opponent?.photo),
+          leading: UserPhoto(
+            photo: opponent?.photo,
+            onTap: opponent == null
+                ? null
+                : () => context.push('/user/@${opponent.username}'),
+          ),
           title: opponentValidatedSetup
+              // TODO : l10n
               ? Text('${opponent?.username ?? 'Opponent'} is waiting for you !')
               : youValidatedSetup
                   ? Text('Waiting for ${opponent?.username ?? 'opponent'}...')
