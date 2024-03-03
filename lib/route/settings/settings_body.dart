@@ -3,6 +3,7 @@ import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/dialog/user/delete_account.dart';
 import 'package:crea_chess/package/atomic_design/modal/modal.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
+import 'package:crea_chess/package/atomic_design/text_style.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/get_locale_flag.dart';
@@ -33,100 +34,104 @@ class SettingsBody extends RouteBody {
   Widget build(BuildContext context) {
     final preferencesCubit = context.read<PreferencesCubit>();
 
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          BlocBuilder<PreferencesCubit, PreferencesState>(
-            builder: (context, preferences) {
-              const buttonSize = CCWidgetSize.small;
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  FilledCircleButton.icon(
-                    icon:
-                        preferences.isDarkMode ? Icons.nightlight : Icons.sunny,
-                    onPressed: preferencesCubit.toggleTheme,
-                    size: buttonSize,
-                  ),
-                  CCGap.large,
-                  FilledCircleButton.icon(
-                    icon: null,
-                    onPressed: () => Modal.show(
-                      context: context,
-                      title: context.l10n.chooseColor,
-                      sections: [
-                        GridView.count(
-                          shrinkWrap: true,
-                          crossAxisCount: 3,
-                          crossAxisSpacing: CCSize.large,
-                          mainAxisSpacing: CCSize.large,
-                          children: SeedColor.values
-                              .map(
-                                (seedColor) => FilledButton(
-                                  style: TextButton.styleFrom(
-                                    minimumSize: Size.zero,
-                                    padding: EdgeInsets.zero,
-                                    backgroundColor: seedColor.color,
-                                  ),
-                                  onPressed: () => context
-                                    ..pop()
-                                    ..read<PreferencesCubit>()
-                                        .setSeedColor(seedColor),
-                                  child: const Text(''),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        BlocBuilder<PreferencesCubit, PreferencesState>(
+          builder: (context, preferences) {
+            const buttonSize = CCWidgetSize.small;
+            return ExpansionTile(
+              title: Text(
+                'Préférences', // TODO : l10n
+                style: CCTextStyle.titleLarge(context),
+              ),
+              children: [
+                FilledCircleButton.icon(
+                  icon: preferences.isDarkMode ? Icons.nightlight : Icons.sunny,
+                  onPressed: preferencesCubit.toggleTheme,
+                  size: buttonSize,
+                ),
+                CCGap.large,
+                FilledCircleButton.icon(
+                  icon: null,
+                  onPressed: () => Modal.show(
+                    context: context,
+                    title: context.l10n.chooseColor,
+                    sections: [
+                      GridView.count(
+                        shrinkWrap: true,
+                        crossAxisCount: 3,
+                        crossAxisSpacing: CCSize.large,
+                        mainAxisSpacing: CCSize.large,
+                        children: SeedColor.values
+                            .map(
+                              (seedColor) => FilledButton(
+                                style: TextButton.styleFrom(
+                                  minimumSize: Size.zero,
+                                  padding: EdgeInsets.zero,
+                                  backgroundColor: seedColor.color,
                                 ),
-                              )
-                              .toList(),
-                        ),
-                      ],
-                    ),
-                    size: buttonSize,
+                                onPressed: () => context
+                                  ..pop()
+                                  ..read<PreferencesCubit>()
+                                      .setSeedColor(seedColor),
+                                child: const Text(''),
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ],
                   ),
-                  CCGap.large,
-                  FilledCircleButton.text(
-                    text: getLocaleFlag(context.l10n.localeName),
-                    onPressed: preferencesCubit.toggleLocale,
-                    size: buttonSize,
-                  ),
-                ],
-              );
-            },
-          ),
-          BlocBuilder<AuthenticationCubit, User?>(
-            builder: (context, auth) {
-              if (auth == null) return const SizedBox.shrink();
+                  size: buttonSize,
+                ),
+                CCGap.large,
+                FilledCircleButton.text(
+                  text: getLocaleFlag(context.l10n.localeName),
+                  onPressed: preferencesCubit.toggleLocale,
+                  size: buttonSize,
+                ),
+              ],
+            );
+          },
+        ),
+        BlocBuilder<AuthenticationCubit, User?>(
+          builder: (context, auth) {
+            if (auth == null) return const SizedBox.shrink();
 
-              return Column(
-                children: [
-                  CCGap.large,
-                  OutlinedButton.icon(
-                    onPressed: () {
-                      authenticationCRUD.signOut();
-                      context.push('/sso');
-                    },
-                    icon: const Icon(Icons.logout),
-                    label: Text(context.l10n.signout),
-                  ),
-                  CCGap.large,
-                  OutlinedButton.icon(
-                    onPressed: () => showDeleteAccountDialog(context, auth),
-                    icon: const Icon(Icons.delete_forever),
-                    label: Text(context.l10n.deleteAccount),
-                    style: ButtonStyle(
-                      iconColor: MaterialStateColor.resolveWith(
-                        (states) => Colors.red,
-                      ),
-                      foregroundColor: MaterialStateColor.resolveWith(
-                        (states) => Colors.red,
-                      ),
+            return ExpansionTile(
+              title: Text(
+                'Compte',
+                style: CCTextStyle.titleLarge(context),
+              ), // TODO : l10n
+              children: [
+                CCGap.large,
+                OutlinedButton.icon(
+                  onPressed: () {
+                    authenticationCRUD.signOut();
+                    context.push('/sso');
+                  },
+                  icon: const Icon(Icons.logout),
+                  label: Text(context.l10n.signout),
+                ),
+                CCGap.large,
+                OutlinedButton.icon(
+                  onPressed: () => showDeleteAccountDialog(context, auth),
+                  icon: const Icon(Icons.delete_forever),
+                  label: Text(context.l10n.deleteAccount),
+                  style: ButtonStyle(
+                    iconColor: MaterialStateColor.resolveWith(
+                      (states) => Colors.red,
+                    ),
+                    foregroundColor: MaterialStateColor.resolveWith(
+                      (states) => Colors.red,
                     ),
                   ),
-                ],
-              );
-            },
-          ),
-        ],
-      ),
+                ),
+              ],
+            );
+          },
+        ),
+      ],
     );
   }
 }
