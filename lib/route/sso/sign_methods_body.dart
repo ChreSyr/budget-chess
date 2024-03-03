@@ -98,38 +98,35 @@ class SignMethodsBody extends RouteBody {
               // CCGap.large,
               // AuthProviderButton.facebook(),
 
-              CCGap.xlarge,
+              CCGap.xxxlarge,
 
               // or continue with
               Row(
                 children: [
                   Expanded(child: CCDivider.xthin),
                   CCGap.small,
-                  const Text('Ou'), // TODO : l10n
+                  const Text('Ou avec une adresse mail'), // TODO : l10n
                   CCGap.small,
                   Expanded(child: CCDivider.xthin),
                 ],
               ),
 
-              CCGap.xlarge,
-              SizedBox(
-                width: CCWidgetSize.xlarge,
-                child: ListView(
-                  shrinkWrap: true,
-                  children: [
-                    // sign in button
-                    FilledButton(
-                      onPressed: () => context.push('/sso/signin'),
-                      child: Text(context.l10n.signin),
-                    ),
-                    CCGap.medium,
-                    // sign up button
-                    FilledButton(
-                      onPressed: () => context.push('/sso/signup'),
-                      child: Text(context.l10n.signup),
-                    ),
-                  ],
-                ),
+              // CCGap.xlarge,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // sign in button
+                  TextButton(
+                    onPressed: () => context.push('/sso/signin'),
+                    child: Text(context.l10n.signin),
+                  ),
+                  CCGap.medium,
+                  // sign up button
+                  TextButton(
+                    onPressed: () => context.push('/sso/signup'),
+                    child: Text(context.l10n.signup),
+                  ),
+                ],
               ),
            
               const Expanded(child: CCGap.medium),
