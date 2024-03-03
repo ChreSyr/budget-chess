@@ -125,11 +125,12 @@ class AuthProviderButton extends StatelessWidget {
               imageAsset = 'assets/icon/facebook_icon.png';
               onPressed = authenticationCRUD.signInWithFacebook;
             case 'google':
-              if (kIsWeb) {
-                return authenticationCRUD.getGoogleSignInButton(
-                  darkMode: preferences.isDarkMode,
-                );
-              }
+              // LATER : why is this not working ?
+              // if (kIsWeb) {
+              //   return authenticationCRUD.getGoogleSignInButton(
+              //     darkMode: preferences.isDarkMode,
+              //   );
+              // }
               imageAsset = 'assets/icon/google_icon.png';
               onPressed = authenticationCRUD.signInWithGoogle;
             default:
