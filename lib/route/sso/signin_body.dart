@@ -24,6 +24,9 @@ class SigninBody extends RouteBody {
   }
 
   @override
+  List<Widget> getActions(BuildContext context) => [];
+
+  @override
   Widget build(BuildContext context) {
     return BlocListener<AuthenticationCubit, User?>(
       listener: (context, user) {

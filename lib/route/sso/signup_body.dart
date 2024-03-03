@@ -24,6 +24,9 @@ class SignupBody extends RouteBody {
   }
 
   @override
+  List<Widget> getActions(BuildContext context) => [];
+
+  @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => SignupCubit(),
