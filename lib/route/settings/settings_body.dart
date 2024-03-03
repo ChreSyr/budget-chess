@@ -148,6 +148,9 @@ class SettingsBody extends RouteBody {
                 OutlinedButton.icon(
                   onPressed: () {
                     authenticationCRUD.signOut();
+                    while (context.canPop()) {
+                      context.pop();
+                    }
                     context.push('/sso');
                   },
                   icon: const Icon(Icons.logout),

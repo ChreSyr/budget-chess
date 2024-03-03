@@ -32,7 +32,11 @@ class SignMethodsBody extends RouteBody {
         width: CCWidgetSize.large4,
         child: BlocListener<AuthenticationCubit, User?>(
           listener: (context, user) {
-            if (user != null && context.canPop()) context.pop();
+            if (user != null) {
+              while (context.canPop()) {
+                context.pop();
+              }
+            }
           },
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
