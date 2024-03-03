@@ -224,8 +224,9 @@ Future<ui.Image> _loadBackground({
   final data = await rootBundle.load(assetPath);
   final codec = await ui.instantiateImageCodec(
     data.buffer.asUint8List(),
-    targetHeight: (squareSize * boardSize.ranks).toInt(),
-    targetWidth: (squareSize * boardSize.files).toInt(),
+    // The board assets are 8x8 boards
+    targetHeight: (squareSize * 8).toInt(),
+    targetWidth: (squareSize * 8).toInt(),
   );
   final frame = await codec.getNextFrame();
   return frame.image;
