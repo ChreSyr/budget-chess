@@ -29,7 +29,6 @@ class UserBody extends RouteBody {
     icon: Icons.person,
     getTitle: (l10n) => 'Voir mon profil',
   );
-  static const notifEmailNotVerified = 'email-not-verified';
   static const notifPhotoEmpty = 'photo-empty';
   static const notifNameEmpty = 'name-empty';
 

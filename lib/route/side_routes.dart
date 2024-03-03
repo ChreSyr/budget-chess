@@ -129,9 +129,7 @@ class SideRoutes extends StatelessWidget {
                         children: [
                           CCGap.xxxlarge,
                           CountBadge(
-                            count: navNotifs.count(
-                              routeId: UserBody.data.id,
-                            ),
+                            count: navNotifs.count(routeId: UserBody.data.id),
                             child: const ProfileButton(),
                             offset: const Offset(-10, -10),
                           ),
@@ -139,7 +137,13 @@ class SideRoutes extends StatelessWidget {
                           const Divider(),
                           ...[
                             SettingsBody.data,
-                          ].map(SideRouteButton.new),
+                          ].map(
+                            (data) => CountBadge(
+                              count: navNotifs.count(routeId: data.id),
+                              child: SideRouteButton(data),
+                              offset: const Offset(-10, 10),
+                            ),
+                          ),
                         ],
                       );
                     },

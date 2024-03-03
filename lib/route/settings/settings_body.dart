@@ -25,6 +25,7 @@ class SettingsBody extends RouteBody {
     icon: Icons.settings,
     getTitle: (l10n) => l10n.settings,
   );
+  static const notifEmailNotVerified = 'email-not-verified';
 
   @override
   String getTitle(AppLocalizations l10n) {
@@ -105,13 +106,37 @@ class SettingsBody extends RouteBody {
                 'Compte',
                 style: CCTextStyle.titleLarge(context),
               ), // TODO : l10n
+              trailing: auth.isVerified
+                  ? null
+                  : const Icon(Icons.priority_high, color: Colors.red),
               children: [
                 CCGap.large,
                 ListTile(
                   leading: const Icon(Icons.email),
-                  title: Text(
-                    context.read<AuthenticationCubit>().state?.email ?? '',
-                  ),
+                  title: auth.isVerified
+                      ? Text(
+                          context.read<AuthenticationCubit>().state?.email ??
+                              '',
+                        )
+                      : Row(
+                          children: [
+                            Text(
+                              context
+                                      .read<AuthenticationCubit>()
+                                      .state
+                                      ?.email ??
+                                  '',
+                            ),
+                            CCGap.small,
+                            Text(
+                              'non vérifiée', // TODO : l10n
+                              style: CCTextStyle.bodyMedium(context)?.copyWith(
+                                fontStyle: FontStyle.italic,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
+                        ),
                   trailing: auth.isVerified
                       ? null
                       : const Icon(Icons.priority_high, color: Colors.red),

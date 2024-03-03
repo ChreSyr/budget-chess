@@ -1,5 +1,6 @@
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/route/friends/friends_body.dart';
+import 'package:crea_chess/route/settings/settings_body.dart';
 import 'package:crea_chess/route/user/user_body.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ class NavNotifCubit extends Cubit<NavNotifs> {
           for (var e in [
             FriendsBody.data,
             UserBody.data,
+            SettingsBody.data,
           ].map((e) => e.id))
             e: {},
         });
@@ -52,8 +54,8 @@ class NavNotifier extends StatelessWidget {
     return BlocListener<AuthenticationCubit, User?>(
       listener: (context, auth) {
         context.read<NavNotifCubit>().set(
-              routeId: UserBody.data.id,
-              notifId: UserBody.notifEmailNotVerified,
+              routeId: SettingsBody.data.id,
+              notifId: SettingsBody.notifEmailNotVerified,
               count: auth != null && !auth.isVerified ? 1 : 0,
             );
       },

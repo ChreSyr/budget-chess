@@ -48,7 +48,7 @@ class CCColor {
   static Color surfaceVariant(BuildContext context) =>
       Theme.of(context).colorScheme.surfaceVariant;
   
-  static Color transparentGrey = const Color.fromARGB(128, 0, 0, 0);
+  static const Color transparentGrey = Color.fromARGB(128, 0, 0, 0);
 }
 
 enum SeedColor {
