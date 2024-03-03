@@ -40,7 +40,6 @@ enum ProfileFormStatus {
 }
 
 enum ProfileFormStep {
-  start(0),
   username(1),
   photo(2);
 
@@ -48,7 +47,7 @@ enum ProfileFormStep {
 
   factory ProfileFormStep.init(UserModel user) {
     if (user.username.isEmpty || user.username == user.id) {
-      return start;
+      return username;
     } else if (user.photo == null || user.photo!.isEmpty) {
       return photo;
     } else {
@@ -138,10 +137,6 @@ class ProfileFormCubit extends Cubit<ProfileForm> {
   void setPhoto(String photo) {
     emit(state.copyWith(photo: state.photo.copyWith(string: photo)));
   }
-
-  void tempReset() => emit(state.copyWith(step: ProfileFormStep.start));
-
-  void submitStart() => emit(state.copyWith(step: ProfileFormStep.username));
 
   Future<void> submitName() async {
     var newUsername = state.name.value;
@@ -336,13 +331,6 @@ class _ProfileCompleter extends StatelessWidget {
                       ],
                     ),
                   ),
-                  CCGap.xxlarge,
-                  OutlinedButton(
-                    onPressed: profileFormCubit.submitStart,
-                    // TODO : l10n
-                    child: const Text("Let's start by creating your profile !"),
-                  ),
-                  CCGap.xxlarge,
                   CCGap.xxlarge,
                   const UsernameField(),
                   const PhotoField(),
