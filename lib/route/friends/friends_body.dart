@@ -11,7 +11,9 @@ import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/route/route_body.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class FriendRequestsCubit extends Cubit<Iterable<RelationshipModel>> {
   FriendRequestsCubit() : super([]) {
@@ -108,33 +110,36 @@ class FriendRequestCard extends StatelessWidget {
       child: CCPadding.allMedium(
         child: Column(
           children: [
-            StreamBuilder<UserModel?>(
-              stream: userCRUD.stream(documentId: requester),
-              builder: (context, snapshot) {
-                final requesterProfile = snapshot.data;
-                if (requesterProfile == null) return CCGap.zero;
+            GestureDetector(
+              onTap: () => context.push('/user/@$requester'),
+              child: StreamBuilder<UserModel?>(
+                stream: userCRUD.stream(documentId: requester),
+                builder: (context, snapshot) {
+                  final requesterProfile = snapshot.data;
+                  if (requesterProfile == null) return CCGap.zero;
 
-                return Row(
-                  children: [
-                    UserPhoto(
-                      photo: requesterProfile.photo,
-                      radius: CCSize.xlarge,
-                    ),
-                    CCGap.medium,
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          requesterProfile.username,
-                          style: CCTextStyle.titleLarge(context),
-                        ),
-                        CCGap.medium,
-                        const Text('Vous demande en ami !'), // TODO : l10n
-                      ],
-                    ),
-                  ],
-                );
-              },
+                  return Row(
+                    children: [
+                      UserPhoto(
+                        photo: requesterProfile.photo,
+                        radius: CCSize.xlarge,
+                      ),
+                      CCGap.medium,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            requesterProfile.username,
+                            style: CCTextStyle.titleLarge(context),
+                          ),
+                          CCGap.medium,
+                          const Text('Vous demande en ami !'), // TODO : l10n
+                        ],
+                      ),
+                    ],
+                  );
+                },
+              ),
             ),
             CCGap.medium,
             Row(
