@@ -34,9 +34,10 @@ class SettingsBody extends RouteBody {
   Widget build(BuildContext context) {
     final preferencesCubit = context.read<PreferencesCubit>();
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
+    return ListView(
+      // mainAxisSize: MainAxisSize.min,
       children: [
+        CCGap.medium,
         BlocBuilder<PreferencesCubit, PreferencesState>(
           builder: (context, preferences) {
             const buttonSize = CCWidgetSize.small;
@@ -104,6 +105,15 @@ class SettingsBody extends RouteBody {
                 style: CCTextStyle.titleLarge(context),
               ), // TODO : l10n
               children: [
+                CCGap.large,
+                ListTile(
+                  leading: const Icon(Icons.mail),
+                  title: Text(context.l10n.email),
+                  trailing: Text(
+                    auth.email ?? '',
+                    style: CCTextStyle.bodyLarge(context),
+                  ),
+                ),
                 CCGap.large,
                 OutlinedButton.icon(
                   onPressed: () {
