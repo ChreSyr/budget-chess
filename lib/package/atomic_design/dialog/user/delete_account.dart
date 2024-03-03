@@ -4,6 +4,7 @@ import 'package:crea_chess/package/firebase/authentication/authentication_crud.d
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 Future<AlertDialog?> showDeleteAccountDialog(
   BuildContext pageContext,
@@ -32,6 +33,11 @@ Future<AlertDialog?> showDeleteAccountDialog(
                 snackBarNotify(pageContext, pageContext.l10n.deletedAccount);
                 // ignore: use_build_context_synchronously
                 popDialog(dialogContext);
+                // ignore: use_build_context_synchronously
+                while (pageContext.canPop()) {
+                  // ignore: use_build_context_synchronously
+                  pageContext.pop();
+                }
               } catch (_) {
                 // ignore: use_build_context_synchronously
                 snackBarError(pageContext, pageContext.l10n.errorOccurred);
