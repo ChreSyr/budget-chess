@@ -254,7 +254,7 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
 
   final StatefulNavigationShell navigationShell;
 
-  static final _bottomRouteDatas = [
+  static final bottomRouteDatas = [
     HubBody.data,
     MissionsBody.data,
     MessagesBody.data,
@@ -279,14 +279,14 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
 
     return Scaffold(
       body: navigationShell,
-      bottomNavigationBar: selectedIndex >= _bottomRouteDatas.length
+      bottomNavigationBar: selectedIndex >= bottomRouteDatas.length
           ? null
           : BlocBuilder<NavNotifCubit, NavNotifs>(
               builder: (context, notifs) {
                 return CCNavigationBar(
                   height: CCWidgetSize.xxsmall,
                   selectedIndex: selectedIndex,
-                  destinations: _bottomRouteDatas.map(
+                  destinations: bottomRouteDatas.map(
                     (route) {
                       final notifCount = notifs.count(routeId: route.id);
                       final icon = CountBadge(

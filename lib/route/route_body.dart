@@ -5,8 +5,11 @@ import 'package:flutter/material.dart';
 
 abstract class RouteBody extends StatelessWidget {
   const RouteBody({
+    this.isBottomRoute = false,
     super.key,
   });
+
+  final bool isBottomRoute;
 
   String getTitle(AppLocalizations l10n);
 

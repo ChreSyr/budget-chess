@@ -43,7 +43,7 @@ class FriendRequestsCubit extends Cubit<Iterable<RelationshipModel>> {
 }
 
 class FriendsBody extends RouteBody {
-  const FriendsBody({super.key});
+  const FriendsBody({super.key}) : super(isBottomRoute: true);
 
   static final MainRouteData data = MainRouteData(
     id: 'friends',

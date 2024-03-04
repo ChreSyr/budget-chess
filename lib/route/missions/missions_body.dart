@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MissionsBody extends RouteBody {
-  const MissionsBody({super.key});
+  const MissionsBody({super.key}) : super(isBottomRoute: true);
 
   static final MainRouteData data = MainRouteData(
     id: 'misions',

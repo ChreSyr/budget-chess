@@ -9,7 +9,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
 class HubBody extends RouteBody {
-  const HubBody({super.key});
+  const HubBody({super.key}) : super(isBottomRoute: true);
 
   static final MainRouteData data = MainRouteData(
     id: 'hub',
