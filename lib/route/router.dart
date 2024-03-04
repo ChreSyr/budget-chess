@@ -296,11 +296,11 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
                       return CCNavigationDestination(
                         // icon: icon,
                         icon: SizedBox.square(
-                          dimension: CCSize.xxxlarge,
+                          dimension: CCWidgetSize.xsmall,
                           child: Center(child: icon),
                         ),
                         selectedIcon: SizedBox.square(
-                          dimension: CCSize.xxxlarge,
+                          dimension: CCWidgetSize.xsmall,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
