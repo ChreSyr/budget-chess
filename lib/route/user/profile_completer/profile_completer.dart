@@ -11,6 +11,7 @@ import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/form/form_error.dart';
 import 'package:crea_chess/package/form/input/input_string.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
+import 'package:crea_chess/route/user/profile_completer/emergency_app_bar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -233,7 +234,7 @@ class ProfileCompleter extends StatelessWidget {
     final user = context.watch<UserCubit>().state;
     if (user != null && user.profileCompleted == false) {
       return Scaffold(
-        appBar: AppBar(),
+        appBar: getEmergencyAppBar(context),
         body: BlocProvider(
           create: (context) => ProfileFormCubit(user),
           child: _ProfileCompleter(user),

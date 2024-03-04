@@ -10,7 +10,7 @@ import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/route/nav_notifier.dart';
 import 'package:crea_chess/route/route_body.dart';
 import 'package:crea_chess/route/settings/settings_body.dart';
-import 'package:crea_chess/route/user/profile_completer.dart';
+import 'package:crea_chess/route/user/profile_completer/profile_completer.dart';
 import 'package:crea_chess/route/user/user_body.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

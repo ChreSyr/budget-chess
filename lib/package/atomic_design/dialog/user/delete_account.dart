@@ -39,8 +39,10 @@ Future<AlertDialog?> showDeleteAccountDialog(
                   pageContext.pop();
                 }
               } catch (_) {
+                try {
                 // ignore: use_build_context_synchronously
                 snackBarError(pageContext, pageContext.l10n.errorOccurred);
+                } catch (_) {}
               }
             },
           ),

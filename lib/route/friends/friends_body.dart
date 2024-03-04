@@ -72,6 +72,7 @@ class FriendsBody extends RouteBody {
                 child: Row(
                   children: [
                     Text(
+                      // TODO : l10n
                       'Rechercher un joueur',
                       style: CCTextStyle.bodyLarge(context),
                     ),
