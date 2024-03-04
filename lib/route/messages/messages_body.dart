@@ -18,6 +18,11 @@ class MessagesBody extends RouteBody {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(child: Text('Messages page'));
+    return const Center(
+      child: Text(
+        'Messages page is coming soon !\n\nFeel free to make suggestions !\n\nYou can contact the player Mael_Mainsard ;)',
+        textAlign: TextAlign.center,
+      ),
+    );
   }
 }

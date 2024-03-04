@@ -18,6 +18,11 @@ class MissionsBody extends RouteBody {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(child: Text('Missions page'));
+    return const Center(
+      child: Text(
+        'Missions page is coming soon ! Only 1 year !\n\nFeel free to make suggestions !\n\nYou can contact the player chresyr ;)',
+        textAlign: TextAlign.center,
+      ),
+    );
   }
 }
