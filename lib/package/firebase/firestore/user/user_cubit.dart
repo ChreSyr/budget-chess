@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:crea_chess/package/firebase/authentication/auth_uid_listener_cubit.dart';
 import 'package:crea_chess/package/firebase/authentication/authentication_crud.dart';
 import 'package:crea_chess/package/firebase/firestore/user/challenge_filter/challenge_filter_crud.dart';
 import 'package:crea_chess/package/firebase/firestore/user/user_crud.dart';
@@ -7,18 +8,16 @@ import 'package:crea_chess/package/firebase/firestore/user/user_model.dart';
 import 'package:diacritic/diacritic.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:regexpattern/regexpattern.dart';
 
-class UserCubit extends Cubit<UserModel?> {
-  UserCubit() : super(null) {
-    _authStream = FirebaseAuth.instance.userChanges().listen(_fromAuth);
-  }
+class UserCubit extends AuthListenerCubit<UserModel?> {
+  UserCubit() : super(null);
 
-  void _fromAuth(User? auth) {
+  @override
+  void authChanged(User? auth) {
     _userStream?.cancel();
 
-    if (auth == null || !auth.isVerified) {
+    if (auth == null) {
       signedOut = true;
       emit(null);
       return;
@@ -66,13 +65,11 @@ class UserCubit extends Cubit<UserModel?> {
   }
 
   StreamSubscription<UserModel?>? _userStream;
-  late StreamSubscription<User?> _authStream;
   bool signedOut = true;
 
   @override
   Future<void> close() {
     _userStream?.cancel();
-    _authStream.cancel();
     return super.close();
   }
 

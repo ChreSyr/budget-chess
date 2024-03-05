@@ -15,29 +15,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class FriendRequestsCubit extends Cubit<Iterable<RelationshipModel>> {
-  FriendRequestsCubit() : super([]) {
-    _authStream = FirebaseAuth.instance.userChanges().listen(_authChanged);
-  }
+class FriendRequestsCubit
+    extends AuthUidListenerCubit<Iterable<RelationshipModel>> {
+  FriendRequestsCubit() : super([]);
 
-  void _authChanged(User? auth) {
+  @override
+  void authUidChanged(String? authUid) {
     _relationsStream?.cancel();
 
-    if (auth == null || !auth.isVerified) {
-      emit([]);
-      return;
-    }
+    if (authUid == null) return emit([]);
 
-    _relationsStream = relationshipCRUD.requestsTo(auth.uid).listen(emit);
+    _relationsStream = relationshipCRUD.requestsTo(authUid).listen(emit);
   }
 
   StreamSubscription<Iterable<RelationshipModel>>? _relationsStream;
-  late StreamSubscription<User?> _authStream;
 
   @override
   Future<void> close() {
     _relationsStream?.cancel();
-    _authStream.cancel();
     return super.close();
   }
 }

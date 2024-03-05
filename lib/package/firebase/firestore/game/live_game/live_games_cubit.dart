@@ -2,18 +2,15 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crea_chess/package/firebase/export.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-class LiveGamesCubit extends Cubit<Iterable<GameModel>> {
-  LiveGamesCubit() : super([]) {
-    _authStream = FirebaseAuth.instance.userChanges().listen(_fromAuth);
-  }
+class LiveGamesCubit extends AuthUidListenerCubit<Iterable<GameModel>> {
+  LiveGamesCubit() : super([]);
 
-  void _fromAuth(User? auth) {
+  @override
+  void authUidChanged(String? authUid) {
     _liveGamesStream?.cancel();
 
-    if (auth == null || !auth.isVerified) {
+    if (authUid == null) {
       emit([]);
       return;
     }
@@ -22,8 +19,8 @@ class LiveGamesCubit extends Cubit<Iterable<GameModel>> {
         .streamFiltered(
           filter: (collection) => collection.where(
             Filter.or(
-              Filter('whiteId', isEqualTo: auth.uid),
-              Filter('blackId', isEqualTo: auth.uid),
+              Filter('whiteId', isEqualTo: authUid),
+              Filter('blackId', isEqualTo: authUid),
             ),
           ),
         )
@@ -31,12 +28,10 @@ class LiveGamesCubit extends Cubit<Iterable<GameModel>> {
   }
 
   StreamSubscription<Iterable<GameModel>>? _liveGamesStream;
-  late StreamSubscription<User?> _authStream;
 
   @override
   Future<void> close() {
     _liveGamesStream?.cancel();
-    _authStream.cancel();
     return super.close();
   }
 }
