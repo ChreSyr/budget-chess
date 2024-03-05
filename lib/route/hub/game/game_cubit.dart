@@ -13,7 +13,13 @@ class GameCubit extends Cubit<GameState?> {
     _gameStream = liveGameCRUD.stream(documentId: gameId).listen(
           (game) => game == null
               ? emit(null)
-              : emit(GameState(game: game, stepCursor: game.steps.length)),
+              : emit(
+                  GameState(
+                    game: game,
+                    stepCursor: game.steps.length,
+                    premove: state?.premove,
+                  ),
+                ),
         );
   }
 
