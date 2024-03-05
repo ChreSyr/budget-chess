@@ -5,8 +5,6 @@ import 'package:crea_chess/package/atomic_design/snack_bar.dart';
 import 'package:crea_chess/package/atomic_design/text_style.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/firestore/user/user_cubit.dart';
-import 'package:crea_chess/package/game/speed.dart';
-import 'package:crea_chess/package/game/time_control.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/package/lichess/rule.dart';
 import 'package:crea_chess/package/unichess/unichess.dart';
@@ -77,30 +75,31 @@ class _CreateChallengeBody extends StatelessWidget {
                   _TitledRow(
                     title: 'Rules', // TODO : l10n
                     child: OutlinedButton(
-                      onPressed: () => ModalSelect.show(
-                        context: context,
-                        title: context.l10n.boardSize,
-                        choices: [
-                          ModalSelectRowData(
-                            title: 'Standard', // TODO : l10n
-                            choices: const [
-                              Rule.chess,
-                            ],
-                            choiceBuilder: ruleBuilder,
-                          ),
-                          ModalSelectRowData(
-                            title: 'Variants',
-                            choices: Rule.values.toList()..remove(Rule.chess),
-                            choiceBuilder: ruleBuilder,
-                          ),
-                        ],
-                        selected: form.rule.value,
-                        onSelected: (Rule rule) {
-                          createChallengeCubit.setRule(rule);
-                          // Strang bug on web
-                          Navigator.pop(context);
-                        },
-                      ),
+                      onPressed: null,
+                      // onPressed: () => ModalSelect.show(
+                      //   context: context,
+                      //   title: context.l10n.boardSize,
+                      //   choices: [
+                      //     ModalSelectRowData(
+                      //       title: 'Standard', // TODO : l10n
+                      //       choices: const [
+                      //         Rule.chess,
+                      //       ],
+                      //       choiceBuilder: ruleBuilder,
+                      //     ),
+                      //     ModalSelectRowData(
+                      //       title: 'Variants',
+                      //       choices: Rule.values.toList()..remove(Rule.chess),
+                      //       choiceBuilder: ruleBuilder,
+                      //     ),
+                      //   ],
+                      //   selected: form.rule.value,
+                      //   onSelected: (Rule rule) {
+                      //     createChallengeCubit.setRule(rule);
+                      //     // Strang bug on web
+                      //     Navigator.pop(context);
+                      //   },
+                      // ),
                       child: ruleBuilder(form.rule.value),
                     ),
                   ),
@@ -108,58 +107,59 @@ class _CreateChallengeBody extends StatelessWidget {
                   _TitledRow(
                     title: context.l10n.timeControl,
                     child: OutlinedButton.icon(
-                      onPressed: () => ModalSelect.show(
-                        context: context,
-                        title: context.l10n.boardSize,
-                        choices: [
-                          ModalSelectRowData(
-                            title: 'Bullet',
-                            titleIcon: Icon(Speed.bullet.icon),
-                            choices: const [
-                              TimeControl(0, 1),
-                              TimeControl(60, 0),
-                              TimeControl(60, 1),
-                              TimeControl(120, 1),
-                            ],
-                          ),
-                          ModalSelectRowData(
-                            title: 'Blitz',
-                            titleIcon: Icon(Speed.blitz.icon),
-                            choices: const [
-                              TimeControl(180, 0),
-                              TimeControl(180, 2),
-                              TimeControl(300, 0),
-                              TimeControl(300, 3),
-                            ],
-                          ),
-                          ModalSelectRowData(
-                            title: 'Rapid',
-                            titleIcon: Icon(Speed.rapid.icon),
-                            choices: const [
-                              TimeControl(600, 0),
-                              TimeControl(600, 5),
-                              TimeControl(900, 0),
-                              TimeControl(900, 10),
-                            ],
-                          ),
-                          ModalSelectRowData(
-                            title: 'Classical',
-                            titleIcon: Icon(Speed.classical.icon),
-                            choices: const [
-                              TimeControl(1500, 0),
-                              TimeControl(1800, 0),
-                              TimeControl(1800, 20),
-                              TimeControl(3600, 0),
-                            ],
-                          ),
-                        ],
-                        selected: form.timeControl.value,
-                        onSelected: (TimeControl choice) {
-                          createChallengeCubit.setTimeControl(choice);
-                          // Strang bug on web
-                          Navigator.pop(context);
-                        },
-                      ),
+                      onPressed: null,
+                      // onPressed: () => ModalSelect.show(
+                      //   context: context,
+                      //   title: context.l10n.boardSize,
+                      //   choices: [
+                      //     ModalSelectRowData(
+                      //       title: 'Bullet',
+                      //       titleIcon: Icon(Speed.bullet.icon),
+                      //       choices: const [
+                      //         TimeControl(0, 1),
+                      //         TimeControl(60, 0),
+                      //         TimeControl(60, 1),
+                      //         TimeControl(120, 1),
+                      //       ],
+                      //     ),
+                      //     ModalSelectRowData(
+                      //       title: 'Blitz',
+                      //       titleIcon: Icon(Speed.blitz.icon),
+                      //       choices: const [
+                      //         TimeControl(180, 0),
+                      //         TimeControl(180, 2),
+                      //         TimeControl(300, 0),
+                      //         TimeControl(300, 3),
+                      //       ],
+                      //     ),
+                      //     ModalSelectRowData(
+                      //       title: 'Rapid',
+                      //       titleIcon: Icon(Speed.rapid.icon),
+                      //       choices: const [
+                      //         TimeControl(600, 0),
+                      //         TimeControl(600, 5),
+                      //         TimeControl(900, 0),
+                      //         TimeControl(900, 10),
+                      //       ],
+                      //     ),
+                      //     ModalSelectRowData(
+                      //       title: 'Classical',
+                      //       titleIcon: Icon(Speed.classical.icon),
+                      //       choices: const [
+                      //         TimeControl(1500, 0),
+                      //         TimeControl(1800, 0),
+                      //         TimeControl(1800, 20),
+                      //         TimeControl(3600, 0),
+                      //       ],
+                      //     ),
+                      //   ],
+                      //   selected: form.timeControl.value,
+                      //   onSelected: (TimeControl choice) {
+                      //     createChallengeCubit.setTimeControl(choice);
+                      //     // Strang bug on web
+                      //     Navigator.pop(context);
+                      //   },
+                      // ),
                       icon: Icon(form.timeControl.value.speed.icon),
                       label: Text(form.timeControl.value.toString()),
                     ),

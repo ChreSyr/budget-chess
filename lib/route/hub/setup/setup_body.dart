@@ -84,6 +84,8 @@ class _SetupBody extends StatelessWidget {
       width: CCSize.boardSizeOf(context),
       child: Column(
         children: [
+          SetupOpponentTile(game: game),
+          CCGap.medium,
           BlocBuilder<SelectedRoleCubit, Role?>(
             builder: (context, selectedRole) {
               return SetupBoard(
@@ -124,8 +126,6 @@ class _SetupBody extends StatelessWidget {
               ],
             ),
           ),
-          CCGap.medium,
-          SetupOpponentTile(game: game),
         ],
       ),
     );
