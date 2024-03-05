@@ -72,6 +72,7 @@ class _GameBody extends StatelessWidget {
 
     return Center(
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           PlayerTile(
             userId: orientation == Side.white ? game.blackId : game.whiteId,
