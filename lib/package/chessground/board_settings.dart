@@ -14,8 +14,8 @@ import 'package:flutter/widgets.dart';
 class BoardSettings {
   const BoardSettings({
     // theme
-    this.colorScheme = BoardColorScheme.brown,
-    this.pieceAssets = PieceSet.cburnettAssets,
+    this.colorScheme = BoardColorScheme.brown2,
+    this.pieceAssets = PieceSet.frenzyPieceSet,
     // visual settings
     this.enableCoordinates = true,
     this.animationDuration = const Duration(milliseconds: 250),

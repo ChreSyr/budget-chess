@@ -1,4 +1,3 @@
-import 'package:crea_chess/frenzy_piece_set.dart';
 import 'package:crea_chess/package/atomic_design/dialog/enum_choice.dart';
 import 'package:crea_chess/package/chessground/export.dart';
 import 'package:crea_chess/package/unichess/unichess.dart';
@@ -29,7 +28,7 @@ class _HomePageState extends State<PlayPage> {
   ValidMoves validMoves = IMap(const {});
   Side sideToMove = Side.white;
   PieceSet? pieceSet;
-  PieceAssets pieceAssets = frenzyPieceSet;
+  PieceAssets pieceAssets = PieceSet.frenzy.assets;
   BoardTheme boardTheme = BoardTheme.blue;
   bool immersiveMode = false;
   Mode playMode = Mode.botPlay;

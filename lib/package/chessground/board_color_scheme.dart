@@ -145,6 +145,16 @@ class BoardColorScheme {
         validPremoves: const Color(0x40203085),
       );
 
+  factory BoardColorScheme.brown2(BoardSize size) => BoardColorScheme.solid(
+        boardSize: size,
+        lightSquare: const Color(0xffccb28b),
+        darkSquare: const Color(0xff8b5e3f),
+        lastMove: const HighlightDetails(solidColor: Color(0x7fffff00)),
+        selected: const HighlightDetails(solidColor: Color(0x7fffff00)),
+        validMoves: const Color(0x30000000),
+        validPremoves: const Color(0x40203085),
+      );
+
   factory BoardColorScheme.blue(BoardSize size) => BoardColorScheme.solid(
         boardSize: size,
         lightSquare: const Color(0xffdee3e6),
