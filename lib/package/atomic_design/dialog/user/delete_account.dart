@@ -30,8 +30,6 @@ Future<AlertDialog?> showDeleteAccountDialog(
               try {
                 await authenticationCRUD.deleteUserAccount(userId: user.uid);
                 // ignore: use_build_context_synchronously
-                snackBarNotify(pageContext, pageContext.l10n.deletedAccount);
-                // ignore: use_build_context_synchronously
                 popDialog(dialogContext);
                 // ignore: use_build_context_synchronously
                 while (pageContext.canPop()) {

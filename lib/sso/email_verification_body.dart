@@ -2,36 +2,23 @@ import 'dart:async';
 
 import 'package:crea_chess/package/atomic_design/widget/body_template.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
-import 'package:crea_chess/package/firebase/authentication/authentication_crud.dart';
+import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/route/route_body.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:crea_chess/sso/emergency_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 class EmailVerificationBody extends RouteBody {
   const EmailVerificationBody({super.key});
 
   @override
-  String getTitle(AppLocalizations l10n) {
-    return l10n.signin;
-  }
+  String getTitle(AppLocalizations l10n) => '';
 
   @override
-  Widget build(BuildContext context) {
-    return BlocListener<AuthenticationCubit, User?>(
-      listener: (context, user) {
-        if (user == null) return;
-        if (user.emailVerified) context.push('/user/modify_name');
-      },
-      child: const _EmailVerificationBody(),
-    );
+  List<Widget> getActions(BuildContext context) {
+    return getEmergencyAppBarActions(context);
   }
-}
-
-class _EmailVerificationBody extends StatelessWidget {
-  const _EmailVerificationBody();
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +29,7 @@ class _EmailVerificationBody extends StatelessWidget {
       children: [
         Text(
           context.l10n.verifyEmailExplainLink(
-            context.read<AuthenticationCubit>().state?.email ?? 'ERROR',
+            context.read<AuthNotVerifiedCubit>().state?.email ?? 'ERROR',
           ),
           textAlign: TextAlign.center,
         ),

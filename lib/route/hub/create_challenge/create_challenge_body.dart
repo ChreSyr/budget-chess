@@ -4,7 +4,7 @@ import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/snack_bar.dart';
 import 'package:crea_chess/package/atomic_design/text_style.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
-import 'package:crea_chess/package/firebase/authentication/authentication_crud.dart';
+import 'package:crea_chess/package/firebase/firestore/user/user_cubit.dart';
 import 'package:crea_chess/package/game/speed.dart';
 import 'package:crea_chess/package/game/time_control.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
@@ -14,7 +14,6 @@ import 'package:crea_chess/route/hub/create_challenge/create_challenge_cubit.dar
 import 'package:crea_chess/route/hub/create_challenge/create_challenge_form.dart';
 import 'package:crea_chess/route/hub/create_challenge/create_challenge_status.dart';
 import 'package:crea_chess/route/route_body.dart';
-import 'package:crea_chess/route/user/user_body.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -40,10 +39,7 @@ class _CreateChallengeBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final createChallengeCubit = context.read<CreateChallengeCubit>();
-    final authId = context.read<AuthenticationCubit>().state?.uid;
-    if (authId == null) {
-      return const NotConnectedScreen();
-    }
+    final authId = context.read<UserCubit>().state.id;
 
     Widget ruleBuilder(Rule e) => Row(
           mainAxisSize: MainAxisSize.min,

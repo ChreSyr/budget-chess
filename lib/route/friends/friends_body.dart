@@ -10,7 +10,6 @@ import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/route/friends/search_friend/search_friend_body.dart';
 import 'package:crea_chess/route/route_body.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -97,10 +96,9 @@ class FriendsBody extends RouteBody {
           CCGap.medium,
           // Friend previews
           Center(
-            child: BlocBuilder<AuthenticationCubit, User?>(
-              builder: (context, auth) {
-                final authUid = auth?.uid;
-                if (authUid == null) return CCGap.zero;
+            child: BlocBuilder<UserCubit, UserModel>(
+              builder: (context, user) {
+                final authUid = user.id;
                 return StreamBuilder<Iterable<RelationshipModel>>(
                   stream: relationshipCRUD.friendshipsOf(authUid),
                   builder: (context, snapshot) {
@@ -133,12 +131,12 @@ class FriendRequestCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authUid = context.watch<AuthenticationCubit>().state?.uid;
+    final authUid = context.watch<UserCubit>().state.id;
 
     final requester = request.requester;
     if (requester == null) return CCGap.zero;
 
-    if (authUid == null || request.otherUser(requester) != authUid) {
+    if (request.otherUser(requester) != authUid) {
       return const SizedBox.shrink();
     }
 

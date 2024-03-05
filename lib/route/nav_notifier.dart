@@ -51,7 +51,7 @@ class NavNotifier extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AuthenticationCubit, User?>(
+    return BlocListener<AuthNotVerifiedCubit, User?>(
       listener: (context, auth) {
         context.read<NavNotifCubit>().set(
               routeId: SettingsBody.data.id,

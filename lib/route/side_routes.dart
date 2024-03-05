@@ -10,9 +10,7 @@ import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/route/nav_notifier.dart';
 import 'package:crea_chess/route/route_body.dart';
 import 'package:crea_chess/route/settings/settings_body.dart';
-import 'package:crea_chess/route/user/profile_completer/profile_completer.dart';
 import 'package:crea_chess/route/user/user_body.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -22,14 +20,8 @@ class OpenSideRoutesButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AuthenticationCubit, User?>(
+    return BlocBuilder<UserCubit, UserModel>(
       builder: (context, auth) {
-        if (auth == null) {
-          return FilledButton(
-            onPressed: () => context.push('/sso'),
-            child: Text(context.l10n.signin),
-          );
-        }
         return BlocBuilder<NavNotifCubit, NavNotifs>(
           builder: (context, navNotifs) {
             final hasNotif = navNotifs.keys
@@ -108,81 +100,79 @@ class SideRoutes extends StatelessWidget {
     );
 
     return Material(
-      child: ProfileCompleter(
-        child: Stack(
-          children: [
-            SizedBox.expand(
-              child: ColoredBox(
-                color: CCColor.primary(context),
-              ),
+      child: Stack(
+        children: [
+          SizedBox.expand(
+            child: ColoredBox(
+              color: CCColor.primary(context),
             ),
-            Align(
-              alignment: Alignment.topRight,
-              child: SizedBox(
-                width: CCWidgetSize.large2,
-                child: CCPadding.allLarge(
-                  child: Theme(
-                    data: newTheme,
-                    child: BlocBuilder<NavNotifCubit, NavNotifs>(
-                      builder: (context, navNotifs) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            CCGap.xxxlarge,
-                            CountBadge(
-                              count: navNotifs.count(routeId: UserBody.data.id),
-                              child: const ProfileButton(),
-                              offset: const Offset(-10, -10),
+          ),
+          Align(
+            alignment: Alignment.topRight,
+            child: SizedBox(
+              width: CCWidgetSize.large2,
+              child: CCPadding.allLarge(
+                child: Theme(
+                  data: newTheme,
+                  child: BlocBuilder<NavNotifCubit, NavNotifs>(
+                    builder: (context, navNotifs) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          CCGap.xxxlarge,
+                          CountBadge(
+                            count: navNotifs.count(routeId: UserBody.data.id),
+                            child: const ProfileButton(),
+                            offset: const Offset(-10, -10),
+                          ),
+                          CCGap.small,
+                          const Divider(),
+                          ...[
+                            SettingsBody.data,
+                          ].map(
+                            (data) => CountBadge(
+                              count: navNotifs.count(routeId: data.id),
+                              child: SideRouteButton(data),
+                              offset: const Offset(-10, 10),
                             ),
-                            CCGap.small,
-                            const Divider(),
-                            ...[
-                              SettingsBody.data,
-                            ].map(
-                              (data) => CountBadge(
-                                count: navNotifs.count(routeId: data.id),
-                                child: SideRouteButton(data),
-                                offset: const Offset(-10, 10),
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                    ),
+                          ),
+                        ],
+                      );
+                    },
                   ),
                 ),
               ),
             ),
-            AnimatedContainer(
-              duration: showSideRoutes
-                  ? const Duration(milliseconds: 300)
-                  : const Duration(milliseconds: 150),
-              transform: showSideRoutes
-                  ? (Matrix4.rotationZ(-0.1).scaled(0.8)
-                    ..translate(
-                      -MediaQuery.of(context).size.width * 0.8,
-                      100,
-                    ))
-                  : Matrix4.rotationZ(0),
-              curve: showSideRoutes ? Curves.easeOutBack : Curves.linear,
-              decoration: const BoxDecoration(
-                color: Colors.blue,
-                borderRadius: CCBorderRadiusCircular.medium,
-              ),
-              clipBehavior: Clip.antiAlias,
-              child: GestureDetector(
-                onTap: showSideRoutes
-                    ? context.read<SideRoutesCubit>().toggle
-                    : null,
-                child: AbsorbPointer(
-                  absorbing: showSideRoutes,
-                  child: child,
-                ),
+          ),
+          AnimatedContainer(
+            duration: showSideRoutes
+                ? const Duration(milliseconds: 300)
+                : const Duration(milliseconds: 150),
+            transform: showSideRoutes
+                ? (Matrix4.rotationZ(-0.1).scaled(0.8)
+                  ..translate(
+                    -MediaQuery.of(context).size.width * 0.8,
+                    100,
+                  ))
+                : Matrix4.rotationZ(0),
+            curve: showSideRoutes ? Curves.easeOutBack : Curves.linear,
+            decoration: const BoxDecoration(
+              color: Colors.blue,
+              borderRadius: CCBorderRadiusCircular.medium,
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: GestureDetector(
+              onTap: showSideRoutes
+                  ? context.read<SideRoutesCubit>().toggle
+                  : null,
+              child: AbsorbPointer(
+                absorbing: showSideRoutes,
+                child: child,
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -198,9 +188,7 @@ class ProfileButton extends StatelessWidget {
         context.push('/user');
         context.read<SideRoutesCubit>().reset();
       },
-      icon: UserPhoto(
-        photo: context.watch<UserCubit>().state?.photo,
-      ),
+      icon: UserPhoto(photo: context.watch<UserCubit>().state.photo),
       label: const Text('Voir mon profil'), // TODO : l10n
     );
   }

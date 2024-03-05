@@ -183,6 +183,7 @@ class _AuthenticationCRUD {
       if (e.toString() == 'popup_closed') {
         authProviderStatusCubit.idle();
       } else {
+        print(e);
         authProviderStatusCubit.error();
       }
     }
@@ -250,8 +251,8 @@ class AuthProviderStatusCubit extends Cubit<AuthProviderStatus> {
   void waiting() => emit(AuthProviderStatus.waiting);
 }
 
-class AuthenticationCubit extends Cubit<User?> {
-  AuthenticationCubit() : super(_firebaseAuth.currentUser) {
+class AuthNotVerifiedCubit extends Cubit<User?> {
+  AuthNotVerifiedCubit() : super(_firebaseAuth.currentUser) {
     _authStream = _firebaseAuth.userChanges().listen(emit);
     if (kIsWeb) {
       _googleAuth.onCurrentUserChanged
@@ -265,7 +266,7 @@ class AuthenticationCubit extends Cubit<User?> {
     }
   }
 
-  late StreamSubscription<User?> _authStream;
+  late final StreamSubscription<User?> _authStream;
 
   @override
   Future<void> close() {

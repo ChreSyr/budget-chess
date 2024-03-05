@@ -12,8 +12,7 @@ class SetupOpponentTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authUid = context.watch<AuthenticationCubit>().state?.uid;
-    if (authUid == null) return CCGap.zero;
+    final authUid = context.watch<UserCubit>().state.id;
     final side = game.sideOf(authUid);
     if (side == null) return CCGap.zero;
 

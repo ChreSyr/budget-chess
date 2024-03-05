@@ -1,4 +1,3 @@
-import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/relationship_button.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_header.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_profile.dart';
@@ -7,10 +6,8 @@ import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/route/route_body.dart';
 import 'package:crea_chess/route/router.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 // LATER: welcome and connect page when it is the first opening of the app
 // LATER: App Check
@@ -34,105 +31,51 @@ class UserBody extends RouteBody {
 
   @override
   Widget build(BuildContext context) {
-    return AuthVerifier(
-      builder: (context, authUid) {
-        return BlocBuilder<UserCubit, UserModel?>(
-          builder: (context, currentUser) {
-            // creating or deleting the user
-            if (currentUser == null) return const LinearProgressIndicator();
+    return BlocBuilder<UserCubit, UserModel?>(
+      builder: (context, currentUser) {
+        // creating or deleting the user
+        if (currentUser == null) return const LinearProgressIndicator();
 
-            if (usernameOrId != null &&
-                usernameOrId != currentUser.usernameLowercase) {
-              Widget builder(BuildContext context, UserModel user) {
-                return UserProfile(
-                  header: UserHeader(
-                    userId: user.id,
-                    banner: user.banner,
-                    photo: user.photo,
-                    username: user.username,
-                    isConnected: user.isConnected,
-                    editable: false,
-                  ),
-                  relationshipWidget: RelationshipButton(userId: user.id),
-                  tabSections: UserSection.getSections(authUid, user.id),
-                );
-              }
-
-              return UserStreamBuilder(
-                userId: usernameOrId!,
-                notFound: UserStreamBuilder(
-                  userId: usernameOrId!,
-                  idIsUsername: true,
-                  builder: builder,
-                ),
-                builder: builder,
-              );
-            }
-
+        if (usernameOrId != null &&
+            usernameOrId != currentUser.usernameLowercase) {
+          Widget builder(BuildContext context, UserModel user) {
             return UserProfile(
               header: UserHeader(
-                userId: authUid,
-                banner: currentUser.banner,
-                photo: currentUser.photo,
-                username: currentUser.username,
-                isConnected: currentUser.isConnected,
-                editable: true,
+                userId: user.id,
+                banner: user.banner,
+                photo: user.photo,
+                username: user.username,
+                isConnected: user.isConnected,
+                editable: false,
               ),
-              tabSections: UserSection.getSections(authUid, authUid),
+              relationshipWidget: RelationshipButton(userId: user.id),
+              tabSections: UserSection.getSections(currentUser.id, user.id),
             );
-          },
+          }
+
+          return UserStreamBuilder(
+            userId: usernameOrId!,
+            notFound: UserStreamBuilder(
+              userId: usernameOrId!,
+              idIsUsername: true,
+              builder: builder,
+            ),
+            builder: builder,
+          );
+        }
+
+        return UserProfile(
+          header: UserHeader(
+            userId: currentUser.id,
+            banner: currentUser.banner,
+            photo: currentUser.photo,
+            username: currentUser.username,
+            isConnected: currentUser.isConnected,
+            editable: true,
+          ),
+          tabSections: UserSection.getSections(currentUser.id, currentUser.id),
         );
       },
-    );
-  }
-}
-
-/// Check if the the user is connected and if its email is verified.
-///
-/// The builder function is called when the email is verified.
-class AuthVerifier extends StatelessWidget {
-  const AuthVerifier({required this.builder, super.key});
-
-  final Widget Function(BuildContext context, String authId) builder;
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<AuthenticationCubit, User?>(
-      builder: (context, auth) {
-        if (auth == null) {
-          return const NotConnectedScreen();
-        } else if (!auth.isVerified) {
-          // If the email is not verified yet
-          return UserProfile(
-            header: UserHeader.notVerified(authId: auth.uid),
-            tabSections: [],
-          );
-        } else {
-          return builder(context, auth.uid);
-        }
-      },
-    );
-  }
-}
-
-class NotConnectedScreen extends StatelessWidget {
-  const NotConnectedScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(context.l10n.notConnected),
-          CCGap.large,
-          FilledButton.icon(
-            onPressed: () => context.push('/sso'),
-            icon: const Icon(Icons.login),
-            label: Text(context.l10n.signin),
-          ),
-        ],
-      ),
     );
   }
 }

@@ -11,8 +11,7 @@ void showAnswerFriendRequestDialog(
   String? requesterId,
 ) {
   if (requesterId == null) return;
-  final authUid = pageContext.read<AuthenticationCubit>().state?.uid;
-  if (authUid == null) return; // should never happen
+  final authUid = pageContext.read<UserCubit>().state.id;
   showDialog<AlertDialog>(
     context: pageContext,
     builder: (BuildContext dialogContext) {

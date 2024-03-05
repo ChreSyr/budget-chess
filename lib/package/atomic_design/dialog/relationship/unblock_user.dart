@@ -10,8 +10,7 @@ void showUnblockUserDialog(
   BuildContext pageContext,
   String toUnblockId,
 ) {
-  final authUid = pageContext.read<AuthenticationCubit>().state?.uid;
-  if (authUid == null) return; // should never happen
+  final authUid = pageContext.read<UserCubit>().state.id;
 
   showYesNoDialog(
     pageContext: pageContext,

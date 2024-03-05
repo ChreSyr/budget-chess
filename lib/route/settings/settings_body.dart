@@ -1,7 +1,6 @@
 import 'package:crea_chess/package/atomic_design/button/filled_circle_button.dart';
 import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/dialog/user/delete_account.dart';
-import 'package:crea_chess/package/atomic_design/dialog/user/email_verification.dart';
 import 'package:crea_chess/package/atomic_design/modal/modal.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/text_style.dart';
@@ -97,7 +96,7 @@ class SettingsBody extends RouteBody {
             );
           },
         ),
-        BlocBuilder<AuthenticationCubit, User?>(
+        BlocBuilder<AuthNotVerifiedCubit, User?>(
           builder: (context, auth) {
             if (auth == null) return const SizedBox.shrink();
 
@@ -114,19 +113,10 @@ class SettingsBody extends RouteBody {
                 ListTile(
                   leading: const Icon(Icons.email),
                   title: auth.isVerified
-                      ? Text(
-                          context.read<AuthenticationCubit>().state?.email ??
-                              '',
-                        )
+                      ? Text(auth.email ?? '')
                       : Row(
                           children: [
-                            Text(
-                              context
-                                      .read<AuthenticationCubit>()
-                                      .state
-                                      ?.email ??
-                                  '',
-                            ),
+                            Text(auth.email ?? ''),
                             CCGap.small,
                             Text(
                               'non vérifiée', // TODO : l10n
@@ -140,9 +130,6 @@ class SettingsBody extends RouteBody {
                   trailing: auth.isVerified
                       ? null
                       : const Icon(Icons.priority_high, color: Colors.red),
-                  onTap: auth.isVerified
-                      ? null
-                      : () => showEmailVerificationDialog(context),
                 ),
                 CCGap.large,
                 OutlinedButton.icon(
@@ -151,7 +138,6 @@ class SettingsBody extends RouteBody {
                     while (context.canPop()) {
                       context.pop();
                     }
-                    context.push('/sso');
                   },
                   icon: const Icon(Icons.logout),
                   label: Text(context.l10n.signout),

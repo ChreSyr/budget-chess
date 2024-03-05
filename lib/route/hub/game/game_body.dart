@@ -47,7 +47,7 @@ class _GameBody extends StatelessWidget {
 
     final game = gameState.game;
 
-    final authUid = context.watch<AuthenticationCubit>().state?.uid;
+    final authUid = context.watch<UserCubit>().state.id;
 
     final side = game.blackId == authUid
         ? Side.black

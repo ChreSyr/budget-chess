@@ -102,7 +102,7 @@ class ChallengeTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authUid = context.read<AuthenticationCubit>().state?.uid;
+    final authUid = context.read<UserCubit>().state.id;
     final authorId = challenge.authorId ?? '';
     if (authorId.isEmpty) return Container(); // corrupted challenge
 
@@ -118,14 +118,10 @@ class ChallengeTile extends StatelessWidget {
               child: Text(
                 context.l10n.play.toLowerCase(),
               ),
-              onPressed: () {
-                if (authUid == null) return;
-
-                liveGameCRUD.onChallengeAccepted(
-                  challenge: challenge,
-                  challengerId: authUid,
-                );
-              },
+              onPressed: () => liveGameCRUD.onChallengeAccepted(
+                challenge: challenge,
+                challengerId: authUid,
+              ),
             ),
     );
   }
@@ -138,8 +134,7 @@ class GameChallengeTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authUid = context.read<AuthenticationCubit>().state?.uid;
-    if (authUid == null) return CCGap.zero; // should never happen
+    final authUid = context.read<UserCubit>().state.id;
     final opponentId = game.otherPlayer(authUid);
     if (opponentId == null) return CCGap.zero; // corrupted challenge
 

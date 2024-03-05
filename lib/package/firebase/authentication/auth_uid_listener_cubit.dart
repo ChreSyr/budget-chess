@@ -16,24 +16,24 @@ abstract class AuthListenerCubit<T> extends Cubit<T> {
   }
 
   User? _auth;
-  late StreamSubscription<User?>? _authStreamSubscription;
+  late final StreamSubscription<User?> _authStreamSubscription;
+
+  @override
+  Future<void> close() {
+    _authStreamSubscription.cancel();
+    return super.close();
+  }
 
   // Called each time the user in Firebase Authentication changed. If the user
   // is not verified yet, the value is null.
   void authChanged(User? auth);
-
-  @override
-  Future<void> close() {
-    _authStreamSubscription?.cancel();
-    return super.close();
-  }
 }
 
 abstract class AuthUidListenerCubit<T> extends Cubit<T> {
   AuthUidListenerCubit(super.initialState) {
     _authStreamSubscription =
         FirebaseAuth.instance.userChanges().listen((auth) {
-      final newAuthUid = auth == null || auth.isVerified ? null : auth.uid;
+      final newAuthUid = auth == null || !auth.isVerified ? null : auth.uid;
       if (newAuthUid == _authUid) return;
       _authUid = newAuthUid;
       authUidChanged(newAuthUid);
@@ -41,15 +41,15 @@ abstract class AuthUidListenerCubit<T> extends Cubit<T> {
   }
 
   String? _authUid;
-  late StreamSubscription<User?>? _authStreamSubscription;
+  late final StreamSubscription<User?> _authStreamSubscription;
+
+  @override
+  Future<void> close() {
+    _authStreamSubscription.cancel();
+    return super.close();
+  }
 
   // Called each time the user in Firebase Authentication changed. If the user
   // is not verified yet, the value is null.
   void authUidChanged(String? authUid);
-
-  @override
-  Future<void> close() {
-    _authStreamSubscription?.cancel();
-    return super.close();
-  }
 }

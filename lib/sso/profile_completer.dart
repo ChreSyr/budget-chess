@@ -11,7 +11,8 @@ import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/form/form_error.dart';
 import 'package:crea_chess/package/form/input/input_string.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
-import 'package:crea_chess/route/user/profile_completer/emergency_app_bar.dart';
+import 'package:crea_chess/route/route_body.dart';
+import 'package:crea_chess/sso/emergency_app_bar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -224,24 +225,29 @@ class ProfileFormCubit extends Cubit<ProfileForm> {
   }
 }
 
-class ProfileCompleter extends StatelessWidget {
-  const ProfileCompleter({required this.child, super.key});
+class ProfileCompleter extends RouteBody {
+  const ProfileCompleter({super.key});
 
-  final Widget child;
+  @override
+  List<Widget> getActions(BuildContext context) {
+    return getEmergencyAppBarActions(context);
+  }
+
+  @override
+  String getTitle(AppLocalizations l10n) {
+    return '';
+  }
 
   @override
   Widget build(BuildContext context) {
     final user = context.watch<UserCubit>().state;
-    if (user != null && user.profileCompleted == false) {
-      return Scaffold(
-        appBar: getEmergencyAppBar(context),
-        body: BlocProvider(
-          create: (context) => ProfileFormCubit(user),
-          child: _ProfileCompleter(user),
-        ),
+    if (user.profileCompleted == false) {
+      return BlocProvider(
+        create: (context) => ProfileFormCubit(user),
+        child: _ProfileCompleter(user),
       );
     }
-    return child;
+    return const Center(child: Icon(Icons.check));
   }
 }
 
@@ -277,7 +283,7 @@ class _ProfileCompleter extends StatelessWidget {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             // Delay the scroll to give TextField enough time to complete
             // autofocus
-            Future.delayed(const Duration(milliseconds: 500), () {
+            Future.delayed(const Duration(milliseconds: 700), () {
               scrollController.animateTo(
                 scrollController.position.maxScrollExtent,
                 duration: const Duration(milliseconds: 300),

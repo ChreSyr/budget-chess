@@ -4,16 +4,13 @@ import 'package:crea_chess/package/atomic_design/field/password_form_field.dart'
 import 'package:crea_chess/package/atomic_design/snack_bar.dart';
 import 'package:crea_chess/package/atomic_design/widget/body_template.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
-import 'package:crea_chess/package/firebase/authentication/authentication_crud.dart';
 import 'package:crea_chess/package/form/signup/signup_cubit.dart';
 import 'package:crea_chess/package/form/signup/signup_form.dart';
 import 'package:crea_chess/package/form/signup/signup_status.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/route/route_body.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 class SignupBody extends RouteBody {
   const SignupBody({super.key});
@@ -25,28 +22,6 @@ class SignupBody extends RouteBody {
 
   @override
   List<Widget> getActions(BuildContext context) => [];
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => SignupCubit(),
-      child: BlocListener<AuthenticationCubit, User?>(
-        listener: (context, user) {
-          if (user != null) {
-            context.pop();
-            if (user.emailVerified != true) {
-              context.push('/sso/email_verification');
-            }
-          }
-        },
-        child: const _SignupBody(),
-      ),
-    );
-  }
-}
-
-class _SignupBody extends StatelessWidget {
-  const _SignupBody();
 
   @override
   Widget build(BuildContext context) {

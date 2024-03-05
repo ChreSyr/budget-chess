@@ -17,10 +17,6 @@ import 'package:crea_chess/route/nav_notifier.dart';
 import 'package:crea_chess/route/route_scaffold.dart';
 import 'package:crea_chess/route/settings/settings_body.dart';
 import 'package:crea_chess/route/side_routes.dart';
-import 'package:crea_chess/route/sso/email_verification_body.dart';
-import 'package:crea_chess/route/sso/sign_methods_body.dart';
-import 'package:crea_chess/route/sso/signin_body.dart';
-import 'package:crea_chess/route/sso/signup_body.dart';
 import 'package:crea_chess/route/user/modify_username/modify_username_body.dart';
 import 'package:crea_chess/route/user/user_body.dart';
 import 'package:flutter/material.dart';
@@ -38,12 +34,11 @@ final _shellNavigatorFriendsKey =
     GlobalKey<NavigatorState>(debugLabel: 'shellFriends');
 final _shellNavigatorSettingsKey =
     GlobalKey<NavigatorState>(debugLabel: 'shellSettings');
-final _shellNavigatorSSOKey = GlobalKey<NavigatorState>(debugLabel: 'shellSSO');
 final _shellNavigatorUserKey =
     GlobalKey<NavigatorState>(debugLabel: 'shellUser');
 
 // the one and only GoRouter instance
-final router = GoRouter(
+final authenticatedRouter = GoRouter(
   initialLocation: '/hub',
   navigatorKey: _rootNavigatorKey,
   errorBuilder: (context, state) => ErrorPage(exception: state.error),
@@ -135,36 +130,6 @@ final router = GoRouter(
               path: '/settings',
               builder: (context, state) =>
                   const RouteScaffold(body: SettingsBody()),
-            ),
-          ],
-        ),
-        // SSO
-        StatefulShellBranch(
-          navigatorKey: _shellNavigatorSSOKey,
-          routes: [
-            // top route inside branch
-            GoRoute(
-              path: '/sso',
-              builder: (context, state) =>
-                  const RouteScaffold(body: SignMethodsBody()),
-              routes: [
-                // child routes
-                GoRoute(
-                  path: 'signin',
-                  builder: (context, state) =>
-                      const RouteScaffold(body: SigninBody()),
-                ),
-                GoRoute(
-                  path: 'signup',
-                  builder: (context, state) =>
-                      const RouteScaffold(body: SignupBody()),
-                ),
-                GoRoute(
-                  path: 'email_verification',
-                  builder: (context, state) =>
-                      const RouteScaffold(body: EmailVerificationBody()),
-                ),
-              ],
             ),
           ],
         ),
@@ -274,7 +239,6 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // redirect sso to user
     final selectedIndex = navigationShell.currentIndex;
 
     return Scaffold(

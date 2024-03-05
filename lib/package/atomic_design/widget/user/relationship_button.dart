@@ -15,8 +15,8 @@ class RelationshipButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authUid = context.watch<AuthenticationCubit>().state?.uid;
-    if (authUid == null || authUid == userId) return CCGap.zero;
+    final authUid = context.watch<UserCubit>().state.id;
+    if (authUid == userId) return CCGap.zero;
 
     return StreamBuilder<RelationshipModel?>(
       stream: relationshipCRUD.stream(
@@ -80,8 +80,7 @@ class SendFriendRequestButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authUid = context.watch<AuthenticationCubit>().state?.uid;
-    if (authUid == null) return CCGap.zero;
+    final authUid = context.watch<UserCubit>().state.id;
 
     return FilledButton.icon(
       icon: const Icon(Icons.person_add),

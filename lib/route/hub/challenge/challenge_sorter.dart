@@ -8,7 +8,6 @@ import 'package:crea_chess/package/game/speed.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/package/lichess/rule.dart';
 import 'package:crea_chess/package/unichess/unichess.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:recase/recase.dart';
@@ -19,10 +18,7 @@ class ChallengeSorter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final filterCubit = context.read<ChallengeFilterCubit>();
-    return BlocConsumer<AuthenticationCubit, User?>(
-      listener: (context, auth) {
-        if (auth == null) filterCubit.selectFilter(null);
-      },
+    return BlocBuilder<UserCubit, UserModel>(
       builder: (context, auth) =>
           BlocBuilder<ChallengeFilterCubit, ChallengeFilterModel?>(
         builder: (context, filter) {
@@ -31,17 +27,10 @@ class ChallengeSorter extends StatelessWidget {
                   onPressed: () {
                     if (filter != null) {
                       filterCubit.toggleRule(Rule.chess);
-                    } else if (auth == null) {
-                      filterCubit.selectFilter(
-                        ChallengeFilterModel(
-                          rules: {Rule.chess},
-                          speeds: {},
-                        ),
-                      );
                     } else {
                       filterCubit.createFilter(
                         ChallengeFilterModel(
-                          userId: auth.uid,
+                          userId: auth.id,
                           id: context
                               .read<ChallengeFiltersCubit>()
                               .nextFilterId,
@@ -59,17 +48,10 @@ class ChallengeSorter extends StatelessWidget {
                   onPressed: () {
                     if (filter != null) {
                       filterCubit.toggleSpeed(Speed.blitz);
-                    } else if (auth == null) {
-                      filterCubit.selectFilter(
-                        ChallengeFilterModel(
-                          rules: {},
-                          speeds: {Speed.blitz},
-                        ),
-                      );
                     } else {
                       filterCubit.createFilter(
                         ChallengeFilterModel(
-                          userId: auth.uid,
+                          userId: auth.id,
                           id: context
                               .read<ChallengeFiltersCubit>()
                               .nextFilterId,
@@ -168,7 +150,7 @@ class FilterSelector extends StatelessWidget {
     final filterCubit = context.read<ChallengeFilterCubit>();
     return BlocBuilder<ChallengeFiltersCubit, Iterable<ChallengeFilterModel>>(
       builder: (context, allFilters) {
-        final authId = context.read<AuthenticationCubit>().state?.uid;
+        final authId = context.read<UserCubit>().state.id;
         return BlocBuilder<ChallengeFilterCubit, ChallengeFilterModel?>(
           builder: (context, filter) {
             return SelectChip<ChallengeFilterModel?>.uniqueChoice(
@@ -188,7 +170,7 @@ class FilterSelector extends StatelessWidget {
               previewBuilder: (filter) => Icon(
                 filter == null ? Icons.filter_alt_off : Icons.filter_alt,
               ),
-              bottomChildren: (authId == null || filter == null)
+              bottomChildren: filter == null
                   ? null
                   : [
                       MenuItemButton(

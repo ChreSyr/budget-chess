@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crea_chess/package/firebase/firestore/crud/collection_crud.dart';
+import 'package:crea_chess/package/firebase/firestore/user/challenge_filter/challenge_filter_crud.dart';
 import 'package:crea_chess/package/firebase/firestore/user/user_cubit.dart';
 import 'package:crea_chess/package/firebase/firestore/user/user_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class _UserCRUD extends CollectionCRUD<UserModel> {
   _UserCRUD() : super(collectionName: 'user');
@@ -29,6 +31,24 @@ class _UserCRUD extends CollectionCRUD<UserModel> {
             (key, value) => key == 'id' || value == null,
           )) ??
         {};
+  }
+
+  Future<void> onAccountCreation(User auth) async {
+    print('onAccountCreation, $auth');
+    try {
+      await userCRUD.create(
+        documentId: auth.uid,
+        data: UserModel(
+          id: auth.uid,
+          createdAt: auth.metadata.creationTime ?? DateTime.now(),
+          username: '',
+          photo: auth.photoURL,
+          isConnected: true,
+        ),
+      );
+
+      challengeFilterCRUD.onAccountCreation(auth.uid);
+    } catch (_) {}
   }
 
   Future<void> onSignIn({required String authUid}) async {

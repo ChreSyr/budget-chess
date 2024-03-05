@@ -126,8 +126,7 @@ class FriendSearchDelegate extends SearchDelegate<String?> {
 }
 
 Widget getUserTile(BuildContext context, UserModel user) {
-  final authUid = context.read<AuthenticationCubit>().state?.uid;
-  if (authUid == null) return Container(); // should never happen
+  final authUid = context.read<UserCubit>().state.id;
   final userId = user.id;
   final relationshipId = relationshipCRUD.getId(authUid, userId);
 

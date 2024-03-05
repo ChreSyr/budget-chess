@@ -6,7 +6,6 @@ import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/route/hub/challenge/challenge_sorter.dart';
 import 'package:crea_chess/route/hub/challenge/challenge_tile.dart';
 import 'package:crea_chess/route/hub/challenge/my_challenges.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -15,14 +14,14 @@ class ChallengesBoard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AuthenticationCubit, User?>(
+    return BlocBuilder<UserCubit, UserModel>(
       builder: (context, auth) {
-        final authUid = auth?.uid;
+        final authUid = auth.id;
         return StreamBuilder<Iterable<RelationshipModel>>(
           stream: relationshipCRUD.friendshipsOf(authUid),
           builder: (context, snapshot) {
             final friendships = snapshot.data;
-            final friendIds = (authUid == null || friendships == null)
+            final friendIds = (friendships == null)
                 ? <String>[]
                 : friendships
                     .map((friendship) => friendship.otherUser(authUid))

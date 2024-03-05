@@ -97,7 +97,7 @@ class UserSectionFriends extends UserSection {
                 );
               },
             ).toList();
-            if (context.read<UserCubit>().state?.id == userId) {
+            if (context.read<UserCubit>().state.id == userId) {
               friendsPreviews.add(
                 SizedBox(
                   height: radius * 2,
@@ -329,7 +329,6 @@ class _ChatSectionState extends State<ChatSection> {
   @override
   Widget build(BuildContext context) {
     final currentUser = context.read<UserCubit>().state;
-    if (currentUser == null) return Container();
 
     final relationshipId = relationshipCRUD.getId(
       widget.currentUserId,

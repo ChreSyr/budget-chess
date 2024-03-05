@@ -121,8 +121,7 @@ class UserHeader extends StatelessWidget {
   }
 
   void showUserActionsModal(BuildContext context) {
-    final authUid = context.read<AuthenticationCubit>().state?.uid;
-    if (authUid == null) return; // should never happen
+    final authUid = context.read<UserCubit>().state.id;
 
     return Modal.show(
       context: context,
