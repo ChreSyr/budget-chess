@@ -96,7 +96,7 @@ class _BoardState extends State<BoardWidget> {
     final annotations = widget.data.annotations ?? _emptyAnnotations;
     final checkSquare = widget.data.isCheck ?? false ? _getKingSquare() : null;
     final premove = widget.data.premove;
-        
+
     return LayoutBuilder(
       builder: (context, constraints) {
         final boardWidth = constraints.maxWidth;
@@ -582,8 +582,9 @@ class _BoardState extends State<BoardWidget> {
   }
 
   void _onPanStartShape(DragStartDetails details) {
-    if (_shapeAvatar == null ||
-        widget.settings.drawShape.enable == false) return;
+    if (_shapeAvatar == null || widget.settings.drawShape.enable == false) {
+      return;
+    }
     final squareId = widget.localOffset2SquareId(
       details.localPosition,
       squareSize,
@@ -598,8 +599,9 @@ class _BoardState extends State<BoardWidget> {
   }
 
   void _onPanUpdateShape(DragUpdateDetails details) {
-    if (_shapeAvatar == null ||
-        widget.settings.drawShape.enable == false) return;
+    if (_shapeAvatar == null || widget.settings.drawShape.enable == false) {
+      return;
+    }
     final squareId = widget.localOffset2SquareId(
       details.localPosition,
       squareSize,
