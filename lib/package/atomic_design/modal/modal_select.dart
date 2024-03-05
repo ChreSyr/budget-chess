@@ -2,6 +2,7 @@ import 'package:crea_chess/package/atomic_design/modal/modal.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/text_style.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class ModalSelectRowData<T> {
   ModalSelectRowData({
@@ -80,7 +81,10 @@ class _ModalSelectRow<T> extends StatelessWidget {
                   label: choiceBuilder(choice),
                   selected: selected == choice,
                   onSelected: (bool selected) {
-                    if (selected) onSelected(choice);
+                    if (selected) {
+                      onSelected(choice);
+                      context.pop();
+                    }
                   },
                 ),
               )

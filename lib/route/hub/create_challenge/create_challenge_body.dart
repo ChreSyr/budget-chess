@@ -96,8 +96,6 @@ class _CreateChallengeBody extends StatelessWidget {
                       //   selected: form.rule.value,
                       //   onSelected: (Rule rule) {
                       //     createChallengeCubit.setRule(rule);
-                      //     // Strang bug on web
-                      //     Navigator.pop(context);
                       //   },
                       // ),
                       child: ruleBuilder(form.rule.value),
@@ -156,8 +154,6 @@ class _CreateChallengeBody extends StatelessWidget {
                       //   selected: form.timeControl.value,
                       //   onSelected: (TimeControl choice) {
                       //     createChallengeCubit.setTimeControl(choice);
-                      //     // Strang bug on web
-                      //     Navigator.pop(context);
                       //   },
                       // ),
                       icon: Icon(form.timeControl.value.speed.icon),
@@ -220,11 +216,7 @@ class _CreateChallengeBody extends StatelessWidget {
                           ),
                         ],
                         selected: form.budget.value,
-                        onSelected: (int choice) {
-                          createChallengeCubit.setBudget(choice);
-                          // Strang bug on web
-                          Navigator.pop(context);
-                        },
+                        onSelected: createChallengeCubit.setBudget,
                       ),
                       child: Text(form.budget.value.toString()),
                     ),
