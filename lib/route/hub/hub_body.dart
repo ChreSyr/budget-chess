@@ -3,6 +3,7 @@ import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/route/hub/challenge/challenges_board.dart';
 import 'package:crea_chess/route/route_body.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -25,10 +26,11 @@ class HubBody extends RouteBody {
   @override
   List<Widget> getActions(BuildContext context) {
     return [
-      OutlinedButton(
-        onPressed: () => context.push('/hub/chessground'),
-        child: const Text('Test'), // TODO : remove
-      ),
+      if (kDebugMode)
+        OutlinedButton(
+          onPressed: () => context.push('/hub/chessground'),
+          child: const Text('Test'), // TODO : remove
+        ),
       CCGap.medium,
       ...super.getActions(context),
     ];
