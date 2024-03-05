@@ -6,6 +6,7 @@ import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/unichess/unichess.dart';
 import 'package:crea_chess/route/hub/game/game_cubit.dart';
 import 'package:crea_chess/route/hub/game/side.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -76,7 +77,8 @@ class PlayerTile extends StatelessWidget {
                   ],
                 )
               : username,
-          trailing: IconButton.outlined(
+          trailing: kDebugMode
+              ? IconButton.outlined(
             onPressed: sideToMove == side && position != null
                 ? () {
                     final move = _getRandomMove(position);
@@ -85,7 +87,8 @@ class PlayerTile extends StatelessWidget {
                   }
                 : null,
             icon: const Icon(Icons.play_arrow),
-          ),
+                )
+              : null,
         );
       },
     );
