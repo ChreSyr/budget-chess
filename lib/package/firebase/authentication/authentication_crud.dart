@@ -19,7 +19,7 @@ final _googleAuthProvider = GoogleAuthProvider();
 final _facebookAuth = FacebookLogin(debug: true);
 final _facebookAuthProvider = FacebookAuthProvider();
 
-const accountBeingDeleted = '#---account-being-deleted---#';
+const _accountBeingDeleted = '#---account-being-deleted---#';
 
 class _AuthenticationCRUD {
   final authProviderStatusCubit = AuthProviderStatusCubit();
@@ -32,7 +32,7 @@ class _AuthenticationCRUD {
     try {
       /// This prevents the UserCubit to create a new UserModel in Firestore
       /// after the current UserModel will be deleted
-      await user.updateDisplayName(accountBeingDeleted);
+      await user.updateDisplayName(_accountBeingDeleted);
 
       // Delete user.
       await userCRUD.delete(documentId: user.uid);
@@ -277,10 +277,11 @@ class AuthNotVerifiedCubit extends Cubit<User?> {
 
 extension UserIsVerified on User {
   /// true if the email is verified or has been provided by google or facebook
-  bool get isVerified {
-    return emailVerified ||
+  bool get isVerified =>
+      emailVerified ||
         providerData.where((e) => e.providerId != 'password').isNotEmpty;
-  }
+
+  bool get beingDeleted => displayName == _accountBeingDeleted;
 }
 
 final authenticationCRUD = _AuthenticationCRUD();

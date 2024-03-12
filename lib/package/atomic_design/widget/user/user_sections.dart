@@ -11,7 +11,7 @@ import 'package:crea_chess/package/chat/message/message_model.dart';
 import 'package:crea_chess/package/chat/message/messsage_crud.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
-import 'package:crea_chess/route/friends/search_friend/search_friend_body.dart';
+import 'package:crea_chess/router/app/friends/search_friend/search_friend_body.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
