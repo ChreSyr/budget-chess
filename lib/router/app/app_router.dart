@@ -32,10 +32,8 @@ final _shellNavigatorMessagesKey =
     GlobalKey<NavigatorState>(debugLabel: 'shellMesssages');
 final _shellNavigatorFriendsKey =
     GlobalKey<NavigatorState>(debugLabel: 'shellFriends');
-final _shellNavigatorSettingsKey =
-    GlobalKey<NavigatorState>(debugLabel: 'shellSettings');
-final _shellNavigatorUserKey =
-    GlobalKey<NavigatorState>(debugLabel: 'shellUser');
+final _shellNavigatorOthersKey =
+    GlobalKey<NavigatorState>(debugLabel: 'shellOthers');
 
 // the route when the user user is authenticated and completed his profile
 final appRouter = GoRouter(
@@ -122,43 +120,42 @@ final appRouter = GoRouter(
             ),
           ],
         ),
-        // TODO : make the following routes not statefull
-        // Settings
+        // Other routes
         StatefulShellBranch(
-          navigatorKey: _shellNavigatorSettingsKey,
+          navigatorKey: _shellNavigatorOthersKey,
           routes: [
             // top route inside branch
             GoRoute(
-              path: '/settings',
-              builder: (context, state) =>
-                  CCRoute.appScaffold(context, const SettingsBody()),
-            ),
-          ],
-        ),
-        // User
-        StatefulShellBranch(
-          navigatorKey: _shellNavigatorUserKey,
-          routes: [
-            // top route inside branch
-            GoRoute(
-              path: '/user',
-              builder: (context, state) =>
-                  CCRoute.appScaffold(context, const UserBody()),
+              path: '/',
+              // TODO : redirect ?
+              builder: (context, state) => const ErrorPage(exception: null),
               routes: [
-                // child routes
+                // Settings
+                SettingsRoute.goRoute,
+                // User profile
                 GoRoute(
-                  path: 'modify_name',
+                  path: 'user',
                   builder: (context, state) =>
-                      CCRoute.appScaffold(context, const ModifyUsernameBody()),
-                ),
-                GoRoute(
-                  path: '@:usernameOrId',
-                  builder: (context, state) => CCRoute.appScaffold(
-                    context,
-                    UserBody(
-                      usernameOrId: state.pathParameters['usernameOrId'],
+                      CCRoute.appScaffold(context, const UserBody()),
+                  routes: [
+                    // child routes
+                    GoRoute(
+                      path: 'modify_name',
+                      builder: (context, state) => CCRoute.appScaffold(
+                        context,
+                        const ModifyUsernameBody(),
+                      ),
                     ),
-                  ),
+                    GoRoute(
+                      path: '@:usernameOrId',
+                      builder: (context, state) => CCRoute.appScaffold(
+                        context,
+                        UserBody(
+                          usernameOrId: state.pathParameters['usernameOrId'],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

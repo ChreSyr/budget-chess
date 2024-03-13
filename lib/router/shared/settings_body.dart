@@ -19,7 +19,7 @@ import 'package:go_router/go_router.dart';
 
 class SettingsRoute extends CCRoute {
   static GoRoute goRoute = GoRoute(
-    path: '/settings',
+    path: 'settings',
     builder: (context, state) =>
         CCRoute.appScaffold(context, const SettingsBody()),
   );
