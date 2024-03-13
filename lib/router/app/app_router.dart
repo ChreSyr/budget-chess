@@ -6,9 +6,6 @@ import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/widget/badge.dart';
 import 'package:crea_chess/package/atomic_design/widget/nav_bar.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
-import 'package:crea_chess/router/shared/route_body.dart';
-import 'package:crea_chess/router/shared/settings_body.dart';
-import 'package:crea_chess/router/app/bottom_route_body.dart';
 import 'package:crea_chess/router/app/friends/friends_body.dart';
 import 'package:crea_chess/router/app/hub/chessground/chessground_body.dart';
 import 'package:crea_chess/router/app/hub/create_challenge/create_challenge_body.dart';
@@ -20,6 +17,8 @@ import 'package:crea_chess/router/app/nav_notifier.dart';
 import 'package:crea_chess/router/app/side_routes.dart';
 import 'package:crea_chess/router/app/user/modify_username_body.dart';
 import 'package:crea_chess/router/app/user/user_body.dart';
+import 'package:crea_chess/router/shared/ccroute.dart';
+import 'package:crea_chess/router/shared/settings_body.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -37,23 +36,6 @@ final _shellNavigatorSettingsKey =
     GlobalKey<NavigatorState>(debugLabel: 'shellSettings');
 final _shellNavigatorUserKey =
     GlobalKey<NavigatorState>(debugLabel: 'shellUser');
-
-// TODO : remove this ugly function
-Widget buildRoute(BuildContext context, RouteBody body) => Scaffold(
-      appBar: AppBar(
-        // Sometime, the router goes to a non bottom route, and the nav bar is
-        // not shown anymore. In this situation, we need an access to the hub.
-        leading: body is! BottomRouteBody && !context.canPop()
-            ? IconButton(
-                onPressed: () => context.go('/hub'),
-                icon: const Icon(Icons.arrow_back),
-              )
-            : null,
-        title: Text(body.getTitle(context.l10n)),
-        actions: body.getActions(context),
-      ),
-      body: body,
-    );
 
 // the route when the user user is authenticated and completed his profile
 final appRouter = GoRouter(
@@ -78,7 +60,8 @@ final appRouter = GoRouter(
             // top route inside branch
             GoRoute(
               path: '/hub',
-              builder: (context, _) => buildRoute(context, const HubBody()),
+              builder: (context, _) =>
+                  CCRoute.appScaffold(context, const HubBody()),
               routes: [
                 // child routes
                 GoRoute(
@@ -88,11 +71,11 @@ final appRouter = GoRouter(
                 GoRoute(
                   path: 'create_challenge',
                   builder: (context, _) =>
-                      buildRoute(context, const CreateChallengeBody()),
+                      CCRoute.appScaffold(context, const CreateChallengeBody()),
                 ),
                 GoRoute(
                   path: ':gameId',
-                  builder: (context, state) => buildRoute(
+                  builder: (context, state) => CCRoute.appScaffold(
                     context,
                     GameBody(
                       gameId: state.pathParameters['gameId'] ?? 'none',
@@ -111,7 +94,7 @@ final appRouter = GoRouter(
             GoRoute(
               path: '/missions',
               builder: (context, state) =>
-                  buildRoute(context, const MissionsBody()),
+                  CCRoute.appScaffold(context, const MissionsBody()),
             ),
           ],
         ),
@@ -123,7 +106,7 @@ final appRouter = GoRouter(
             GoRoute(
               path: '/messages',
               builder: (context, state) =>
-                  buildRoute(context, const MessagesBody()),
+                  CCRoute.appScaffold(context, const MessagesBody()),
             ),
           ],
         ),
@@ -135,7 +118,7 @@ final appRouter = GoRouter(
             GoRoute(
               path: '/friends',
               builder: (context, state) =>
-                  buildRoute(context, const FriendsBody()),
+                  CCRoute.appScaffold(context, const FriendsBody()),
             ),
           ],
         ),
@@ -148,7 +131,7 @@ final appRouter = GoRouter(
             GoRoute(
               path: '/settings',
               builder: (context, state) =>
-                  buildRoute(context, const SettingsBody()),
+                  CCRoute.appScaffold(context, const SettingsBody()),
             ),
           ],
         ),
@@ -160,17 +143,17 @@ final appRouter = GoRouter(
             GoRoute(
               path: '/user',
               builder: (context, state) =>
-                  buildRoute(context, const UserBody()),
+                  CCRoute.appScaffold(context, const UserBody()),
               routes: [
                 // child routes
                 GoRoute(
                   path: 'modify_name',
                   builder: (context, state) =>
-                      buildRoute(context, const ModifyUsernameBody()),
+                      CCRoute.appScaffold(context, const ModifyUsernameBody()),
                 ),
                 GoRoute(
                   path: '@:usernameOrId',
-                  builder: (context, state) => buildRoute(
+                  builder: (context, state) => CCRoute.appScaffold(
                     context,
                     UserBody(
                       usernameOrId: state.pathParameters['usernameOrId'],

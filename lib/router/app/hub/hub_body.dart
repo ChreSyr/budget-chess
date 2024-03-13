@@ -1,7 +1,7 @@
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
-import 'package:crea_chess/router/app/bottom_route_body.dart';
+import 'package:crea_chess/router/shared/root_route_body.dart';
 import 'package:crea_chess/router/app/hub/challenge/challenges_board.dart';
 import 'package:crea_chess/router/shared/route_body.dart';
 import 'package:flutter/foundation.dart';
@@ -10,7 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 
-class HubBody extends BottomRouteBody {
+class HubBody extends RootRouteBody {
   const HubBody({super.key});
 
   static final MainRouteData data = MainRouteData(

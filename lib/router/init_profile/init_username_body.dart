@@ -42,7 +42,6 @@ class InitUsernameBody extends RouteBody {
               );
               usernameFormCubit.clearStatus();
             case UsernameFormStatus.success:
-              FocusScope.of(context).unfocus();
               usernameFormCubit.clearStatus();
               context.push('/photo');
             case _:

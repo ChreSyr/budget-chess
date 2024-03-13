@@ -5,12 +5,12 @@ import 'package:crea_chess/package/firebase/firestore/user/user_cubit.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/router/init_profile/email_verification_screen.dart';
 import 'package:crea_chess/router/shared/emergency_app_bar.dart';
-import 'package:crea_chess/router/shared/route_body.dart';
+import 'package:crea_chess/router/shared/root_route_body.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class InitProfileHomeBody extends RouteBody {
+class InitProfileHomeBody extends RootRouteBody {
   const InitProfileHomeBody({super.key});
 
   @override

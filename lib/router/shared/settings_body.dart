@@ -10,11 +10,20 @@ import 'package:crea_chess/package/l10n/get_locale_flag.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/package/preferences/preferences_cubit.dart';
 import 'package:crea_chess/package/preferences/preferences_state.dart';
+import 'package:crea_chess/router/shared/ccroute.dart';
 import 'package:crea_chess/router/shared/route_body.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+
+class SettingsRoute extends CCRoute {
+  static GoRoute goRoute = GoRoute(
+    path: '/settings',
+    builder: (context, state) =>
+        CCRoute.appScaffold(context, const SettingsBody()),
+  );
+}
 
 class SettingsBody extends RouteBody {
   const SettingsBody({super.key});

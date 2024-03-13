@@ -1,9 +1,9 @@
-import 'package:crea_chess/router/app/bottom_route_body.dart';
+import 'package:crea_chess/router/shared/root_route_body.dart';
 import 'package:crea_chess/router/shared/route_body.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class MissionsBody extends BottomRouteBody {
+class MissionsBody extends RootRouteBody {
   const MissionsBody({super.key});
 
   static final MainRouteData data = MainRouteData(

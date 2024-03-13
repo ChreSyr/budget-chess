@@ -1,39 +1,25 @@
-import 'package:crea_chess/package/l10n/l10n.dart';
-import 'package:crea_chess/router/shared/route_body.dart';
+import 'package:crea_chess/router/shared/ccroute.dart';
 import 'package:crea_chess/router/shared/settings_body.dart';
 import 'package:crea_chess/router/sso/signin_body.dart';
 import 'package:crea_chess/router/sso/signup_body.dart';
 import 'package:crea_chess/router/sso/sso_home_body.dart';
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
-// TODO : remove this ugly function
-Widget buildRoute(BuildContext context, GoRouterState _, RouteBody body) =>
-    Scaffold(
-      appBar: AppBar(
-        title: Text(body.getTitle(context.l10n)),
-        actions: body.getActions(context),
-      ),
-      body: body,
-    );
 
 final ssoRouter = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      builder: (context, _) => buildRoute(context, _, const SSOHomeBody()),
+      builder: (context, _) =>
+          CCRoute.appScaffold(context, const SSOHomeBody()),
       routes: [
-        GoRoute(
-          path: 'settings',
-          builder: (_, __) => buildRoute(_, __, const SettingsBody()),
-        ),
+        SettingsRoute.goRoute,
         GoRoute(
           path: 'signin',
-          builder: (_, __) => buildRoute(_, __, const SigninBody()),
+          builder: (_, __) => CCRoute.appScaffold(_, const SigninBody()),
         ),
         GoRoute(
           path: 'signup',
-          builder: (_, __) => buildRoute(_, __, const SignupBody()),
+          builder: (_, __) => CCRoute.appScaffold(_, const SignupBody()),
         ),
       ],
     ),

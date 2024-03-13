@@ -74,10 +74,6 @@ class PhotoFormCubit extends Cubit<PhotoForm> {
   Future<void> submit() async {
     final newPhoto = state.photo.value;
 
-    if (newPhoto == initialPhoto) {
-      return emit(state.copyWith(status: PhotoFormStatus.success));
-    }
-
     if (state.isNotValid) {
       return emit(state.copyWith(status: PhotoFormStatus.editError));
     }
