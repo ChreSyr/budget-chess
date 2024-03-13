@@ -448,7 +448,7 @@ class PhotoField extends StatelessWidget {
         CCGap.large,
         if (!kIsWeb)
           ListTile(
-            leading: const Icon(Icons.add_a_photo),
+            leading: const Icon(Icons.photo_camera),
             title: Text(context.l10n.pictureTake),
             onTap: () {
               cubit.waitPhoto(() async {
@@ -462,7 +462,7 @@ class PhotoField extends StatelessWidget {
             },
           ),
         ListTile(
-          leading: const Icon(Icons.drive_folder_upload),
+          leading: const Icon(Icons.folder),
           title: Text(context.l10n.pictureImport),
           onTap: () {
             cubit.waitPhoto(() async {
@@ -476,7 +476,7 @@ class PhotoField extends StatelessWidget {
           },
         ),
         ListTile(
-          leading: const Icon(Icons.person),
+          leading: const Icon(Icons.face),
           title: Text(context.l10n.avatarChoose),
           onTap: () {
             showAvatarModal(

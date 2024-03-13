@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:crea_chess/package/atomic_design/modal/user/photo.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/snack_bar.dart';
@@ -28,7 +30,8 @@ class InitPhotoBody extends RouteBody {
 
   @override
   Widget build(BuildContext context) {
-    final initialPhoto = context.read<UserCubit>().state.photo ?? '';
+    final initialPhoto = context.read<UserCubit>().state.photo ??
+        'avatar-${avatarNames[Random().nextInt(avatarNames.length)]}';
     final photoFormCubit = PhotoFormCubit(initialPhoto);
 
     return BlocProvider(
@@ -65,46 +68,56 @@ class InitPhotoBody extends RouteBody {
                 'Choississez un avatar ou une de vos photo !',
                 textAlign: TextAlign.center,
               ),
-              CCGap.large,
-              if (!kIsWeb)
-                ListTile(
-                  leading: const Icon(Icons.add_a_photo),
-                  title: Text(context.l10n.pictureTake),
-                  onTap: () {
-                    photoFormCubit.waitPhoto(() async {
-                      final photoRef = await uploadProfilePhoto(
-                        ImageSource.camera,
-                        photoFormCubit.initialPhoto,
+              CCGap.xxlarge,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (!kIsWeb) ...[
+                    _PhotoAction(
+                      icon: Icons.photo_camera,
+                      title: context.l10n.pictureTake,
+                      onTap: () {
+                        photoFormCubit.waitPhoto(() async {
+                          final photoRef = await uploadProfilePhoto(
+                            ImageSource.camera,
+                            photoFormCubit.initialPhoto,
+                          );
+                          if (photoRef == null) return;
+                          photoFormCubit
+                              .setPhoto(await photoRef.getDownloadURL());
+                        });
+                      },
+                    ),
+                    CCGap.large,
+                  ],
+                  _PhotoAction(
+                    icon: Icons.folder,
+                    title: context.l10n.pictureImport,
+                    onTap: () {
+                      photoFormCubit.waitPhoto(() async {
+                        final photoRef = await uploadProfilePhoto(
+                          ImageSource.gallery,
+                          photoFormCubit.initialPhoto,
+                        );
+                        if (photoRef == null) return;
+                        photoFormCubit
+                            .setPhoto(await photoRef.getDownloadURL());
+                      });
+                    },
+                  ),
+                  CCGap.large,
+                  _PhotoAction(
+                    icon: Icons.face,
+                    title: context.l10n.avatarChoose,
+                    onTap: () {
+                      showAvatarModal(
+                        context,
+                        (avatarName) =>
+                            photoFormCubit.setPhoto('avatar-$avatarName'),
                       );
-                      if (photoRef == null) return;
-                      photoFormCubit.setPhoto(await photoRef.getDownloadURL());
-                    });
-                  },
-                ),
-              ListTile(
-                leading: const Icon(Icons.drive_folder_upload),
-                title: Text(context.l10n.pictureImport),
-                onTap: () {
-                  photoFormCubit.waitPhoto(() async {
-                    final photoRef = await uploadProfilePhoto(
-                      ImageSource.gallery,
-                      photoFormCubit.initialPhoto,
-                    );
-                    if (photoRef == null) return;
-                    photoFormCubit.setPhoto(await photoRef.getDownloadURL());
-                  });
-                },
-              ),
-              ListTile(
-                leading: const Icon(Icons.person),
-                title: Text(context.l10n.avatarChoose),
-                onTap: () {
-                  showAvatarModal(
-                    context,
-                    (avatarName) =>
-                        photoFormCubit.setPhoto('avatar-$avatarName'),
-                  );
-                },
+                    },
+                  ),
+                ],
               ),
               CCGap.xxlarge,
               Align(
@@ -117,6 +130,42 @@ class InitPhotoBody extends RouteBody {
             ],
           );
         },
+      ),
+    );
+  }
+}
+
+class _PhotoAction extends StatelessWidget {
+  const _PhotoAction({
+    required this.icon,
+    required this.title,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String title;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: CCWidgetSize.xsmall,
+      child: Column(
+        children: [
+          IconButton.filledTonal(
+            icon: Icon(icon),
+            style: const ButtonStyle(
+              iconSize: MaterialStatePropertyAll(CCWidgetSize.xxxsmall),
+              padding: MaterialStatePropertyAll(EdgeInsets.all(CCSize.medium)),
+            ),
+            onPressed: onTap,
+          ),
+          CCGap.small,
+          Text(
+            title,
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
     );
   }

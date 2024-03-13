@@ -40,7 +40,7 @@ void showPhotoModal(BuildContext context, String userId) {
     sections: [
       if (!kIsWeb)
         ListTile(
-          leading: const Icon(Icons.add_a_photo),
+          leading: const Icon(Icons.photo_camera),
           title: Text(context.l10n.pictureTake),
           onTap: () async {
             context.pop();
@@ -52,7 +52,7 @@ void showPhotoModal(BuildContext context, String userId) {
           },
         ),
       ListTile(
-        leading: const Icon(Icons.drive_folder_upload),
+        leading: const Icon(Icons.folder),
         title: Text(context.l10n.pictureImport),
         onTap: () async {
           context.pop();
@@ -64,7 +64,7 @@ void showPhotoModal(BuildContext context, String userId) {
         },
       ),
       ListTile(
-        leading: const Icon(Icons.person),
+        leading: const Icon(Icons.face),
         title: Text(context.l10n.avatarChoose),
         onTap: () {
           context.pop();
