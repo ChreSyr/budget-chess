@@ -4,7 +4,7 @@ import 'package:crea_chess/package/firebase/authentication/auth_uid_listener_cub
 import 'package:crea_chess/package/firebase/firestore/user/user_crud.dart';
 import 'package:crea_chess/package/firebase/firestore/user/user_model.dart';
 
-final _userUnauthenticated = UserModel(id: '', username: 'userUnauthenticated');
+final _userUnauthenticated = UserModel(id: '', username: '');
 final _noAccountInFirebase = UserModel(id: '', username: 'noAccountInFirebase');
 
 class UserCubit extends AuthUidListenerCubit<UserModel> {

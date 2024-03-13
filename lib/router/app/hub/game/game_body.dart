@@ -6,7 +6,7 @@ import 'package:crea_chess/router/app/hub/game/player_tile.dart';
 import 'package:crea_chess/router/app/hub/game/side.dart';
 import 'package:crea_chess/router/app/hub/setup/board_settings_cubit.dart';
 import 'package:crea_chess/router/app/hub/setup/setup_body.dart';
-import 'package:crea_chess/router/.shared/route_body.dart';
+import 'package:crea_chess/router/shared/route_body.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

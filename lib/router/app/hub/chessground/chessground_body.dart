@@ -1,5 +1,5 @@
 import 'package:crea_chess/router/app/hub/chessground/play_page.dart';
-import 'package:crea_chess/router/.shared/route_body.dart';
+import 'package:crea_chess/router/shared/route_body.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 

@@ -1,32 +1,35 @@
 import 'dart:async';
 
+import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/widget/body_template.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
-import 'package:crea_chess/router/.shared/emergency_app_bar.dart';
-import 'package:crea_chess/router/.shared/route_body.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class EmailVerificationBody extends RouteBody {
-  const EmailVerificationBody({super.key});
-
-  @override
-  String getTitle(AppLocalizations l10n) => '';
-
-  @override
-  List<Widget> getActions(BuildContext context) {
-    return getEmergencyAppBarActions(context);
-  }
+class EmailVerificationScreen extends StatelessWidget {
+  const EmailVerificationScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BodyTemplate(
       loading: false,
-      emoji: '📬',
-      title: context.l10n.verifyMailbox,
       children: [
+        // emoji
+        const Text(
+          '📬',
+          style: TextStyle(fontSize: CCWidgetSize.xxsmall),
+          textAlign: TextAlign.center,
+        ),
+
+        // title
+        Text(
+          context.l10n.verifyMailbox,
+          textAlign: TextAlign.center,
+        ),
+        CCGap.xlarge,
+
         Text(
           context.l10n.verifyEmailExplainLink(
             context.read<AuthNotVerifiedCubit>().state?.email ?? 'ERROR',

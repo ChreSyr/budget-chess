@@ -11,7 +11,7 @@ import 'package:crea_chess/package/unichess/unichess.dart';
 import 'package:crea_chess/router/app/hub/create_challenge/create_challenge_cubit.dart';
 import 'package:crea_chess/router/app/hub/create_challenge/create_challenge_form.dart';
 import 'package:crea_chess/router/app/hub/create_challenge/create_challenge_status.dart';
-import 'package:crea_chess/router/.shared/route_body.dart';
+import 'package:crea_chess/router/shared/route_body.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';

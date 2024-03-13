@@ -1,8 +1,8 @@
 import 'package:crea_chess/package/l10n/l10n.dart';
+import 'package:crea_chess/router/init_profile/init_photo_body.dart';
+import 'package:crea_chess/router/init_profile/init_profile_home_body.dart';
+import 'package:crea_chess/router/init_profile/init_username_body.dart';
 import 'package:crea_chess/router/shared/route_body.dart';
-import 'package:crea_chess/router/sso/signin_body.dart';
-import 'package:crea_chess/router/sso/signup_body.dart';
-import 'package:crea_chess/router/sso/sso_home_body.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -16,19 +16,20 @@ Widget buildRoute(BuildContext context, GoRouterState _, RouteBody body) =>
       body: body,
     );
 
-final ssoRouter = GoRouter(
+final initProfileRouter = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      builder: (context, _) => buildRoute(context, _, const SSOHomeBody()),
+      builder: (context, _) =>
+          buildRoute(context, _, const InitProfileHomeBody()),
       routes: [
         GoRoute(
-          path: 'signin',
-          builder: (_, __) => buildRoute(_, __, const SigninBody()),
+          path: 'username',
+          builder: (_, __) => buildRoute(_, __, const InitUsernameBody()),
         ),
         GoRoute(
-          path: 'signup',
-          builder: (_, __) => buildRoute(_, __, const SignupBody()),
+          path: 'photo',
+          builder: (_, __) => buildRoute(_, __, const InitPhotoBody()),
         ),
       ],
     ),

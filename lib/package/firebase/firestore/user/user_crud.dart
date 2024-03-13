@@ -42,7 +42,6 @@ class _UserCRUD extends CollectionCRUD<UserModel> {
           id: auth.uid,
           createdAt: auth.metadata.creationTime ?? DateTime.now(),
           username: '',
-          photo: auth.photoURL,
           isConnected: true,
         ),
       );

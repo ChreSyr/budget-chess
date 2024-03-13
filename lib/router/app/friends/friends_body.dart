@@ -10,7 +10,7 @@ import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/router/app/bottom_route_body.dart';
 import 'package:crea_chess/router/app/friends/search_friend/search_friend_body.dart';
-import 'package:crea_chess/router/.shared/route_body.dart';
+import 'package:crea_chess/router/shared/route_body.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';

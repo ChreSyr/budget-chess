@@ -69,6 +69,9 @@ class _AuthenticationCRUD {
           }
           authProviderStatusCubit.success();
         } catch (_) {
+          // without this line, the app is stuck on the account deletion page
+          // TODO : re-authenticate before deleting challenges, relations...
+          await user.updateDisplayName(user.displayName);
           return authProviderStatusCubit.error();
         }
 

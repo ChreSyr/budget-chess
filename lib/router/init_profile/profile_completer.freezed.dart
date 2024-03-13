@@ -132,7 +132,7 @@ class __$$ProfileFormImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$ProfileFormImpl extends _ProfileForm {
+class _$ProfileFormImpl extends _ProfileForm with DiagnosticableTreeMixin {
   _$ProfileFormImpl(
       {required this.name,
       required this.photo,
@@ -150,8 +150,19 @@ class _$ProfileFormImpl extends _ProfileForm {
   final ProfileFormStep step;
 
   @override
-  String toString() {
+  String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
     return 'ProfileForm(name: $name, photo: $photo, status: $status, step: $step)';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties
+      ..add(DiagnosticsProperty('type', 'ProfileForm'))
+      ..add(DiagnosticsProperty('name', name))
+      ..add(DiagnosticsProperty('photo', photo))
+      ..add(DiagnosticsProperty('status', status))
+      ..add(DiagnosticsProperty('step', step));
   }
 
   @override

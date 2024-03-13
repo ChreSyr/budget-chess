@@ -10,7 +10,7 @@ import 'package:crea_chess/package/firebase/authentication/authentication_crud.d
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/package/preferences/preferences_cubit.dart';
 import 'package:crea_chess/package/preferences/preferences_state.dart';
-import 'package:crea_chess/router/.shared/route_body.dart';
+import 'package:crea_chess/router/shared/route_body.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -137,6 +137,7 @@ class SSOHomeBody extends RouteBody {
     if (auth.beingDeleted) {
       return const Center(
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Text('Compte en cours de suppression'),
             CCGap.medium,
@@ -149,7 +150,7 @@ class SSOHomeBody extends RouteBody {
     // The user is logged in, the application will change router
     else {
       return const Center(
-        child: CircularProgressIndicator(),
+        child: CircularProgressIndicator()
       );
     }
   }

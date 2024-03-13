@@ -6,7 +6,8 @@ import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/widget/badge.dart';
 import 'package:crea_chess/package/atomic_design/widget/nav_bar.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
-import 'package:crea_chess/router/.shared/route_body.dart';
+import 'package:crea_chess/router/shared/route_body.dart';
+import 'package:crea_chess/router/shared/settings_body.dart';
 import 'package:crea_chess/router/app/bottom_route_body.dart';
 import 'package:crea_chess/router/app/friends/friends_body.dart';
 import 'package:crea_chess/router/app/hub/chessground/chessground_body.dart';
@@ -16,10 +17,8 @@ import 'package:crea_chess/router/app/hub/hub_body.dart';
 import 'package:crea_chess/router/app/messages/messages_body.dart';
 import 'package:crea_chess/router/app/missions/missions_body.dart';
 import 'package:crea_chess/router/app/nav_notifier.dart';
-import 'package:crea_chess/router/app/route_scaffold.dart';
-import 'package:crea_chess/router/.shared/settings_body.dart';
 import 'package:crea_chess/router/app/side_routes.dart';
-import 'package:crea_chess/router/app/user/modify_username/modify_username_body.dart';
+import 'package:crea_chess/router/app/user/modify_username_body.dart';
 import 'package:crea_chess/router/app/user/user_body.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -112,7 +111,7 @@ final appRouter = GoRouter(
             GoRoute(
               path: '/missions',
               builder: (context, state) =>
-                  const RouteScaffold(body: MissionsBody()),
+                  buildRoute(context, const MissionsBody()),
             ),
           ],
         ),
@@ -124,7 +123,7 @@ final appRouter = GoRouter(
             GoRoute(
               path: '/messages',
               builder: (context, state) =>
-                  const RouteScaffold(body: MessagesBody()),
+                  buildRoute(context, const MessagesBody()),
             ),
           ],
         ),
@@ -136,7 +135,7 @@ final appRouter = GoRouter(
             GoRoute(
               path: '/friends',
               builder: (context, state) =>
-                  const RouteScaffold(body: FriendsBody()),
+                  buildRoute(context, const FriendsBody()),
             ),
           ],
         ),
@@ -149,7 +148,7 @@ final appRouter = GoRouter(
             GoRoute(
               path: '/settings',
               builder: (context, state) =>
-                  const RouteScaffold(body: SettingsBody()),
+                  buildRoute(context, const SettingsBody()),
             ),
           ],
         ),
@@ -161,18 +160,19 @@ final appRouter = GoRouter(
             GoRoute(
               path: '/user',
               builder: (context, state) =>
-                  const RouteScaffold(body: UserBody()),
+                  buildRoute(context, const UserBody()),
               routes: [
                 // child routes
                 GoRoute(
                   path: 'modify_name',
                   builder: (context, state) =>
-                      const RouteScaffold(body: ModifyUsernameBody()),
+                      buildRoute(context, const ModifyUsernameBody()),
                 ),
                 GoRoute(
                   path: '@:usernameOrId',
-                  builder: (context, state) => RouteScaffold(
-                    body: UserBody(
+                  builder: (context, state) => buildRoute(
+                    context,
+                    UserBody(
                       usernameOrId: state.pathParameters['usernameOrId'],
                     ),
                   ),

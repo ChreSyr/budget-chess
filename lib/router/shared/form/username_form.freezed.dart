@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'modify_username_form.dart';
+part of 'username_form.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,28 +15,28 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
-mixin _$ModifyUsernameForm {
+mixin _$UsernameForm {
   InputString get name => throw _privateConstructorUsedError;
-  ModifyUsernameStatus get status => throw _privateConstructorUsedError;
+  UsernameFormStatus get status => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
-  $ModifyUsernameFormCopyWith<ModifyUsernameForm> get copyWith =>
+  $UsernameFormCopyWith<UsernameForm> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $ModifyUsernameFormCopyWith<$Res> {
-  factory $ModifyUsernameFormCopyWith(
-          ModifyUsernameForm value, $Res Function(ModifyUsernameForm) then) =
-      _$ModifyUsernameFormCopyWithImpl<$Res, ModifyUsernameForm>;
+abstract class $UsernameFormCopyWith<$Res> {
+  factory $UsernameFormCopyWith(
+          UsernameForm value, $Res Function(UsernameForm) then) =
+      _$UsernameFormCopyWithImpl<$Res, UsernameForm>;
   @useResult
-  $Res call({InputString name, ModifyUsernameStatus status});
+  $Res call({InputString name, UsernameFormStatus status});
 }
 
 /// @nodoc
-class _$ModifyUsernameFormCopyWithImpl<$Res, $Val extends ModifyUsernameForm>
-    implements $ModifyUsernameFormCopyWith<$Res> {
-  _$ModifyUsernameFormCopyWithImpl(this._value, this._then);
+class _$UsernameFormCopyWithImpl<$Res, $Val extends UsernameForm>
+    implements $UsernameFormCopyWith<$Res> {
+  _$UsernameFormCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -57,28 +57,28 @@ class _$ModifyUsernameFormCopyWithImpl<$Res, $Val extends ModifyUsernameForm>
       status: null == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
-              as ModifyUsernameStatus,
+              as UsernameFormStatus,
     ) as $Val);
   }
 }
 
 /// @nodoc
-abstract class _$$ModifyUsernameFormImplCopyWith<$Res>
-    implements $ModifyUsernameFormCopyWith<$Res> {
-  factory _$$ModifyUsernameFormImplCopyWith(_$ModifyUsernameFormImpl value,
-          $Res Function(_$ModifyUsernameFormImpl) then) =
-      __$$ModifyUsernameFormImplCopyWithImpl<$Res>;
+abstract class _$$UsernameFormImplCopyWith<$Res>
+    implements $UsernameFormCopyWith<$Res> {
+  factory _$$UsernameFormImplCopyWith(
+          _$UsernameFormImpl value, $Res Function(_$UsernameFormImpl) then) =
+      __$$UsernameFormImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({InputString name, ModifyUsernameStatus status});
+  $Res call({InputString name, UsernameFormStatus status});
 }
 
 /// @nodoc
-class __$$ModifyUsernameFormImplCopyWithImpl<$Res>
-    extends _$ModifyUsernameFormCopyWithImpl<$Res, _$ModifyUsernameFormImpl>
-    implements _$$ModifyUsernameFormImplCopyWith<$Res> {
-  __$$ModifyUsernameFormImplCopyWithImpl(_$ModifyUsernameFormImpl _value,
-      $Res Function(_$ModifyUsernameFormImpl) _then)
+class __$$UsernameFormImplCopyWithImpl<$Res>
+    extends _$UsernameFormCopyWithImpl<$Res, _$UsernameFormImpl>
+    implements _$$UsernameFormImplCopyWith<$Res> {
+  __$$UsernameFormImplCopyWithImpl(
+      _$UsernameFormImpl _value, $Res Function(_$UsernameFormImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -87,7 +87,7 @@ class __$$ModifyUsernameFormImplCopyWithImpl<$Res>
     Object? name = null,
     Object? status = null,
   }) {
-    return _then(_$ModifyUsernameFormImpl(
+    return _then(_$UsernameFormImpl(
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -95,32 +95,31 @@ class __$$ModifyUsernameFormImplCopyWithImpl<$Res>
       status: null == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
-              as ModifyUsernameStatus,
+              as UsernameFormStatus,
     ));
   }
 }
 
 /// @nodoc
 
-class _$ModifyUsernameFormImpl extends _ModifyUsernameForm {
-  _$ModifyUsernameFormImpl({required this.name, required this.status})
-      : super._();
+class _$UsernameFormImpl extends _UsernameForm {
+  _$UsernameFormImpl({required this.name, required this.status}) : super._();
 
   @override
   final InputString name;
   @override
-  final ModifyUsernameStatus status;
+  final UsernameFormStatus status;
 
   @override
   String toString() {
-    return 'ModifyUsernameForm(name: $name, status: $status)';
+    return 'UsernameForm(name: $name, status: $status)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ModifyUsernameFormImpl &&
+            other is _$UsernameFormImpl &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.status, status) || other.status == status));
   }
@@ -131,23 +130,22 @@ class _$ModifyUsernameFormImpl extends _ModifyUsernameForm {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ModifyUsernameFormImplCopyWith<_$ModifyUsernameFormImpl> get copyWith =>
-      __$$ModifyUsernameFormImplCopyWithImpl<_$ModifyUsernameFormImpl>(
-          this, _$identity);
+  _$$UsernameFormImplCopyWith<_$UsernameFormImpl> get copyWith =>
+      __$$UsernameFormImplCopyWithImpl<_$UsernameFormImpl>(this, _$identity);
 }
 
-abstract class _ModifyUsernameForm extends ModifyUsernameForm {
-  factory _ModifyUsernameForm(
+abstract class _UsernameForm extends UsernameForm {
+  factory _UsernameForm(
       {required final InputString name,
-      required final ModifyUsernameStatus status}) = _$ModifyUsernameFormImpl;
-  _ModifyUsernameForm._() : super._();
+      required final UsernameFormStatus status}) = _$UsernameFormImpl;
+  _UsernameForm._() : super._();
 
   @override
   InputString get name;
   @override
-  ModifyUsernameStatus get status;
+  UsernameFormStatus get status;
   @override
   @JsonKey(ignore: true)
-  _$$ModifyUsernameFormImplCopyWith<_$ModifyUsernameFormImpl> get copyWith =>
+  _$$UsernameFormImplCopyWith<_$UsernameFormImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

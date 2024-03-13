@@ -1,6 +1,6 @@
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
-import 'package:crea_chess/route/app/side_routes.dart';
+import 'package:crea_chess/router/app/side_routes.dart';
 import 'package:flutter/material.dart';
 
 // TODO : hub_route instead of hub_body
