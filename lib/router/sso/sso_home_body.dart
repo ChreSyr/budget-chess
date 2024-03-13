@@ -54,14 +54,14 @@ class SSOHomeBody extends RouteBody {
                           Text(
                             'Welcome to', // TODO : l10n
                             style: CCTextStyle.displaySmall(context)?.copyWith(
-                              color: CCColor.background(context),
+                              color: Colors.white,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           Text(
                             'Budget Chess', // TODO : l10n
                             style: CCTextStyle.titleLarge(context)?.copyWith(
-                              color: CCColor.background(context),
+                              color: Colors.white,
                               // fontWeight: FontWeight.bold,
                             ),
                           ),
