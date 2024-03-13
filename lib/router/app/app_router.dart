@@ -4,6 +4,7 @@
 import 'package:crea_chess/package/atomic_design/border.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/widget/badge.dart';
+import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/atomic_design/widget/nav_bar.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/router/app/friends/friends_body.dart';
@@ -23,22 +24,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-// private navigators
-final _rootNavigatorKey = GlobalKey<NavigatorState>();
-final _shellNavigatorHubKey = GlobalKey<NavigatorState>(debugLabel: 'shellHub');
-final _shellNavigatorMissionsKey =
-    GlobalKey<NavigatorState>(debugLabel: 'shellMissions');
-final _shellNavigatorMessagesKey =
-    GlobalKey<NavigatorState>(debugLabel: 'shellMesssages');
-final _shellNavigatorFriendsKey =
-    GlobalKey<NavigatorState>(debugLabel: 'shellFriends');
-final _shellNavigatorOthersKey =
-    GlobalKey<NavigatorState>(debugLabel: 'shellOthers');
-
 // the route when the user user is authenticated and completed his profile
 final appRouter = GoRouter(
   initialLocation: '/hub',
-  navigatorKey: _rootNavigatorKey,
   errorBuilder: (context, state) => ErrorPage(exception: state.error),
   routes: [
     // Stateful nested navigation based on:
@@ -53,7 +41,6 @@ final appRouter = GoRouter(
       branches: [
         // Hub
         StatefulShellBranch(
-          navigatorKey: _shellNavigatorHubKey,
           routes: [
             // top route inside branch
             GoRoute(
@@ -86,7 +73,6 @@ final appRouter = GoRouter(
         ),
         // Missions
         StatefulShellBranch(
-          navigatorKey: _shellNavigatorMissionsKey,
           routes: [
             // top route inside branch
             GoRoute(
@@ -98,7 +84,6 @@ final appRouter = GoRouter(
         ),
         // Messages
         StatefulShellBranch(
-          navigatorKey: _shellNavigatorMessagesKey,
           routes: [
             // top route inside branch
             GoRoute(
@@ -110,7 +95,6 @@ final appRouter = GoRouter(
         ),
         // Friends
         StatefulShellBranch(
-          navigatorKey: _shellNavigatorFriendsKey,
           routes: [
             // top route inside branch
             GoRoute(
@@ -122,12 +106,10 @@ final appRouter = GoRouter(
         ),
         // Other routes
         StatefulShellBranch(
-          navigatorKey: _shellNavigatorOthersKey,
           routes: [
             // top route inside branch
             GoRoute(
               path: '/',
-              // TODO : redirect ?
               builder: (context, state) => const ErrorPage(exception: null),
               routes: [
                 // Settings
@@ -191,19 +173,12 @@ class ErrorBody extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(exception?.toString() ?? 'null'),
-          TextButton(
-            onPressed: () {
-              try {
-                while (context.canPop()) {
-                  context.pop();
-                }
-              } catch (_) {
-                debugPrint('ERROR : Invalid route path');
-                context.go('/hub');
-              }
-            },
-            child: Text(context.l10n.back),
+          Text('Error : $exception'),
+          CCGap.medium,
+          FilledButton.icon(
+            onPressed: () => context.go('/hub'),
+            icon: Icon(HubBody.data.icon),
+            label: Text(context.l10n.hub),
           ),
         ],
       ),
