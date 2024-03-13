@@ -60,10 +60,11 @@ class InitProfileHomeBody extends RouteBody {
     if (!user.profileCompleted) {
       return Center(
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             const Text('Bienvenue sur Budget Chess !'), // TODO : l10n
             CCGap.medium,
-            TextButton(
+            FilledButton(
               onPressed: () => context.push('/username'),
               child: const Text("C'est parti !"), // TODO : l10n
             ),
