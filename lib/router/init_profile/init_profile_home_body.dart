@@ -3,9 +3,9 @@ import 'package:crea_chess/package/firebase/authentication/authentication_crud.d
 import 'package:crea_chess/package/firebase/firestore/user/user_crud.dart';
 import 'package:crea_chess/package/firebase/firestore/user/user_cubit.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
+import 'package:crea_chess/router/init_profile/email_verification_screen.dart';
 import 'package:crea_chess/router/shared/emergency_app_bar.dart';
 import 'package:crea_chess/router/shared/route_body.dart';
-import 'package:crea_chess/router/init_profile/email_verification_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -17,10 +17,9 @@ class InitProfileHomeBody extends RouteBody {
   String getTitle(AppLocalizations l10n) => '';
 
   @override
-  List<Widget> getActions(BuildContext context) {
-    return getEmergencyAppBarActions(context);
-  }
-
+  List<Widget> getActions(BuildContext context) =>
+      getEmergencyAppBarActions(context);
+  
   @override
   Widget build(BuildContext context) {
     final auth = context.watch<AuthNotVerifiedCubit>().state;

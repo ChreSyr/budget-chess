@@ -9,6 +9,7 @@ import 'package:crea_chess/package/form/signin/signin_cubit.dart';
 import 'package:crea_chess/package/form/signin/signin_form.dart';
 import 'package:crea_chess/package/form/signin/signin_status.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
+import 'package:crea_chess/router/shared/emergency_app_bar.dart';
 import 'package:crea_chess/router/shared/route_body.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,8 +21,8 @@ class SigninBody extends RouteBody {
   String getTitle(AppLocalizations l10n) => l10n.signin;
 
   @override
-  // TODO : preferences & help
-  List<Widget> getActions(BuildContext context) => [];
+  List<Widget> getActions(BuildContext context) =>
+      getEmergencyAppBarActions(context);
 
   @override
   Widget build(BuildContext context) {

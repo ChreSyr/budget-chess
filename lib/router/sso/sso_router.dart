@@ -1,5 +1,6 @@
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/router/shared/route_body.dart';
+import 'package:crea_chess/router/shared/settings_body.dart';
 import 'package:crea_chess/router/sso/signin_body.dart';
 import 'package:crea_chess/router/sso/signup_body.dart';
 import 'package:crea_chess/router/sso/sso_home_body.dart';
@@ -22,6 +23,10 @@ final ssoRouter = GoRouter(
       path: '/',
       builder: (context, _) => buildRoute(context, _, const SSOHomeBody()),
       routes: [
+        GoRoute(
+          path: 'settings',
+          builder: (_, __) => buildRoute(_, __, const SettingsBody()),
+        ),
         GoRoute(
           path: 'signin',
           builder: (_, __) => buildRoute(_, __, const SigninBody()),

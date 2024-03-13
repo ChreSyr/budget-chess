@@ -32,6 +32,9 @@ class SettingsBody extends RouteBody {
   }
 
   @override
+  List<Widget> getActions(BuildContext context) => [];
+
+  @override
   Widget build(BuildContext context) {
     final preferencesCubit = context.read<PreferencesCubit>();
 

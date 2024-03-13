@@ -3,6 +3,7 @@ import 'package:crea_chess/router/init_profile/init_photo_body.dart';
 import 'package:crea_chess/router/init_profile/init_profile_home_body.dart';
 import 'package:crea_chess/router/init_profile/init_username_body.dart';
 import 'package:crea_chess/router/shared/route_body.dart';
+import 'package:crea_chess/router/shared/settings_body.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -23,6 +24,10 @@ final initProfileRouter = GoRouter(
       builder: (context, _) =>
           buildRoute(context, _, const InitProfileHomeBody()),
       routes: [
+        GoRoute(
+          path: 'settings',
+          builder: (_, __) => buildRoute(_, __, const SettingsBody()),
+        ),
         GoRoute(
           path: 'username',
           builder: (_, __) => buildRoute(_, __, const InitUsernameBody()),

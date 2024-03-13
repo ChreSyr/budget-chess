@@ -10,6 +10,7 @@ import 'package:crea_chess/package/firebase/authentication/authentication_crud.d
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/package/preferences/preferences_cubit.dart';
 import 'package:crea_chess/package/preferences/preferences_state.dart';
+import 'package:crea_chess/router/shared/emergency_app_bar.dart';
 import 'package:crea_chess/router/shared/route_body.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,8 +23,8 @@ class SSOHomeBody extends RouteBody {
   String getTitle(AppLocalizations l10n) => '';
 
   @override
-  // TODO : preferences & help
-  List<Widget> getActions(BuildContext context) => [];
+  List<Widget> getActions(BuildContext context) =>
+      getEmergencyAppBarActions(context);
 
   @override
   Widget build(BuildContext context) {
@@ -149,9 +150,7 @@ class SSOHomeBody extends RouteBody {
 
     // The user is logged in, the application will change router
     else {
-      return const Center(
-        child: CircularProgressIndicator()
-      );
+      return const Center(child: CircularProgressIndicator());
     }
   }
 }
