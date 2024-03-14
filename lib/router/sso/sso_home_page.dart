@@ -69,14 +69,14 @@ class SSOHomePage extends StatelessWidget {
                         children: [
                           Text(
                             'Welcome to', // TODO : l10n
-                            style: CCTextStyle.displaySmall(context)?.copyWith(
+                            style: context.textTheme.displaySmall?.copyWith(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           Text(
                             'Budget Chess', // TODO : l10n
-                            style: CCTextStyle.titleLarge(context)?.copyWith(
+                            style: context.textTheme.titleLarge?.copyWith(
                               color: Colors.white,
                               // fontWeight: FontWeight.bold,
                             ),

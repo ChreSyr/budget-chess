@@ -78,7 +78,7 @@ class FriendsPage extends StatelessWidget {
                       Text(
                         // TODO : l10n
                         'Rechercher un joueur',
-                        style: CCTextStyle.bodyLarge(context),
+                        style: context.textTheme.bodyLarge,
                       ),
                       const Expanded(child: CCGap.medium),
                       const Icon(Icons.search),
@@ -175,7 +175,7 @@ class FriendRequestCard extends StatelessWidget {
                         children: [
                           Text(
                             requesterProfile.username,
-                            style: CCTextStyle.titleLarge(context),
+                            style: context.textTheme.titleLarge,
                           ),
                           CCGap.medium,
                           const Text('Vous demande en ami !'), // TODO : l10n

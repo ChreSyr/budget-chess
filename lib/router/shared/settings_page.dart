@@ -48,7 +48,7 @@ class SettingsPage extends StatelessWidget {
               return ExpansionTile(
                 title: Text(
                   'Préférences', // TODO : l10n
-                  style: CCTextStyle.titleLarge(context),
+                  style: context.textTheme.titleLarge,
                 ),
                 children: [
                   FilledCircleButton.icon(
@@ -107,7 +107,7 @@ class SettingsPage extends StatelessWidget {
               return ExpansionTile(
                 title: Text(
                   'Compte',
-                  style: CCTextStyle.titleLarge(context),
+                  style: context.textTheme.titleLarge,
                 ), // TODO : l10n
                 trailing: auth.isVerified
                     ? null
@@ -125,7 +125,7 @@ class SettingsPage extends StatelessWidget {
                               Text(
                                 'non vérifiée', // TODO : l10n
                                 style:
-                                    CCTextStyle.bodyMedium(context)?.copyWith(
+                                    context.textTheme.bodyMedium?.copyWith(
                                   fontStyle: FontStyle.italic,
                                   color: Colors.grey,
                                 ),

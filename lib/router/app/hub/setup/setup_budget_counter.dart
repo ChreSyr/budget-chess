@@ -36,14 +36,14 @@ class SetupBudgetCounter extends StatelessWidget {
               leading: Icon(e.icon),
               title: Text(
                 e.name, // TODO : l10n
-                style: CCTextStyle.titleLarge(context),
+                style: context.textTheme.titleLarge,
               ),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
                     e.cost.toString(),
-                    style: CCTextStyle.titleLarge(context),
+                    style: context.textTheme.titleLarge,
                   ),
                   const Icon(Icons.attach_money),
                 ],
@@ -55,7 +55,7 @@ class SetupBudgetCounter extends StatelessWidget {
       icon: const Icon(Icons.attach_money),
       label: Text(
         '$cost / $budget',
-        style: CCTextStyle.titleLarge(context),
+        style: context.textTheme.titleLarge,
       ),
     );
   }
