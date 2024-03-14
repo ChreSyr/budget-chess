@@ -904,39 +904,40 @@ abstract class Position<T extends Position<T>> {
 
     SquareMap pseudo;
     SquareMap? legalEpSquare;
-    // TODO : switch
-    if (piece.role == Role.pawn) {
-      pseudo = board.attacks.ofPawn(turn, square) & board.bySide(turn.opposite);
-      final delta = turn == Side.white ? board.size.files : -board.size.files;
-      final step = square + delta;
-      if (0 <= step &&
-          step < board.size.capacity &&
-          !board.occupied.has(step)) {
-        pseudo = pseudo.withSquare(step);
-        final canDoubleStep = turn == Side.white
-            ? square < board.size.files * 2
-            : square >= board.size.capacity - board.size.files * 2;
-        final doubleStep = step + delta;
-        if (canDoubleStep && !board.occupied.has(doubleStep)) {
-          pseudo = pseudo.withSquare(doubleStep);
+    switch (piece.role) {
+      case Role.pawn:
+        pseudo =
+            board.attacks.ofPawn(turn, square) & board.bySide(turn.opposite);
+        final delta = turn == Side.white ? board.size.files : -board.size.files;
+        final step = square + delta;
+        if (0 <= step &&
+            step < board.size.capacity &&
+            !board.occupied.has(step)) {
+          pseudo = pseudo.withSquare(step);
+          final canDoubleStep = turn == Side.white
+              ? square < board.size.files * 2
+              : square >= board.size.capacity - board.size.files * 2;
+          final doubleStep = step + delta;
+          if (canDoubleStep && !board.occupied.has(doubleStep)) {
+            pseudo = pseudo.withSquare(doubleStep);
+          }
         }
-      }
-      if (epSquare != null && _canCaptureEp(square)) {
-        final pawn = epSquare! - delta;
-        if (ctx.checkers.isEmpty || ctx.checkers.singleSquare == pawn) {
-          legalEpSquare = SquareMapExt.fromSquare(epSquare!);
+        if (epSquare != null && _canCaptureEp(square)) {
+          final pawn = epSquare! - delta;
+          if (ctx.checkers.isEmpty || ctx.checkers.singleSquare == pawn) {
+            legalEpSquare = SquareMapExt.fromSquare(epSquare!);
+          }
         }
-      }
-    } else if (piece.role == Role.bishop) {
-      pseudo = board.attacks.ofBishop(square, board.occupied);
-    } else if (piece.role == Role.knight) {
-      pseudo = board.attacks.ofKnight(square);
-    } else if (piece.role == Role.rook) {
-      pseudo = board.attacks.ofRook(square, board.occupied);
-    } else if (piece.role == Role.queen) {
-      pseudo = board.attacks.ofQueen(square, board.occupied);
-    } else {
-      pseudo = board.attacks.ofKing(square);
+      case Role.bishop:
+        pseudo = board.attacks.ofBishop(square, board.occupied);
+      case Role.knight:
+        pseudo = board.attacks.ofKnight(square);
+      case Role.rook:
+        pseudo = board.attacks.ofRook(square, board.occupied);
+      case Role.queen:
+        pseudo = board.attacks.ofQueen(square, board.occupied);
+      case Role.king:
+        pseudo = board.attacks.ofKing(square);
     }
 
     pseudo = pseudo.diff(board.bySide(turn));
