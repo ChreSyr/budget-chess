@@ -8,12 +8,27 @@ import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
-import 'package:crea_chess/router/shared/root_route_body.dart';
-import 'package:crea_chess/router/app/friends/search_friend/search_friend_body.dart';
-import 'package:crea_chess/router/shared/route_body.dart';
+import 'package:crea_chess/router/app/friends/search_friend/search_friend_delegate.dart';
+import 'package:crea_chess/router/app/user/user_page.dart';
+import 'package:crea_chess/router/shared/app_bar_actions.dart';
+import 'package:crea_chess/router/shared/ccroute.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+
+class FriendsRoute extends CCRoute {
+  const FriendsRoute._() : super(name: '/friends', icon: Icons.people);
+
+  /// Instance
+  static const i = FriendsRoute._();
+
+  @override
+  String getTitle(AppLocalizations l10n) => l10n.friends;
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const FriendsPage();
+}
 
 class FriendRequestsCubit
     extends AuthUidListenerCubit<Iterable<RelationshipModel>> {
@@ -37,86 +52,81 @@ class FriendRequestsCubit
   }
 }
 
-class FriendsBody extends RootRouteBody {
-  const FriendsBody({super.key});
-
-  static final MainRouteData data = MainRouteData(
-    id: 'friends',
-    icon: Icons.people,
-    getTitle: (l10n) => l10n.friends,
-  );
-
-  @override
-  String getTitle(AppLocalizations l10n) {
-    return l10n.friends;
-  }
+class FriendsPage extends StatelessWidget {
+  const FriendsPage({super.key});
 
   static const notifFriendRequests = 'friend-requests';
 
   @override
   Widget build(BuildContext context) {
-    return CCPadding.horizontalMedium(
-      child: Column(
-        children: [
-          // Search bar
-          Card(
-            clipBehavior: Clip.hardEdge,
-            child: InkWell(
-              onTap: () => searchFriend(context),
-              child: CCPadding.allSmall(
-                child: Row(
-                  children: [
-                    Text(
-                      // TODO : l10n
-                      'Rechercher un joueur',
-                      style: CCTextStyle.bodyLarge(context),
-                    ),
-                    const Expanded(child: CCGap.medium),
-                    const Icon(Icons.search),
-                  ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(FriendsRoute.i.getTitle(context.l10n)),
+        actions: getSideRoutesAppBarActions(context),
+      ),
+      body: CCPadding.horizontalMedium(
+        child: Column(
+          children: [
+            // Search bar
+            Card(
+              clipBehavior: Clip.hardEdge,
+              child: InkWell(
+                onTap: () => searchFriend(context),
+                child: CCPadding.allSmall(
+                  child: Row(
+                    children: [
+                      Text(
+                        // TODO : l10n
+                        'Rechercher un joueur',
+                        style: CCTextStyle.bodyLarge(context),
+                      ),
+                      const Expanded(child: CCGap.medium),
+                      const Icon(Icons.search),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          // Friendship requests
-          BlocBuilder<FriendRequestsCubit, Iterable<RelationshipModel>>(
-            builder: (context, requests) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: requests
-                    .map(
-                      (request) => FriendRequestCard(
-                        request,
-                        context,
-                      ),
-                    )
-                    .toList(),
-              );
-            },
-          ),
-          CCGap.medium,
-          // Friend previews
-          Center(
-            child: BlocBuilder<UserCubit, UserModel>(
-              builder: (context, user) {
-                final authUid = user.id;
-                return StreamBuilder<Iterable<RelationshipModel>>(
-                  stream: relationshipCRUD.friendshipsOf(authUid),
-                  builder: (context, snapshot) {
-                    final friendships = snapshot.data ?? [];
-                    return Wrap(
-                      children: friendships.map((e) {
-                        final friendId = e.otherUser(authUid);
-                        if (friendId == null) return CCGap.zero;
-                        return FriendPreview(friendId);
-                      }).toList(),
-                    );
-                  },
+            // Friendship requests
+            BlocBuilder<FriendRequestsCubit, Iterable<RelationshipModel>>(
+              builder: (context, requests) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: requests
+                      .map(
+                        (request) => FriendRequestCard(
+                          request,
+                          context,
+                        ),
+                      )
+                      .toList(),
                 );
               },
             ),
-          ),
-        ],
+            CCGap.medium,
+            // Friend previews
+            Center(
+              child: BlocBuilder<UserCubit, UserModel>(
+                builder: (context, user) {
+                  final authUid = user.id;
+                  return StreamBuilder<Iterable<RelationshipModel>>(
+                    stream: relationshipCRUD.friendshipsOf(authUid),
+                    builder: (context, snapshot) {
+                      final friendships = snapshot.data ?? [];
+                      return Wrap(
+                        children: friendships.map((e) {
+                          final friendId = e.otherUser(authUid);
+                          if (friendId == null) return CCGap.zero;
+                          return FriendPreview(friendId);
+                        }).toList(),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -146,7 +156,7 @@ class FriendRequestCard extends StatelessWidget {
         child: Column(
           children: [
             GestureDetector(
-              onTap: () => context.push('/user/@$requester'),
+              onTap: () => UserRoute.push(usernameOrId: requester),
               child: StreamBuilder<UserModel?>(
                 stream: userCRUD.stream(documentId: requester),
                 builder: (context, snapshot) {
@@ -227,7 +237,7 @@ class FriendPreview extends StatelessWidget {
           width: CCWidgetSize.medium,
           child: CCPadding.allXsmall(
             child: GestureDetector(
-              onTap: () => context.push('/user/@${friend.username}'),
+              onTap: () => UserRoute.push(usernameOrId: friend.id),
               child: Column(
                 children: [
                   DecoratedBox(

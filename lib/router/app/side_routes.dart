@@ -8,9 +8,9 @@ import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/router/app/nav_notifier.dart';
-import 'package:crea_chess/router/app/user/user_body.dart';
-import 'package:crea_chess/router/shared/route_body.dart';
-import 'package:crea_chess/router/shared/settings_body.dart';
+import 'package:crea_chess/router/app/user/user_page.dart';
+import 'package:crea_chess/router/shared/ccroute.dart';
+import 'package:crea_chess/router/shared/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -26,8 +26,9 @@ class OpenSideRoutesButton extends StatelessWidget {
           builder: (context, navNotifs) {
             final hasNotif = navNotifs.keys
                 .map(
-                  (routeId) => SideRoutes.allRouteDataIds.contains(routeId)
-                      ? navNotifs.count(routeId: routeId)
+                  (routeName) =>
+                      SideRoutes.allSideRouteNames.contains(routeName)
+                          ? navNotifs.count(routeName: routeName)
                       : 0,
                 )
                 .any((count) => count > 0);
@@ -65,11 +66,11 @@ class SideRoutes extends StatelessWidget {
 
   final Widget child;
 
-  static final allRouteDatas = [
-    UserBody.data,
-    SettingsBody.data,
+  static final allSideRoutes = [
+    UserRoute.i,
+    SettingsRoute.i,
   ];
-  static final allRouteDataIds = allRouteDatas.map((data) => data.id);
+  static final allSideRouteNames = allSideRoutes.map((route) => route.name);
 
   @override
   Widget build(BuildContext context) {
@@ -122,18 +123,18 @@ class SideRoutes extends StatelessWidget {
                         children: [
                           CCGap.xxxlarge,
                           CountBadge(
-                            count: navNotifs.count(routeId: UserBody.data.id),
+                            count: navNotifs.count(routeName: UserRoute.i.name),
                             child: const ProfileButton(),
                             offset: const Offset(-10, -10),
                           ),
                           CCGap.small,
                           const Divider(),
                           ...[
-                            SettingsBody.data,
+                            SettingsRoute.i,
                           ].map(
-                            (data) => CountBadge(
-                              count: navNotifs.count(routeId: data.id),
-                              child: SideRouteButton(data),
+                            (route) => CountBadge(
+                              count: navNotifs.count(routeName: route.name),
+                              child: SideRouteButton(route),
                               offset: const Offset(-10, 10),
                             ),
                           ),
@@ -195,19 +196,19 @@ class ProfileButton extends StatelessWidget {
 }
 
 class SideRouteButton extends StatelessWidget {
-  const SideRouteButton(this.routeData, {super.key});
+  const SideRouteButton(this.route, {super.key});
 
-  final MainRouteData routeData;
+  final CCRoute route;
 
   @override
   Widget build(BuildContext context) {
     return TextButton.icon(
       onPressed: () {
-        context.push('/${routeData.id}');
+        context.pushNamed(route.name);
         context.read<SideRoutesCubit>().reset();
       },
-      icon: Icon(routeData.icon),
-      label: Text(routeData.getTitle(context.l10n)),
+      icon: Icon(route.icon),
+      label: Text(route.getTitle(context.l10n)),
     );
   }
 }

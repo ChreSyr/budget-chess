@@ -6,10 +6,10 @@ import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/unichess/unichess.dart';
 import 'package:crea_chess/router/app/hub/game/game_cubit.dart';
 import 'package:crea_chess/router/app/hub/game/side.dart';
+import 'package:crea_chess/router/app/user/user_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 class PlayerTile extends StatelessWidget {
   const PlayerTile({
@@ -62,7 +62,7 @@ class PlayerTile extends StatelessWidget {
             photo: user?.photo,
             onTap: user == null
                 ? null
-                : () => context.push('/user/@${user.username}'),
+                : () => UserRoute.push(usernameOrId: user.id),
           ),
           title: won
               ? Stack(

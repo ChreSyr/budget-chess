@@ -1,41 +1,59 @@
 import 'package:crea_chess/package/chessground/export.dart';
 import 'package:crea_chess/package/firebase/export.dart';
+import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/package/unichess/unichess.dart';
+import 'package:crea_chess/router/app/app_router.dart';
 import 'package:crea_chess/router/app/hub/game/game_cubit.dart';
 import 'package:crea_chess/router/app/hub/game/player_tile.dart';
 import 'package:crea_chess/router/app/hub/game/side.dart';
 import 'package:crea_chess/router/app/hub/setup/board_settings_cubit.dart';
-import 'package:crea_chess/router/app/hub/setup/setup_body.dart';
-import 'package:crea_chess/router/shared/route_body.dart';
+import 'package:crea_chess/router/app/hub/setup/setup_screen.dart';
+import 'package:crea_chess/router/shared/app_bar_actions.dart';
+import 'package:crea_chess/router/shared/ccroute.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
 
-class GameBody extends RouteBody {
-  const GameBody({required this.gameId, super.key});
+class GameRoute extends CCRoute {
+  GameRoute._() : super(name: ':gameId');
+
+  /// Instance
+  static final i = GameRoute._();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      GamePage(gameId: state.pathParameters['gameId'] ?? 'none');
+
+  static void push({required String gameId}) =>
+      appRouter.pushNamed(i.name, pathParameters: {'gameId': gameId});
+}
+
+class GamePage extends StatelessWidget {
+  const GamePage({required this.gameId, super.key});
 
   // TODO : remove ? rework ?
-  factory GameBody.games() => const GameBody(gameId: 'none');
+  factory GamePage.games() => const GamePage(gameId: 'none');
 
   final String gameId;
 
   @override
-  String getTitle(AppLocalizations l10n) {
-    return 'Game'; // TODO : l10n
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => GameCubit(gameId: gameId),
-      child: const _GameBody(),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(GameRoute.i.getTitle(context.l10n)),
+        actions: getSideRoutesAppBarActions(context),
+      ),
+      body: BlocProvider(
+        create: (context) => GameCubit(gameId: gameId),
+        child: const _GamePage(),
+      ),
     );
   }
 }
 
-class _GameBody extends StatelessWidget {
-  const _GameBody();
+class _GamePage extends StatelessWidget {
+  const _GamePage();
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +74,7 @@ class _GameBody extends StatelessWidget {
             : null;
 
     if (side != null && game.status == GameStatus.created) {
-      return SetupBody(side: side, challenge: game.challenge);
+      return SetupScreen(side: side, challenge: game.challenge);
     }
 
     final boardSettings = context.watch<BoardSettingsCubit>().state;

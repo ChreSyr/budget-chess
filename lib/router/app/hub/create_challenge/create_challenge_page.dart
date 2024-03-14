@@ -11,28 +11,46 @@ import 'package:crea_chess/package/unichess/unichess.dart';
 import 'package:crea_chess/router/app/hub/create_challenge/create_challenge_cubit.dart';
 import 'package:crea_chess/router/app/hub/create_challenge/create_challenge_form.dart';
 import 'package:crea_chess/router/app/hub/create_challenge/create_challenge_status.dart';
-import 'package:crea_chess/router/shared/route_body.dart';
+import 'package:crea_chess/router/shared/app_bar_actions.dart';
+import 'package:crea_chess/router/shared/ccroute.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class CreateChallengeBody extends RouteBody {
-  const CreateChallengeBody({super.key});
+class CreateChallengeRoute extends CCRoute {
+  CreateChallengeRoute._() : super(name: 'create_challenge');
+
+  /// Instance
+  static final i = CreateChallengeRoute._();
 
   @override
   String getTitle(AppLocalizations l10n) => l10n.challengeCreate;
 
   @override
+  Widget build(BuildContext context, GoRouterState state) =>
+      const CreateChallengePage();
+}
+
+class CreateChallengePage extends StatelessWidget {
+  const CreateChallengePage({super.key});
+
+  @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (BuildContext context) => CreateChallengeCubit(),
-      child: const _CreateChallengeBody(),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(CreateChallengeRoute.i.getTitle(context.l10n)),
+        actions: getSideRoutesAppBarActions(context),
+      ),
+      body: BlocProvider(
+        create: (BuildContext context) => CreateChallengeCubit(),
+        child: const _CreateChallengePage(),
+      ),
     );
   }
 }
 
-class _CreateChallengeBody extends StatelessWidget {
-  const _CreateChallengeBody();
+class _CreateChallengePage extends StatelessWidget {
+  const _CreateChallengePage();
 
   @override
   Widget build(BuildContext context) {

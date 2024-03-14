@@ -9,6 +9,7 @@ import 'package:crea_chess/package/atomic_design/widget/user/user_banner.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
+import 'package:crea_chess/router/app/user/modify_username_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -106,7 +107,7 @@ class UserHeader extends StatelessWidget {
           trailing: editable
               ? EditButton(
                   onPressed: editable
-                      ? () => context.push('/user/modify_name')
+                      ? () => context.pushNamed(ModifyUsernameRoute.i.name)
                       : () => showUserActionsModal(context),
                   priorityHigh: editable &&
                       ((username ?? '').isEmpty || username == userId),

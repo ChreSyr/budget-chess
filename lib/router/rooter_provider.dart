@@ -1,6 +1,6 @@
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/router/app/app_router.dart';
-import 'package:crea_chess/router/init_profile/init_profile_router.dart';
+import 'package:crea_chess/router/init/init_router.dart';
 import 'package:crea_chess/router/sso/sso_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

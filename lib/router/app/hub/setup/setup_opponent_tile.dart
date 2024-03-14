@@ -1,9 +1,9 @@
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/firebase/export.dart';
+import 'package:crea_chess/router/app/user/user_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 class SetupOpponentTile extends StatelessWidget {
   const SetupOpponentTile({required this.game, super.key});
@@ -31,7 +31,7 @@ class SetupOpponentTile extends StatelessWidget {
             photo: opponent?.photo,
             onTap: opponent == null
                 ? null
-                : () => context.push('/user/@${opponent.username}'),
+                : () => UserRoute.push(usernameOrId: opponent.id),
           ),
           title: opponentValidatedSetup
               // TODO : l10n

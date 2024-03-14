@@ -2,24 +2,49 @@ import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/authentication/authentication_crud.dart';
 import 'package:crea_chess/package/firebase/firestore/user/user_crud.dart';
 import 'package:crea_chess/package/firebase/firestore/user/user_cubit.dart';
-import 'package:crea_chess/package/l10n/l10n.dart';
-import 'package:crea_chess/router/init_profile/email_verification_screen.dart';
-import 'package:crea_chess/router/shared/emergency_app_bar.dart';
-import 'package:crea_chess/router/shared/root_route_body.dart';
+import 'package:crea_chess/router/init/email_verification_screen.dart';
+import 'package:crea_chess/router/init/init_photo_page.dart';
+import 'package:crea_chess/router/init/init_username_page.dart';
+import 'package:crea_chess/router/shared/app_bar_actions.dart';
+import 'package:crea_chess/router/shared/ccroute.dart';
+import 'package:crea_chess/router/shared/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class InitProfileHomeBody extends RootRouteBody {
-  const InitProfileHomeBody({super.key});
+class InitHomeRoute extends CCRoute {
+  const InitHomeRoute._() : super(name: 'home');
+
+  /// Instance
+  static const i = InitHomeRoute._();
 
   @override
-  String getTitle(AppLocalizations l10n) => '';
+  Widget build(BuildContext context, GoRouterState state) =>
+      const InitHomePage();
 
   @override
-  List<Widget> getActions(BuildContext context) =>
-      getEmergencyAppBarActions(context);
-  
+  List<RouteBase> get routes => [
+        SettingsRoute.i.goRoute,
+        InitUsernameRoute.i.goRoute,
+        InitPhotoRoute.i.goRoute,
+      ];
+}
+
+class InitHomePage extends StatelessWidget {
+  const InitHomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(actions: getSettingsAppBarActions(context)),
+      body: const _InitHomePage(),
+    );
+  }
+}
+
+class _InitHomePage extends StatelessWidget {
+  const _InitHomePage();
+
   @override
   Widget build(BuildContext context) {
     final auth = context.watch<AuthNotVerifiedCubit>().state;
@@ -65,7 +90,7 @@ class InitProfileHomeBody extends RootRouteBody {
             const Text('Bienvenue sur Budget Chess !'), // TODO : l10n
             CCGap.medium,
             FilledButton(
-              onPressed: () => context.push('/username'),
+              onPressed: () => context.pushNamed(InitUsernameRoute.i.name),
               child: const Text("C'est parti !"), // TODO : l10n
             ),
           ],

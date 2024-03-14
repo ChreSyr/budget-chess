@@ -9,9 +9,9 @@ import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
+import 'package:crea_chess/router/app/user/user_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 class QueriedUsersCubit extends Cubit<Iterable<UserModel>> {
   QueriedUsersCubit() : super([]);
@@ -202,7 +202,7 @@ Widget getUserTile(BuildContext context, UserModel user) {
         leading: UserPhoto(photo: user.photo),
         title: Text(user.username),
         trailing: trailing,
-        onTap: () => context.push('/user/@${user.usernameLowercase}'),
+        onTap: () => UserRoute.push(usernameOrId: user.id),
       );
     },
   );

@@ -5,9 +5,10 @@ import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/router/app/hub/challenge/card_tile.dart';
+import 'package:crea_chess/router/app/hub/game/game_page.dart';
+import 'package:crea_chess/router/app/user/user_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 class ChallengeTileTemplate extends StatelessWidget {
   const ChallengeTileTemplate({
@@ -32,7 +33,7 @@ class ChallengeTileTemplate extends StatelessWidget {
             UserPhoto.fromId(
               userId: userId,
               radius: CCSize.medium,
-              onTap: () => context.push('/user/@$userId'),
+              onTap: () => UserRoute.push(usernameOrId: userId),
             ),
             CCGap.small,
             const SizedBox(height: CCSize.large, child: VerticalDivider()),
@@ -138,7 +139,7 @@ class GameChallengeTile extends StatelessWidget {
     final opponentId = game.otherPlayer(authUid);
     if (opponentId == null) return CCGap.zero; // corrupted challenge
 
-    void enterGame() => context.push('/hub/${game.challenge.id}');
+    void enterGame() => GameRoute.push(gameId: game.challenge.id);
 
     return GestureDetector(
       onTap: enterGame,

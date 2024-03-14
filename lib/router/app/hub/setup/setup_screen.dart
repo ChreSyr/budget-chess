@@ -17,8 +17,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SetupBody extends StatelessWidget {
-  const SetupBody({required this.side, required this.challenge, super.key});
+class SetupScreen extends StatelessWidget {
+  const SetupScreen({required this.side, required this.challenge, super.key});
 
   final Side side;
   final ChallengeModel challenge;
@@ -51,15 +51,15 @@ class SetupBody extends StatelessWidget {
                 );
               },
             ),
-          const _SetupBody(),
+          const _SetupPage(),
         ],
       ),
     );
   }
 }
 
-class _SetupBody extends StatelessWidget {
-  const _SetupBody();
+class _SetupPage extends StatelessWidget {
+  const _SetupPage();
 
   @override
   Widget build(BuildContext context) {

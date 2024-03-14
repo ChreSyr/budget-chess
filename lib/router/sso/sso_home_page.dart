@@ -10,29 +10,45 @@ import 'package:crea_chess/package/firebase/authentication/authentication_crud.d
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/package/preferences/preferences_cubit.dart';
 import 'package:crea_chess/package/preferences/preferences_state.dart';
-import 'package:crea_chess/router/shared/emergency_app_bar.dart';
-import 'package:crea_chess/router/shared/root_route_body.dart';
+import 'package:crea_chess/router/shared/app_bar_actions.dart';
+import 'package:crea_chess/router/shared/ccroute.dart';
+import 'package:crea_chess/router/shared/settings_page.dart';
+import 'package:crea_chess/router/sso/signin_page.dart';
+import 'package:crea_chess/router/sso/signup_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class SSOHomeBody extends RootRouteBody {
-  const SSOHomeBody({super.key});
+class SSOHomeRoute extends CCRoute {
+  const SSOHomeRoute._() : super(name: 'home');
+
+  /// Instance
+  static const i = SSOHomeRoute._();
 
   @override
-  String getTitle(AppLocalizations l10n) => '';
+  Widget build(BuildContext context, GoRouterState state) =>
+      const SSOHomePage();
 
   @override
-  List<Widget> getActions(BuildContext context) =>
-      getEmergencyAppBarActions(context);
+  List<RouteBase> get routes => [
+        SettingsRoute.i.goRoute,
+        SignupRoute.i.goRoute,
+        SigninRoute.i.goRoute,
+      ];
+}
+
+class SSOHomePage extends StatelessWidget {
+  const SSOHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     final auth = context.watch<AuthNotVerifiedCubit>().state;
 
+    final Widget body;
+
     // The user is not logged in
     if (auth == null) {
-      return CCPadding.horizontalLarge(
+      body = CCPadding.horizontalLarge(
         child: SizedBox(
           width: CCWidgetSize.large4,
           child: ListView(
@@ -117,13 +133,13 @@ class SSOHomeBody extends RootRouteBody {
                 children: [
                   // sign in button
                   TextButton(
-                    onPressed: () => context.push('/signin'),
+                    onPressed: () => context.pushNamed(SigninRoute.i.name),
                     child: Text(context.l10n.signin),
                   ),
                   CCGap.medium,
                   // sign up button
                   TextButton(
-                    onPressed: () => context.push('/signup'),
+                    onPressed: () => context.pushNamed(SignupRoute.i.name),
                     child: Text(context.l10n.signup),
                   ),
                 ],
@@ -136,7 +152,7 @@ class SSOHomeBody extends RootRouteBody {
 
     // The user just asked to delete its account
     if (auth.beingDeleted) {
-      return const Center(
+      body = const Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -150,8 +166,13 @@ class SSOHomeBody extends RootRouteBody {
 
     // The user is logged in, the application will change router
     else {
-      return const Center(child: CircularProgressIndicator());
+      body = const Center(child: CircularProgressIndicator());
     }
+
+    return Scaffold(
+      appBar: AppBar(actions: getSettingsAppBarActions(context)),
+      body: body,
+    );
   }
 }
 
