@@ -64,7 +64,7 @@ class _CreateChallengePage extends StatelessWidget {
             CCGap.small,
             Text(
               e.explain(context.l10n),
-              style: CCTextStyle.bold,
+              style: TextStyleExt.bold,
             ),
           ],
         );

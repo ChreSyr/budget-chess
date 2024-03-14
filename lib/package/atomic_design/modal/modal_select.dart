@@ -36,7 +36,7 @@ class ModalSelect {
           selected: selected,
           onSelected: onSelected,
           choiceBuilder: e.choiceBuilder ??
-              (choice) => Text(choice.toString(), style: CCTextStyle.bold),
+              (choice) => Text(choice.toString(), style: TextStyleExt.bold),
         ),
       ),
     );

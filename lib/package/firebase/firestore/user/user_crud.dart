@@ -34,7 +34,6 @@ class _UserCRUD extends CollectionCRUD<UserModel> {
   }
 
   Future<void> onAccountCreation(User auth) async {
-    print('onAccountCreation, $auth');
     try {
       await userCRUD.create(
         documentId: auth.uid,

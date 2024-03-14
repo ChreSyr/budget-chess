@@ -186,7 +186,7 @@ class _AuthenticationCRUD {
       if (e.toString() == 'popup_closed') {
         authProviderStatusCubit.idle();
       } else {
-        print(e);
+        if (kDebugMode) print(e);
         authProviderStatusCubit.error();
       }
     }
