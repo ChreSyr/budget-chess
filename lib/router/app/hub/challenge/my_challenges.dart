@@ -26,7 +26,7 @@ class MyChallenges extends StatelessWidget {
             offset: Offset(0, -10),
           ),
         ],
-        color: CCColor.background(context),
+        color: context.colorScheme.background,
       ),
       child: CCPadding.horizontalLarge(
         child: Column(

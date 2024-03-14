@@ -110,7 +110,7 @@ class SignupPage extends StatelessWidget {
                           ) ==
                           null
                       ? null
-                      : TextStyle(color: CCColor.error(context)),
+                      : TextStyle(color: context.colorScheme.error),
                 ),
               ),
 

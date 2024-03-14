@@ -52,8 +52,8 @@ void snackBarNotify(BuildContext context, String message) {
   _snackBar(
     context: context,
     message: message,
-    textColor: CCColor.onInverseSurface(context),
-    backgroundColor: CCColor.inverseSurface(context),
+    textColor: context.colorScheme.onInverseSurface,
+    backgroundColor: context.colorScheme.inverseSurface,
   );
 }
 

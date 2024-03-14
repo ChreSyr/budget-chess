@@ -217,7 +217,7 @@ class AuthProviderButton extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: CCBorderRadiusCircular.medium,
             side: BorderSide(
-              color: CCColor.onBackground(context),
+              color: context.colorScheme.onBackground,
               width: .5,
             ),
           ),

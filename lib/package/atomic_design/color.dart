@@ -1,53 +1,15 @@
 import 'package:flutter/material.dart';
 
-class CCColor {
-  static Color background(BuildContext context) =>
-      Theme.of(context).colorScheme.background;
+extension ColorSchemeGetter on BuildContext {
+  ColorScheme get colorScheme => Theme.of(this).colorScheme;
+}
 
+class CCColor {
   static Color cardBorder(BuildContext context) =>
       Theme.of(context).colorScheme.brightness == Brightness.light
           ? Colors.black
           : Colors.grey;
 
-  static Color error(BuildContext context) =>
-      Theme.of(context).colorScheme.error;
-
-  static Color inverseSurface(BuildContext context) =>
-      Theme.of(context).colorScheme.inverseSurface;
-
-  static Color onBackground(BuildContext context) =>
-      Theme.of(context).colorScheme.onBackground;
-
-  static Color onError(BuildContext context) =>
-      Theme.of(context).colorScheme.onError;
-
-  static Color onInverseSurface(BuildContext context) =>
-      Theme.of(context).colorScheme.onInverseSurface;
-
-  static Color onPrimaryContainer(BuildContext context) =>
-      Theme.of(context).colorScheme.onPrimaryContainer;
-
-  static Color onSecondary(BuildContext context) =>
-      Theme.of(context).colorScheme.onSecondary;
-
-  static Color onSurfaceVariant(BuildContext context) =>
-      Theme.of(context).colorScheme.onSurfaceVariant;
-
-  static Color outline(BuildContext context) =>
-      Theme.of(context).colorScheme.outline;
-
-  static Color primary(BuildContext context) =>
-      Theme.of(context).colorScheme.primary;
-
-  static Color primaryContainer(BuildContext context) =>
-      Theme.of(context).colorScheme.primaryContainer;
-
-  static Color secondaryContainer(BuildContext context) =>
-      Theme.of(context).colorScheme.secondaryContainer;
-
-  static Color surfaceVariant(BuildContext context) =>
-      Theme.of(context).colorScheme.surfaceVariant;
-  
   static const Color transparentGrey = Color.fromARGB(128, 0, 0, 0);
 }
 

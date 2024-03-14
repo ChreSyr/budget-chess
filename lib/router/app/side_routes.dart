@@ -75,7 +75,7 @@ class SideRoutes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final showSideRoutes = context.watch<SideRoutesCubit>().state;
-    final backgroundColor = CCColor.background(context);
+    final backgroundColor = context.colorScheme.background;
     final currentTheme = Theme.of(context);
     final newTheme = ThemeData(
       useMaterial3: true,
@@ -105,7 +105,7 @@ class SideRoutes extends StatelessWidget {
         children: [
           SizedBox.expand(
             child: ColoredBox(
-              color: CCColor.primary(context),
+              color: context.colorScheme.primary,
             ),
           ),
           Align(

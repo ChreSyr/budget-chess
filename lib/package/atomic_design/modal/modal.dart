@@ -20,7 +20,7 @@ class Modal {
             CCGap.small,
             Container(
               decoration: BoxDecoration(
-                color: CCColor.onSurfaceVariant(context),
+                color: context.colorScheme.onSurfaceVariant,
                 borderRadius: CCBorderRadiusCircular.small,
               ),
               width: CCWidgetSize.xxxsmall,

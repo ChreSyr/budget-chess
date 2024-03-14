@@ -84,10 +84,10 @@ class ActionButton extends StatelessWidget {
             const EdgeInsets.symmetric(horizontal: CCSize.small),
           ),
           backgroundColor: MaterialStateColor.resolveWith(
-            (states) => CCColor.surfaceVariant(context),
+            (states) => context.colorScheme.surfaceVariant,
           ),
           foregroundColor: MaterialStateColor.resolveWith(
-            (states) => CCColor.onBackground(context),
+            (states) => context.colorScheme.onBackground,
           ),
         ),
         child: child,

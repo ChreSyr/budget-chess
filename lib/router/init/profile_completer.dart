@@ -309,7 +309,7 @@ class _ProfileCompleter extends StatelessWidget {
                                 'Welcome to', // TODO : l10n
                                 style:
                                     CCTextStyle.displaySmall(context)?.copyWith(
-                                  color: CCColor.background(context),
+                                  color: context.colorScheme.background,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -317,7 +317,7 @@ class _ProfileCompleter extends StatelessWidget {
                                 'Budget Chess', // TODO : l10n
                                 style:
                                     CCTextStyle.titleLarge(context)?.copyWith(
-                                  color: CCColor.background(context),
+                                  color: context.colorScheme.background,
                                   // fontWeight: FontWeight.bold,
                                 ),
                               ),

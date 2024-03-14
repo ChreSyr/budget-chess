@@ -112,8 +112,8 @@ class InventorySlot extends StatelessWidget {
           children: [
             Card(
               color: isSelected
-                  ? CCColor.primary(context)
-                  : CCColor.secondaryContainer(context),
+                  ? context.colorScheme.primary
+                  : context.colorScheme.secondaryContainer,
               child: Draggable<Role>(
                 data: role,
                 feedback: piece,
@@ -138,9 +138,9 @@ class InventorySlot extends StatelessWidget {
                 child: Badge.count(
                   count: amount,
                   backgroundColor: disabled
-                      ? CCColor.outline(context)
-                      : CCColor.primary(context),
-                  textColor: CCColor.background(context),
+                      ? context.colorScheme.outline
+                      : context.colorScheme.primary,
+                  textColor: context.colorScheme.background,
                 ),
               ),
             ),
