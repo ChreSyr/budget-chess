@@ -133,13 +133,13 @@ class SSOHomePage extends StatelessWidget {
                 children: [
                   // sign in button
                   TextButton(
-                    onPressed: () => context.pushNamed(SigninRoute.i.name),
+                    onPressed: () => context.pushRoute(SigninRoute.i),
                     child: Text(context.l10n.signin),
                   ),
                   CCGap.medium,
                   // sign up button
                   TextButton(
-                    onPressed: () => context.pushNamed(SignupRoute.i.name),
+                    onPressed: () => context.pushRoute(SignupRoute.i),
                     child: Text(context.l10n.signup),
                   ),
                 ],

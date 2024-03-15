@@ -25,6 +25,7 @@ final appRouter = GoRouter(
   initialLocation: '/hub',
   errorBuilder: (context, state) => ErrorPage(exception: state.error),
   routes: [
+    GoRoute(path: '/', redirect: (_, __) => '/hub'),
     // Stateful nested navigation based on:
     // https://github.com/flutter/packages/blob/main/packages/go_router/example/lib/stateful_shell_route.dart
     StatefulShellRoute.indexedStack(

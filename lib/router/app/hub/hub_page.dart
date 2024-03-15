@@ -44,7 +44,7 @@ class HubPage extends StatelessWidget {
           if (kDebugMode)
             OutlinedButton(
               onPressed: () =>
-                  context.pushNamed(ChessgroundTestingRoute.i.name),
+                  context.pushRoute(ChessgroundTestingRoute.i),
               child: const Text('Test'), // TODO : remove
             ),
           CCGap.medium,

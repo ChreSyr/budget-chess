@@ -6,9 +6,9 @@ import 'package:crea_chess/package/firebase/firestore/game/live_game/live_games_
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/router/app/hub/challenge/challenge_tile.dart';
 import 'package:crea_chess/router/app/hub/create_challenge/create_challenge_page.dart';
+import 'package:crea_chess/router/shared/ccroute.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 class MyChallenges extends StatelessWidget {
   const MyChallenges({required this.myChallenges, super.key});
@@ -74,7 +74,7 @@ class MyChallenges extends StatelessWidget {
             ],
             CCGap.medium,
             FilledButton.icon(
-              onPressed: () => context.pushNamed(CreateChallengeRoute.i.name),
+              onPressed: () => context.pushRoute(CreateChallengeRoute.i),
               icon: const Icon(Icons.add),
               label: Text(context.l10n.challengeCreate),
             ),

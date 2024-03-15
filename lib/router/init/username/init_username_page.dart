@@ -48,7 +48,7 @@ class InitUsernamePage extends StatelessWidget {
                 usernameFormCubit.clearStatus();
               case UsernameFormStatus.success:
                 usernameFormCubit.clearStatus();
-                context.pushNamed(InitPhotoRoute.i.name);
+                context.pushRoute(InitPhotoRoute.i);
               case _:
                 break;
             }

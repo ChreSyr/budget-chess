@@ -204,7 +204,7 @@ class SideRouteButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton.icon(
       onPressed: () {
-        context.pushNamed(route.name);
+        context.pushRoute(route);
         context.read<SideRoutesCubit>().reset();
       },
       icon: Icon(route.icon),

@@ -90,7 +90,7 @@ class _InitHomePage extends StatelessWidget {
             const Text('Bienvenue sur Budget Chess !'), // TODO : l10n
             CCGap.medium,
             FilledButton(
-              onPressed: () => context.pushNamed(InitUsernameRoute.i.name),
+              onPressed: () => context.pushRoute(InitUsernameRoute.i),
               child: const Text("C'est parti !"), // TODO : l10n
             ),
           ],
