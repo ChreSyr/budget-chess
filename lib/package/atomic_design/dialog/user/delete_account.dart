@@ -21,7 +21,7 @@ Future<AlertDialog?> showDeleteAccountDialog(
         ),
         actions: [
           TextButton(
-            onPressed: () => popDialog(dialogContext),
+            onPressed: () => Navigator.pop(dialogContext),
             child: Text(pageContext.l10n.cancel),
           ),
           FilledButton(
@@ -30,7 +30,7 @@ Future<AlertDialog?> showDeleteAccountDialog(
               try {
                 await authenticationCRUD.deleteUserAccount(userId: user.uid);
                 // ignore: use_build_context_synchronously
-                popDialog(dialogContext);
+                Navigator.pop(dialogContext);
                 // ignore: use_build_context_synchronously
                 while (pageContext.canPop()) {
                   // ignore: use_build_context_synchronously

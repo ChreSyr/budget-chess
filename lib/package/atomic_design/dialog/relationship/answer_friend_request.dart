@@ -35,7 +35,7 @@ void showAnswerFriendRequestDialog(
                 refuserId: authUid,
                 requesterId: requesterId,
               );
-              popDialog(dialogContext);
+              Navigator.pop(dialogContext);
               showBlockUserDialog(pageContext, requesterId);
             },
             label: Text(pageContext.l10n.decline),
@@ -43,7 +43,7 @@ void showAnswerFriendRequestDialog(
           ElevatedButton.icon(
             icon: const Icon(Icons.check),
             onPressed: () {
-              popDialog(dialogContext);
+              Navigator.pop(dialogContext);
               relationshipCRUD.makeFriends(requesterId, authUid);
               // LATER: fiest animation on new friend
             },

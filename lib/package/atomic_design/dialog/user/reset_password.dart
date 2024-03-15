@@ -17,7 +17,7 @@ Future<AlertDialog?> showResetPasswordDialog(
         ),
         actions: [
           TextButton(
-            onPressed: () => popDialog(dialogContext),
+            onPressed: () => Navigator.pop(dialogContext),
             child: Text(pageContext.l10n.cancel),
           ),
           FilledButton(
@@ -26,7 +26,7 @@ Future<AlertDialog?> showResetPasswordDialog(
               try {
                 authenticationCRUD.sendPasswordResetEmail(email: email);
                 snackBarNotify(pageContext, pageContext.l10n.verifyMailbox);
-                popDialog(dialogContext);
+                Navigator.pop(dialogContext);
               } catch (_) {
                 snackBarError(pageContext, pageContext.l10n.errorOccurred);
               }

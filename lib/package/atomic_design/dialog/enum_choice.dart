@@ -1,4 +1,3 @@
-import 'package:crea_chess/package/atomic_design/dialog/pop_dialog.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 
@@ -25,7 +24,7 @@ void showEnumChoiceDialog<T extends Enum>(
               onChanged: (value) {
                 if (value != null) onSelectedItemChanged(value);
                 // for some reason, dialogContext.pop pops the pageContext
-                popDialog(dialogContext);
+                Navigator.pop(dialogContext);
               },
             );
           }).toList(growable: false),
@@ -33,7 +32,7 @@ void showEnumChoiceDialog<T extends Enum>(
         actions: [
           TextButton(
             // for some reason, dialogContext.pop pops the pageContext
-            onPressed: () => popDialog(dialogContext),
+            onPressed: () => Navigator.pop(dialogContext),
             child: Text(pageContext.l10n.cancel),
           ),
         ],
