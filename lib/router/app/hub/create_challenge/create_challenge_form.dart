@@ -1,6 +1,6 @@
-import 'package:crea_chess/package/form/form_error.dart';
-import 'package:crea_chess/package/form/input/input_int.dart';
-import 'package:crea_chess/package/form/input/input_select.dart';
+import 'package:crea_chess/package/atomic_design/form/form_error.dart';
+import 'package:crea_chess/package/atomic_design/form/input/input_int.dart';
+import 'package:crea_chess/package/atomic_design/form/input/input_select.dart';
 import 'package:crea_chess/package/game/time_control.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/package/unichess/unichess.dart';

@@ -1,7 +1,7 @@
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/firebase/firestore/game/live_game/live_games_cubit.dart';
-import 'package:crea_chess/package/form/signin/signin_cubit.dart';
-import 'package:crea_chess/package/form/signup/signup_cubit.dart';
+import 'package:crea_chess/package/atomic_design/form/signin/signin_cubit.dart';
+import 'package:crea_chess/package/atomic_design/form/signup/signup_cubit.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/package/preferences/preferences_cubit.dart';
 import 'package:crea_chess/package/preferences/preferences_state.dart';

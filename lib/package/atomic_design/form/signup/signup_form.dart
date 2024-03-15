@@ -1,7 +1,7 @@
-import 'package:crea_chess/package/form/form_error.dart';
-import 'package:crea_chess/package/form/input/input_boolean.dart';
-import 'package:crea_chess/package/form/input/input_string.dart';
-import 'package:crea_chess/package/form/signup/signup_status.dart';
+import 'package:crea_chess/package/atomic_design/form/form_error.dart';
+import 'package:crea_chess/package/atomic_design/form/input/input_boolean.dart';
+import 'package:crea_chess/package/atomic_design/form/input/input_string.dart';
+import 'package:crea_chess/package/atomic_design/form/signup/signup_status.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:formz/formz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -44,7 +44,7 @@ class SignupForm with FormzMixin, _$SignupForm {
           input.regexPattern == RegexPattern.passwordNormal3) {
         return l10n.formError('notPassword');
       }
-    } 
+    }
 
     return l10n.formError(input.error!.name);
   }

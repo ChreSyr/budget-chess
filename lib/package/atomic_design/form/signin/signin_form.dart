@@ -1,6 +1,6 @@
-import 'package:crea_chess/package/form/form_error.dart';
-import 'package:crea_chess/package/form/input/input_string.dart';
-import 'package:crea_chess/package/form/signin/signin_status.dart';
+import 'package:crea_chess/package/atomic_design/form/form_error.dart';
+import 'package:crea_chess/package/atomic_design/form/input/input_string.dart';
+import 'package:crea_chess/package/atomic_design/form/signin/signin_status.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:formz/formz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';

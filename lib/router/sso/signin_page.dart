@@ -1,12 +1,12 @@
 import 'package:crea_chess/package/atomic_design/dialog/user/reset_password.dart';
-import 'package:crea_chess/package/atomic_design/field/password_form_field.dart';
+import 'package:crea_chess/package/atomic_design/form/field/password_form_field.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/snack_bar.dart';
 import 'package:crea_chess/package/atomic_design/widget/body_template.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
-import 'package:crea_chess/package/form/signin/signin_cubit.dart';
-import 'package:crea_chess/package/form/signin/signin_form.dart';
-import 'package:crea_chess/package/form/signin/signin_status.dart';
+import 'package:crea_chess/package/atomic_design/form/signin/signin_cubit.dart';
+import 'package:crea_chess/package/atomic_design/form/signin/signin_form.dart';
+import 'package:crea_chess/package/atomic_design/form/signin/signin_status.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/router/shared/app_bar_actions.dart';
 import 'package:crea_chess/router/shared/ccroute.dart';

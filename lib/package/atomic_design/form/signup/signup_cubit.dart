@@ -1,8 +1,8 @@
 import 'package:crea_chess/package/firebase/authentication/authentication_crud.dart';
-import 'package:crea_chess/package/form/input/input_boolean.dart';
-import 'package:crea_chess/package/form/input/input_string.dart';
-import 'package:crea_chess/package/form/signup/signup_form.dart';
-import 'package:crea_chess/package/form/signup/signup_status.dart';
+import 'package:crea_chess/package/atomic_design/form/input/input_boolean.dart';
+import 'package:crea_chess/package/atomic_design/form/input/input_string.dart';
+import 'package:crea_chess/package/atomic_design/form/signup/signup_form.dart';
+import 'package:crea_chess/package/atomic_design/form/signup/signup_status.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:regexpattern/regexpattern.dart';

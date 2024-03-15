@@ -1,6 +1,6 @@
 // ignore_for_file: public_member_api_docs
 
-import 'package:crea_chess/package/form/form_error.dart';
+import 'package:crea_chess/package/atomic_design/form/form_error.dart';
 import 'package:formz/formz.dart';
 
 class InputSelect<T> extends FormzInput<T, FormError> {
