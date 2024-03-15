@@ -33,4 +33,5 @@ extension GoRouterInitialLoc on GoRouter {
 
 extension GoRouterSafer on BuildContext {
   void pushRoute(CCRoute route) => GoRouter.of(this).pushNamed(route.name);
+  void goHome() => go('/');
 }

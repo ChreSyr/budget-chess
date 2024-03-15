@@ -5,10 +5,10 @@ import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/snack_bar.dart';
 import 'package:crea_chess/package/atomic_design/widget/body_template.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
+import 'package:crea_chess/package/atomic_design/widget/top_progress_indicator.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/firebase/firestore/user/user_cubit.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
-import 'package:crea_chess/router/init/init_home_page.dart';
 import 'package:crea_chess/router/init/photo/photo_form.dart';
 import 'package:crea_chess/router/shared/app_bar_actions.dart';
 import 'package:crea_chess/router/shared/ccroute.dart';
@@ -52,52 +52,58 @@ class InitPhotoPage extends StatelessWidget {
                 );
                 photoFormCubit.clearStatus();
               case PhotoFormStatus.success:
-                // TODO : is this code called ? initRouter.go('/') ?
-                print('YOOOOOOOOOO');
-                print('YOOOOOOOOOO');
-                print('YOOOOOOOOOO');
-                print('YOOOOOOOOOO');
-                print('YOOOOOOOOOO');
-                print('YOOOOOOOOOO');
-                print('YOOOOOOOOOO');
-                print('YOOOOOOOOOO');
-                print('YOOOOOOOOOO');
-                print('YOOOOOOOOOO');
-                print('YOOOOOOOOOO');
+                // NOTE : If everything works fine, this code is never called
                 photoFormCubit.clearStatus();
-                context.goNamed(InitHomeRoute.i.name);
               case _:
                 break;
             }
           },
           builder: (context, form) {
-            return BodyTemplate(
+            return TopProgressIndicator(
               loading: form.status == PhotoFormStatus.waiting,
-              children: [
-                Center(
-                  child: UserPhoto(
-                    photo: form.photo.value,
-                    radius: CCSize.xxxlarge,
+              child: BodyTemplate(
+                children: [
+                  Center(
+                    child: UserPhoto(
+                      photo: form.photo.value,
+                      radius: CCSize.xxxlarge,
+                    ),
                   ),
-                ),
-                CCGap.medium,
-                const Text(
-                  // TODO : l10n
-                  'Choississez un avatar ou une de vos photo !',
-                  textAlign: TextAlign.center,
-                ),
-                CCGap.xxlarge,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (!kIsWeb) ...[
+                  CCGap.medium,
+                  const Text(
+                    // TODO : l10n
+                    'Choississez un avatar ou une de vos photo !',
+                    textAlign: TextAlign.center,
+                  ),
+                  CCGap.xxlarge,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (!kIsWeb) ...[
+                        _PhotoAction(
+                          icon: Icons.photo_camera,
+                          title: context.l10n.pictureTake,
+                          onTap: () {
+                            photoFormCubit.waitPhoto(() async {
+                              final photoRef = await uploadProfilePhoto(
+                                ImageSource.camera,
+                                photoFormCubit.initialPhoto,
+                              );
+                              if (photoRef == null) return;
+                              photoFormCubit
+                                  .setPhoto(await photoRef.getDownloadURL());
+                            });
+                          },
+                        ),
+                        CCGap.large,
+                      ],
                       _PhotoAction(
-                        icon: Icons.photo_camera,
-                        title: context.l10n.pictureTake,
+                        icon: Icons.folder,
+                        title: context.l10n.pictureImport,
                         onTap: () {
                           photoFormCubit.waitPhoto(() async {
                             final photoRef = await uploadProfilePhoto(
-                              ImageSource.camera,
+                              ImageSource.gallery,
                               photoFormCubit.initialPhoto,
                             );
                             if (photoRef == null) return;
@@ -107,46 +113,30 @@ class InitPhotoPage extends StatelessWidget {
                         },
                       ),
                       CCGap.large,
-                    ],
-                    _PhotoAction(
-                      icon: Icons.folder,
-                      title: context.l10n.pictureImport,
-                      onTap: () {
-                        photoFormCubit.waitPhoto(() async {
-                          final photoRef = await uploadProfilePhoto(
-                            ImageSource.gallery,
-                            photoFormCubit.initialPhoto,
+                      _PhotoAction(
+                        icon: Icons.face,
+                        title: context.l10n.avatarChoose,
+                        onTap: () {
+                          showAvatarModal(
+                            context,
+                            (avatarName) =>
+                                photoFormCubit.setPhoto('avatar-$avatarName'),
                           );
-                          if (photoRef == null) return;
-                          photoFormCubit
-                              .setPhoto(await photoRef.getDownloadURL());
-                        });
-                      },
-                    ),
-                    CCGap.large,
-                    _PhotoAction(
-                      icon: Icons.face,
-                      title: context.l10n.avatarChoose,
-                      onTap: () {
-                        showAvatarModal(
-                          context,
-                          (avatarName) =>
-                              photoFormCubit.setPhoto('avatar-$avatarName'),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-                CCGap.xxlarge,
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: FilledButton(
-                    onPressed:
-                        form.photo.isValid ? photoFormCubit.submit : null,
-                    child: Text(context.l10n.save),
+                        },
+                      ),
+                    ],
                   ),
-                ),
-              ],
+                  CCGap.xxlarge,
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: FilledButton(
+                      onPressed:
+                          form.photo.isValid ? photoFormCubit.submit : null,
+                      child: Text(context.l10n.save),
+                    ),
+                  ),
+                ],
+              ),
             );
           },
         ),

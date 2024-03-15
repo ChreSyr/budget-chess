@@ -2,6 +2,7 @@ import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/snack_bar.dart';
 import 'package:crea_chess/package/atomic_design/widget/body_template.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
+import 'package:crea_chess/package/atomic_design/widget/top_progress_indicator.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/router/shared/app_bar_actions.dart';
@@ -56,51 +57,53 @@ class ModifyUsernamePage extends StatelessWidget {
           builder: (context, form) {
             textController.text = form.name.value;
 
-            return BodyTemplate(
+            return TopProgressIndicator(
               loading: form.status == UsernameFormStatus.waiting,
-              children: [
-                // emoji
-                const Text(
-                  '👀',
-                  style: TextStyle(fontSize: CCWidgetSize.xxsmall),
-                  textAlign: TextAlign.center,
-                ),
+              child: BodyTemplate(
+                children: [
+                  // emoji
+                  const Text(
+                    '👀',
+                    style: TextStyle(fontSize: CCWidgetSize.xxsmall),
+                    textAlign: TextAlign.center,
+                  ),
 
-                // title
-                Text(
-                  context.l10n.chooseGoodUsername,
-                  textAlign: TextAlign.center,
-                ),
-                CCGap.xlarge,
+                  // title
+                  Text(
+                    context.l10n.chooseGoodUsername,
+                    textAlign: TextAlign.center,
+                  ),
+                  CCGap.xlarge,
 
-                // mail field
-                TextFormField(
-                  autofocus: true,
-                  controller: textController,
-                  decoration: InputDecoration(
-                    filled: true,
-                    hintText: 'Username', // TODO : l10n
-                    errorText: form.errorMessage(form.name, context.l10n),
-                    errorMaxLines: 3,
-                    suffixIcon: IconButton(
-                      icon: const Icon(Icons.close),
-                      onPressed: () => usernameFormCubit.setName(''),
+                  // mail field
+                  TextFormField(
+                    autofocus: true,
+                    controller: textController,
+                    decoration: InputDecoration(
+                      filled: true,
+                      hintText: 'Username', // TODO : l10n
+                      errorText: form.errorMessage(form.name, context.l10n),
+                      errorMaxLines: 3,
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () => usernameFormCubit.setName(''),
+                      ),
+                    ),
+                    onChanged: usernameFormCubit.setName,
+                  ),
+
+                  CCGap.xlarge,
+
+                  // sign in button
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: FilledButton(
+                      onPressed: usernameFormCubit.submit,
+                      child: Text(context.l10n.save),
                     ),
                   ),
-                  onChanged: usernameFormCubit.setName,
-                ),
-
-                CCGap.xlarge,
-
-                // sign in button
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: FilledButton(
-                    onPressed: usernameFormCubit.submit,
-                    child: Text(context.l10n.save),
-                  ),
-                ),
-              ],
+                ],
+              ),
             );
           },
         ),

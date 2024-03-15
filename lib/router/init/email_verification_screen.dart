@@ -14,7 +14,6 @@ class EmailVerificationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BodyTemplate(
-      loading: false,
       children: [
         // emoji
         const Text(

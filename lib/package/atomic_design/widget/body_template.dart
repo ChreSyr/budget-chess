@@ -5,12 +5,10 @@ import 'package:flutter/material.dart';
 
 class BodyTemplate extends StatelessWidget {
   const BodyTemplate({
-    required this.loading,
     required this.children,
     super.key,
   });
 
-  final bool loading;
   final Iterable<Widget> children;
 
   @override
@@ -21,9 +19,6 @@ class BodyTemplate extends StatelessWidget {
         child: ListView(
           shrinkWrap: true,
           children: [
-            // loading
-            if (loading) const LinearProgressIndicator(),
-
             // children
             ...children,
             CCGap.medium,
