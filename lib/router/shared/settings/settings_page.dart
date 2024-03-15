@@ -8,9 +8,11 @@ import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/get_locale_flag.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
+import 'package:crea_chess/router/app/app_router.dart';
+import 'package:crea_chess/router/app/hub/hub_page.dart';
+import 'package:crea_chess/router/shared/ccroute.dart';
 import 'package:crea_chess/router/shared/settings/preferences/preferences_cubit.dart';
 import 'package:crea_chess/router/shared/settings/preferences/preferences_state.dart';
-import 'package:crea_chess/router/shared/ccroute.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -137,11 +139,12 @@ class SettingsPage extends StatelessWidget {
                   ),
                   CCGap.large,
                   OutlinedButton.icon(
-                    onPressed: () {
-                      authenticationCRUD.signOut();
-                      while (context.canPop()) {
-                        context.pop();
-                      }
+                    onPressed: () async {
+                      await authenticationCRUD.signOut();
+                      // We need to send the app router to the root location, so
+                      // that the next time the user arrives in this router, he
+                      // is properly welcomed.
+                      appRouter.goNamed(HubRoute.i.name);
                     },
                     icon: const Icon(Icons.logout),
                     label: Text(context.l10n.signout),

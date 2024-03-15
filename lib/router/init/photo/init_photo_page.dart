@@ -9,9 +9,9 @@ import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/firebase/firestore/user/user_cubit.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/router/init/init_home_page.dart';
+import 'package:crea_chess/router/init/photo/photo_form.dart';
 import 'package:crea_chess/router/shared/app_bar_actions.dart';
 import 'package:crea_chess/router/shared/ccroute.dart';
-import 'package:crea_chess/router/shared/form/photo_form.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -53,6 +53,17 @@ class InitPhotoPage extends StatelessWidget {
                 photoFormCubit.clearStatus();
               case PhotoFormStatus.success:
                 // TODO : is this code called ? initRouter.go('/') ?
+                print('YOOOOOOOOOO');
+                print('YOOOOOOOOOO');
+                print('YOOOOOOOOOO');
+                print('YOOOOOOOOOO');
+                print('YOOOOOOOOOO');
+                print('YOOOOOOOOOO');
+                print('YOOOOOOOOOO');
+                print('YOOOOOOOOOO');
+                print('YOOOOOOOOOO');
+                print('YOOOOOOOOOO');
+                print('YOOOOOOOOOO');
                 photoFormCubit.clearStatus();
                 context.goNamed(InitHomeRoute.i.name);
               case _:

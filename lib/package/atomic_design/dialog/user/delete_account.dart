@@ -1,9 +1,10 @@
 import 'package:crea_chess/package/atomic_design/snack_bar.dart';
 import 'package:crea_chess/package/firebase/authentication/authentication_crud.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
+import 'package:crea_chess/router/app/app_router.dart';
+import 'package:crea_chess/router/app/hub/hub_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 Future<AlertDialog?> showDeleteAccountDialog(
   BuildContext pageContext,
@@ -28,13 +29,12 @@ Future<AlertDialog?> showDeleteAccountDialog(
             onPressed: () async {
               try {
                 await authenticationCRUD.deleteUserAccount(userId: user.uid);
-                // ignore: use_build_context_synchronously
-                Navigator.pop(dialogContext);
-                // ignore: use_build_context_synchronously
-                while (pageContext.canPop()) {
-                  // ignore: use_build_context_synchronously
-                  pageContext.pop();
-                }
+                
+                // We need to send the app router to the root location, so that
+                // the next time the user arrives in this router, he is properly
+                // welcomed.
+                appRouter.goNamed(HubRoute.i.name);
+                // }
               } catch (_) {
                 try {
                 // ignore: use_build_context_synchronously

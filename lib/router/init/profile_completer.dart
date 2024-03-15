@@ -1,4 +1,6 @@
 import 'package:crea_chess/package/atomic_design/color.dart';
+import 'package:crea_chess/package/atomic_design/form/form_error.dart';
+import 'package:crea_chess/package/atomic_design/form/input/input_string.dart';
 import 'package:crea_chess/package/atomic_design/modal/user/photo.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
@@ -7,8 +9,6 @@ import 'package:crea_chess/package/atomic_design/text_style.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/firebase/export.dart';
-import 'package:crea_chess/package/atomic_design/form/form_error.dart';
-import 'package:crea_chess/package/atomic_design/form/input/input_string.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

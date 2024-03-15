@@ -4,7 +4,7 @@ import 'package:crea_chess/package/atomic_design/widget/body_template.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/firestore/user/user_cubit.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
-import 'package:crea_chess/router/init/init_photo_page.dart';
+import 'package:crea_chess/router/init/photo/init_photo_page.dart';
 import 'package:crea_chess/router/shared/app_bar_actions.dart';
 import 'package:crea_chess/router/shared/ccroute.dart';
 import 'package:crea_chess/router/shared/form/username_form.dart';
@@ -48,7 +48,7 @@ class InitUsernamePage extends StatelessWidget {
                 usernameFormCubit.clearStatus();
               case UsernameFormStatus.success:
                 usernameFormCubit.clearStatus();
-                context.push(InitPhotoRoute.i.name);
+                context.pushNamed(InitPhotoRoute.i.name);
               case _:
                 break;
             }
@@ -90,6 +90,11 @@ class InitUsernamePage extends StatelessWidget {
                     ),
                   ),
                   onChanged: usernameFormCubit.setName,
+                  onFieldSubmitted: (name) {
+                    usernameFormCubit
+                      ..setName(name)
+                      ..submit();
+                  },
                 ),
 
                 CCGap.xlarge,

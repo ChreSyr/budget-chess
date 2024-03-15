@@ -3,8 +3,8 @@ import 'package:crea_chess/package/firebase/authentication/authentication_crud.d
 import 'package:crea_chess/package/firebase/firestore/user/user_crud.dart';
 import 'package:crea_chess/package/firebase/firestore/user/user_cubit.dart';
 import 'package:crea_chess/router/init/email_verification_screen.dart';
-import 'package:crea_chess/router/init/init_photo_page.dart';
-import 'package:crea_chess/router/init/init_username_page.dart';
+import 'package:crea_chess/router/init/photo/init_photo_page.dart';
+import 'package:crea_chess/router/init/username/init_username_page.dart';
 import 'package:crea_chess/router/shared/app_bar_actions.dart';
 import 'package:crea_chess/router/shared/ccroute.dart';
 import 'package:crea_chess/router/shared/settings/settings_page.dart';
