@@ -1,5 +1,3 @@
-import 'package:crea_chess/package/atomic_design/form/signin/signin_cubit.dart';
-import 'package:crea_chess/package/atomic_design/form/signup/signup_cubit.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/firebase/firestore/game/live_game/live_games_cubit.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
@@ -12,6 +10,8 @@ import 'package:crea_chess/router/app/side_routes.dart';
 import 'package:crea_chess/router/rooter_provider.dart';
 import 'package:crea_chess/router/shared/settings/preferences/preferences_cubit.dart';
 import 'package:crea_chess/router/shared/settings/preferences/preferences_state.dart';
+import 'package:crea_chess/router/sso/signin/signin_cubit.dart';
+import 'package:crea_chess/router/sso/signup/signup_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

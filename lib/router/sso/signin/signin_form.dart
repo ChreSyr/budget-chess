@@ -1,11 +1,32 @@
 import 'package:crea_chess/package/atomic_design/form/form_error.dart';
 import 'package:crea_chess/package/atomic_design/form/input/input_string.dart';
-import 'package:crea_chess/package/atomic_design/form/signin/signin_status.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:formz/formz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'signin_form.freezed.dart';
+
+enum SigninStatus {
+  inProgress,
+
+  // show progress indicator
+  waiting,
+
+  // show error under form fields
+  editError,
+
+  // sign in
+  signinSuccess,
+
+  // reset password
+  invalidMailForResetPassword,
+  resetPasswordSuccess,
+
+  // snack bar notified errors
+  invalidCredentials,
+  tooManyRequests,
+  unexpectedError,
+}
 
 @freezed
 class SigninForm with FormzMixin, _$SigninForm {

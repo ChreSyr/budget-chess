@@ -1,7 +1,6 @@
-import 'package:crea_chess/package/firebase/authentication/authentication_crud.dart';
 import 'package:crea_chess/package/atomic_design/form/input/input_string.dart';
-import 'package:crea_chess/package/atomic_design/form/signin/signin_form.dart';
-import 'package:crea_chess/package/atomic_design/form/signin/signin_status.dart';
+import 'package:crea_chess/package/firebase/authentication/authentication_crud.dart';
+import 'package:crea_chess/router/sso/signin/signin_form.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:regexpattern/regexpattern.dart';
