@@ -1,7 +1,7 @@
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/router/app/friends/friends_page.dart';
 import 'package:crea_chess/router/app/user/user_page.dart';
-import 'package:crea_chess/router/shared/settings_page.dart';
+import 'package:crea_chess/router/shared/settings/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

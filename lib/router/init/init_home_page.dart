@@ -7,7 +7,7 @@ import 'package:crea_chess/router/init/init_photo_page.dart';
 import 'package:crea_chess/router/init/init_username_page.dart';
 import 'package:crea_chess/router/shared/app_bar_actions.dart';
 import 'package:crea_chess/router/shared/ccroute.dart';
-import 'package:crea_chess/router/shared/settings_page.dart';
+import 'package:crea_chess/router/shared/settings/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';

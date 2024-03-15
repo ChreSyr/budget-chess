@@ -15,7 +15,7 @@ import 'package:crea_chess/router/app/nav_notifier.dart';
 import 'package:crea_chess/router/app/side_routes.dart';
 import 'package:crea_chess/router/app/user/modify_username_page.dart';
 import 'package:crea_chess/router/app/user/user_page.dart';
-import 'package:crea_chess/router/shared/settings_page.dart';
+import 'package:crea_chess/router/shared/settings/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';

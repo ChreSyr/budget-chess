@@ -8,8 +8,8 @@ import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/get_locale_flag.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
-import 'package:crea_chess/package/preferences/preferences_cubit.dart';
-import 'package:crea_chess/package/preferences/preferences_state.dart';
+import 'package:crea_chess/router/shared/settings/preferences/preferences_cubit.dart';
+import 'package:crea_chess/router/shared/settings/preferences/preferences_state.dart';
 import 'package:crea_chess/router/shared/ccroute.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -124,8 +124,7 @@ class SettingsPage extends StatelessWidget {
                               CCGap.small,
                               Text(
                                 'non vérifiée', // TODO : l10n
-                                style:
-                                    context.textTheme.bodyMedium?.copyWith(
+                                style: context.textTheme.bodyMedium?.copyWith(
                                   fontStyle: FontStyle.italic,
                                   color: Colors.grey,
                                 ),

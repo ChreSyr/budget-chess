@@ -5,7 +5,7 @@ import 'dart:ui';
 import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/firebase/authentication/authentication_crud.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
-import 'package:crea_chess/package/preferences/preferences_state.dart';
+import 'package:crea_chess/router/shared/settings/preferences/preferences_state.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 class PreferencesCubit extends HydratedCubit<PreferencesState> {
