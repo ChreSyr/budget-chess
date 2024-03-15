@@ -90,25 +90,6 @@ class SSOHomePage extends StatelessWidget {
 
               CCGap.xxxlarge,
               CCGap.xxxlarge,
-              // google or facebook loading animation
-              BlocConsumer<AuthProviderStatusCubit, AuthProviderStatus>(
-                listener: (context, status) {
-                  if (status == AuthProviderStatus.error) {
-                    snackBarError(context, context.l10n.errorOccurred);
-                  }
-                },
-                builder: (context, status) {
-                  if (status == AuthProviderStatus.waiting) {
-                    return const Column(
-                      children: [
-                        LinearProgressIndicator(),
-                        CCGap.medium,
-                      ],
-                    );
-                  }
-                  return Container();
-                },
-              ),
               // google + facebook sign in buttons
               AuthProviderButton.google(),
               // CCGap.large,
@@ -193,8 +174,8 @@ class AuthProviderButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<PreferencesCubit, PreferencesState>(
       builder: (context, preferences) {
-        final String? imageAsset;
-        final VoidCallback? onPressed;
+        final String imageAsset;
+        final VoidCallback onPressed;
         switch (provider) {
           case 'facebook':
             imageAsset = 'assets/icon/facebook_icon.png';
@@ -209,8 +190,7 @@ class AuthProviderButton extends StatelessWidget {
             imageAsset = 'assets/icon/google_icon.png';
             onPressed = authenticationCRUD.signInWithGoogle;
           default:
-            imageAsset = null;
-            onPressed = null;
+            throw Exception('Unknown provider : $provider');
         }
 
         return ActionChip(
@@ -221,21 +201,47 @@ class AuthProviderButton extends StatelessWidget {
               width: .5,
             ),
           ),
-          padding: const EdgeInsets.only(
-            left: 24,
-            top: 24,
-            right: 16,
-            bottom: 24,
-          ),
+          padding: EdgeInsets.zero,
           elevation: 5,
           shadowColor: Colors.black,
-          avatar: imageAsset == null
-              ? null
-              : Image.asset(
-                  imageAsset,
-                  height: CCSize.large,
+          label: SizedBox(
+            width: CCWidgetSize.large2,
+            child: Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: CCSize.large),
+                  child: Center(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Image.asset(imageAsset, height: CCSize.large),
+                        CCGap.medium,
+                        Text(
+                          context.l10n.signWithProvider(provider),
+                          style: context.textTheme.titleMedium,
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-          label: Text(context.l10n.signWithProvider(provider)),
+                BlocConsumer<AuthProviderStatusCubit, AuthProviderStatus>(
+                  listener: (context, status) {
+                    if (status == AuthProviderStatus.error) {
+                      snackBarError(context, context.l10n.errorOccurred);
+                    }
+                  },
+                  builder: (context, status) {
+                    if (status != AuthProviderStatus.waiting) return CCGap.zero;
+
+                    return const Align(
+                      alignment: Alignment.bottomCenter,
+                      child: LinearProgressIndicator(),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
           onPressed: onPressed,
         );
       },
