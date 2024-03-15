@@ -1,5 +1,4 @@
 import 'package:crea_chess/package/atomic_design/color.dart';
-import 'package:crea_chess/package/atomic_design/field/input_decoration.dart';
 import 'package:crea_chess/package/atomic_design/field/password_form_field.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/snack_bar.dart';
@@ -75,9 +74,11 @@ class SignupPage extends StatelessWidget {
               // mail field
               TextFormField(
                 autofocus: true,
-                decoration: CCInputDecoration(
+                decoration: InputDecoration(
+                  filled: true,
                   hintText: context.l10n.email,
                   errorText: form.errorMessage(form.email, context.l10n),
+                  errorMaxLines: 3,
                 ),
                 initialValue: form.email.value,
                 keyboardType: TextInputType.emailAddress,

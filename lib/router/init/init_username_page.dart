@@ -1,4 +1,3 @@
-import 'package:crea_chess/package/atomic_design/field/input_decoration.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/snack_bar.dart';
 import 'package:crea_chess/package/atomic_design/widget/body_template.dart';
@@ -80,8 +79,11 @@ class InitUsernamePage extends StatelessWidget {
                 TextFormField(
                   autofocus: true,
                   controller: textController,
-                  decoration: CCInputDecoration(
+                  decoration: InputDecoration(
+                    filled: true,
+                    hintText: 'Username', // TODO : l10n
                     errorText: form.errorMessage(form.name, context.l10n),
+                    errorMaxLines: 3,
                     suffixIcon: IconButton(
                       icon: const Icon(Icons.close),
                       onPressed: () => usernameFormCubit.setName(''),

@@ -1,4 +1,3 @@
-import 'package:crea_chess/package/atomic_design/field/input_decoration.dart';
 import 'package:flutter/material.dart';
 
 class PasswordFromField extends StatefulWidget {
@@ -33,9 +32,11 @@ class _PasswordFromFieldState extends State<PasswordFromField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      decoration: CCInputDecoration(
+      decoration: InputDecoration(
+        filled: true,
         hintText: widget.hintText,
         errorText: widget.errorText,
+        errorMaxLines: 3,
         suffixIcon: IconButton(
           onPressed: toggleIsObscure,
           icon: Icon(

@@ -1,5 +1,4 @@
 import 'package:crea_chess/package/atomic_design/color.dart';
-import 'package:crea_chess/package/atomic_design/field/input_decoration.dart';
 import 'package:crea_chess/package/atomic_design/modal/user/photo.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
@@ -376,9 +375,11 @@ class UsernameField extends StatelessWidget {
             CCGap.large,
             TextFormField(
               controller: textController,
-              decoration: CCInputDecoration(
+              decoration: InputDecoration(
+                filled: true,
                 labelText: 'Username', // TODO : l10n
                 errorText: form.errorMessage(form.name, context.l10n),
+                errorMaxLines: 3,
                 suffixIcon: IconButton(
                   icon: const Icon(Icons.close),
                   onPressed: () => cubit.setName(''),
