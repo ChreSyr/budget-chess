@@ -129,8 +129,8 @@ class _BoardState extends State<SetupBoard> {
                 squareId: squareId,
                 boardSize: widget.size,
                 child: DragTarget<Role>(
-                  onAccept: (role) {
-                    _onDrop(squareId, role);
+                  onAcceptWithDetails: (details) {
+                    _onDrop(squareId, details.data);
                     setState(() {
                       _dropTarget = null;
                     });
