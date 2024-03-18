@@ -39,7 +39,7 @@ abstract class SubCollectionCRUD<T> {
     required String documentId,
   }) async {
     return _collection(parentDocumentId).doc(documentId).get().then(
-          (snapshot) => snapshot.data(),
+          (doc) => doc.data(),
         );
   }
 
@@ -48,7 +48,7 @@ abstract class SubCollectionCRUD<T> {
     required Query<T?> Function(CollectionReference<T?>) filter,
   }) {
     return filter(_collection(parentDocumentId)).get().then(
-          (snapshot) => snapshot.docs.map((doc) => doc.data()).whereType<T>(),
+          (query) => query.docs.map((doc) => doc.data()).whereType<T>(),
         );
   }
 
@@ -56,23 +56,15 @@ abstract class SubCollectionCRUD<T> {
     required String parentDocumentId,
     required String documentId,
   }) {
-    final streamController = StreamController<T?>();
-
-    if (documentId.isNotEmpty) {
-      _collection(parentDocumentId)
-          .doc(documentId)
-          .snapshots()
-          .listen((snapshot) {
-        streamController.add(snapshot.data());
-      });
-    }
-
-    return streamController.stream;
+    return _collection(parentDocumentId)
+        .doc(documentId)
+        .snapshots()
+        .map((doc) => doc.data());
   }
 
   Stream<Iterable<T>> streamAll({required String parentDocumentId}) {
     return _collection(parentDocumentId).snapshots().map(
-          (snapshot) => snapshot.docs.map((doc) => doc.data()).whereType<T>(),
+          (query) => query.docs.map((doc) => doc.data()).whereType<T>(),
         );
   }
 
@@ -81,7 +73,7 @@ abstract class SubCollectionCRUD<T> {
     required Query<T?> Function(CollectionReference<T?>) filter,
   }) {
     return filter(_collection(parentDocumentId)).snapshots().map(
-          (snapshot) => snapshot.docs.map((doc) => doc.data()).whereType<T>(),
+          (query) => query.docs.map((doc) => doc.data()).whereType<T>(),
         );
   }
 

@@ -50,7 +50,6 @@ class UserPage extends StatelessWidget {
       appBar: AppBar(actions: getSideRoutesAppBarActions(context)),
       body: BlocBuilder<UserCubit, UserModel?>(
         builder: (context, currentUser) {
-          // creating or deleting the user
           if (currentUser == null) return const LinearProgressIndicator();
 
           if (usernameOrId != null &&

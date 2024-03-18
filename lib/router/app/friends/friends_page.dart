@@ -237,7 +237,7 @@ class FriendPreview extends StatelessWidget {
           width: CCWidgetSize.medium,
           child: CCPadding.allXsmall(
             child: GestureDetector(
-              onTap: () => UserRoute.pushId(userId: friend.username),
+              onTap: () => UserRoute.pushId(userId: friend.id),
               child: Column(
                 children: [
                   DecoratedBox(

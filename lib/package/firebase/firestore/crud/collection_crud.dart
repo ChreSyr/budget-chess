@@ -26,34 +26,24 @@ abstract class CollectionCRUD<T> {
   }
 
   Future<T?> read({required String documentId}) async {
-    return _collection.doc(documentId).get().then(
-          (snapshot) => snapshot.data(),
-        );
+    return _collection.doc(documentId).get().then((doc) => doc.data());
   }
 
   Future<Iterable<T>> readFiltered({
     required Query<T?> Function(CollectionReference<T?>) filter,
   }) {
     return filter(_collection).get().then(
-          (snapshot) => snapshot.docs.map((doc) => doc.data()).whereType<T>(),
+          (query) => query.docs.map((doc) => doc.data()).whereType<T>(),
         );
   }
 
   Stream<T?> stream({required String documentId}) {
-    final streamController = StreamController<T?>();
-
-    if (documentId.isNotEmpty) {
-      _collection.doc(documentId).snapshots().listen((snapshot) {
-        streamController.add(snapshot.data());
-      });
-    }
-
-    return streamController.stream;
+    return _collection.doc(documentId).snapshots().map((doc) => doc.data());
   }
 
   Stream<Iterable<T>> streamAll() {
     return _collection.snapshots().map(
-          (snapshot) => snapshot.docs.map((doc) => doc.data()).whereType<T>(),
+          (query) => query.docs.map((doc) => doc.data()).whereType<T>(),
         );
   }
 
@@ -61,7 +51,7 @@ abstract class CollectionCRUD<T> {
     required Query<T?> Function(CollectionReference<T?>) filter,
   }) {
     return filter(_collection).snapshots().map(
-          (snapshot) => snapshot.docs.map((doc) => doc.data()).whereType<T>(),
+          (query) => query.docs.map((doc) => doc.data()).whereType<T>(),
         );
   }
 
