@@ -62,7 +62,7 @@ class PlayerTile extends StatelessWidget {
             photo: user?.photo,
             onTap: user == null
                 ? null
-                : () => UserRoute.push(usernameOrId: user.id),
+                : () => UserRoute.pushId(userId: user.id),
           ),
           title: won
               ? Stack(

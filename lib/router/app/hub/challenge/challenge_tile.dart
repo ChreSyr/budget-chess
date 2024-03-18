@@ -33,7 +33,7 @@ class ChallengeTileTemplate extends StatelessWidget {
             UserPhoto.fromId(
               userId: userId,
               radius: CCSize.medium,
-              onTap: () => UserRoute.push(usernameOrId: userId),
+              onTap: () => UserRoute.pushId(userId: userId),
             ),
             CCGap.small,
             const SizedBox(height: CCSize.large, child: VerticalDivider()),

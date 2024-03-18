@@ -202,7 +202,7 @@ Widget getUserTile(BuildContext context, UserModel user) {
         leading: UserPhoto(photo: user.photo),
         title: Text(user.username),
         trailing: trailing,
-        onTap: () => UserRoute.push(usernameOrId: user.id),
+        onTap: () => UserRoute.pushId(userId: user.id),
       );
     },
   );

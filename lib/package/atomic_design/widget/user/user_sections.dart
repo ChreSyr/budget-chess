@@ -92,7 +92,7 @@ class UserSectionFriends extends UserSection {
                         context.pop();
                       }
                     } else {
-                      UserRoute.push(usernameOrId: friendId);
+                      UserRoute.pushId(userId: friendId);
                     }
                   },
                 );

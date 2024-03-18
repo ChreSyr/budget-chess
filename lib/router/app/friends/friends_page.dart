@@ -156,7 +156,7 @@ class FriendRequestCard extends StatelessWidget {
         child: Column(
           children: [
             GestureDetector(
-              onTap: () => UserRoute.push(usernameOrId: requester),
+              onTap: () => UserRoute.pushId(userId: requester),
               child: StreamBuilder<UserModel?>(
                 stream: userCRUD.stream(documentId: requester),
                 builder: (context, snapshot) {
@@ -237,7 +237,7 @@ class FriendPreview extends StatelessWidget {
           width: CCWidgetSize.medium,
           child: CCPadding.allXsmall(
             child: GestureDetector(
-              onTap: () => UserRoute.push(usernameOrId: friend.id),
+              onTap: () => UserRoute.pushId(userId: friend.username),
               child: Column(
                 children: [
                   DecoratedBox(

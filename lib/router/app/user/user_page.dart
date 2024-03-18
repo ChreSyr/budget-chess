@@ -14,7 +14,7 @@ import 'package:go_router/go_router.dart';
 // LATER: App Check
 
 class UserRoute extends CCRoute {
-  const UserRoute._() : super(name: '@:usernameOrId');
+  const UserRoute._() : super(name: ':usernameOrId');
 
   /// Instance
   static const i = UserRoute._();
@@ -24,9 +24,14 @@ class UserRoute extends CCRoute {
         usernameOrId: state.pathParameters['usernameOrId'],
       );
 
-  static void push({required String usernameOrId}) => appRouter.pushNamed(
+  static void pushId({required String userId}) => appRouter.pushNamed(
         i.name,
-        pathParameters: {'usernameOrId': usernameOrId},
+        pathParameters: {'usernameOrId': userId},
+      );
+
+  static void pushUsername({required String username}) => appRouter.pushNamed(
+        i.name,
+        pathParameters: {'usernameOrId': '@$username'},
       );
 }
 
@@ -49,30 +54,24 @@ class UserPage extends StatelessWidget {
           if (currentUser == null) return const LinearProgressIndicator();
 
           if (usernameOrId != null &&
+              usernameOrId != currentUser.id &&
               usernameOrId?.toLowerCase() != currentUser.usernameLowercase) {
-            Widget builder(BuildContext context, UserModel user) {
-              return UserProfile(
-                header: UserHeader(
-                  userId: user.id,
-                  banner: user.banner,
-                  photo: user.photo,
-                  username: user.username,
-                  isConnected: user.isConnected,
-                  editable: false,
-                ),
-                relationshipWidget: RelationshipButton(userId: user.id),
-                tabSections: UserSection.getSections(currentUser.id, user.id),
-              );
-            }
-
             return UserStreamBuilder(
               userId: usernameOrId!,
-              notFound: UserStreamBuilder(
-                userId: usernameOrId!,
-                idIsUsername: true,
-                builder: builder,
-              ),
-              builder: builder,
+              builder: (BuildContext context, UserModel user) {
+                return UserProfile(
+                  header: UserHeader(
+                    userId: user.id,
+                    banner: user.banner,
+                    photo: user.photo,
+                    username: user.username,
+                    isConnected: user.isConnected,
+                    editable: false,
+                  ),
+                  relationshipWidget: RelationshipButton(userId: user.id),
+                  tabSections: UserSection.getSections(currentUser.id, user.id),
+                );
+              },
             );
           }
 
@@ -95,26 +94,23 @@ class UserPage extends StatelessWidget {
 }
 
 class UserStreamBuilder extends StatelessWidget {
+  /// UserId can be a uid or a username, starting with @
   const UserStreamBuilder({
     required this.userId,
     required this.builder,
-    this.idIsUsername = false,
-    this.notFound,
     super.key,
   });
 
   final String userId;
-  final bool idIsUsername;
   final Widget Function(BuildContext, UserModel) builder;
-  final Widget? notFound;
 
   @override
   Widget build(BuildContext context) {
-    if (idIsUsername) {}
+    final idIsUsername = userId.startsWith('@');
 
     return StreamBuilder<UserModel?>(
       stream: idIsUsername
-          ? userCRUD.streamUsername(userId)
+          ? userCRUD.streamUsername(userId.substring(1))
           : userCRUD.stream(documentId: userId),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
@@ -126,7 +122,7 @@ class UserStreamBuilder extends StatelessWidget {
 
         final user = snapshot.data;
         if (user == null) {
-          return notFound ?? ErrorBody(exception: Exception('User not found'));
+          return ErrorBody(exception: Exception('User not found'));
         }
 
         return builder(context, user);

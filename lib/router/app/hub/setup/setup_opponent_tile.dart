@@ -31,7 +31,7 @@ class SetupOpponentTile extends StatelessWidget {
             photo: opponent?.photo,
             onTap: opponent == null
                 ? null
-                : () => UserRoute.push(usernameOrId: opponent.id),
+                : () => UserRoute.pushId(userId: opponent.id),
           ),
           title: opponentValidatedSetup
               // TODO : l10n
