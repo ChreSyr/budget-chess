@@ -32,6 +32,7 @@ class SetupOpponentTile extends StatelessWidget {
             onTap: opponent == null
                 ? null
                 : () => UserRoute.pushId(userId: opponent.id),
+            isConnected: opponent?.isConnected,
           ),
           title: opponentValidatedSetup
               // TODO : l10n

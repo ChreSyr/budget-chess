@@ -34,6 +34,7 @@ class ChallengeTileTemplate extends StatelessWidget {
               userId: userId,
               radius: CCSize.medium,
               onTap: () => UserRoute.pushId(userId: userId),
+              showConnectedIndicator: true,
             ),
             CCGap.small,
             const SizedBox(height: CCSize.large, child: VerticalDivider()),

@@ -1,6 +1,4 @@
-import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/widget/crown.dart';
-import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/unichess/unichess.dart';
@@ -44,22 +42,13 @@ class PlayerTile extends StatelessWidget {
       builder: (context, snapshot) {
         final user = snapshot.data;
 
-        final username = Row(
-          children: [
-            Text(user?.username ?? ''),
-            CCGap.small,
-            CircleAvatar(
-              backgroundColor:
-                  user?.isConnected == true ? Colors.green : Colors.grey,
-              radius: CCSize.xsmall,
-            ),
-          ],
-        );
+        final username = Text(user?.username ?? '');
         final won = side != null && side == winner;
 
         return ListTile(
           leading: UserPhoto(
             photo: user?.photo,
+            isConnected: user?.isConnected,
             onTap: user == null
                 ? null
                 : () => UserRoute.pushId(userId: user.id),

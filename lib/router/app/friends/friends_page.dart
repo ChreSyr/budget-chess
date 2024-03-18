@@ -168,6 +168,7 @@ class FriendRequestCard extends StatelessWidget {
                       UserPhoto(
                         photo: requesterProfile.photo,
                         radius: CCSize.xlarge,
+                        isConnected: requesterProfile.isConnected,
                       ),
                       CCGap.medium,
                       Column(

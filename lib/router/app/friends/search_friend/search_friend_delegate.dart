@@ -199,7 +199,7 @@ Widget getUserTile(BuildContext context, UserModel user) {
       final trailing = getTrailing();
 
       return ListTile(
-        leading: UserPhoto(photo: user.photo),
+        leading: UserPhoto(photo: user.photo, isConnected: user.isConnected),
         title: Text(user.username),
         trailing: trailing,
         onTap: () => UserRoute.pushId(userId: user.id),
