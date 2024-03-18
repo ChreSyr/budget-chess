@@ -4,7 +4,6 @@ import 'package:crea_chess/package/atomic_design/modal/modal.dart';
 import 'package:crea_chess/package/atomic_design/modal/user/photo.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/widget/edit_button.dart';
-import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_banner.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/firebase/export.dart';
@@ -74,6 +73,7 @@ class UserHeader extends StatelessWidget {
                   UserPhoto(
                     photo: photo,
                     radius: CCWidgetSize.xxsmall,
+                    isConnected: isConnected,
                     backgroundColor: photo == null ? Colors.red[100] : null,
                   ),
                   if (editable)
@@ -94,17 +94,7 @@ class UserHeader extends StatelessWidget {
         // username
         ListTile(
           leading: const Icon(Icons.alternate_email),
-          title: Row(
-            children: [
-              Text(username ?? ''),
-              CCGap.medium,
-              CircleAvatar(
-                backgroundColor:
-                    isConnected == true ? Colors.green : Colors.grey,
-                radius: CCSize.xsmall,
-              ),
-            ],
-          ),
+          title: Text(username ?? ''),
           trailing: editable
               ? EditButton(
                   onPressed: editable

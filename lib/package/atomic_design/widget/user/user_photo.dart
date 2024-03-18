@@ -1,3 +1,7 @@
+import 'dart:math';
+
+import 'package:crea_chess/package/atomic_design/color.dart';
+import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:flutter/material.dart';
 
@@ -5,7 +9,8 @@ class UserPhoto extends StatelessWidget {
   const UserPhoto({
     required this.photo,
     this.backgroundColor,
-    this.radius,
+    this.radius = 20,
+    this.isConnected,
     this.onTap,
     super.key,
   });
@@ -13,7 +18,8 @@ class UserPhoto extends StatelessWidget {
   static Widget fromId({
     required String userId,
     Color? backgroundColor,
-    double? radius,
+    double radius = 20,
+    bool? showConnectedIndicator,
     void Function()? onTap,
   }) {
     return StreamBuilder<UserModel?>(
@@ -22,6 +28,8 @@ class UserPhoto extends StatelessWidget {
         photo: snapshot.data?.photo,
         backgroundColor: backgroundColor,
         radius: radius,
+        isConnected: showConnectedIndicator == true &&
+            snapshot.data?.isConnected == true,
         onTap: onTap,
       ),
     );
@@ -29,23 +37,38 @@ class UserPhoto extends StatelessWidget {
 
   final String? photo;
   final Color? backgroundColor;
-  final double? radius;
+  final double radius;
+  final bool? isConnected;
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    final avatar = CircleAvatar(
-      backgroundColor: (photo ?? '').isEmpty
-          ? Colors.red[100]
-          : backgroundColor ?? Colors.transparent,
-      backgroundImage: _getPhotoAsset(photo),
-      radius: radius,
+    final avatar = SizedBox(
+      width: radius * 2,
+      height: radius * 2,
+      child: CircleAvatar(
+        backgroundColor: (photo ?? '').isEmpty
+            ? Colors.red[100]
+            : backgroundColor ?? Colors.transparent,
+        backgroundImage: _getPhotoAsset(photo),
+        radius: radius,
+      ),
     );
+
+    final stack = isConnected == true
+        ? Stack(
+            children: [
+              avatar,
+              ConnectedIndicator(size: sqrt(radius) * 4),
+            ],
+          )
+        : avatar;
+
     return onTap == null
-        ? avatar
+        ? stack
         : GestureDetector(
             onTap: onTap,
-            child: avatar,
+            child: stack,
           );
   }
 }
@@ -57,5 +80,38 @@ ImageProvider<Object>? _getPhotoAsset(String? photo) {
     return AssetImage('assets/${photo.replaceAll('-', '/')}.jpg');
   } else {
     return NetworkImage(photo);
+  }
+}
+
+class ConnectedIndicator extends StatelessWidget {
+  const ConnectedIndicator({required this.size, super.key});
+
+  static const ConnectedIndicator small =
+      ConnectedIndicator(size: CCSize.large);
+
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      right: -size / 6,
+      bottom: -size / 6,
+      child: SizedBox(
+        width: size,
+        height: size,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: context.colorScheme.background,
+            shape: BoxShape.circle,
+          ),
+          child: Center(
+            child: CircleAvatar(
+              backgroundColor: Colors.green,
+              radius: size / 3,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
