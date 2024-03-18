@@ -29,9 +29,21 @@ class _AuthenticationCRUD {
     final user = _firebaseAuth.currentUser;
     if (user == null) return;
 
+    // re-authenticate before deleting challenges, relations...
+    final userInfo = user.providerData.first;
     try {
-      /// This prevents the UserCubit to create a new UserModel in Firestore
-      /// after the current UserModel will be deleted
+      if (_googleAuthProvider.providerId == userInfo.providerId) {
+        await user.reauthenticateWithProvider(_googleAuthProvider);
+      } else if (_facebookAuthProvider.providerId == userInfo.providerId) {
+        await user.reauthenticateWithProvider(_facebookAuthProvider);
+      }
+    } catch (_) {
+      return authProviderStatusCubit.error();
+    }
+
+    try {
+      // This prevents the UserCubit to create a new UserModel in Firestore
+      // after the current UserModel will be deleted
       await user.updateDisplayName(_accountBeingDeleted);
 
       // Delete user.
@@ -58,6 +70,7 @@ class _AuthenticationCRUD {
     } on FirebaseAuthException catch (e) {
       debugPrint(e.toString());
       if (e.code == 'requires-recent-login') {
+        // should never happen since
         final userInfo = user.providerData.first;
 
         authProviderStatusCubit.waiting();
@@ -66,11 +79,12 @@ class _AuthenticationCRUD {
             await user.reauthenticateWithProvider(_googleAuthProvider);
           } else if (_facebookAuthProvider.providerId == userInfo.providerId) {
             await user.reauthenticateWithProvider(_facebookAuthProvider);
+          } else {
+            rethrow;
           }
           authProviderStatusCubit.success();
         } catch (_) {
           // without this line, the app is stuck on the account deletion page
-          // TODO : re-authenticate before deleting challenges, relations...
           await user.updateDisplayName(user.displayName);
           return authProviderStatusCubit.error();
         }
@@ -282,7 +296,7 @@ extension UserIsVerified on User {
   /// true if the email is verified or has been provided by google or facebook
   bool get isVerified =>
       emailVerified ||
-        providerData.where((e) => e.providerId != 'password').isNotEmpty;
+      providerData.where((e) => e.providerId != 'password').isNotEmpty;
 
   bool get beingDeleted => displayName == _accountBeingDeleted;
 }

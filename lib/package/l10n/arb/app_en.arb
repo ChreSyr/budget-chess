@@ -22,7 +22,7 @@
   "continue_": "Continue",
   "decline": "Decline",
   "deleteAccount": "Delete this account",
-  "deleteAccountExplanation": "Are you sure you want to delete the account linked to {email} ?\nThis action is irreversible.",
+  "deleteAccountExplanation": "Are you sure you want to delete the account linked to {email} ?\nThis action is irreversible.\nRe-authentication may be requested.",
   "@deleteAccountExplanation": {
     "placeholders": {
       "email": {}

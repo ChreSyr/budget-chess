@@ -22,7 +22,7 @@
   "continue_": "Continuer",
   "decline": "Décliner",
   "deleteAccount": "Supprimer ce compte",
-  "deleteAccountExplanation": "Êtes vous sûr de vouloir supprimer le compte lié à l'addresse {email} ?\nCette action est irréversible.",
+  "deleteAccountExplanation": "Êtes vous sûr de vouloir supprimer le compte lié à l'addresse {email} ?\nCette action est irréversible.\nUne réauthentification peut être demandée.",
   "@deleteAccountExplanation": {
     "placeholders": {
       "email": {}
