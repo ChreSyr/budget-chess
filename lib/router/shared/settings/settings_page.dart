@@ -71,7 +71,7 @@ class AccountPreviewCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(CCSize.xxxlarge),
       ),
       clipBehavior: Clip.hardEdge,
-      child: GestureDetector(
+      child: InkWell(
         onTap: () => UserRoute.pushId(userId: user.id),
         child: CCPadding.allSmall(
           child: Row(
