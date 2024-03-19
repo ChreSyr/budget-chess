@@ -63,9 +63,22 @@ class SettingsPage extends StatelessWidget {
                             onTap: () => UserRoute.pushId(userId: user.id),
                           ),
                           CCGap.medium,
-                          Text(
-                            '@${user.username}',
-                            style: context.textTheme.titleMedium,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '@${user.username}',
+                                style: context.textTheme.titleMedium,
+                              ),
+                              Text(
+                                context
+                                        .read<AuthNotVerifiedCubit>()
+                                        .state
+                                        ?.email ??
+                                    '',
+                                style: const TextStyle(color: Colors.grey),
+                              ),
+                            ],
                           ),
                           const Expanded(child: CCGap.medium),
                           IconButton(
@@ -88,73 +101,15 @@ class SettingsPage extends StatelessWidget {
                   ],
                 ),
               ),
-              BlocBuilder<AuthNotVerifiedCubit, User?>(
-                builder: (context, auth) {
-                  if (auth == null) return const SizedBox.shrink();
-
-                  return ExpansionTile(
-                    title: Text(
-                      'Compte',
-                      style: context.textTheme.titleLarge,
-                    ), // TODO : l10n
-                    trailing: auth.isVerified
-                        ? null
-                        : const Icon(Icons.priority_high, color: Colors.red),
-                    children: [
-                      CCGap.large,
-                      ListTile(
-                        leading: const Icon(Icons.email),
-                        title: auth.isVerified
-                            ? Text(auth.email ?? '')
-                            : Row(
-                                children: [
-                                  Text(auth.email ?? ''),
-                                  CCGap.small,
-                                  Text(
-                                    'non vérifiée', // TODO : l10n
-                                    style:
-                                        context.textTheme.bodyMedium?.copyWith(
-                                      fontStyle: FontStyle.italic,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                        trailing: auth.isVerified
-                            ? null
-                            : const Icon(Icons.priority_high,
-                                color: Colors.red),
-                      ),
-                      CCGap.large,
-                      OutlinedButton.icon(
-                        onPressed: () async {
-                          final currentRouter = GoRouter.of(context);
-                          await authenticationCRUD.signOut();
-                          // We need to send the app router to the root location, so
-                          // that the next time the user arrives in this router, he
-                          // is properly welcomed.
-                          currentRouter.goHome();
-                        },
-                        icon: const Icon(Icons.logout),
-                        label: Text(context.l10n.signout),
-                      ),
-                      CCGap.large,
-                      OutlinedButton.icon(
-                        onPressed: () => showDeleteAccountDialog(context, auth),
-                        icon: const Icon(Icons.delete_forever),
-                        label: Text(context.l10n.deleteAccount),
-                        style: ButtonStyle(
-                          iconColor: MaterialStateColor.resolveWith(
-                            (states) => Colors.red,
-                          ),
-                          foregroundColor: MaterialStateColor.resolveWith(
-                            (states) => Colors.red,
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                },
+              CCGap.medium,
+              const Card(
+                child: Column(
+                  children: [
+                    CCGap.medium,
+                    AccountSettings(),
+                    CCGap.medium,
+                  ],
+                ),
               ),
             ],
           ),
@@ -239,6 +194,66 @@ class PreferencesSettings extends StatelessWidget {
                     Text('${locale.emoji} ${locale.localized}'),
                 previewBuilder: (locale) =>
                     Text('${locale.emoji} ${locale.localized}'),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class AccountSettings extends StatelessWidget {
+  const AccountSettings({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<AuthNotVerifiedCubit, User?>(
+      builder: (context, auth) {
+        if (auth == null) return const SizedBox.shrink();
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            CCPadding.horizontalMedium(
+              child: Text(
+                'Compte', // TODO : l10n
+                style: context.textTheme.titleLarge
+                    ?.copyWith(fontWeight: FontWeight.bold),
+              ),
+            ),
+            CCGap.small,
+            ListTile(
+              leading: const Icon(Icons.meeting_room),
+              title: Text(context.l10n.signout),
+              trailing: IconButton(
+                onPressed: () async {
+                  final currentRouter = GoRouter.of(context);
+                  await authenticationCRUD.signOut();
+                  // We need to send the app router to the root location, so
+                  // that the next time the user arrives in this router, he
+                  // is properly welcomed.
+                  currentRouter.goHome();
+                },
+                icon: const Icon(Icons.logout),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.warning),
+              title: Text(context.l10n.deleteAccount),
+              trailing: IconButton(
+                onPressed: () => showDeleteAccountDialog(context, auth),
+                icon: const Icon(Icons.delete_forever),
+                style: ButtonStyle(
+                  iconColor: MaterialStateColor.resolveWith(
+                    (states) => Colors.red,
+                  ),
+                  foregroundColor: MaterialStateColor.resolveWith(
+                    (states) => Colors.red,
+                  ),
+                ),
               ),
             ),
           ],
