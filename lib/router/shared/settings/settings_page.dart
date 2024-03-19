@@ -1,4 +1,3 @@
-import 'package:crea_chess/package/atomic_design/button/filled_circle_button.dart';
 import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/dialog/user/delete_account.dart';
 import 'package:crea_chess/package/atomic_design/modal/modal.dart';
@@ -144,8 +143,8 @@ class PreferencesSettingsCard extends StatelessWidget {
                 ListTile(
                   leading: const Icon(Icons.palette),
                   title: const Text("Couleur de l'app"), // TODO : l10n
-                  trailing: FilledCircleButton.icon(
-                    icon: null,
+                  trailing: FilledButton(
+                    child: CCGap.zero,
                     onPressed: () => Modal.show(
                       context: context,
                       title: context.l10n.chooseColor,
