@@ -83,20 +83,24 @@ class AccountPreviewCard extends StatelessWidget {
                 onTap: () => UserRoute.pushId(userId: user.id),
               ),
               CCGap.medium,
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '@${user.username}',
-                    style: context.textTheme.titleMedium,
-                  ),
-                  Text(
-                    context.read<AuthNotVerifiedCubit>().state?.email ?? '',
-                    style: const TextStyle(color: Colors.grey),
-                  ),
-                ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '@${user.username}',
+                      style: context.textTheme.titleMedium,
+                    ),
+                    Text(
+                      context.read<AuthNotVerifiedCubit>().state?.email ?? '',
+                      style: context.textTheme.bodySmall
+                          ?.copyWith(color: Colors.grey),
+                      maxLines: 1,
+                    ),
+                  ],
+                ),
               ),
-              const Expanded(child: CCGap.medium),
+              CCGap.medium,
               const Icon(Icons.edit),
               CCGap.medium,
             ],

@@ -16,6 +16,7 @@ import 'package:crea_chess/router/app/user/user_page.dart';
 import 'package:crea_chess/router/shared/app_bar_actions.dart';
 import 'package:crea_chess/router/shared/ccroute.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -213,18 +214,20 @@ class FriendRequestCard extends StatelessWidget {
                         isConnected: requesterProfile.isConnected,
                       ),
                       CCGap.medium,
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            requesterProfile.username,
-                            style: context.textTheme.titleLarge,
-                          ),
-                          CCGap.medium,
-                          const badges.Badge(
-                            child: Text('Vous demande en ami !'),
-                          ), // TODO : l10n
-                        ],
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              requesterProfile.username,
+                              style: context.textTheme.titleLarge,
+                            ),
+                            CCGap.medium,
+                            const badges.Badge(
+                              child: Text('Vous demande en ami !'),
+                            ), // TODO : l10n
+                          ],
+                        ),
                       ),
                     ],
                   );
@@ -346,6 +349,8 @@ class SentFriendRequestsCard extends StatelessWidget {
                       final requested = snapshot.data;
                       if (requested == null) return CCGap.zero;
                       return ListTile(
+                        contentPadding:
+                            const EdgeInsets.only(left: CCSize.small),
                         leading: UserPhoto(
                           photo: requested.photo,
                           isConnected: requested.isConnected,
