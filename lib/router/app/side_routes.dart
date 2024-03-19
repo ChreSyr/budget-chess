@@ -118,7 +118,7 @@ class SideRoutes extends StatelessWidget {
                   child: BlocBuilder<NavNotifCubit, NavNotifs>(
                     builder: (context, navNotifs) {
                       return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           CCGap.xxxlarge,
@@ -127,8 +127,7 @@ class SideRoutes extends StatelessWidget {
                             child: const ProfileButton(),
                             offset: const Offset(-10, -10),
                           ),
-                          CCGap.small,
-                          const Divider(),
+                          const Divider(height: 0),
                           ...[
                             SettingsRoute.i,
                           ].map(
@@ -184,13 +183,22 @@ class ProfileButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton.icon(
-      onPressed: () {
-        context.push('/user');
-        context.read<SideRoutesCubit>().reset();
-      },
-      icon: UserPhoto(photo: context.watch<UserCubit>().state.photo),
-      label: const Text('Voir mon profil'), // TODO : l10n
+    return SizedBox(
+      height: CCWidgetSize.xxsmall,
+      child: SizedBox.expand(
+        child: TextButton.icon(
+          onPressed: () {
+            context.push('/user');
+            context.read<SideRoutesCubit>().reset();
+          },
+          icon: UserPhoto(photo: context.watch<UserCubit>().state.photo),
+          label: const Text('Voir mon profil'), // TODO : l10n
+          style: TextButton.styleFrom(
+            alignment: Alignment.centerLeft,
+            shape: const BeveledRectangleBorder(),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -202,13 +210,22 @@ class SideRouteButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton.icon(
-      onPressed: () {
-        context.pushRoute(route);
-        context.read<SideRoutesCubit>().reset();
-      },
-      icon: Icon(route.icon),
-      label: Text(route.getTitle(context.l10n)),
+    return SizedBox(
+      height: CCWidgetSize.xxsmall,
+      child: SizedBox.expand(
+        child: TextButton.icon(
+          onPressed: () {
+            context.pushRoute(route);
+            context.read<SideRoutesCubit>().reset();
+          },
+          icon: Icon(route.icon),
+          label: Text(route.getTitle(context.l10n)),
+          style: TextButton.styleFrom(
+            alignment: Alignment.centerLeft,
+            shape: const BeveledRectangleBorder(),
+          ),
+        ),
+      ),
     );
   }
 }
