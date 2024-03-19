@@ -29,7 +29,7 @@ class OpenSideRoutesButton extends StatelessWidget {
                   (routeName) =>
                       SideRoutes.allSideRouteNames.contains(routeName)
                           ? navNotifs.count(routeName: routeName)
-                      : 0,
+                          : 0,
                 )
                 .any((count) => count > 0);
             return SimpleBadge(
@@ -183,22 +183,13 @@ class ProfileButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: CCWidgetSize.xxsmall,
-      child: SizedBox.expand(
-        child: TextButton.icon(
-          onPressed: () {
-            context.push('/user');
-            context.read<SideRoutesCubit>().reset();
-          },
-          icon: UserPhoto(photo: context.watch<UserCubit>().state.photo),
-          label: const Text('Voir mon profil'), // TODO : l10n
-          style: TextButton.styleFrom(
-            alignment: Alignment.centerLeft,
-            shape: const BeveledRectangleBorder(),
-          ),
-        ),
-      ),
+    return _SideRouteButtonTemplate(
+      onPressed: () {
+        context.push('/user');
+        context.read<SideRoutesCubit>().reset();
+      },
+      icon: UserPhoto(photo: context.watch<UserCubit>().state.photo),
+      label: const Text('Voir mon profil'), // TODO : l10n
     );
   }
 }
@@ -210,16 +201,37 @@ class SideRouteButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return _SideRouteButtonTemplate(
+      onPressed: () {
+        context.pushRoute(route);
+        context.read<SideRoutesCubit>().reset();
+      },
+      icon: Icon(route.icon),
+      label: Text(route.getTitle(context.l10n)),
+    );
+  }
+}
+
+class _SideRouteButtonTemplate extends StatelessWidget {
+  const _SideRouteButtonTemplate({
+    required this.onPressed,
+    required this.icon,
+    required this.label,
+  });
+
+  final VoidCallback onPressed;
+  final Widget icon;
+  final Widget label;
+
+  @override
+  Widget build(BuildContext context) {
     return SizedBox(
       height: CCWidgetSize.xxsmall,
       child: SizedBox.expand(
         child: TextButton.icon(
-          onPressed: () {
-            context.pushRoute(route);
-            context.read<SideRoutesCubit>().reset();
-          },
-          icon: Icon(route.icon),
-          label: Text(route.getTitle(context.l10n)),
+          onPressed: onPressed,
+          icon: icon,
+          label: label,
           style: TextButton.styleFrom(
             alignment: Alignment.centerLeft,
             shape: const BeveledRectangleBorder(),
