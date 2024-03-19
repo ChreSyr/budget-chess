@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:badges/badges.dart' as badges;
 import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/dialog/relationship/block_user.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
@@ -61,20 +62,18 @@ class FriendsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(FriendsRoute.i.getTitle(context.l10n)),
-        actions: getSideRoutesAppBarActions(context),
-      ),
+      appBar: AppBar(actions: getSideRoutesAppBarActions(context)),
       backgroundColor: context.colorScheme.surfaceVariant,
-      body: CCPadding.allMedium(
-        child: Column(
+      body: CCPadding.horizontalLarge(
+        child: ListView(
           children: [
             // Search bar
+            CCGap.large,
             Card(
               clipBehavior: Clip.hardEdge,
               child: InkWell(
                 onTap: () => searchFriend(context),
-                child: CCPadding.allSmall(
+                child: CCPadding.allMedium(
                   child: Row(
                     children: [
                       Text(
@@ -89,6 +88,7 @@ class FriendsPage extends StatelessWidget {
                 ),
               ),
             ),
+            CCGap.medium,
             // Friendship requests
             BlocBuilder<FriendRequestsCubit, Iterable<RelationshipModel>>(
               builder: (context, requests) {
@@ -96,37 +96,64 @@ class FriendsPage extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: requests
                       .map(
-                        (request) => FriendRequestCard(
-                          request,
-                          context,
+                        (request) => Padding(
+                          padding: EdgeInsets.only(bottom: CCSize.medium),
+                          child: FriendRequestCard(
+                            request,
+                            context,
+                          ),
                         ),
                       )
                       .toList(),
                 );
               },
             ),
-            CCGap.medium,
             // Friend previews
-            Center(
-              child: BlocBuilder<UserCubit, UserModel>(
-                builder: (context, user) {
-                  final authUid = user.id;
-                  return StreamBuilder<Iterable<RelationshipModel>>(
-                    stream: relationshipCRUD.friendshipsOf(authUid),
-                    builder: (context, snapshot) {
-                      final friendships = snapshot.data ?? [];
-                      return Wrap(
-                        children: friendships.map((e) {
-                          final friendId = e.otherUser(authUid);
-                          if (friendId == null) return CCGap.zero;
-                          return FriendPreview(friendId);
-                        }).toList(),
-                      );
-                    },
-                  );
-                },
+            Card(
+              child: CCPadding.allMedium(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      context.l10n.friends,
+                      style: context.textTheme.titleLarge
+                          ?.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    CCGap.medium,
+                    BlocBuilder<UserCubit, UserModel>(
+                      builder: (context, user) {
+                        final authUid = user.id;
+                        return StreamBuilder<Iterable<RelationshipModel>>(
+                          stream: relationshipCRUD.friendshipsOf(authUid),
+                          builder: (context, snapshot) {
+                            final friendships = snapshot.data ?? [];
+                            if (snapshot.connectionState ==
+                                    ConnectionState.active &&
+                                friendships.isEmpty) {
+                              return const Text(
+                                // TODO : l10n
+                                "Vous n'avez pas encore d'ami.",
+                              );
+                            }
+                            return Center(
+                              child: Wrap(
+                                runSpacing: CCSize.medium,
+                                children: friendships.map((e) {
+                                  final friendId = e.otherUser(authUid);
+                                  if (friendId == null) return CCGap.zero;
+                                  return FriendPreview(friendId);
+                                }).toList(),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
+            CCGap.large,
           ],
         ),
       ),
@@ -181,7 +208,9 @@ class FriendRequestCard extends StatelessWidget {
                             style: context.textTheme.titleLarge,
                           ),
                           CCGap.medium,
-                          const Text('Vous demande en ami !'), // TODO : l10n
+                          const badges.Badge(
+                            child: Text('Vous demande en ami !'),
+                          ), // TODO : l10n
                         ],
                       ),
                     ],
@@ -237,7 +266,7 @@ class FriendPreview extends StatelessWidget {
         if (friend == null) return CCGap.zero;
 
         return SizedBox(
-          width: CCWidgetSize.medium,
+          width: CCWidgetSize.small,
           child: CCPadding.allXsmall(
             child: GestureDetector(
               onTap: () => UserRoute.pushId(userId: friend.id),
@@ -245,7 +274,7 @@ class FriendPreview extends StatelessWidget {
                 children: [
                   UserPhoto(
                     photo: friend.photo,
-                    backgroundColor: context.colorScheme.surfaceVariant,
+                    backgroundColor: CardTheme.of(context).color,
                     radius: CCSize.xlarge,
                     isConnected: friend.isConnected,
                   ),
