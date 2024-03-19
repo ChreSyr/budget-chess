@@ -10,12 +10,70 @@ import 'package:crea_chess/router/app/user/user_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ChallengeTileTemplate extends StatelessWidget {
-  const ChallengeTileTemplate({
+class ChallengeTile extends StatelessWidget {
+  const ChallengeTile(this.challenge, {super.key});
+
+  final ChallengeModel challenge;
+
+  @override
+  Widget build(BuildContext context) {
+    final authUid = context.read<UserCubit>().state.id;
+    final authorId = challenge.authorId ?? '';
+    if (authorId.isEmpty) return Container(); // corrupted challenge
+
+    return _ChallengeTileTemplate(
+      userId: authorId,
+      challenge: challenge,
+      action: (authUid == authorId)
+          ? _ActionButton(
+              onPressed: () => challengeCRUD.delete(documentId: challenge.id),
+              child: Text(context.l10n.cancel.toLowerCase()),
+            )
+          : _ActionButton(
+              child: Text(
+                context.l10n.play.toLowerCase(),
+              ),
+              onPressed: () => liveGameCRUD.onChallengeAccepted(
+                challenge: challenge,
+                challengerId: authUid,
+              ),
+            ),
+    );
+  }
+}
+
+class GameChallengeTile extends StatelessWidget {
+  const GameChallengeTile(this.game, {super.key});
+
+  final GameModel game;
+
+  @override
+  Widget build(BuildContext context) {
+    final authUid = context.read<UserCubit>().state.id;
+    final opponentId = game.otherPlayer(authUid);
+    if (opponentId == null) return CCGap.zero; // corrupted challenge
+
+    void enterGame() => GameRoute.push(gameId: game.challenge.id);
+
+    return GestureDetector(
+      onTap: enterGame,
+      child: _ChallengeTileTemplate(
+        userId: opponentId,
+        challenge: game.challenge,
+        action: _ActionButton(
+          onPressed: enterGame,
+          child: const Text('rejoindre'), // TODO : l10n
+        ),
+      ),
+    );
+  }
+}
+
+class _ChallengeTileTemplate extends StatelessWidget {
+  const _ChallengeTileTemplate({
     required this.userId,
     required this.challenge,
     required this.action,
-    super.key,
   });
 
   final String userId;
@@ -47,13 +105,13 @@ class ChallengeTileTemplate extends StatelessWidget {
             CCGap.small,
             Text(challenge.budget.toString()),
             CCGap.small,
-            const SizedBox(height: CCSize.large, child: VerticalDivider()),
-            CCGap.xsmall,
-            Icon(challenge.timeControl.speed.icon),
-            CCGap.small,
-            Text(challenge.timeControl.toString()),
-            CCGap.xsmall,
-            const SizedBox(height: CCSize.large, child: VerticalDivider()),
+            // const SizedBox(height: CCSize.large, child: VerticalDivider()),
+            // CCGap.xsmall,
+            // Icon(challenge.timeControl.speed.icon),
+            // CCGap.small,
+            // Text(challenge.timeControl.toString()),
+            // CCGap.xsmall,
+            // const SizedBox(height: CCSize.large, child: VerticalDivider()),
             const Expanded(child: CCGap.small),
             action,
             CCGap.small,
@@ -64,11 +122,10 @@ class ChallengeTileTemplate extends StatelessWidget {
   }
 }
 
-class ActionButton extends StatelessWidget {
-  const ActionButton({
+class _ActionButton extends StatelessWidget {
+  const _ActionButton({
     required this.child,
     required this.onPressed,
-    super.key,
   });
 
   final Widget child;
@@ -92,65 +149,6 @@ class ActionButton extends StatelessWidget {
           ),
         ),
         child: child,
-      ),
-    );
-  }
-}
-
-class ChallengeTile extends StatelessWidget {
-  const ChallengeTile(this.challenge, {super.key});
-
-  final ChallengeModel challenge;
-
-  @override
-  Widget build(BuildContext context) {
-    final authUid = context.read<UserCubit>().state.id;
-    final authorId = challenge.authorId ?? '';
-    if (authorId.isEmpty) return Container(); // corrupted challenge
-
-    return ChallengeTileTemplate(
-      userId: authorId,
-      challenge: challenge,
-      action: (authUid == authorId)
-          ? ActionButton(
-              onPressed: () => challengeCRUD.delete(documentId: challenge.id),
-              child: Text(context.l10n.cancel.toLowerCase()),
-            )
-          : ActionButton(
-              child: Text(
-                context.l10n.play.toLowerCase(),
-              ),
-              onPressed: () => liveGameCRUD.onChallengeAccepted(
-                challenge: challenge,
-                challengerId: authUid,
-              ),
-            ),
-    );
-  }
-}
-
-class GameChallengeTile extends StatelessWidget {
-  const GameChallengeTile(this.game, {super.key});
-
-  final GameModel game;
-
-  @override
-  Widget build(BuildContext context) {
-    final authUid = context.read<UserCubit>().state.id;
-    final opponentId = game.otherPlayer(authUid);
-    if (opponentId == null) return CCGap.zero; // corrupted challenge
-
-    void enterGame() => GameRoute.push(gameId: game.challenge.id);
-
-    return GestureDetector(
-      onTap: enterGame,
-      child: ChallengeTileTemplate(
-        userId: opponentId,
-        challenge: game.challenge,
-        action: ActionButton(
-          onPressed: enterGame,
-          child: const Text('rejoindre'), // TODO : l10n
-        ),
       ),
     );
   }

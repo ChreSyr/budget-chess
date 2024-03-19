@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
+import 'package:crea_chess/package/atomic_design/text_style.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
@@ -67,27 +68,24 @@ class ChallengesBoard extends StatelessWidget {
                             child: SingleChildScrollView(
                               clipBehavior: Clip.none,
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  CCGap.small,
+                                  CCGap.large,
                                   const ChallengeSorter(),
                                   CCGap.small,
-                                  const Divider(),
                                   if (friendChallenges.isNotEmpty) ...[
-                                    CCPadding.allSmall(
-                                      child: Text(
-                                        context.l10n.challengesFromFriends,
-                                      ),
+                                    FriendsChallengesCard(
+                                      challenges: friendChallenges,
                                     ),
-                                    ...friendChallenges.map(ChallengeTile.new),
-                                    const Divider(),
+                                    CCGap.medium,
                                   ],
-                                  CCPadding.allSmall(
-                                    child: Text(
-                                      context.l10n.challengesFromStrangers,
+                                  if (otherChallenges.isNotEmpty) ...[
+                                    StrangersChallengesCard(
+                                      challenges: otherChallenges,
                                     ),
-                                  ),
-                                  ...otherChallenges.map(ChallengeTile.new),
+                                    CCGap.medium,
+                                  ],
+                                  CCGap.medium,
                                 ],
                               ),
                             ),
@@ -103,6 +101,73 @@ class ChallengesBoard extends StatelessWidget {
           },
         );
       },
+    );
+  }
+}
+
+class FriendsChallengesCard extends StatelessWidget {
+  const FriendsChallengesCard({required this.challenges, super.key});
+
+  final Iterable<ChallengeModel> challenges;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: CCPadding.allMedium(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              // TODO : l10n : enlever les 2 points
+              context.l10n.challengesFromFriends,
+              style: context.textTheme.titleLarge
+                  ?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            CCGap.medium,
+            ChallengesTables(challenges: challenges),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class StrangersChallengesCard extends StatelessWidget {
+  const StrangersChallengesCard({required this.challenges, super.key});
+
+  final Iterable<ChallengeModel> challenges;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: CCPadding.allMedium(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              // TODO : l10n : enlever les 2 points
+              context.l10n.challengesFromStrangers,
+              style: context.textTheme.titleLarge
+                  ?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            CCGap.medium,
+            ChallengesTables(challenges: challenges),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ChallengesTables extends StatelessWidget {
+  const ChallengesTables({required this.challenges, super.key});
+
+  final Iterable<ChallengeModel> challenges;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: challenges.map(ChallengeTile.new).toList(),
     );
   }
 }
