@@ -101,7 +101,7 @@ class UserStreamBuilder extends StatelessWidget {
   });
 
   final String userId;
-  final Widget Function(BuildContext, UserModel) builder;
+  final Widget Function(BuildContext context, UserModel user) builder;
 
   @override
   Widget build(BuildContext context) {

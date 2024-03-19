@@ -101,6 +101,7 @@ class _RelationshipCRUD extends CollectionCRUD<RelationshipModel> {
 
     final newUsers = relationship.copyOfUsers;
     newUsers[cancelerId] = UserInRelationshipStatus.none;
+    newUsers[otherId] = UserInRelationshipStatus.none;
 
     await update(
       documentId: relationshipId,
@@ -195,7 +196,17 @@ class _RelationshipCRUD extends CollectionCRUD<RelationshipModel> {
   }
 
   /// Return the relationships waiting for an answer, from or to userId
-  Stream<Iterable<RelationshipModel>> requestsTo(String userId) {
+  Stream<Iterable<RelationshipModel>> streamRequestsFrom(String userId) {
+    return streamFiltered(
+      filter: (collection) => collection.where(
+        'users.$userId',
+        isEqualTo: UserInRelationshipStatus.requests.name,
+      ),
+    );
+  }
+
+  /// Return the relationships waiting for an answer, from or to userId
+  Stream<Iterable<RelationshipModel>> streamRequestsTo(String userId) {
     return streamFiltered(
       filter: (collection) => collection.where(
         'users.$userId',

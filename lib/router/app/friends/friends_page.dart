@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:badges/badges.dart' as badges;
 import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/dialog/relationship/block_user.dart';
+import 'package:crea_chess/package/atomic_design/dialog/relationship/cancel_friend_request.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/text_style.dart';
@@ -42,7 +43,7 @@ class FriendRequestsCubit
 
     if (authUid == null) return emit([]);
 
-    _relationsStream = relationshipCRUD.requestsTo(authUid).listen(emit);
+    _relationsStream = relationshipCRUD.streamRequestsTo(authUid).listen(emit);
   }
 
   StreamSubscription<Iterable<RelationshipModel>>? _relationsStream;
@@ -97,7 +98,7 @@ class FriendsPage extends StatelessWidget {
                   children: requests
                       .map(
                         (request) => Padding(
-                          padding: EdgeInsets.only(bottom: CCSize.medium),
+                          padding: const EdgeInsets.only(bottom: CCSize.medium),
                           child: FriendRequestCard(
                             request,
                             context,
@@ -153,6 +154,18 @@ class FriendsPage extends StatelessWidget {
                 ),
               ),
             ),
+            // Friendship requests from this user
+            StreamBuilder<Iterable<RelationshipModel>>(
+              stream: relationshipCRUD.streamRequestsFrom(
+                context.read<UserCubit>().state.id,
+              ),
+              builder: (context, snapshot) {
+                final requests = snapshot.data ?? [];
+                if (requests.isEmpty) return CCGap.zero;
+
+                return SentFriendRequestsCard(requests: requests);
+              },
+            ),
             CCGap.large,
           ],
         ),
@@ -176,9 +189,9 @@ class FriendRequestCard extends StatelessWidget {
     final requester = request.requester;
     if (requester == null) return CCGap.zero;
 
-    if (request.otherUser(requester) != authUid) {
-      return const SizedBox.shrink();
-    }
+    // if (request.otherUser(requester) != authUid) {
+    //   return CCGap.zero;
+    // }
 
     return Card(
       child: CCPadding.allMedium(
@@ -291,6 +304,70 @@ class FriendPreview extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class SentFriendRequestsCard extends StatelessWidget {
+  const SentFriendRequestsCard({
+    required this.requests,
+    super.key,
+  });
+
+  final Iterable<RelationshipModel> requests;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: CCSize.medium),
+      child: Card(
+        child: CCPadding.allMedium(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                // TODO : l10n : plural
+                context.l10n.friendRequestSent,
+                style: context.textTheme.titleLarge
+                    ?.copyWith(fontWeight: FontWeight.bold),
+              ),
+              CCGap.medium,
+              ...requests.map(
+                (request) {
+                  final requester = request.requester;
+                  if (requester == null) return CCGap.zero;
+                  final requestedId = request.otherUser(requester);
+                  if (requestedId == null) return CCGap.zero;
+
+                  return StreamBuilder<UserModel?>(
+                    stream: userCRUD.stream(documentId: requestedId),
+                    builder: (context, snapshot) {
+                      final requested = snapshot.data;
+                      if (requested == null) return CCGap.zero;
+                      return ListTile(
+                        leading: UserPhoto(
+                          photo: requested.photo,
+                          isConnected: requested.isConnected,
+                          onTap: () => UserRoute.pushId(userId: requestedId),
+                        ),
+                        title: Text(requested.username),
+                        trailing: IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () => showCancelFriendRequestDialog(
+                            context,
+                            requestedId,
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
