@@ -73,7 +73,7 @@ class UserHeader extends StatelessWidget {
                   UserPhoto(
                     photo: photo,
                     radius: CCWidgetSize.xxsmall,
-                    isConnected: isConnected,
+                    isConnected: isConnected == true && editable == false,
                     backgroundColor: photo == null ? Colors.red[100] : null,
                   ),
                   if (editable)

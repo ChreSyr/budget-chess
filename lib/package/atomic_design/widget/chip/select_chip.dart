@@ -211,8 +211,8 @@ class SelectChip<T> extends StatelessWidget {
         label: previewBuilderSafe(selectedValues),
         avatar: showArrow
             ? Icon(
-          Icons.arrow_drop_down,
-          color: Theme.of(context).colorScheme.onSurface,
+                Icons.arrow_drop_down,
+                color: Theme.of(context).colorScheme.onSurface,
               )
             : null,
         onPressed: () {
@@ -220,26 +220,26 @@ class SelectChip<T> extends StatelessWidget {
         },
       ),
       menuChildren: values.map(
-        (e) {
-          final selected = selectedValues.contains(e);
-          final top1 = selected && selectedValues.length == 1;
-          return MenuItemButton(
-            style: const ButtonStyle(visualDensity: VisualDensity.compact),
-            closeOnActivate: uniqueChoice && !top1,
-            onPressed: () => onSelected(e),
-            child: Card(
-              elevation: 0,
-              color: selected ? null : Colors.transparent,
-              shape: selected
-                  ? RoundedRectangleBorder(
-                      borderRadius: CCBorderRadiusCircular.small,
-                      side: BorderSide(color: CCColor.cardBorder(context)),
-                    )
-                  : null,
-              child: CCPadding.allSmall(child: valueBuilderSafe(e)),
-            ),
-          );
-        },
+            (e) {
+              final selected = selectedValues.contains(e);
+              final top1 = selected && selectedValues.length == 1;
+              return MenuItemButton(
+                style: const ButtonStyle(visualDensity: VisualDensity.compact),
+                closeOnActivate: uniqueChoice && !top1,
+                onPressed: () => onSelected(e),
+                child: Card(
+                  elevation: 0,
+                  color: selected ? null : Colors.transparent,
+                  shape: selected
+                      ? RoundedRectangleBorder(
+                          borderRadius: CCBorderRadiusCircular.small,
+                          side: BorderSide(color: CCColor.cardBorder(context)),
+                        )
+                      : null,
+                  child: CCPadding.allSmall(child: valueBuilderSafe(e)),
+                ),
+              );
+            },
           ).toList() +
           (bottomChildren ?? []),
     );

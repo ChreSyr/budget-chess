@@ -34,6 +34,11 @@ class PreferencesCubit extends HydratedCubit<PreferencesState> {
     emit(state.copyWith(seedColor: seedColor));
   }
 
+  void setLocale(String locale) {
+    emit(state.copyWith(languageCode: locale));
+    authenticationCRUD.setLanguageCode(locale);
+  }
+
   void toggleLocale() {
     final newLanguageCode = state.languageCode == 'fr' ? 'en' : 'fr';
     emit(state.copyWith(languageCode: newLanguageCode));
