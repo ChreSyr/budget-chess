@@ -59,7 +59,10 @@ class UserPhoto extends StatelessWidget {
         ? Stack(
             children: [
               avatar,
-              ConnectedIndicator(size: sqrt(radius) * 4),
+              ConnectedIndicator(
+                size: sqrt(radius) * 4,
+                backgroundColor: backgroundColor,
+              ),
             ],
           )
         : avatar;
@@ -84,12 +87,17 @@ ImageProvider<Object>? _getPhotoAsset(String? photo) {
 }
 
 class ConnectedIndicator extends StatelessWidget {
-  const ConnectedIndicator({required this.size, super.key});
+  const ConnectedIndicator({
+    required this.size,
+    this.backgroundColor,
+    super.key,
+  });
 
   static const ConnectedIndicator small =
       ConnectedIndicator(size: CCSize.large);
 
   final double size;
+  final Color? backgroundColor;
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +109,7 @@ class ConnectedIndicator extends StatelessWidget {
         height: size,
         child: DecoratedBox(
           decoration: BoxDecoration(
-            color: context.colorScheme.background,
+            color: backgroundColor ?? context.colorScheme.background,
             shape: BoxShape.circle,
           ),
           child: Center(

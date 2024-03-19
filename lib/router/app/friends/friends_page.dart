@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/dialog/relationship/block_user.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
@@ -64,7 +65,8 @@ class FriendsPage extends StatelessWidget {
         title: Text(FriendsRoute.i.getTitle(context.l10n)),
         actions: getSideRoutesAppBarActions(context),
       ),
-      body: CCPadding.horizontalMedium(
+      backgroundColor: context.colorScheme.surfaceVariant,
+      body: CCPadding.allMedium(
         child: Column(
           children: [
             // Search bar
@@ -243,6 +245,7 @@ class FriendPreview extends StatelessWidget {
                 children: [
                   UserPhoto(
                     photo: friend.photo,
+                    backgroundColor: context.colorScheme.surfaceVariant,
                     radius: CCSize.xlarge,
                     isConnected: friend.isConnected,
                   ),

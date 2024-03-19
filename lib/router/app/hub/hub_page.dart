@@ -1,3 +1,4 @@
+import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
@@ -51,6 +52,7 @@ class HubPage extends StatelessWidget {
           ...getSideRoutesAppBarActions(context),
         ],
       ),
+      backgroundColor: context.colorScheme.surfaceVariant,
       body: MultiBlocProvider(
         providers: [
           BlocProvider(
