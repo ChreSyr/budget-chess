@@ -119,4 +119,12 @@ class CCPadding extends Padding {
       child: child,
     );
   }
+
+  /// padding: const EdgeInsets.symmetric(vertical: 16),
+  factory CCPadding.verticalMedium({required Widget child}) {
+    return CCPadding(
+      padding: const EdgeInsets.symmetric(vertical: CCSize.medium),
+      child: child,
+    );
+  }
 }

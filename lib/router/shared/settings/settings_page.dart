@@ -15,7 +15,6 @@ import 'package:crea_chess/router/app/user/user_page.dart';
 import 'package:crea_chess/router/shared/ccroute.dart';
 import 'package:crea_chess/router/shared/settings/preferences/preferences_cubit.dart';
 import 'package:crea_chess/router/shared/settings/preferences/preferences_state.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -45,72 +44,12 @@ class SettingsPage extends StatelessWidget {
         color: context.colorScheme.surfaceVariant,
         child: CCPadding.allLarge(
           child: ListView(
-            children: [
-              BlocBuilder<UserCubit, UserModel>(
-                builder: (context, user) {
-                  if (user.id.isEmpty) return CCGap.zero;
-                  return Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(CCSize.xxxlarge),
-                    ),
-                    child: CCPadding.allSmall(
-                      child: Row(
-                        children: [
-                          CCGap.small,
-                          UserPhoto(
-                            photo: user.photo,
-                            radius: CCSize.xlarge,
-                            onTap: () => UserRoute.pushId(userId: user.id),
-                          ),
-                          CCGap.medium,
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                '@${user.username}',
-                                style: context.textTheme.titleMedium,
-                              ),
-                              Text(
-                                context
-                                        .read<AuthNotVerifiedCubit>()
-                                        .state
-                                        ?.email ??
-                                    '',
-                                style: const TextStyle(color: Colors.grey),
-                              ),
-                            ],
-                          ),
-                          const Expanded(child: CCGap.medium),
-                          IconButton(
-                            onPressed: authenticationCRUD.signOut,
-                            icon: const Icon(Icons.logout),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
+            children: const [
+              AccountPreviewCard(),
               CCGap.medium,
-              const Card(
-                child: Column(
-                  children: [
-                    CCGap.medium,
-                    PreferencesSettings(),
-                    CCGap.medium,
-                  ],
-                ),
-              ),
+              PreferencesSettingsCard(),
               CCGap.medium,
-              const Card(
-                child: Column(
-                  children: [
-                    CCGap.medium,
-                    AccountSettings(),
-                    CCGap.medium,
-                  ],
-                ),
-              ),
+              AccountSettingsCard(),
             ],
           ),
         ),
@@ -119,102 +58,159 @@ class SettingsPage extends StatelessWidget {
   }
 }
 
-class PreferencesSettings extends StatelessWidget {
-  const PreferencesSettings({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final preferencesCubit = context.read<PreferencesCubit>();
-
-    return BlocBuilder<PreferencesCubit, PreferencesState>(
-      builder: (context, preferences) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            CCPadding.horizontalMedium(
-              child: Text(
-                'Préférences', // TODO : l10n
-                style: context.textTheme.titleLarge
-                    ?.copyWith(fontWeight: FontWeight.bold),
-              ),
-            ),
-            CCGap.small,
-            ListTile(
-              leading: const Icon(Icons.fluorescent),
-              title: const Text('Dark mode'), // TODO : l10n
-              trailing: Switch(
-                value: preferences.isDarkMode,
-                onChanged: (_) => preferencesCubit.toggleTheme(),
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.palette),
-              title: const Text("Couleur de l'app"), // TODO : l10n
-              trailing: FilledCircleButton.icon(
-                icon: null,
-                onPressed: () => Modal.show(
-                  context: context,
-                  title: context.l10n.chooseColor,
-                  sections: [
-                    GridView.count(
-                      shrinkWrap: true,
-                      crossAxisCount: 3,
-                      crossAxisSpacing: CCSize.large,
-                      mainAxisSpacing: CCSize.large,
-                      children: SeedColor.values
-                          .map(
-                            (seedColor) => FilledButton(
-                              style: TextButton.styleFrom(
-                                minimumSize: Size.zero,
-                                padding: EdgeInsets.zero,
-                                backgroundColor: seedColor.color,
-                              ),
-                              onPressed: () => context
-                                ..pop()
-                                ..read<PreferencesCubit>()
-                                    .setSeedColor(seedColor),
-                              child: const Text(''),
-                            ),
-                          )
-                          .toList(),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.flag),
-              title: const Text('Langue'), // TODO : l10n
-              trailing: SelectChip<SupportedLocale>.uniqueChoice(
-                values: SupportedLocale.values,
-                selectedValue:
-                    SupportedLocale.fromName(context.l10n.localeName),
-                onSelected: (locale) => preferencesCubit.setLocale(locale.name),
-                valueBuilder: (locale) =>
-                    Text('${locale.emoji} ${locale.localized}'),
-                previewBuilder: (locale) =>
-                    Text('${locale.emoji} ${locale.localized}'),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-}
-
-class AccountSettings extends StatelessWidget {
-  const AccountSettings({
+class AccountPreviewCard extends StatelessWidget {
+  const AccountPreviewCard({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AuthNotVerifiedCubit, User?>(
-      builder: (context, auth) {
+    final user = context.watch<UserCubit>().state;
+    if (user.id.isEmpty) return CCGap.zero;
+
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(CCSize.xxxlarge),
+      ),
+      clipBehavior: Clip.hardEdge,
+      child: GestureDetector(
+        onTap: () => UserRoute.pushId(userId: user.id),
+        child: CCPadding.allSmall(
+          child: Row(
+            children: [
+              CCGap.small,
+              UserPhoto(
+                photo: user.photo,
+                radius: CCSize.xlarge,
+                onTap: () => UserRoute.pushId(userId: user.id),
+              ),
+              CCGap.medium,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '@${user.username}',
+                    style: context.textTheme.titleMedium,
+                  ),
+                  Text(
+                    context.read<AuthNotVerifiedCubit>().state?.email ?? '',
+                    style: const TextStyle(color: Colors.grey),
+                  ),
+                ],
+              ),
+              const Expanded(child: CCGap.medium),
+              const Icon(Icons.edit),
+              CCGap.medium,
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class PreferencesSettingsCard extends StatelessWidget {
+  const PreferencesSettingsCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final preferencesCubit = context.read<PreferencesCubit>();
+
+    return Card(
+      child: CCPadding.verticalMedium(
+        child: BlocBuilder<PreferencesCubit, PreferencesState>(
+          builder: (context, preferences) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                CCPadding.horizontalMedium(
+                  child: Text(
+                    'Préférences', // TODO : l10n
+                    style: context.textTheme.titleLarge
+                        ?.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                CCGap.small,
+                ListTile(
+                  leading: const Icon(Icons.fluorescent),
+                  title: const Text('Dark mode'), // TODO : l10n
+                  trailing: Switch(
+                    value: preferences.isDarkMode,
+                    onChanged: (_) => preferencesCubit.toggleTheme(),
+                  ),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.palette),
+                  title: const Text("Couleur de l'app"), // TODO : l10n
+                  trailing: FilledCircleButton.icon(
+                    icon: null,
+                    onPressed: () => Modal.show(
+                      context: context,
+                      title: context.l10n.chooseColor,
+                      sections: [
+                        GridView.count(
+                          shrinkWrap: true,
+                          crossAxisCount: 3,
+                          crossAxisSpacing: CCSize.large,
+                          mainAxisSpacing: CCSize.large,
+                          children: SeedColor.values
+                              .map(
+                                (seedColor) => FilledButton(
+                                  style: TextButton.styleFrom(
+                                    minimumSize: Size.zero,
+                                    padding: EdgeInsets.zero,
+                                    backgroundColor: seedColor.color,
+                                  ),
+                                  onPressed: () => context
+                                    ..pop()
+                                    ..read<PreferencesCubit>()
+                                        .setSeedColor(seedColor),
+                                  child: const Text(''),
+                                ),
+                              )
+                              .toList(),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.flag),
+                  title: const Text('Langue'), // TODO : l10n
+                  trailing: SelectChip<SupportedLocale>.uniqueChoice(
+                    values: SupportedLocale.values,
+                    selectedValue:
+                        SupportedLocale.fromName(context.l10n.localeName),
+                    onSelected: (locale) =>
+                        preferencesCubit.setLocale(locale.name),
+                    valueBuilder: (locale) =>
+                        Text('${locale.emoji} ${locale.localized}'),
+                    previewBuilder: (locale) =>
+                        Text('${locale.emoji} ${locale.localized}'),
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class AccountSettingsCard extends StatelessWidget {
+  const AccountSettingsCard({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final auth = context.watch<AuthNotVerifiedCubit>().state;
         if (auth == null) return const SizedBox.shrink();
 
-        return Column(
+    return Card(
+      child: CCPadding.verticalMedium(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             CCPadding.horizontalMedium(
@@ -257,8 +253,8 @@ class AccountSettings extends StatelessWidget {
               ),
             ),
           ],
-        );
-      },
+        ),
+      ),
     );
   }
 }
