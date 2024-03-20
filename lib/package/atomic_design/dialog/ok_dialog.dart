@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 void showOkDialog({
   required BuildContext pageContext,
-  required String title,
+  required String? title,
   required Widget content,
 }) {
   showDialog<AlertDialog>(
     context: pageContext,
     builder: (BuildContext dialogContext) {
       return AlertDialog(
-        title: Text(title),
+        title: title == null ? null : Text(title),
         content: content,
         actions: [
           ElevatedButton(

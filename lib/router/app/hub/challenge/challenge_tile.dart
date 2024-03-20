@@ -1,10 +1,10 @@
+import 'package:crea_chess/package/atomic_design/border.dart';
 import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
-import 'package:crea_chess/router/app/hub/challenge/card_tile.dart';
 import 'package:crea_chess/router/app/hub/game/game_page.dart';
 import 'package:crea_chess/router/app/user/user_page.dart';
 import 'package:flutter/material.dart';
@@ -84,7 +84,7 @@ class _ChallengeTileTemplate extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: CCWidgetSize.xxsmall,
-      child: CardTile(
+      child: _CardTile(
         child: Row(
           children: [
             CCGap.small,
@@ -122,6 +122,25 @@ class _ChallengeTileTemplate extends StatelessWidget {
   }
 }
 
+class _CardTile extends StatelessWidget {
+  const _CardTile({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 4,
+      clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(
+        borderRadius: CCBorderRadiusCircular.medium,
+        side: BorderSide(color: CCColor.cardBorder(context)),
+      ),
+      child: child,
+    );
+  }
+}
+
 class _ActionButton extends StatelessWidget {
   const _ActionButton({
     required this.child,
@@ -150,6 +169,19 @@ class _ActionButton extends StatelessWidget {
         ),
         child: child,
       ),
+    );
+  }
+}
+
+class ChallengesTables extends StatelessWidget {
+  const ChallengesTables({required this.challenges, super.key});
+
+  final Iterable<ChallengeModel> challenges;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: challenges.map(ChallengeTile.new).toList(),
     );
   }
 }
