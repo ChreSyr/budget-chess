@@ -3,6 +3,8 @@ import 'package:crea_chess/package/unichess/unichess.dart';
 
 /// The chessboard theme.
 enum BoardTheme {
+  brown1('Brown 1', BoardColorScheme.brown1),
+  brown2('Brown 2', BoardColorScheme.brown2),
   blue('Blue', BoardColorScheme.blue),
   blue2('Blue2', BoardColorScheme.blue2),
   blue3('Blue3', BoardColorScheme.blue3),
@@ -14,7 +16,6 @@ enum BoardTheme {
   wood4('Wood4', BoardColorScheme.wood4),
   maple('Maple', BoardColorScheme.maple),
   maple2('Maple 2', BoardColorScheme.maple2),
-  brown1('Brown', BoardColorScheme.brown1),
   leather('Leather', BoardColorScheme.leather),
   green('Green', BoardColorScheme.green),
   marble('Marble', BoardColorScheme.marble),

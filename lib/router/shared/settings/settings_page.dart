@@ -11,16 +11,13 @@ import 'package:crea_chess/package/chessground/export.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/package/l10n/supported_locale.dart';
-import 'package:crea_chess/package/lichess/lichess_icons.dart';
 import 'package:crea_chess/package/unichess/unichess.dart';
 import 'package:crea_chess/router/app/hub/setup/board_settings_cubit.dart';
 import 'package:crea_chess/router/app/user/user_page.dart';
 import 'package:crea_chess/router/shared/ccroute.dart';
 import 'package:crea_chess/router/shared/settings/preferences/preferences_cubit.dart';
 import 'package:crea_chess/router/shared/settings/preferences/preferences_state.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:recase/recase.dart';
@@ -216,7 +213,8 @@ class BoardSettingsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final boardSettings = context.watch<BoardSettingsCubit>().state;
+    final boardSettingsCubit = context.watch<BoardSettingsCubit>();
+    final boardSettings = boardSettingsCubit.state;
     return Card(
       child: CCPadding.verticalMedium(
         child: Column(
@@ -231,39 +229,26 @@ class BoardSettingsCard extends StatelessWidget {
             ),
             CCGap.small,
             ListTile(
-              leading: const Icon(LichessIcons.chess_board),
+              leading: SizedBox.square(
+                dimension: CCSize.large,
+                child: BoardWidget(
+                  key: Key(boardSettings.colorScheme.toString()),
+                  data: const BoardData(
+                    interactableSide: InteractableSide.none,
+                    orientation: Side.white,
+                    fen: '2/2',
+                  ),
+                  size: BoardSize(files: 2, ranks: 2),
+                  settings: BoardSettings(
+                    colorScheme: boardSettings.colorScheme,
+                    enableCoordinates: false,
+                  ),
+                ),
+              ),
               title: const Text("Thème de l'échiquier"), // TODO : l10n
               subtitle:
                   Text(boardSettings.colorScheme(BoardSize.standard).name),
-              onTap: () => Modal.show(
-                context: context,
-                title: "Thème de l'échiquier",
-                sections: [
-                  Expanded(
-                    child: ListView(
-                      children: BoardTheme.values
-                          .map(
-                            (theme) => ListTile(
-                              title: BoardWidget(
-                                data: const BoardData(
-                                  interactableSide: InteractableSide.none,
-                                  orientation: Side.white,
-                                  fen: '',
-                                ),
-                                size: BoardSize(files: 8, ranks: 1),
-                                settings: BoardSettings(
-                                  colorScheme: theme.colors,
-                                  enableCoordinates: false,
-                                ),
-                              ),
-                              subtitle: Text(theme.name.titleCase),
-                            ),
-                          )
-                          .toList(),
-                    ),
-                  ),
-                ],
-              ),
+              onTap: () => showBoardThemeModal(context, boardSettingsCubit),
             ),
             ListTile(
               leading: PieceWidget(
@@ -273,42 +258,96 @@ class BoardSettingsCard extends StatelessWidget {
               ),
               title: const Text('Jeu de pièces'), // TODO : l10n
               subtitle: Text(boardSettings.pieceSet.label),
-              onTap: () => Modal.show(
-                context: context,
-                title: 'Jeu de pièces',
-                sections: [
-                  Expanded(
-                    child: ListView(
-                      children: PieceSet.values
-                          .map(
-                            (set) => ListTile(
-                              title: BoardWidget(
-                                data: const BoardData(
-                                  interactableSide: InteractableSide.none,
-                                  orientation: Side.white,
-                                  fen: 'KqRbNp',
-                                ),
-                                size: BoardSize(files: 6, ranks: 1),
-                                settings: BoardSettings(
-                                  colorScheme: boardSettings.colorScheme,
-                                  pieceSet: set,
-                                  enableCoordinates: false,
-                                ),
-                              ),
-                              subtitle: Text(set.label),
-                            ),
-                          )
-                          .toList(),
-                    ),
-                  ),
-                ],
-              ),
+              onTap: () => showPieceSetModal(context, boardSettingsCubit),
             ),
           ],
         ),
       ),
     );
   }
+
+  void showBoardThemeModal(BuildContext context, BoardSettingsCubit cubit) =>
+      Modal.show(
+        context: context,
+        title: "Thème de l'échiquier",
+        sections: [
+          Expanded(
+            child: ListView(
+              children: BoardTheme.values
+                  .map(
+                    (theme) => Container(
+                      // ListTile.color has a strange bug when scrolling
+                      color: theme.colors == cubit.state.colorScheme
+                          ? context.colorScheme.surfaceVariant
+                          : null,
+                      child: ListTile(
+                        title: BoardWidget(
+                          data: const BoardData(
+                            interactableSide: InteractableSide.none,
+                            orientation: Side.white,
+                            fen: '',
+                          ),
+                          size: BoardSize(files: 8, ranks: 1),
+                          settings: BoardSettings(
+                            colorScheme: theme.colors,
+                            enableCoordinates: false,
+                          ),
+                        ),
+                        subtitle: Text(theme.name.titleCase),
+                        onTap: () {
+                          context.pop();
+                          cubit.setBoardColorScheme(theme.colors);
+                        },
+                      ),
+                    ),
+                  )
+                  .toList(),
+            ),
+          ),
+        ],
+      );
+
+  void showPieceSetModal(BuildContext context, BoardSettingsCubit cubit) =>
+      Modal.show(
+        context: context,
+        title: 'Jeu de pièces',
+        sections: [
+          Expanded(
+            child: ListView(
+              children: PieceSet.values
+                  .map(
+                    (set) => Container(
+                      // ListTile.color has a strange bug when scrolling
+                      color: set == cubit.state.pieceSet
+                          ? context.colorScheme.surfaceVariant
+                          : null,
+                      child: ListTile(
+                        title: BoardWidget(
+                          data: const BoardData(
+                            interactableSide: InteractableSide.none,
+                            orientation: Side.white,
+                            fen: 'KqRbNp',
+                          ),
+                          size: BoardSize(files: 6, ranks: 1),
+                          settings: BoardSettings(
+                            colorScheme: cubit.state.colorScheme,
+                            pieceSet: set,
+                            enableCoordinates: false,
+                          ),
+                        ),
+                        subtitle: Text(set.label),
+                        onTap: () {
+                          context.pop();
+                          cubit.setPieceSetScheme(set);
+                        },
+                      ),
+                    ),
+                  )
+                  .toList(),
+            ),
+          ),
+        ],
+      );
 }
 
 class AccountSettingsCard extends StatelessWidget {
