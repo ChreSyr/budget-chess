@@ -40,15 +40,17 @@ class SettingsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text(SettingsRoute.i.getTitle(context.l10n))),
       backgroundColor: context.colorScheme.surfaceVariant,
-      body: CCPadding.allLarge(
-        child: ListView(
-          children: const [
-            AccountPreviewCard(),
-            CCGap.medium,
-            PreferencesSettingsCard(),
-            CCGap.medium,
-            AccountSettingsCard(),
-          ],
+      body: SingleChildScrollView(
+        child: CCPadding.allLarge(
+          child: const Column(
+            children: [
+              AccountPreviewCard(),
+              CCGap.medium,
+              PreferencesSettingsCard(),
+              CCGap.medium,
+              AccountSettingsCard(),
+            ],
+          ),
         ),
       ),
     );

@@ -64,10 +64,10 @@ class HubPage extends StatelessWidget {
         child: Column(
           children: [
             Expanded(
-              child: CCPadding.horizontalLarge(
-                child: const SingleChildScrollView(
-                  clipBehavior: Clip.none,
-                  child: HubNews(),
+              child: SingleChildScrollView(
+                clipBehavior: Clip.none,
+                child: CCPadding.allLarge(
+                  child: const HubFeed(),
                 ),
               ),
             ),
@@ -79,15 +79,14 @@ class HubPage extends StatelessWidget {
   }
 }
 
-class HubNews extends StatelessWidget {
-  const HubNews({super.key});
+class HubFeed extends StatelessWidget {
+  const HubFeed({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        CCGap.large,
         BlocBuilder<LiveGamesCubit, Iterable<GameModel>>(
           builder: (context, liveGames) {
             final gamesInProgress = liveGames.where((e) => e.playable);
@@ -104,7 +103,6 @@ class HubNews extends StatelessWidget {
           },
         ),
         const ChallengeCards(),
-        CCGap.small,
       ],
     );
   }

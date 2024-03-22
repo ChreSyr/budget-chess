@@ -66,109 +66,109 @@ class FriendsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(actions: getSideRoutesAppBarActions(context)),
       backgroundColor: context.colorScheme.surfaceVariant,
-      body: CCPadding.horizontalLarge(
-        child: ListView(
-          children: [
-            // Search bar
-            CCGap.large,
-            Card(
-              clipBehavior: Clip.hardEdge,
-              child: InkWell(
-                onTap: () => searchFriend(context),
+      body: SingleChildScrollView(
+        child: CCPadding.allLarge(
+          child: Column(
+            children: [
+              // Search bar
+              Card(
+                clipBehavior: Clip.hardEdge,
+                child: InkWell(
+                  onTap: () => searchFriend(context),
+                  child: CCPadding.allMedium(
+                    child: Row(
+                      children: [
+                        Text(
+                          // TODO : l10n
+                          'Rechercher un joueur',
+                          style: context.textTheme.bodyLarge,
+                        ),
+                        const Expanded(child: CCGap.medium),
+                        const Icon(Icons.search),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              CCGap.medium,
+              // Friendship requests
+              BlocBuilder<FriendRequestsCubit, Iterable<RelationshipModel>>(
+                builder: (context, requests) {
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: requests
+                        .map(
+                          (request) => Padding(
+                            padding: const EdgeInsets.only(bottom: CCSize.medium),
+                            child: FriendRequestCard(
+                              request,
+                              context,
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  );
+                },
+              ),
+              // Friend previews
+              Card(
                 child: CCPadding.allMedium(
-                  child: Row(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        // TODO : l10n
-                        'Rechercher un joueur',
-                        style: context.textTheme.bodyLarge,
+                        context.l10n.friends,
+                        style: context.textTheme.titleLarge
+                            ?.copyWith(fontWeight: FontWeight.bold),
                       ),
-                      const Expanded(child: CCGap.medium),
-                      const Icon(Icons.search),
+                      CCGap.medium,
+                      BlocBuilder<UserCubit, UserModel>(
+                        builder: (context, user) {
+                          final authUid = user.id;
+                          return StreamBuilder<Iterable<RelationshipModel>>(
+                            stream: relationshipCRUD.friendshipsOf(authUid),
+                            builder: (context, snapshot) {
+                              final friendships = snapshot.data ?? [];
+                              if (snapshot.connectionState ==
+                                      ConnectionState.active &&
+                                  friendships.isEmpty) {
+                                return const Text(
+                                  // TODO : l10n
+                                  "Vous n'avez pas encore d'ami.",
+                                );
+                              }
+                              return Center(
+                                child: Wrap(
+                                  runSpacing: CCSize.medium,
+                                  children: friendships.map((e) {
+                                    final friendId = e.otherUser(authUid);
+                                    if (friendId == null) return CCGap.zero;
+                                    return FriendPreview(friendId);
+                                  }).toList(),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      ),
                     ],
                   ),
                 ),
               ),
-            ),
-            CCGap.medium,
-            // Friendship requests
-            BlocBuilder<FriendRequestsCubit, Iterable<RelationshipModel>>(
-              builder: (context, requests) {
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: requests
-                      .map(
-                        (request) => Padding(
-                          padding: const EdgeInsets.only(bottom: CCSize.medium),
-                          child: FriendRequestCard(
-                            request,
-                            context,
-                          ),
-                        ),
-                      )
-                      .toList(),
-                );
-              },
-            ),
-            // Friend previews
-            Card(
-              child: CCPadding.allMedium(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      context.l10n.friends,
-                      style: context.textTheme.titleLarge
-                          ?.copyWith(fontWeight: FontWeight.bold),
-                    ),
-                    CCGap.medium,
-                    BlocBuilder<UserCubit, UserModel>(
-                      builder: (context, user) {
-                        final authUid = user.id;
-                        return StreamBuilder<Iterable<RelationshipModel>>(
-                          stream: relationshipCRUD.friendshipsOf(authUid),
-                          builder: (context, snapshot) {
-                            final friendships = snapshot.data ?? [];
-                            if (snapshot.connectionState ==
-                                    ConnectionState.active &&
-                                friendships.isEmpty) {
-                              return const Text(
-                                // TODO : l10n
-                                "Vous n'avez pas encore d'ami.",
-                              );
-                            }
-                            return Center(
-                              child: Wrap(
-                                runSpacing: CCSize.medium,
-                                children: friendships.map((e) {
-                                  final friendId = e.otherUser(authUid);
-                                  if (friendId == null) return CCGap.zero;
-                                  return FriendPreview(friendId);
-                                }).toList(),
-                              ),
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  ],
+              // Friendship requests from this user
+              StreamBuilder<Iterable<RelationshipModel>>(
+                stream: relationshipCRUD.streamRequestsFrom(
+                  context.read<UserCubit>().state.id,
                 ),
+                builder: (context, snapshot) {
+                  final requests = snapshot.data ?? [];
+                  if (requests.isEmpty) return CCGap.zero;
+        
+                  return SentFriendRequestsCard(requests: requests);
+                },
               ),
-            ),
-            // Friendship requests from this user
-            StreamBuilder<Iterable<RelationshipModel>>(
-              stream: relationshipCRUD.streamRequestsFrom(
-                context.read<UserCubit>().state.id,
-              ),
-              builder: (context, snapshot) {
-                final requests = snapshot.data ?? [];
-                if (requests.isEmpty) return CCGap.zero;
-
-                return SentFriendRequestsCard(requests: requests);
-              },
-            ),
-            CCGap.large,
-          ],
+            ],
+          ),
         ),
       ),
     );

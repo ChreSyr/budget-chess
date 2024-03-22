@@ -69,7 +69,6 @@ class ChallengeCards extends StatelessWidget {
                   friendChallenges: friendChallenges,
                   otherChallenges: otherChallenges,
                 ),
-                CCGap.medium,
               ],
             );
           },
