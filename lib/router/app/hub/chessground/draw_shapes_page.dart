@@ -40,7 +40,7 @@ class _DrawShapesPageState extends State<DrawShapesPage> {
             BoardWidget(
               size: BoardSize(ranks: 8, files: 8),
               settings: BoardSettings(
-                pieceSet: pieceSet,
+                pieceAssets: pieceSet.assets,
                 colorScheme: boardTheme.colors,
                 drawShape: DrawShapeOptions(
                   enable: drawShapes,

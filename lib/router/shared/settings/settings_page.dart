@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/dialog/user/delete_account.dart';
 import 'package:crea_chess/package/atomic_design/modal/modal.dart';
@@ -254,11 +255,27 @@ class BoardSettingsCard extends StatelessWidget {
               leading: PieceWidget(
                 piece: CGPiece.whiteKnight,
                 size: CCSize.large,
-                pieceAssets: boardSettings.pieceSet.assets,
+                pieceAssets: boardSettings.pieceAssets,
               ),
               title: const Text('Jeu de pièces'), // TODO : l10n
-              subtitle: Text(boardSettings.pieceSet.label),
+              subtitle: Text(
+                PieceSet.values
+                        .firstWhereOrNull(
+                          (set) => set.assets == boardSettings.pieceAssets,
+                        )
+                        ?.label ??
+                    '',
+              ),
               onTap: () => showPieceSetModal(context, boardSettingsCubit),
+            ),
+            ListTile(
+              leading: const Icon(Icons.onetwothree),
+              title: const Text('Coordonnées'), // TODO : l10n
+              // subtitle: const Text('a-h, 1-8'),
+              trailing: Switch(
+                value: boardSettings.enableCoordinates,
+                onChanged: boardSettingsCubit.enableCoordinates,
+              ),
             ),
           ],
         ),
@@ -318,7 +335,7 @@ class BoardSettingsCard extends StatelessWidget {
                   .map(
                     (set) => Container(
                       // ListTile.color has a strange bug when scrolling
-                      color: set == cubit.state.pieceSet
+                      color: set.assets == cubit.state.pieceAssets
                           ? context.colorScheme.surfaceVariant
                           : null,
                       child: ListTile(
@@ -331,14 +348,14 @@ class BoardSettingsCard extends StatelessWidget {
                           size: BoardSize(files: 6, ranks: 1),
                           settings: BoardSettings(
                             colorScheme: cubit.state.colorScheme,
-                            pieceSet: set,
+                            pieceAssets: set.assets,
                             enableCoordinates: false,
                           ),
                         ),
                         subtitle: Text(set.label),
                         onTap: () {
                           context.pop();
-                          cubit.setPieceSetScheme(set);
+                          cubit.setPieceAssets(set.assets);
                         },
                       ),
                     ),

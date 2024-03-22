@@ -93,7 +93,7 @@ class _HomePageState extends State<PlayPage> {
             BoardWidget(
               size: BoardSize(ranks: 8, files: 8),
               settings: BoardSettings(
-                pieceSet: pieceSet,
+                pieceAssets: pieceSet.assets,
                 colorScheme: boardTheme.colors,
               ),
               data: BoardData(
