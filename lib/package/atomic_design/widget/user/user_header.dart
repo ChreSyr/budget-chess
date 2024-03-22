@@ -3,16 +3,17 @@ import 'package:crea_chess/package/atomic_design/dialog/relationship/cancel_rela
 import 'package:crea_chess/package/atomic_design/modal/modal.dart';
 import 'package:crea_chess/package/atomic_design/modal/user/photo.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
-import 'package:crea_chess/package/atomic_design/widget/edit_button.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_banner.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/router/app/user/modify_username_page.dart';
 import 'package:crea_chess/router/shared/ccroute.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 
 class UserHeader extends StatelessWidget {
   const UserHeader({
@@ -45,68 +46,41 @@ class UserHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Stack(
-          children: [
-            const SizedBox(height: CCWidgetSize.xxxlarge),
+        SizedBox(
+          height: CCWidgetSize.xxxlarge,
+          child: Stack(
+            children: [
+              // banner
+              UserBanner(banner, editable: editable),
 
-            // banner
-            Stack(
-              children: [
-                UserBanner(banner),
-                if (editable)
-                  Positioned(
-                    right: 0,
-                    bottom: 0,
-                    child:
-                        EditButton(onPressed: () => showBannerModal(context)),
-                  ),
-              ],
-            ),
-
-            // photo
-            Positioned(
-              left: CCSize.small,
-              bottom: 0,
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  UserPhoto(
-                    photo: photo,
-                    radius: CCWidgetSize.xxsmall,
-                    isConnected: isConnected == true && editable == false,
-                    backgroundColor: photo == null ? Colors.red[100] : null,
-                  ),
-                  if (editable)
-                    Positioned(
-                      right: -CCSize.medium,
-                      bottom: 0,
-                      child: EditButton(
-                        onPressed: () => showPhotoModal(context, userId),
-                        priorityHigh: (photo ?? '').isEmpty,
-                      ),
-                    ),
-                ],
+              // photo
+              Positioned(
+                left: CCSize.small,
+                bottom: 0,
+                child: UserPhoto(
+                  photo: photo,
+                  radius: CCWidgetSize.xxsmall,
+                  isConnected: isConnected == true && editable == false,
+                  backgroundColor: photo == null ? Colors.red[100] : null,
+                  onTap: editable
+                      ? () => showMyActionsModal(context, onlyPhotos: true)
+                      : null,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
 
         // username
         ListTile(
           leading: const Icon(Icons.alternate_email),
           title: Text(username ?? ''),
-          trailing: editable
-              ? EditButton(
-                  onPressed: editable
-                      ? () => context.pushRoute(ModifyUsernameRoute.i)
-                      : () => showUserActionsModal(context),
-                  priorityHigh: editable &&
-                      ((username ?? '').isEmpty || username == userId),
-                )
-              : IconButton(
-                  onPressed: () => showUserActionsModal(context),
-                  icon: const Icon(Icons.more_horiz),
-                ),
+          trailing: IconButton(
+            onPressed: () => editable
+                ? showMyActionsModal(context)
+                : showUserActionsModal(context),
+            icon: Icon(editable ? Icons.edit : Icons.more_horiz),
+          ),
         ),
       ],
     );
@@ -151,27 +125,65 @@ class UserHeader extends StatelessWidget {
     );
   }
 
-  void showBannerModal(BuildContext context) {
-    Modal.show(
+  void showMyActionsModal(BuildContext context, {bool onlyPhotos = false}) {
+    return Modal.show(
       context: context,
       sections: [
-        GridView.count(
-          shrinkWrap: true,
-          childAspectRatio: 3,
-          crossAxisCount: 2,
-          crossAxisSpacing: CCSize.large,
-          mainAxisSpacing: CCSize.large,
-          children: bannerNames
-              .map(
-                (e) => GestureDetector(
-                  onTap: () {
-                    userCRUD.userCubit.setBanner(banner: e);
-                    context.pop();
-                  },
-                  child: UserBanner(e),
-                ),
-              )
-              .toList(),
+        if (!kIsWeb)
+          ListTile(
+            leading: const Icon(Icons.photo_camera),
+            title: Text(context.l10n.pictureTake),
+            onTap: () async {
+              context.pop();
+              final photoRef =
+                  await uploadProfilePhoto(ImageSource.camera, userId);
+              if (photoRef == null) return;
+              await userCRUD.userCubit
+                  .setPhoto(photo: await photoRef.getDownloadURL());
+            },
+          ),
+        ListTile(
+          leading: const Icon(Icons.folder),
+          title: Text(context.l10n.pictureImport),
+          onTap: () async {
+            context.pop();
+            final photoRef =
+                await uploadProfilePhoto(ImageSource.gallery, userId);
+            if (photoRef == null) return;
+            await userCRUD.userCubit
+                .setPhoto(photo: await photoRef.getDownloadURL());
+          },
+        ),
+        ListTile(
+          leading: const Icon(Icons.face),
+          title: Text(context.l10n.avatarChoose),
+          onTap: () {
+            context.pop();
+            showAvatarModal(
+              context,
+              (avatarName) =>
+                  userCRUD.userCubit.setPhoto(photo: 'avatar-$avatarName'),
+            );
+          },
+        ),
+        if (!onlyPhotos)
+          ListTile(
+          leading: const Icon(Icons.landscape),
+          title: Text(context.l10n.bannerChoose),
+          onTap: () {
+            context.pop();
+            showBannerModal(context);
+          },
+        ),
+        if (!onlyPhotos)
+          ListTile(
+          leading: const Icon(Icons.edit),
+          title: Text(context.l10n.usernameModify),
+          onTap: () {
+            context
+              ..pop()
+              ..pushRoute(ModifyUsernameRoute.i);
+          },
         ),
       ],
     );
