@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:crea_chess/package/atomic_design/modal/modal.dart';
-import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
+import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -39,27 +39,32 @@ void showAvatarModal(
 ) {
   Modal.show(
     context: context,
+    // isScrollControlled: true,
     sections: [
       Expanded(
-        child: CCPadding.horizontalMedium(
-          child: GridView.count(
-            shrinkWrap: true,
-            crossAxisCount: 4,
-            crossAxisSpacing: CCSize.large,
-            mainAxisSpacing: CCSize.large,
-            children: avatarNames
-                .map(
-                  (e) => GestureDetector(
-                    onTap: () {
-                      onSelect(e);
-                      context.pop();
-                    },
-                    child: CircleAvatar(
-                      backgroundImage: AssetImage('assets/avatar/$e.jpg'),
-                    ),
-                  ),
-                )
-                .toList(),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Wrap(
+                spacing: CCSize.medium,
+                runSpacing: CCSize.medium,
+                children: avatarNames
+                    .map(
+                      (e) => GestureDetector(
+                        onTap: () {
+                          onSelect(e);
+                          context.pop();
+                        },
+                        child: CircleAvatar(
+                          backgroundImage: AssetImage('assets/avatar/$e.jpg'),
+                          radius: CCSize.xlarge,
+                        ),
+                      ),
+                    )
+                    .toList(),
+              ),
+              CCGap.large,
+            ],
           ),
         ),
       ),
