@@ -143,25 +143,25 @@ class BoardColorScheme {
   /// BoardWidget background that defines light and dark square colors
   final Background background;
 
-  factory BoardColorScheme.brown(BoardSize size) => BoardColorScheme.solid(
+  factory BoardColorScheme.brown1(BoardSize size) => BoardColorScheme.solid(
         name: 'Brown 1',
-        boardSize: size,
-        lightSquare: const Color(0xfff0d9b6),
-        darkSquare: const Color(0xffb58863),
-        lastMove: const HighlightDetails(solidColor: Color(0x809cc700)),
-        selected: const HighlightDetails(solidColor: Color(0x6014551e)),
-        validMoves: const Color(0x4014551e),
-        validPremoves: const Color(0x40203085),
-      );
-
-  factory BoardColorScheme.brown2(BoardSize size) => BoardColorScheme.solid(
-        name: 'Brown 2',
         boardSize: size,
         lightSquare: const Color(0xffccb28b),
         darkSquare: const Color(0xff8b5e3f),
         lastMove: const HighlightDetails(solidColor: Color(0x7fffff00)),
         selected: const HighlightDetails(solidColor: Color(0x7fffff00)),
         validMoves: const Color(0x30000000),
+        validPremoves: const Color(0x40203085),
+      );
+
+  factory BoardColorScheme.brown2(BoardSize size) => BoardColorScheme.solid(
+        name: 'Brown 2',
+        boardSize: size,
+        lightSquare: const Color(0xfff0d9b6),
+        darkSquare: const Color(0xffb58863),
+        lastMove: const HighlightDetails(solidColor: Color(0x809cc700)),
+        selected: const HighlightDetails(solidColor: Color(0x6014551e)),
+        validMoves: const Color(0x4014551e),
         validPremoves: const Color(0x40203085),
       );
 

@@ -13,7 +13,7 @@ import 'package:flutter/widgets.dart';
 class BoardSettings {
   const BoardSettings({
     // theme
-    this.colorScheme = BoardColorScheme.brown2,
+    this.colorScheme = BoardColorScheme.brown1,
     this.pieceSet = PieceSet.frenzy,
     // visual settings
     this.enableCoordinates = true,

@@ -20,8 +20,10 @@ import 'package:crea_chess/router/shared/settings/preferences/preferences_cubit.
 import 'package:crea_chess/router/shared/settings/preferences/preferences_state.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:recase/recase.dart';
 
 class SettingsRoute extends CCRoute {
   const SettingsRoute._() : super(name: 'settings', icon: Icons.settings);
@@ -233,6 +235,35 @@ class BoardSettingsCard extends StatelessWidget {
               title: const Text("Thème de l'échiquier"), // TODO : l10n
               subtitle:
                   Text(boardSettings.colorScheme(BoardSize.standard).name),
+              onTap: () => Modal.show(
+                context: context,
+                title: "Thème de l'échiquier",
+                sections: [
+                  Expanded(
+                    child: ListView(
+                      children: BoardTheme.values
+                          .map(
+                            (theme) => ListTile(
+                              title: BoardWidget(
+                                data: const BoardData(
+                                  interactableSide: InteractableSide.none,
+                                  orientation: Side.white,
+                                  fen: '',
+                                ),
+                                size: BoardSize(files: 8, ranks: 1),
+                                settings: BoardSettings(
+                                  colorScheme: theme.colors,
+                                  enableCoordinates: false,
+                                ),
+                              ),
+                              subtitle: Text(theme.name.titleCase),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                ],
+              ),
             ),
             ListTile(
               leading: PieceWidget(
@@ -242,6 +273,36 @@ class BoardSettingsCard extends StatelessWidget {
               ),
               title: const Text('Jeu de pièces'), // TODO : l10n
               subtitle: Text(boardSettings.pieceSet.label),
+              onTap: () => Modal.show(
+                context: context,
+                title: 'Jeu de pièces',
+                sections: [
+                  Expanded(
+                    child: ListView(
+                      children: PieceSet.values
+                          .map(
+                            (set) => ListTile(
+                              title: BoardWidget(
+                                data: const BoardData(
+                                  interactableSide: InteractableSide.none,
+                                  orientation: Side.white,
+                                  fen: 'KqRbNp',
+                                ),
+                                size: BoardSize(files: 6, ranks: 1),
+                                settings: BoardSettings(
+                                  colorScheme: boardSettings.colorScheme,
+                                  pieceSet: set,
+                                  enableCoordinates: false,
+                                ),
+                              ),
+                              subtitle: Text(set.label),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

@@ -14,7 +14,7 @@ enum BoardTheme {
   wood4('Wood4', BoardColorScheme.wood4),
   maple('Maple', BoardColorScheme.maple),
   maple2('Maple 2', BoardColorScheme.maple2),
-  brown('Brown', BoardColorScheme.brown),
+  brown1('Brown', BoardColorScheme.brown1),
   leather('Leather', BoardColorScheme.leather),
   green('Green', BoardColorScheme.green),
   marble('Marble', BoardColorScheme.marble),
