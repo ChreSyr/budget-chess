@@ -173,6 +173,7 @@ class PreferencesSettingsCard extends StatelessWidget {
                               )
                               .toList(),
                         ),
+                        CCGap.large,
                       ],
                     ),
                   ),

@@ -1,6 +1,7 @@
 import 'package:crea_chess/package/atomic_design/modal/modal.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/text_style.dart';
+import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:flutter/material.dart';
 
 class ModalSelectRowData<T> {
@@ -28,17 +29,21 @@ class ModalSelect {
     Modal.show(
       context: context,
       title: title,
-      sections: choices.map(
-        (e) => _ModalSelectRow<T>(
-          title: e.title,
-          titleIcon: e.titleIcon,
-          choices: e.choices,
-          selected: selected,
-          onSelected: onSelected,
-          choiceBuilder: e.choiceBuilder ??
-              (choice) => Text(choice.toString(), style: TextStyleExt.bold),
-        ),
-      ),
+      sections: choices
+              .map<Widget>(
+                (e) => _ModalSelectRow<T>(
+                  title: e.title,
+                  titleIcon: e.titleIcon,
+                  choices: e.choices,
+                  selected: selected,
+                  onSelected: onSelected,
+                  choiceBuilder: e.choiceBuilder ??
+                      (choice) =>
+                          Text(choice.toString(), style: TextStyleExt.bold),
+                ),
+              )
+              .toList() +
+          [CCGap.xlarge],
     );
   }
 }

@@ -11,8 +11,9 @@ class Modal {
     required BuildContext context,
     required Iterable<Widget> sections,
     String? title,
+    bool isScrollControlled = false,
   }) {
-    final content = CCPadding.allMedium(
+    final content = CCPadding.horizontalMedium(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -33,7 +34,6 @@ class Modal {
             CCGap.xlarge,
           ],
           ...sections,
-          CCGap.xlarge,
         ],
       ),
     );
@@ -53,7 +53,7 @@ class Modal {
     } else {
       showModalBottomSheet<void>(
         context: context,
-        isScrollControlled: true,
+        isScrollControlled: isScrollControlled,
         builder: (_) => content,
       );
     }

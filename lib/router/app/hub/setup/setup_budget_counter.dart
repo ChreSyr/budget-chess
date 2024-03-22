@@ -20,6 +20,7 @@ class SetupBudgetCounter extends StatelessWidget {
       onPressed: () => Modal.show(
         context: context,
         title: "Le budget, c'est quoi ?", // TODO : l10n
+        isScrollControlled: true,
         sections: [
           const Text(
             // ignore: lines_longer_than_80_chars
@@ -50,6 +51,7 @@ class SetupBudgetCounter extends StatelessWidget {
               ),
             ),
           ),
+          CCGap.large,
         ],
       ),
       icon: const Icon(Icons.attach_money),

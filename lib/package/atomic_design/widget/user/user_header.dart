@@ -3,6 +3,7 @@ import 'package:crea_chess/package/atomic_design/dialog/relationship/cancel_rela
 import 'package:crea_chess/package/atomic_design/modal/modal.dart';
 import 'package:crea_chess/package/atomic_design/modal/user/photo.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
+import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_banner.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/firebase/export.dart';
@@ -121,6 +122,7 @@ class UserHeader extends StatelessWidget {
             }
           },
         ),
+        CCGap.large,
       ],
     );
   }
@@ -185,6 +187,7 @@ class UserHeader extends StatelessWidget {
               ..pushRoute(ModifyUsernameRoute.i);
           },
         ),
+        CCGap.large,
       ],
     );
   }
