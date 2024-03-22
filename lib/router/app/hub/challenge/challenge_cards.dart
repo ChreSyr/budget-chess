@@ -162,7 +162,7 @@ class AvailibleChallengesCard extends StatelessWidget {
                   ChallengesTables(challenges: friendChallenges),
                 ],
               ),
-              CCGap.medium,
+              if (otherChallenges.isNotEmpty) CCGap.medium,
             ],
             if (otherChallenges.isNotEmpty || friendChallenges.isEmpty)
               Column(
