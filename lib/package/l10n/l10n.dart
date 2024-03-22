@@ -3,7 +3,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 export 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-const defaultLocale = 'en';
+// TODO : from user location
+const defaultLocale = 'fr';
 
 extension AppLocalizationsX on BuildContext {
   AppLocalizations get l10n =>
