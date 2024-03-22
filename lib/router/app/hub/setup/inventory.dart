@@ -50,7 +50,7 @@ class Inventory extends StatelessWidget {
                 (entry) => InventorySlot(
                   width: slotWidth,
                   color: color,
-                  assets: settings.pieceAssets,
+                  assets: settings.pieceSet.assets,
                   role: entry.key,
                   amount: entry.value,
                   isSelected: entry.key == selectedRole,

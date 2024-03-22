@@ -13,6 +13,7 @@ const _boardsPath = 'assets/boards';
 /// more than once.
 class BoardColorScheme {
   const BoardColorScheme._({
+    required this.name,
     required this.boardSize,
     required this.lightSquare,
     required this.darkSquare,
@@ -26,6 +27,7 @@ class BoardColorScheme {
   });
 
   factory BoardColorScheme.image({
+    required String name,
     required BoardSize boardSize,
     required Color lightSquare,
     required Color darkSquare,
@@ -36,6 +38,7 @@ class BoardColorScheme {
     required AssetImage image,
   }) =>
       BoardColorScheme._(
+        name: name,
         boardSize: boardSize,
         lightSquare: lightSquare,
         darkSquare: darkSquare,
@@ -67,6 +70,7 @@ class BoardColorScheme {
       );
 
   factory BoardColorScheme.solid({
+    required String name,
     required BoardSize boardSize,
     required Color lightSquare,
     required Color darkSquare,
@@ -76,6 +80,7 @@ class BoardColorScheme {
     required Color validPremoves,
   }) =>
       BoardColorScheme._(
+        name: name,
         boardSize: boardSize,
         lightSquare: lightSquare,
         darkSquare: darkSquare,
@@ -102,6 +107,9 @@ class BoardColorScheme {
           boardSize: boardSize,
         ),
       );
+
+  /// The name of this board colors / image
+  final String name;
 
   /// Size of the board
   final BoardSize boardSize;
@@ -136,6 +144,7 @@ class BoardColorScheme {
   final Background background;
 
   factory BoardColorScheme.brown(BoardSize size) => BoardColorScheme.solid(
+        name: 'Brown 1',
         boardSize: size,
         lightSquare: const Color(0xfff0d9b6),
         darkSquare: const Color(0xffb58863),
@@ -146,6 +155,7 @@ class BoardColorScheme {
       );
 
   factory BoardColorScheme.brown2(BoardSize size) => BoardColorScheme.solid(
+        name: 'Brown 2',
         boardSize: size,
         lightSquare: const Color(0xffccb28b),
         darkSquare: const Color(0xff8b5e3f),
@@ -156,6 +166,7 @@ class BoardColorScheme {
       );
 
   factory BoardColorScheme.blue(BoardSize size) => BoardColorScheme.solid(
+        name: 'Blue 1',
         boardSize: size,
         lightSquare: const Color(0xffdee3e6),
         darkSquare: const Color(0xff8ca2ad),
@@ -166,6 +177,7 @@ class BoardColorScheme {
       );
 
   factory BoardColorScheme.green(BoardSize size) => BoardColorScheme.solid(
+        name: 'Green',
         boardSize: size,
         lightSquare: const Color(0xffffffdd),
         darkSquare: const Color(0xff86a666),
@@ -179,6 +191,7 @@ class BoardColorScheme {
       );
 
   factory BoardColorScheme.blue2(BoardSize size) => BoardColorScheme.image(
+        name: 'Blue 2',
         boardSize: size,
         lightSquare: const Color(0xff97b2c7),
         darkSquare: const Color(0xff546f82),
@@ -190,6 +203,7 @@ class BoardColorScheme {
       );
 
   factory BoardColorScheme.blue3(BoardSize size) => BoardColorScheme.image(
+        name: 'Blue 3',
         boardSize: size,
         lightSquare: const Color(0xffd9e0e6),
         darkSquare: const Color(0xff315991),
@@ -201,6 +215,7 @@ class BoardColorScheme {
       );
 
   factory BoardColorScheme.blueMarble(BoardSize size) => BoardColorScheme.image(
+        name: 'Blue Marble',
         boardSize: size,
         lightSquare: const Color(0xffeae6dd),
         darkSquare: const Color(0xff7c7f87),
@@ -212,6 +227,7 @@ class BoardColorScheme {
       );
 
   factory BoardColorScheme.canvas(BoardSize size) => BoardColorScheme.image(
+        name: 'Canvas',
         boardSize: size,
         lightSquare: const Color(0xffd7daeb),
         darkSquare: const Color(0xff547388),
@@ -224,6 +240,7 @@ class BoardColorScheme {
 
   factory BoardColorScheme.greenPlastic(BoardSize size) =>
       BoardColorScheme.image(
+        name: 'Green Plastic',
         boardSize: size,
         lightSquare: const Color(0xfff2f9bb),
         darkSquare: const Color(0xff59935d),
@@ -238,6 +255,7 @@ class BoardColorScheme {
       );
 
   factory BoardColorScheme.grey(BoardSize size) => BoardColorScheme.image(
+        name: 'Grey',
         boardSize: size,
         lightSquare: const Color(0xffb8b8b8),
         darkSquare: const Color(0xff7d7d7d),
@@ -249,6 +267,7 @@ class BoardColorScheme {
       );
 
   factory BoardColorScheme.horsey(BoardSize size) => BoardColorScheme.image(
+        name: 'Horsey',
         boardSize: size,
         lightSquare: const Color(0xfff0d9b5),
         darkSquare: const Color(0xff946f51),
@@ -270,6 +289,7 @@ class BoardColorScheme {
       );
 
   factory BoardColorScheme.leather(BoardSize size) => BoardColorScheme.image(
+        name: 'Leather',
         boardSize: size,
         lightSquare: const Color(0xffd1d1c9),
         darkSquare: const Color(0xffc28e16),
@@ -281,6 +301,7 @@ class BoardColorScheme {
       );
 
   factory BoardColorScheme.maple(BoardSize size) => BoardColorScheme.image(
+        name: 'Maple',
         boardSize: size,
         lightSquare: const Color(0xffe8ceab),
         darkSquare: const Color(0xffbc7944),
@@ -292,6 +313,7 @@ class BoardColorScheme {
       );
 
   factory BoardColorScheme.maple2(BoardSize size) => BoardColorScheme.image(
+        name: 'Maple 2',
         boardSize: size,
         lightSquare: const Color(0xffe2c89f),
         darkSquare: const Color(0xff996633),
@@ -303,6 +325,7 @@ class BoardColorScheme {
       );
 
   factory BoardColorScheme.marble(BoardSize size) => BoardColorScheme.image(
+        name: 'Marble',
         boardSize: size,
         lightSquare: const Color(0xff93ab91),
         darkSquare: const Color(0xff4f644e),
@@ -317,6 +340,7 @@ class BoardColorScheme {
       );
 
   factory BoardColorScheme.metal(BoardSize size) => BoardColorScheme.image(
+        name: 'Metal',
         boardSize: size,
         lightSquare: const Color(0xffc9c9c9),
         darkSquare: const Color(0xff727272),
@@ -328,6 +352,7 @@ class BoardColorScheme {
       );
 
   factory BoardColorScheme.newspaper(BoardSize size) => BoardColorScheme.image(
+        name: 'Newspaper',
         boardSize: size,
         lightSquare: const Color(0xffffffff),
         darkSquare: const Color(0xff8d8d8d),
@@ -339,6 +364,7 @@ class BoardColorScheme {
       );
 
   factory BoardColorScheme.olive(BoardSize size) => BoardColorScheme.image(
+        name: 'Olive',
         boardSize: size,
         lightSquare: const Color(0xffb8b19f),
         darkSquare: const Color(0xff6d6655),
@@ -351,6 +377,7 @@ class BoardColorScheme {
 
   factory BoardColorScheme.pinkPyramid(BoardSize size) =>
       BoardColorScheme.image(
+        name: 'Pink Pyramid',
         boardSize: size,
         lightSquare: const Color(0xffe8e9b7),
         darkSquare: const Color(0xffed7272),
@@ -362,6 +389,7 @@ class BoardColorScheme {
       );
 
   factory BoardColorScheme.purpleDiag(BoardSize size) => BoardColorScheme.image(
+        name: 'Purple Diag',
         boardSize: size,
         lightSquare: const Color(0xffe5daf0),
         darkSquare: const Color(0xff957ab0),
@@ -373,6 +401,7 @@ class BoardColorScheme {
       );
 
   factory BoardColorScheme.wood(BoardSize size) => BoardColorScheme.image(
+        name: 'Wood 1',
         boardSize: size,
         lightSquare: const Color(0xffd8a45b),
         darkSquare: const Color(0xff9b4d0f),
@@ -384,6 +413,7 @@ class BoardColorScheme {
       );
 
   factory BoardColorScheme.wood2(BoardSize size) => BoardColorScheme.image(
+        name: 'Wood 2',
         boardSize: size,
         lightSquare: const Color(0xffa38b5d),
         darkSquare: const Color(0xff6c5017),
@@ -395,6 +425,7 @@ class BoardColorScheme {
       );
 
   factory BoardColorScheme.wood3(BoardSize size) => BoardColorScheme.image(
+        name: 'Wood 3',
         boardSize: size,
         lightSquare: const Color(0xffd0ceca),
         darkSquare: const Color(0xff755839),
@@ -406,6 +437,7 @@ class BoardColorScheme {
       );
 
   factory BoardColorScheme.wood4(BoardSize size) => BoardColorScheme.image(
+        name: 'Wood 4',
         boardSize: size,
         lightSquare: const Color(0xffcaaf7d),
         darkSquare: const Color(0xff7b5330),

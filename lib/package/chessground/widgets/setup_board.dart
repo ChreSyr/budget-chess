@@ -119,7 +119,7 @@ class _BoardState extends State<SetupBoard> {
                   child: PieceWidget(
                     piece: entry.value,
                     size: squareSize,
-                    pieceAssets: widget.settings.pieceAssets,
+                    pieceAssets: widget.settings.pieceSet.assets,
                   ),
                 ),
             for (final squareId in dragTargets)
@@ -303,7 +303,7 @@ class _BoardState extends State<SetupBoard> {
           child: PieceWidget(
             piece: piece,
             size: feedbackSize,
-            pieceAssets: widget.settings.pieceAssets,
+            pieceAssets: widget.settings.pieceSet.assets,
           ),
         ),
       );

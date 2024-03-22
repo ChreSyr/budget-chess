@@ -27,8 +27,7 @@ class _HomePageState extends State<PlayPage> {
   CGMove? premove;
   ValidMoves validMoves = IMap(const {});
   Side sideToMove = Side.white;
-  PieceSet? pieceSet;
-  PieceAssets pieceAssets = PieceSet.frenzy.assets;
+  PieceSet pieceSet = PieceSet.frenzy;
   BoardTheme boardTheme = BoardTheme.blue;
   bool immersiveMode = false;
   Mode playMode = Mode.botPlay;
@@ -94,7 +93,7 @@ class _HomePageState extends State<PlayPage> {
             BoardWidget(
               size: BoardSize(ranks: 8, files: 8),
               settings: BoardSettings(
-                pieceAssets: pieceSet?.assets ?? pieceAssets,
+                pieceSet: pieceSet,
                 colorScheme: boardTheme.colors,
               ),
               data: BoardData(
@@ -150,11 +149,11 @@ class _HomePageState extends State<PlayPage> {
                   children: [
                     ElevatedButton(
                       child:
-                          Text('CGPiece set: ${pieceSet?.label ?? 'frenzy'}'),
+                          Text('CGPiece set: ${pieceSet.label}'),
                       onPressed: () => showEnumChoiceDialog<PieceSet>(
                         context,
                         choices: PieceSet.values,
-                        selectedItem: pieceSet ?? PieceSet.merida,
+                        selectedItem: pieceSet,
                         labelBuilder: (t) => Text(t.label),
                         onSelectedItemChanged: (PieceSet? value) {
                           setState(() {

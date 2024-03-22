@@ -7,13 +7,18 @@ import 'package:crea_chess/package/atomic_design/text_style.dart';
 import 'package:crea_chess/package/atomic_design/widget/chip/select_chip.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
+import 'package:crea_chess/package/chessground/export.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/package/l10n/supported_locale.dart';
+import 'package:crea_chess/package/lichess/lichess_icons.dart';
+import 'package:crea_chess/package/unichess/unichess.dart';
+import 'package:crea_chess/router/app/hub/setup/board_settings_cubit.dart';
 import 'package:crea_chess/router/app/user/user_page.dart';
 import 'package:crea_chess/router/shared/ccroute.dart';
 import 'package:crea_chess/router/shared/settings/preferences/preferences_cubit.dart';
 import 'package:crea_chess/router/shared/settings/preferences/preferences_state.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -47,6 +52,8 @@ class SettingsPage extends StatelessWidget {
               AccountPreviewCard(),
               CCGap.medium,
               PreferencesSettingsCard(),
+              CCGap.medium,
+              BoardSettingsCard(),
               CCGap.medium,
               AccountSettingsCard(),
             ],
@@ -202,6 +209,47 @@ class PreferencesSettingsCard extends StatelessWidget {
   }
 }
 
+class BoardSettingsCard extends StatelessWidget {
+  const BoardSettingsCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final boardSettings = context.watch<BoardSettingsCubit>().state;
+    return Card(
+      child: CCPadding.verticalMedium(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            CCPadding.horizontalMedium(
+              child: Text(
+                'Board', // TODO : l10n
+                style: context.textTheme.titleLarge
+                    ?.copyWith(fontWeight: FontWeight.bold),
+              ),
+            ),
+            CCGap.small,
+            ListTile(
+              leading: const Icon(LichessIcons.chess_board),
+              title: const Text("Thème de l'échiquier"), // TODO : l10n
+              subtitle:
+                  Text(boardSettings.colorScheme(BoardSize.standard).name),
+            ),
+            ListTile(
+              leading: PieceWidget(
+                piece: CGPiece.whiteKnight,
+                size: CCSize.large,
+                pieceAssets: boardSettings.pieceSet.assets,
+              ),
+              title: const Text('Jeu de pièces'), // TODO : l10n
+              subtitle: Text(boardSettings.pieceSet.label),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class AccountSettingsCard extends StatelessWidget {
   const AccountSettingsCard({
     super.key,
@@ -210,7 +258,7 @@ class AccountSettingsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final auth = context.watch<AuthNotVerifiedCubit>().state;
-        if (auth == null) return const SizedBox.shrink();
+    if (auth == null) return const SizedBox.shrink();
 
     return Card(
       child: CCPadding.verticalMedium(

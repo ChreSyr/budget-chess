@@ -190,7 +190,7 @@ class _BoardState extends State<BoardWidget> {
                   duration: widget.settings.animationDuration,
                   piece: entry.value,
                   size: squareSize,
-                  pieceAssets: widget.settings.pieceAssets,
+                  pieceAssets: widget.settings.pieceSet.assets,
                   blindfoldMode: widget.settings.blindfoldMode,
                   onComplete: () {
                     fadingPieces.remove(entry.key);
@@ -208,7 +208,7 @@ class _BoardState extends State<BoardWidget> {
                   child: PieceWidget(
                     piece: entry.value,
                     size: squareSize,
-                    pieceAssets: widget.settings.pieceAssets,
+                    pieceAssets: widget.settings.pieceSet.assets,
                     blindfoldMode: widget.settings.blindfoldMode,
                   ),
                 ),
@@ -229,7 +229,7 @@ class _BoardState extends State<BoardWidget> {
                   child: PieceWidget(
                     piece: entry.value.$1.piece,
                     size: squareSize,
-                    pieceAssets: widget.settings.pieceAssets,
+                    pieceAssets: widget.settings.pieceSet.assets,
                     blindfoldMode: widget.settings.blindfoldMode,
                   ),
                 ),
@@ -302,7 +302,7 @@ class _BoardState extends State<BoardWidget> {
                 board,
               if (_promotionMove != null && widget.data.sideToMove != null)
                 PromotionSelector(
-                  pieceAssets: widget.settings.pieceAssets,
+                  pieceAssets: widget.settings.pieceSet.assets,
                   move: _promotionMove!,
                   boardSize: widget.size,
                   squareSize: squareSize,
@@ -505,7 +505,7 @@ class _BoardState extends State<BoardWidget> {
           child: PieceWidget(
             piece: piece,
             size: feedbackSize,
-            pieceAssets: widget.settings.pieceAssets,
+            pieceAssets: widget.settings.pieceSet.assets,
             blindfoldMode: widget.settings.blindfoldMode,
           ),
         ),

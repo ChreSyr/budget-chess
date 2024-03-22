@@ -1,6 +1,5 @@
 import 'package:crea_chess/package/chessground/board_color_scheme.dart';
 import 'package:crea_chess/package/chessground/draw_shape_options.dart';
-import 'package:crea_chess/package/chessground/models.dart';
 import 'package:crea_chess/package/chessground/piece_set.dart';
 import 'package:crea_chess/package/unichess/unichess.dart';
 import 'package:flutter/widgets.dart';
@@ -15,7 +14,7 @@ class BoardSettings {
   const BoardSettings({
     // theme
     this.colorScheme = BoardColorScheme.brown2,
-    this.pieceAssets = PieceSet.frenzyPieceSet,
+    this.pieceSet = PieceSet.frenzy,
     // visual settings
     this.enableCoordinates = true,
     this.animationDuration = const Duration(milliseconds: 250),
@@ -38,7 +37,7 @@ class BoardSettings {
   final BoardColorScheme Function(BoardSize) colorScheme;
 
   /// CGPiece set
-  final PieceAssets pieceAssets;
+  final PieceSet pieceSet;
 
   /// Whether to show board coordinates
   final bool enableCoordinates;
@@ -78,7 +77,7 @@ class BoardSettings {
 
   BoardSettings copyWith({
     BoardColorScheme Function(BoardSize)? colorScheme,
-    PieceAssets? pieceAssets,
+    PieceSet? pieceSet,
     bool? enableCoordinates,
     Duration? animationDuration,
     bool? showLastMove,
@@ -93,7 +92,7 @@ class BoardSettings {
   }) {
     return BoardSettings(
       colorScheme: colorScheme ?? this.colorScheme,
-      pieceAssets: pieceAssets ?? this.pieceAssets,
+      pieceSet: pieceSet ?? this.pieceSet,
       enableCoordinates: enableCoordinates ?? this.enableCoordinates,
       animationDuration: animationDuration ?? this.animationDuration,
       showLastMove: showLastMove ?? this.showLastMove,
