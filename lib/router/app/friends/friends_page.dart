@@ -16,7 +16,6 @@ import 'package:crea_chess/router/app/user/user_page.dart';
 import 'package:crea_chess/router/shared/app_bar_actions.dart';
 import 'package:crea_chess/router/shared/ccroute.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -56,6 +55,35 @@ class FriendRequestsCubit
   }
 }
 
+class FriendshipsCubit
+    extends AuthUidListenerCubit<Iterable<RelationshipModel>> {
+  FriendshipsCubit() : super([]);
+
+  String? _authUid;
+  StreamSubscription<Iterable<RelationshipModel>>? _friendshipsStream;
+
+  @override
+  void authUidChanged(String? authUid) {
+    _authUid = authUid;
+
+    _friendshipsStream?.cancel();
+
+    if (authUid == null) return emit([]);
+
+    _friendshipsStream = relationshipCRUD.friendshipsOf(authUid).listen(emit);
+  }
+
+  Iterable<String> get friendIds => _authUid == null
+      ? []
+      : state.map((e) => e.otherUser(_authUid!)).whereType<String>();
+
+  @override
+  Future<void> close() {
+    _friendshipsStream?.cancel();
+    return super.close();
+  }
+}
+
 class FriendsPage extends StatelessWidget {
   const FriendsPage({super.key});
 
@@ -63,113 +91,82 @@ class FriendsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(actions: getSideRoutesAppBarActions(context)),
-      backgroundColor: context.colorScheme.surfaceVariant,
-      body: SingleChildScrollView(
-        child: CCPadding.allLarge(
-          child: Column(
-            children: [
-              // Search bar
-              Card(
-                clipBehavior: Clip.hardEdge,
-                child: InkWell(
-                  onTap: () => searchFriend(context),
-                  child: CCPadding.allMedium(
-                    child: Row(
-                      children: [
-                        Text(
-                          // TODO : l10n
-                          'Rechercher un joueur',
-                          style: context.textTheme.bodyLarge,
-                        ),
-                        const Expanded(child: CCGap.medium),
-                        const Icon(Icons.search),
-                      ],
+    return BlocProvider(
+      create: (context) => FriendshipsCubit(),
+      child: Scaffold(
+        backgroundColor: context.colorScheme.surfaceVariant,
+        appBar: AppBar(actions: getSideRoutesAppBarActions(context)),
+        body: const SingleChildScrollView(child: FriendsFeed()),
+      ),
+    );
+  }
+}
+
+class FriendsFeed extends StatelessWidget {
+  const FriendsFeed({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return CCPadding.allLarge(
+      child: Column(
+        children: [
+          // Search bar
+          Card(
+            clipBehavior: Clip.hardEdge,
+            child: InkWell(
+              onTap: () => searchFriend(context),
+              child: CCPadding.allMedium(
+                child: Row(
+                  children: [
+                    Text(
+                      // TODO : l10n
+                      'Rechercher un joueur',
+                      style: context.textTheme.bodyLarge,
                     ),
-                  ),
+                    const Expanded(child: CCGap.medium),
+                    const Icon(Icons.search),
+                  ],
                 ),
               ),
-              CCGap.medium,
-              // Friendship requests
-              BlocBuilder<FriendRequestsCubit, Iterable<RelationshipModel>>(
-                builder: (context, requests) {
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: requests
-                        .map(
-                          (request) => Padding(
-                            padding: const EdgeInsets.only(bottom: CCSize.medium),
-                            child: FriendRequestCard(
-                              request,
-                              context,
-                            ),
-                          ),
-                        )
-                        .toList(),
-                  );
-                },
-              ),
-              // Friend previews
-              Card(
-                child: CCPadding.allMedium(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        context.l10n.friends,
-                        style: context.textTheme.titleLarge
-                            ?.copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      CCGap.medium,
-                      BlocBuilder<UserCubit, UserModel>(
-                        builder: (context, user) {
-                          final authUid = user.id;
-                          return StreamBuilder<Iterable<RelationshipModel>>(
-                            stream: relationshipCRUD.friendshipsOf(authUid),
-                            builder: (context, snapshot) {
-                              final friendships = snapshot.data ?? [];
-                              if (snapshot.connectionState ==
-                                      ConnectionState.active &&
-                                  friendships.isEmpty) {
-                                return const Text(
-                                  // TODO : l10n
-                                  "Vous n'avez pas encore d'ami.",
-                                );
-                              }
-                              return Center(
-                                child: Wrap(
-                                  runSpacing: CCSize.medium,
-                                  children: friendships.map((e) {
-                                    final friendId = e.otherUser(authUid);
-                                    if (friendId == null) return CCGap.zero;
-                                    return FriendPreview(friendId);
-                                  }).toList(),
-                                ),
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              // Friendship requests from this user
-              StreamBuilder<Iterable<RelationshipModel>>(
-                stream: relationshipCRUD.streamRequestsFrom(
-                  context.read<UserCubit>().state.id,
-                ),
-                builder: (context, snapshot) {
-                  final requests = snapshot.data ?? [];
-                  if (requests.isEmpty) return CCGap.zero;
-        
-                  return SentFriendRequestsCard(requests: requests);
-                },
-              ),
-            ],
+            ),
           ),
-        ),
+          CCGap.medium,
+          // Friendship requests
+          BlocBuilder<FriendRequestsCubit, Iterable<RelationshipModel>>(
+            builder: (context, requests) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: requests
+                    .map(
+                      (request) => Padding(
+                        padding: const EdgeInsets.only(
+                          bottom: CCSize.medium,
+                        ),
+                        child: FriendRequestCard(
+                          request,
+                          context,
+                        ),
+                      ),
+                    )
+                    .toList(),
+              );
+            },
+          ),
+          // Friend previews
+          const FriendsCard(),
+          // Friendship requests from this user
+          StreamBuilder<Iterable<RelationshipModel>>(
+            stream: relationshipCRUD.streamRequestsFrom(
+              context.read<UserCubit>().state.id,
+            ),
+            builder: (context, snapshot) {
+              final requests = snapshot.data ?? [];
+              if (requests.isEmpty) return CCGap.zero;
+
+              return SentFriendRequestsCard(requests: requests);
+            },
+          ),
+        ],
       ),
     );
   }
@@ -261,6 +258,44 @@ class FriendRequestCard extends StatelessWidget {
                 ),
               ],
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class FriendsCard extends StatelessWidget {
+  const FriendsCard({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final friendshipsCubit = context.watch<FriendshipsCubit>();
+    final friendIds = friendshipsCubit.friendIds;
+
+    return Card(
+      child: CCPadding.allMedium(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              context.l10n.friends,
+              style: context.textTheme.titleLarge
+                  ?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            CCGap.medium,
+            if (friendIds.isEmpty)
+              // TODO : l10n
+              const Text("Vous n'avez pas encore d'ami.")
+            else
+              Center(
+                child: Wrap(
+                  runSpacing: CCSize.medium,
+                  children: friendIds.map(FriendPreview.new).toList(),
+                ),
+              ),
           ],
         ),
       ),
