@@ -7,6 +7,7 @@ import 'package:crea_chess/package/atomic_design/widget/body_template.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/atomic_design/widget/top_progress_indicator.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
+import 'package:crea_chess/package/firebase/authentication/authentication_crud.dart';
 import 'package:crea_chess/package/firebase/firestore/user/user_cubit.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/router/init/photo/photo_form.dart';
@@ -35,6 +36,7 @@ class InitPhotoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final initialPhoto = context.read<UserCubit>().state.photo ??
+        context.read<AuthNotVerifiedCubit>().state?.photoURL ?? 
         'avatar-${avatarNames[Random().nextInt(avatarNames.length)]}';
     final photoFormCubit = PhotoFormCubit(initialPhoto);
 

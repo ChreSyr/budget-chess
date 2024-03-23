@@ -3,6 +3,7 @@ import 'package:crea_chess/package/atomic_design/snack_bar.dart';
 import 'package:crea_chess/package/atomic_design/widget/body_template.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/atomic_design/widget/top_progress_indicator.dart';
+import 'package:crea_chess/package/firebase/authentication/authentication_crud.dart';
 import 'package:crea_chess/package/firebase/firestore/user/user_cubit.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/router/init/photo/init_photo_page.dart';
@@ -29,7 +30,11 @@ class InitUsernamePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final initialName = context.read<UserCubit>().state.username;
+    var initialName = context.read<UserCubit>().state.username;
+    if (initialName.isEmpty) {
+      initialName =
+          context.read<AuthNotVerifiedCubit>().state?.displayName ?? '';
+    }
     final usernameFormCubit = UsernameFormCubit(initialName);
     final textController = TextEditingController(text: initialName);
 
