@@ -1,17 +1,13 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:crea_chess/package/chat/flutter_chat_types/flutter_chat_types.dart'
-    as types;
 import 'package:crea_chess/package/chat/flutter_chat_ui/models/date_header.dart';
 import 'package:crea_chess/package/chat/flutter_chat_ui/models/emoji_enlargement_behavior.dart';
-import 'package:crea_chess/package/chat/flutter_chat_ui/models/message_spacer.dart';
-import 'package:crea_chess/package/chat/flutter_chat_ui/models/preview_image.dart';
 import 'package:crea_chess/package/chat/flutter_chat_ui/models/unread_header_data.dart';
 import 'package:crea_chess/package/chat/message/message_model.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:flutter/foundation.dart'
-    show TargetPlatform, defaultTargetPlatform, kIsWeb;
+    show TargetPlatform, defaultTargetPlatform;
 import 'package:intl/intl.dart';
 
 /// Returns text representation of a provided bytes value (e.g. 1kB, 1GB).
@@ -106,7 +102,6 @@ List<Object> calculateChatMessages(
   required int dateHeaderThreshold,
   required int groupMessagesThreshold,
   required bool showUserNames,
-  String Function(DateTime)? customDateHeaderText,
   DateFormat? dateFormat,
   bool dateIsUtc = false,
   String? dateLocale,
@@ -114,7 +109,6 @@ List<Object> calculateChatMessages(
   DateFormat? timeFormat,
 }) {
   final chatMessages = <Object>[];
-  final gallery = <PreviewImage>[];
 
   var shouldShowName = false;
 
@@ -145,14 +139,10 @@ List<Object> calculateChatMessages(
 
       if (isFirstInGroup) {
         shouldShowName = false;
-        if (message.type == types.MessageType.text) {
-          showName = true;
-        } else {
-          shouldShowName = true;
-        }
+        showName = true;
       }
 
-      if (message.type == types.MessageType.text && shouldShowName) {
+      if (shouldShowName) {
         showName = true;
         shouldShowName = false;
       }
@@ -186,14 +176,12 @@ List<Object> calculateChatMessages(
         0,
         DateHeader(
           dateTime: message.createdAt!,
-          text: customDateHeaderText != null
-              ? customDateHeaderText(message.createdAt!)
-              : getVerboseDateTimeRepresentation(
-                  message.createdAt!,
-                  dateFormat: dateFormat,
-                  dateLocale: dateLocale,
-                  timeFormat: timeFormat,
-                ),
+          text: getVerboseDateTimeRepresentation(
+            message.createdAt!,
+            dateFormat: dateFormat,
+            dateLocale: dateLocale,
+            timeFormat: timeFormat,
+          ),
         ),
       );
     }
@@ -202,32 +190,20 @@ List<Object> calculateChatMessages(
       'message': message,
       'nextMessageInGroup': nextMessageInGroup,
       'showName': notMyMessage && showUserNames && showName,
-      'showStatus': message.showStatus ?? true,
+      'showStatus': message.showStatus,
     });
-
-    if (!nextMessageInGroup && message.type != types.MessageType.system) {
-      chatMessages.insert(
-        0,
-        MessageSpacer(
-          height: 12,
-          id: message.id ?? '',
-        ),
-      );
-    }
 
     if (nextMessageDifferentDay || nextMessageDateThreshold) {
       chatMessages.insert(
         0,
         DateHeader(
           dateTime: nextMessage!.createdAt!,
-          text: customDateHeaderText != null
-              ? customDateHeaderText(nextMessage.createdAt!)
-              : getVerboseDateTimeRepresentation(
-                  nextMessage.createdAt!,
-                  dateFormat: dateFormat,
-                  dateLocale: dateLocale,
-                  timeFormat: timeFormat,
-                ),
+          text: getVerboseDateTimeRepresentation(
+            nextMessage.createdAt!,
+            dateFormat: dateFormat,
+            dateLocale: dateLocale,
+            timeFormat: timeFormat,
+          ),
         ),
       );
     }
@@ -241,19 +217,7 @@ List<Object> calculateChatMessages(
         ),
       );
     }
-
-    if (message.type == types.MessageType.image) {
-      if (kIsWeb) {
-        if ((message.uri ?? '').startsWith('http') ||
-            (message.uri ?? '').startsWith('blob')) {
-          gallery
-              .add(PreviewImage(id: message.id ?? '', uri: message.uri ?? ''));
-        }
-      } else {
-        gallery.add(PreviewImage(id: message.id ?? '', uri: message.uri ?? ''));
-      }
-    }
   }
 
-  return [chatMessages, gallery];
+  return chatMessages;
 }

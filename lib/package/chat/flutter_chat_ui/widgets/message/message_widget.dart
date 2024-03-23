@@ -1,11 +1,6 @@
-import 'package:crea_chess/package/chat/flutter_chat_types/flutter_chat_types.dart'
-    as types;
-import 'package:crea_chess/package/chat/flutter_chat_ui/conditional/conditional.dart';
 import 'package:crea_chess/package/chat/flutter_chat_ui/models/bubble_rtl_alignment.dart';
 import 'package:crea_chess/package/chat/flutter_chat_ui/models/emoji_enlargement_behavior.dart';
 import 'package:crea_chess/package/chat/flutter_chat_ui/util.dart';
-import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/message/file_message.dart';
-import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/message/image_message.dart';
 import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/message/message_status_icon.dart';
 import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/message/text_message.dart';
 import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/message/user_avatar.dart';
@@ -32,18 +27,9 @@ class MessageWidget extends StatelessWidget {
     required this.showStatus,
     required this.showUserAvatars,
     required this.textMessageOptions,
-    required this.usePreviewData,
     super.key,
-    this.audioMessageBuilder,
-    this.avatarBuilder,
     this.bubbleBuilder,
     this.bubbleRtlAlignment,
-    this.customMessageBuilder,
-    this.customStatusBuilder,
-    this.fileMessageBuilder,
-    this.imageHeaders,
-    this.imageMessageBuilder,
-    this.imageProviderBuilder,
     this.nameBuilder,
     this.onAvatarTap,
     this.onMessageDoubleTap,
@@ -52,19 +38,7 @@ class MessageWidget extends StatelessWidget {
     this.onMessageStatusTap,
     this.onMessageTap,
     this.onMessageVisibilityChanged,
-    this.onPreviewDataFetched,
-    this.textMessageBuilder,
-    this.userAgent,
-    this.videoMessageBuilder,
   });
-
-  /// Build an audio message inside predefined bubble.
-  final Widget Function(MessageModel, {required int messageWidth})?
-      audioMessageBuilder;
-
-  /// This is to allow custom user avatar builder
-  /// By using this we can fetch newest user info based on id.
-  final Widget Function(UserModel author)? avatarBuilder;
 
   /// Customize the default bubble using this function. `child` is a content
   /// you should render inside your bubble, `message` is a current message
@@ -81,39 +55,13 @@ class MessageWidget extends StatelessWidget {
   /// for the LTR languages.
   final BubbleRtlAlignment? bubbleRtlAlignment;
 
-  /// Build a custom message inside predefined bubble.
-  final Widget Function(MessageModel, {required int messageWidth})?
-      customMessageBuilder;
-
-  /// Build a custom status widgets.
-  final Widget Function(MessageModel message, {required BuildContext context})?
-      customStatusBuilder;
-
   /// Controls the enlargement behavior of the emojis in the
   /// [types.TextMessage].
   /// Defaults to [EmojiEnlargementBehavior.multi].
   final EmojiEnlargementBehavior emojiEnlargementBehavior;
 
-  /// Build a file message inside predefined bubble.
-  final Widget Function(MessageModel, {required int messageWidth})?
-      fileMessageBuilder;
-
   /// Hide background for messages containing only emojis.
   final bool hideBackgroundOnEmojiMessages;
-
-  /// See [Chat.imageHeaders].
-  final Map<String, String>? imageHeaders;
-
-  /// Build an image message inside predefined bubble.
-  final Widget Function(MessageModel, {required int messageWidth})?
-      imageMessageBuilder;
-
-  /// See [Chat.imageProviderBuilder].
-  final ImageProvider Function({
-    required String uri,
-    required Map<String, String>? imageHeaders,
-    required Conditional conditional,
-  })? imageProviderBuilder;
 
   /// Any message type.
   final MessageModel message;
@@ -147,9 +95,6 @@ class MessageWidget extends StatelessWidget {
   // ignore: avoid_positional_boolean_parameters
   final void Function(MessageModel, bool visible)? onMessageVisibilityChanged;
 
-  /// See [TextMessage.onPreviewDataFetched].
-  final void Function(MessageModel, types.PreviewData)? onPreviewDataFetched;
-
   /// Rounds border of the message to visually group messages together.
   final bool roundBorder;
 
@@ -165,25 +110,8 @@ class MessageWidget extends StatelessWidget {
   /// Show user avatars for received messages. Useful for a group chat.
   final bool showUserAvatars;
 
-  /// Build a text message inside predefined bubble.
-  final Widget Function(
-    MessageModel, {
-    required int messageWidth,
-    required bool showName,
-  })? textMessageBuilder;
-
   /// See [TextMessage.options].
   final TextMessageOptions textMessageOptions;
-
-  /// See [TextMessage.usePreviewData].
-  final bool usePreviewData;
-
-  /// See [TextMessage.userAgent].
-  final String? userAgent;
-
-  /// Build an audio message inside predefined bubble.
-  final Widget Function(MessageModel, {required int messageWidth})?
-      videoMessageBuilder;
 
   Widget _avatarBuilder() => const SizedBox(width: 40);
   // Widget _avatarBuilder() => showAvatar
@@ -213,8 +141,7 @@ class MessageWidget extends StatelessWidget {
               : Container(
                   decoration: BoxDecoration(
                     borderRadius: borderRadius,
-                    color: !currentUserIsAuthor ||
-                            message.type == types.MessageType.image
+                    color: !currentUserIsAuthor
                         ? InheritedChatTheme.of(context).theme.secondaryColor
                         : InheritedChatTheme.of(context).theme.primaryColor,
                   ),
@@ -225,61 +152,15 @@ class MessageWidget extends StatelessWidget {
                 );
 
   Widget _messageBuilder() {
-    switch (message.type) {
-      case types.MessageType.audio:
-        final audioMessage = message;
-        return audioMessageBuilder != null
-            ? audioMessageBuilder!(audioMessage, messageWidth: messageWidth)
-            : const SizedBox();
-      case types.MessageType.custom:
-        final customMessage = message;
-        return customMessageBuilder != null
-            ? customMessageBuilder!(customMessage, messageWidth: messageWidth)
-            : const SizedBox();
-      case types.MessageType.file:
-        final fileMessage = message;
-        return fileMessageBuilder != null
-            ? fileMessageBuilder!(fileMessage, messageWidth: messageWidth)
-            : FileMessage(message: fileMessage);
-      case types.MessageType.image:
-        final imageMessage = message;
-        return imageMessageBuilder != null
-            ? imageMessageBuilder!(imageMessage, messageWidth: messageWidth)
-            : ImageMessage(
-                imageHeaders: imageHeaders,
-                imageProviderBuilder: imageProviderBuilder,
-                message: imageMessage,
-                messageWidth: messageWidth,
-              );
-      case types.MessageType.text:
-        final textMessage = message;
-        return textMessageBuilder != null
-            ? textMessageBuilder!(
-                textMessage,
-                messageWidth: messageWidth,
-                showName: showName,
-              )
-            : TextMessage(
-                emojiEnlargementBehavior: emojiEnlargementBehavior,
-                hideBackgroundOnEmojiMessages: hideBackgroundOnEmojiMessages,
-                message: textMessage,
-                nameBuilder: nameBuilder,
-                onPreviewDataFetched: onPreviewDataFetched,
-                options: textMessageOptions,
-                showName: showName,
-                usePreviewData: usePreviewData,
-                userAgent: userAgent,
-              );
-      case types.MessageType.video:
-        final videoMessage = message;
-        return videoMessageBuilder != null
-            ? videoMessageBuilder!(videoMessage, messageWidth: messageWidth)
-            : const SizedBox();
-      case types.MessageType.system:
-      case types.MessageType.unsupported:
-      case null:
-        return const SizedBox();
-    }
+    final textMessage = message;
+    return TextMessage(
+      emojiEnlargementBehavior: emojiEnlargementBehavior,
+      hideBackgroundOnEmojiMessages: hideBackgroundOnEmojiMessages,
+      message: textMessage,
+      nameBuilder: nameBuilder,
+      options: textMessageOptions,
+      showName: showName,
+    );
   }
 
   @override
@@ -289,7 +170,6 @@ class MessageWidget extends StatelessWidget {
     final currentUserIsAuthor = user.id == message.authorId;
     final enlargeEmojis =
         emojiEnlargementBehavior != EmojiEnlargementBehavior.never &&
-            message.type == types.MessageType.text &&
             isConsistsOfEmojis(emojiEnlargementBehavior, message);
     final messageBorderRadius =
         InheritedChatTheme.of(context).theme.messageBorderRadius;
@@ -355,7 +235,7 @@ class MessageWidget extends StatelessWidget {
                   onTap: () => onMessageTap?.call(context, message),
                   child: onMessageVisibilityChanged != null
                       ? VisibilityDetector(
-                          key: Key(message.id ?? ''),
+                          key: Key(message.id),
                           onVisibilityChanged: (visibilityInfo) =>
                               onMessageVisibilityChanged!(
                             message,
@@ -386,9 +266,7 @@ class MessageWidget extends StatelessWidget {
                       onLongPress: () =>
                           onMessageStatusLongPress?.call(context, message),
                       onTap: () => onMessageStatusTap?.call(context, message),
-                      child: customStatusBuilder != null
-                          ? customStatusBuilder!(message, context: context)
-                          : MessageStatusIcon(status: message.status),
+                      child: MessageStatusIcon(status: message.status),
                     )
                   : null,
             ),

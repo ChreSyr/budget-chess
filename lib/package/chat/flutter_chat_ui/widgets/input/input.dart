@@ -1,9 +1,6 @@
-import 'package:crea_chess/package/chat/flutter_chat_types/flutter_chat_types.dart'
-    as types;
 import 'package:crea_chess/package/chat/flutter_chat_ui/models/input_clear_mode.dart';
 import 'package:crea_chess/package/chat/flutter_chat_ui/models/send_button_visibility_mode.dart';
 import 'package:crea_chess/package/chat/flutter_chat_ui/util.dart';
-import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/input/attachment_button.dart';
 import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/input/input_text_field_controller.dart';
 import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/input/send_button.dart';
 import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/state/inherited_chat_theme.dart';
@@ -19,23 +16,12 @@ class Input extends StatefulWidget {
   const Input({
     required this.onSendPressed,
     super.key,
-    this.isAttachmentUploading,
-    this.onAttachmentPressed,
     this.options = const InputOptions(),
   });
 
-  /// Whether attachment is uploading. Will replace attachment button with a
-  /// [CircularProgressIndicator]. Since we don't have libraries for
-  /// managing media in dependencies we have no way of knowing if
-  /// something is uploading so you need to set this manually.
-  final bool? isAttachmentUploading;
-
-  /// See [AttachmentButton.onPressed].
-  final VoidCallback? onAttachmentPressed;
-
   /// Will be called on [SendButton] tap. Has [types.PartialText] which can
   /// be transformed to [types.TextMessage] and added to the messages list.
-  final void Function(types.PartialText) onSendPressed;
+  final void Function(String) onSendPressed;
 
   /// Customisation options for the [Input].
   final InputOptions options;
@@ -96,9 +82,8 @@ class _InputState extends State<Input> {
 
   void _handleSendPressed() {
     final trimmedText = _textController.text.trim();
-    if (trimmedText != '') {
-      final partialText = types.PartialText(text: trimmedText);
-      widget.onSendPressed(partialText);
+    if (trimmedText.isNotEmpty) {
+      widget.onSendPressed(trimmedText);
 
       if (widget.options.inputClearMode == InputClearMode.always) {
         _textController.clear();
@@ -134,12 +119,7 @@ class _InputState extends State<Input> {
         .inputPadding
         .copyWith(left: 0, right: 0)
         .add(
-          EdgeInsets.fromLTRB(
-            widget.onAttachmentPressed != null ? 0 : 24,
-            0,
-            _sendButtonVisible ? 0 : 24,
-            0,
-          ),
+          EdgeInsets.fromLTRB(24, 0, _sendButtonVisible ? 0 : 24, 0),
         );
 
     return Focus(
@@ -159,12 +139,6 @@ class _InputState extends State<Input> {
             child: Row(
               textDirection: TextDirection.ltr,
               children: [
-                if (widget.onAttachmentPressed != null)
-                  AttachmentButton(
-                    isLoading: widget.isAttachmentUploading ?? false,
-                    onPressed: widget.onAttachmentPressed,
-                    padding: buttonPadding,
-                  ),
                 Expanded(
                   child: Padding(
                     padding: textPadding,

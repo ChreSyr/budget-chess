@@ -20,26 +20,15 @@ MessageModel _$MessageModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$MessageModel {
-  String? get id => throw _privateConstructorUsedError;
+  String get id => throw _privateConstructorUsedError;
   @TimestampToDateTimeConverter()
   DateTime? get createdAt => throw _privateConstructorUsedError;
   @TimestampToDateTimeConverter()
   DateTime? get updatedAt => throw _privateConstructorUsedError;
   String? get authorId => throw _privateConstructorUsedError;
   String? get text => throw _privateConstructorUsedError;
-  Map<String, dynamic>? get metadata => throw _privateConstructorUsedError;
-  PreviewData? get previewData => throw _privateConstructorUsedError;
-  String? get remoteId =>
-      throw _privateConstructorUsedError; // MessageModel? repliedMessage,
-  String? get roomId => throw _privateConstructorUsedError;
-  bool? get showStatus => throw _privateConstructorUsedError;
+  bool get showStatus => throw _privateConstructorUsedError;
   MessageStatus? get status => throw _privateConstructorUsedError;
-  MessageType? get type => throw _privateConstructorUsedError;
-  String? get mediaName => throw _privateConstructorUsedError;
-  num? get mediaSize => throw _privateConstructorUsedError;
-  double? get mediaHeight => throw _privateConstructorUsedError;
-  double? get mediaWidth => throw _privateConstructorUsedError;
-  String? get uri => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -54,23 +43,13 @@ abstract class $MessageModelCopyWith<$Res> {
       _$MessageModelCopyWithImpl<$Res, MessageModel>;
   @useResult
   $Res call(
-      {String? id,
+      {String id,
       @TimestampToDateTimeConverter() DateTime? createdAt,
       @TimestampToDateTimeConverter() DateTime? updatedAt,
       String? authorId,
       String? text,
-      Map<String, dynamic>? metadata,
-      PreviewData? previewData,
-      String? remoteId,
-      String? roomId,
-      bool? showStatus,
-      MessageStatus? status,
-      MessageType? type,
-      String? mediaName,
-      num? mediaSize,
-      double? mediaHeight,
-      double? mediaWidth,
-      String? uri});
+      bool showStatus,
+      MessageStatus? status});
 }
 
 /// @nodoc
@@ -86,29 +65,19 @@ class _$MessageModelCopyWithImpl<$Res, $Val extends MessageModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = freezed,
+    Object? id = null,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
     Object? authorId = freezed,
     Object? text = freezed,
-    Object? metadata = freezed,
-    Object? previewData = freezed,
-    Object? remoteId = freezed,
-    Object? roomId = freezed,
-    Object? showStatus = freezed,
+    Object? showStatus = null,
     Object? status = freezed,
-    Object? type = freezed,
-    Object? mediaName = freezed,
-    Object? mediaSize = freezed,
-    Object? mediaHeight = freezed,
-    Object? mediaWidth = freezed,
-    Object? uri = freezed,
   }) {
     return _then(_value.copyWith(
-      id: freezed == id
+      id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -125,54 +94,14 @@ class _$MessageModelCopyWithImpl<$Res, $Val extends MessageModel>
           ? _value.text
           : text // ignore: cast_nullable_to_non_nullable
               as String?,
-      metadata: freezed == metadata
-          ? _value.metadata
-          : metadata // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>?,
-      previewData: freezed == previewData
-          ? _value.previewData
-          : previewData // ignore: cast_nullable_to_non_nullable
-              as PreviewData?,
-      remoteId: freezed == remoteId
-          ? _value.remoteId
-          : remoteId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      roomId: freezed == roomId
-          ? _value.roomId
-          : roomId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      showStatus: freezed == showStatus
+      showStatus: null == showStatus
           ? _value.showStatus
           : showStatus // ignore: cast_nullable_to_non_nullable
-              as bool?,
+              as bool,
       status: freezed == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as MessageStatus?,
-      type: freezed == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as MessageType?,
-      mediaName: freezed == mediaName
-          ? _value.mediaName
-          : mediaName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      mediaSize: freezed == mediaSize
-          ? _value.mediaSize
-          : mediaSize // ignore: cast_nullable_to_non_nullable
-              as num?,
-      mediaHeight: freezed == mediaHeight
-          ? _value.mediaHeight
-          : mediaHeight // ignore: cast_nullable_to_non_nullable
-              as double?,
-      mediaWidth: freezed == mediaWidth
-          ? _value.mediaWidth
-          : mediaWidth // ignore: cast_nullable_to_non_nullable
-              as double?,
-      uri: freezed == uri
-          ? _value.uri
-          : uri // ignore: cast_nullable_to_non_nullable
-              as String?,
     ) as $Val);
   }
 }
@@ -186,23 +115,13 @@ abstract class _$$MessageModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String? id,
+      {String id,
       @TimestampToDateTimeConverter() DateTime? createdAt,
       @TimestampToDateTimeConverter() DateTime? updatedAt,
       String? authorId,
       String? text,
-      Map<String, dynamic>? metadata,
-      PreviewData? previewData,
-      String? remoteId,
-      String? roomId,
-      bool? showStatus,
-      MessageStatus? status,
-      MessageType? type,
-      String? mediaName,
-      num? mediaSize,
-      double? mediaHeight,
-      double? mediaWidth,
-      String? uri});
+      bool showStatus,
+      MessageStatus? status});
 }
 
 /// @nodoc
@@ -216,29 +135,19 @@ class __$$MessageModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = freezed,
+    Object? id = null,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
     Object? authorId = freezed,
     Object? text = freezed,
-    Object? metadata = freezed,
-    Object? previewData = freezed,
-    Object? remoteId = freezed,
-    Object? roomId = freezed,
-    Object? showStatus = freezed,
+    Object? showStatus = null,
     Object? status = freezed,
-    Object? type = freezed,
-    Object? mediaName = freezed,
-    Object? mediaSize = freezed,
-    Object? mediaHeight = freezed,
-    Object? mediaWidth = freezed,
-    Object? uri = freezed,
   }) {
     return _then(_$MessageModelImpl(
-      id: freezed == id
+      id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -255,54 +164,14 @@ class __$$MessageModelImplCopyWithImpl<$Res>
           ? _value.text
           : text // ignore: cast_nullable_to_non_nullable
               as String?,
-      metadata: freezed == metadata
-          ? _value._metadata
-          : metadata // ignore: cast_nullable_to_non_nullable
-              as Map<String, dynamic>?,
-      previewData: freezed == previewData
-          ? _value.previewData
-          : previewData // ignore: cast_nullable_to_non_nullable
-              as PreviewData?,
-      remoteId: freezed == remoteId
-          ? _value.remoteId
-          : remoteId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      roomId: freezed == roomId
-          ? _value.roomId
-          : roomId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      showStatus: freezed == showStatus
+      showStatus: null == showStatus
           ? _value.showStatus
           : showStatus // ignore: cast_nullable_to_non_nullable
-              as bool?,
+              as bool,
       status: freezed == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as MessageStatus?,
-      type: freezed == type
-          ? _value.type
-          : type // ignore: cast_nullable_to_non_nullable
-              as MessageType?,
-      mediaName: freezed == mediaName
-          ? _value.mediaName
-          : mediaName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      mediaSize: freezed == mediaSize
-          ? _value.mediaSize
-          : mediaSize // ignore: cast_nullable_to_non_nullable
-              as num?,
-      mediaHeight: freezed == mediaHeight
-          ? _value.mediaHeight
-          : mediaHeight // ignore: cast_nullable_to_non_nullable
-              as double?,
-      mediaWidth: freezed == mediaWidth
-          ? _value.mediaWidth
-          : mediaWidth // ignore: cast_nullable_to_non_nullable
-              as double?,
-      uri: freezed == uri
-          ? _value.uri
-          : uri // ignore: cast_nullable_to_non_nullable
-              as String?,
     ));
   }
 }
@@ -311,31 +180,20 @@ class __$$MessageModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$MessageModelImpl extends _MessageModel {
   _$MessageModelImpl(
-      {this.id,
+      {required this.id,
       @TimestampToDateTimeConverter() this.createdAt,
       @TimestampToDateTimeConverter() this.updatedAt,
       this.authorId,
       this.text,
-      final Map<String, dynamic>? metadata,
-      this.previewData,
-      this.remoteId,
-      this.roomId,
-      this.showStatus,
-      this.status,
-      this.type,
-      this.mediaName,
-      this.mediaSize,
-      this.mediaHeight,
-      this.mediaWidth,
-      this.uri})
-      : _metadata = metadata,
-        super._();
+      this.showStatus = true,
+      this.status})
+      : super._();
 
   factory _$MessageModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$MessageModelImplFromJson(json);
 
   @override
-  final String? id;
+  final String id;
   @override
   @TimestampToDateTimeConverter()
   final DateTime? createdAt;
@@ -346,43 +204,15 @@ class _$MessageModelImpl extends _MessageModel {
   final String? authorId;
   @override
   final String? text;
-  final Map<String, dynamic>? _metadata;
   @override
-  Map<String, dynamic>? get metadata {
-    final value = _metadata;
-    if (value == null) return null;
-    if (_metadata is EqualUnmodifiableMapView) return _metadata;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(value);
-  }
-
-  @override
-  final PreviewData? previewData;
-  @override
-  final String? remoteId;
-// MessageModel? repliedMessage,
-  @override
-  final String? roomId;
-  @override
-  final bool? showStatus;
+  @JsonKey()
+  final bool showStatus;
   @override
   final MessageStatus? status;
-  @override
-  final MessageType? type;
-  @override
-  final String? mediaName;
-  @override
-  final num? mediaSize;
-  @override
-  final double? mediaHeight;
-  @override
-  final double? mediaWidth;
-  @override
-  final String? uri;
 
   @override
   String toString() {
-    return 'MessageModel(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, authorId: $authorId, text: $text, metadata: $metadata, previewData: $previewData, remoteId: $remoteId, roomId: $roomId, showStatus: $showStatus, status: $status, type: $type, mediaName: $mediaName, mediaSize: $mediaSize, mediaHeight: $mediaHeight, mediaWidth: $mediaWidth, uri: $uri)';
+    return 'MessageModel(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, authorId: $authorId, text: $text, showStatus: $showStatus, status: $status)';
   }
 
   @override
@@ -398,48 +228,15 @@ class _$MessageModelImpl extends _MessageModel {
             (identical(other.authorId, authorId) ||
                 other.authorId == authorId) &&
             (identical(other.text, text) || other.text == text) &&
-            const DeepCollectionEquality().equals(other._metadata, _metadata) &&
-            (identical(other.previewData, previewData) ||
-                other.previewData == previewData) &&
-            (identical(other.remoteId, remoteId) ||
-                other.remoteId == remoteId) &&
-            (identical(other.roomId, roomId) || other.roomId == roomId) &&
             (identical(other.showStatus, showStatus) ||
                 other.showStatus == showStatus) &&
-            (identical(other.status, status) || other.status == status) &&
-            (identical(other.type, type) || other.type == type) &&
-            (identical(other.mediaName, mediaName) ||
-                other.mediaName == mediaName) &&
-            (identical(other.mediaSize, mediaSize) ||
-                other.mediaSize == mediaSize) &&
-            (identical(other.mediaHeight, mediaHeight) ||
-                other.mediaHeight == mediaHeight) &&
-            (identical(other.mediaWidth, mediaWidth) ||
-                other.mediaWidth == mediaWidth) &&
-            (identical(other.uri, uri) || other.uri == uri));
+            (identical(other.status, status) || other.status == status));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      createdAt,
-      updatedAt,
-      authorId,
-      text,
-      const DeepCollectionEquality().hash(_metadata),
-      previewData,
-      remoteId,
-      roomId,
-      showStatus,
-      status,
-      type,
-      mediaName,
-      mediaSize,
-      mediaHeight,
-      mediaWidth,
-      uri);
+  int get hashCode => Object.hash(runtimeType, id, createdAt, updatedAt,
+      authorId, text, showStatus, status);
 
   @JsonKey(ignore: true)
   @override
@@ -457,30 +254,20 @@ class _$MessageModelImpl extends _MessageModel {
 
 abstract class _MessageModel extends MessageModel {
   factory _MessageModel(
-      {final String? id,
+      {required final String id,
       @TimestampToDateTimeConverter() final DateTime? createdAt,
       @TimestampToDateTimeConverter() final DateTime? updatedAt,
       final String? authorId,
       final String? text,
-      final Map<String, dynamic>? metadata,
-      final PreviewData? previewData,
-      final String? remoteId,
-      final String? roomId,
-      final bool? showStatus,
-      final MessageStatus? status,
-      final MessageType? type,
-      final String? mediaName,
-      final num? mediaSize,
-      final double? mediaHeight,
-      final double? mediaWidth,
-      final String? uri}) = _$MessageModelImpl;
+      final bool showStatus,
+      final MessageStatus? status}) = _$MessageModelImpl;
   _MessageModel._() : super._();
 
   factory _MessageModel.fromJson(Map<String, dynamic> json) =
       _$MessageModelImpl.fromJson;
 
   @override
-  String? get id;
+  String get id;
   @override
   @TimestampToDateTimeConverter()
   DateTime? get createdAt;
@@ -492,29 +279,9 @@ abstract class _MessageModel extends MessageModel {
   @override
   String? get text;
   @override
-  Map<String, dynamic>? get metadata;
-  @override
-  PreviewData? get previewData;
-  @override
-  String? get remoteId;
-  @override // MessageModel? repliedMessage,
-  String? get roomId;
-  @override
-  bool? get showStatus;
+  bool get showStatus;
   @override
   MessageStatus? get status;
-  @override
-  MessageType? get type;
-  @override
-  String? get mediaName;
-  @override
-  num? get mediaSize;
-  @override
-  double? get mediaHeight;
-  @override
-  double? get mediaWidth;
-  @override
-  String? get uri;
   @override
   @JsonKey(ignore: true)
   _$$MessageModelImplCopyWith<_$MessageModelImpl> get copyWith =>

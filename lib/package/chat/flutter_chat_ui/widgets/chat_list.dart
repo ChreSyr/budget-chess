@@ -201,7 +201,9 @@ class _ChatListState extends State<ChatList>
 
   T? _mapMessage<T>(Object maybeMessage, T Function(MessageModel) f) {
     if (maybeMessage is Map<String, Object>) {
-      return f((maybeMessage['message'] ?? MessageModel()) as MessageModel);
+      return f(
+        (maybeMessage['message'] ?? MessageModel(id: '')) as MessageModel,
+      );
     }
     return null;
   }

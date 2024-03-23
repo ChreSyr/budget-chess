@@ -1,12 +1,9 @@
-import 'package:crea_chess/package/chat/flutter_chat_types/flutter_chat_types.dart'
-    as types;
 import 'package:crea_chess/package/chat/flutter_chat_ui/models/emoji_enlargement_behavior.dart';
 import 'package:crea_chess/package/chat/flutter_chat_ui/models/matchers.dart';
 import 'package:crea_chess/package/chat/flutter_chat_ui/models/pattern_style.dart';
 import 'package:crea_chess/package/chat/flutter_chat_ui/util.dart';
 import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/state/inherited_chat_theme.dart';
 import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/state/inherited_user.dart';
-import 'package:crea_chess/package/chat/flutter_link_previewer/flutter_link_previewer.dart';
 import 'package:crea_chess/package/chat/message/message_model.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:flutter/material.dart';
@@ -20,11 +17,8 @@ class TextMessage extends StatelessWidget {
     required this.hideBackgroundOnEmojiMessages,
     required this.message,
     required this.showName,
-    required this.usePreviewData,
     this.nameBuilder,
-    this.onPreviewDataFetched,
     this.options = const TextMessageOptions(),
-    this.userAgent,
     super.key,
   });
 
@@ -41,65 +35,11 @@ class TextMessage extends StatelessWidget {
   /// By using this we can fetch newest user info based on id.
   final Widget Function(UserModel)? nameBuilder;
 
-  /// See [LinkPreview.onPreviewDataFetched].
-  final void Function(MessageModel, types.PreviewData)? onPreviewDataFetched;
-
   /// Customisation options for the [TextMessage].
   final TextMessageOptions options;
 
   /// Show user name for the received message. Useful for a group chat.
   final bool showName;
-
-  /// Enables link (URL) preview.
-  final bool usePreviewData;
-
-  /// User agent to fetch preview data with.
-  final String? userAgent;
-
-  Widget _linkPreview(
-    UserModel user,
-    double width,
-    BuildContext context,
-  ) {
-    final linkDescriptionTextStyle = user.id == message.authorId
-        ? InheritedChatTheme.of(context)
-            .theme
-            .sentMessageLinkDescriptionTextStyle
-        : InheritedChatTheme.of(context)
-            .theme
-            .receivedMessageLinkDescriptionTextStyle;
-    final linkTitleTextStyle = user.id == message.authorId
-        ? InheritedChatTheme.of(context).theme.sentMessageLinkTitleTextStyle
-        : InheritedChatTheme.of(context)
-            .theme
-            .receivedMessageLinkTitleTextStyle;
-
-    return LinkPreview(
-      enableAnimation: true,
-      metadataTextStyle: linkDescriptionTextStyle,
-      metadataTitleStyle: linkTitleTextStyle,
-      onLinkPressed: options.onLinkPressed,
-      onPreviewDataFetched: _onPreviewDataFetched,
-      openOnPreviewImageTap: options.openOnPreviewImageTap,
-      openOnPreviewTitleTap: options.openOnPreviewTitleTap,
-      padding: EdgeInsets.symmetric(
-        horizontal:
-            InheritedChatTheme.of(context).theme.messageInsetsHorizontal,
-        vertical: InheritedChatTheme.of(context).theme.messageInsetsVertical,
-      ),
-      previewData: message.previewData,
-      text: message.text ?? '',
-      textWidget: _textWidgetBuilder(user, context, false),
-      userAgent: userAgent,
-      width: width,
-    );
-  }
-
-  void _onPreviewDataFetched(types.PreviewData previewData) {
-    if (message.previewData == null) {
-      onPreviewDataFetched?.call(message, previewData);
-    }
-  }
 
   Widget _textWidgetBuilder(
     UserModel user,
@@ -154,16 +94,6 @@ class TextMessage extends StatelessWidget {
             isConsistsOfEmojis(emojiEnlargementBehavior, message);
     final theme = InheritedChatTheme.of(context).theme;
     final user = InheritedUser.of(context).user;
-    final width = MediaQuery.of(context).size.width;
-
-    if (usePreviewData && onPreviewDataFetched != null) {
-      final urlRegexp = RegExp(regexLink, caseSensitive: false);
-      final matches = urlRegexp.allMatches(message.text ?? '');
-
-      if (matches.isNotEmpty) {
-        return _linkPreview(user, width, context);
-      }
-    }
 
     return Container(
       margin: EdgeInsets.symmetric(
@@ -218,19 +148,6 @@ class TextMessageText extends StatelessWidget {
   Widget build(BuildContext context) => ParsedText(
         parse: [
           ...options.matchers,
-          mailToMatcher(
-            style: bodyLinkTextStyle ??
-                bodyTextStyle.copyWith(
-                  decoration: TextDecoration.underline,
-                ),
-          ),
-          urlMatcher(
-            onLinkPressed: options.onLinkPressed,
-            style: bodyLinkTextStyle ??
-                bodyTextStyle.copyWith(
-                  decoration: TextDecoration.underline,
-                ),
-          ),
           boldMatcher(
             style: boldTextStyle ??
                 bodyTextStyle.merge(PatternStyle.bold.textStyle),
