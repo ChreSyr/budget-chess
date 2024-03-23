@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:badges/badges.dart' as badges;
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/collection.dart';
 import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/dialog/relationship/block_user.dart';
 import 'package:crea_chess/package/atomic_design/dialog/relationship/cancel_friend_request.dart';
@@ -88,8 +90,21 @@ class FriendshipsCubit
       : state!.map((e) => e.otherUser(_authUid!)).whereType<String>();
 }
 
-class FriendSuggestionsCubit extends Cubit<List<RelationshipModel>> {
+class FriendSuggestionsCubit extends Cubit<Iterable<RelationshipModel>> {
   FriendSuggestionsCubit() : super([]);
+
+  // This list helps to keep suggested relations in this cubit even after the
+  // user decided to send a friend request, which would make this relation not
+  // matching the filters anymore
+  Iterable<String>? suggestionIds;
+  StreamSubscription<Iterable<RelationshipModel>>? _existingRelationsStream;
+
+  static final suggestableStatus = [
+    null,
+    UserInRelationshipStatus.none,
+    UserInRelationshipStatus.cancels,
+    UserInRelationshipStatus.isCanceled,
+  ];
 
   Future<void> buildSuggestions(
     String authUid,
@@ -109,23 +124,52 @@ class FriendSuggestionsCubit extends Cubit<List<RelationshipModel>> {
       }
     }
 
-    final relationsWithFOF = await Future.wait(
-      friendsOfFriends.map(
-        (userId) async {
-          final relationId = relationshipCRUD.getId(userId, authUid);
-          return await relationshipCRUD.read(documentId: relationId) ??
-              RelationshipModel(
-                id: relationId,
-                users: {
-                  authUid: UserInRelationshipStatus.none,
-                  userId: UserInRelationshipStatus.none,
-                },
-              );
-        },
-      ),
-    );
+    final suggestedRelationIds =
+        friendsOfFriends.map((e) => relationshipCRUD.getId(e, authUid));
 
-    emit(relationsWithFOF);
+    suggestionIds = null;
+    await _existingRelationsStream?.cancel();
+    _existingRelationsStream = relationshipCRUD
+        .streamFiltered(
+      filter: (collection) => collection.where(
+        FieldPath.documentId,
+        whereIn: suggestedRelationIds,
+      ),
+    )
+        .listen((existingRelations) {
+      final existingRelationIds = existingRelations.map((e) => e.id);
+      final noRelationIds =
+          suggestedRelationIds.whereNot(existingRelationIds.contains);
+
+      final suggestableExistingRelations = suggestionIds == null
+          ? existingRelations.where(
+              (e) => suggestableStatus.contains(e.statusOf(authUid)),
+            )
+          : existingRelations.where((e) => suggestionIds!.contains(e.id));
+
+      final suggestions = suggestableExistingRelations.followedBy(
+        noRelationIds.map(
+          (relationId) {
+            final userId = relationId.replaceAll(authUid, '');
+            return RelationshipModel(
+              id: relationId,
+              users: {
+                authUid: UserInRelationshipStatus.none,
+                userId: UserInRelationshipStatus.none,
+              },
+            );
+          },
+        ),
+      );
+      suggestionIds ??= suggestions.map((e) => e.id);
+      emit(suggestions);
+    });
+  }
+
+  @override
+  Future<void> close() {
+    _existingRelationsStream?.cancel();
+    return super.close();
   }
 }
 
@@ -458,7 +502,10 @@ class FriendSuggestionsCard extends StatelessWidget {
                             asIcon: true,
                           ),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: FriendSuggestionsCubit.suggestableStatus
+                                    .contains(relation.statusOf(authUid))
+                                ? () {}
+                                : null,
                             icon: const Icon(Icons.close),
                           ),
                         ],
@@ -512,7 +559,7 @@ class SentFriendRequestsCard extends StatelessWidget {
                     final requested = snapshot.data;
                     if (requested == null) return CCGap.zero;
                     return ListTile(
-                      contentPadding: const EdgeInsets.only(left: CCSize.small),
+                      contentPadding: EdgeInsets.zero,
                       leading: UserPhoto(
                         photo: requested.photo,
                         isConnected: requested.isConnected,
