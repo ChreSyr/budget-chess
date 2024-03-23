@@ -14,7 +14,7 @@ import 'package:go_router/go_router.dart';
 // LATER: App Check
 
 class UserRoute extends CCRoute {
-  const UserRoute._() : super(name: ':usernameOrId');
+  const UserRoute._() : super(name: 'user', path: ':usernameOrId');
 
   /// Instance
   static const i = UserRoute._();
