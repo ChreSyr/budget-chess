@@ -112,7 +112,16 @@ class _RelationshipCRUD extends CollectionCRUD<RelationshipModel> {
     );
   }
 
-  Stream<Iterable<RelationshipModel>> friendshipsOf(String? userId) {
+  Future<Iterable<RelationshipModel>> readFriendshipsOf(String? userId) {
+    return readFiltered(
+      filter: (collection) => collection.where(
+        'users.$userId',
+        isEqualTo: UserInRelationshipStatus.open.name,
+      ),
+    );
+  }
+
+  Stream<Iterable<RelationshipModel>> streamFriendshipsOf(String? userId) {
     return streamFiltered(
       filter: (collection) => collection.where(
         'users.$userId',

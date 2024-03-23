@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crea_chess/package/atomic_design/dialog/ok_dialog.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
-import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/text_style.dart';
+import 'package:crea_chess/package/atomic_design/widget/button.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
@@ -18,7 +18,7 @@ class ChallengeCards extends StatelessWidget {
     final authUid = context.watch<UserCubit>().state.id;
 
     return StreamBuilder<Iterable<RelationshipModel>>(
-      stream: relationshipCRUD.friendshipsOf(authUid),
+      stream: relationshipCRUD.streamFriendshipsOf(authUid),
       builder: (context, snapshot) {
         final friendships = snapshot.data;
         final friendIds = (friendships == null)
@@ -102,20 +102,13 @@ class MyChallengesCard extends StatelessWidget {
                 ),
                 CCGap.small,
                 if (challenges.length > 1)
-                  SizedBox(
-                    height: CCSize.large,
-                    width: CCSize.large,
-                    child: IconButton(
-                      onPressed: () => showOkDialog(
-                        pageContext: context,
-                        title: null,
-                        content: Text(context.l10n.tipChallengesRemoved),
-                      ),
-                      icon: const Icon(Icons.info_outline),
-                      style: IconButton.styleFrom(
-                        padding: EdgeInsets.zero,
-                      ),
+                  CompactIconButton(
+                    onPressed: () => showOkDialog(
+                      pageContext: context,
+                      title: null,
+                      content: Text(context.l10n.tipChallengesRemoved),
                     ),
+                    icon: const Icon(Icons.info_outline),
                   ),
               ],
             ),

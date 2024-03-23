@@ -7,6 +7,7 @@ import 'package:crea_chess/package/atomic_design/dialog/relationship/cancel_frie
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/text_style.dart';
+import 'package:crea_chess/package/atomic_design/widget/button.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/firebase/export.dart';
@@ -70,7 +71,8 @@ class FriendshipsCubit
 
     if (authUid == null) return emit([]);
 
-    _friendshipsStream = relationshipCRUD.friendshipsOf(authUid).listen(emit);
+    _friendshipsStream =
+        relationshipCRUD.streamFriendshipsOf(authUid).listen(emit);
   }
 
   @override
@@ -85,6 +87,47 @@ class FriendshipsCubit
       : state!.map((e) => e.otherUser(_authUid!)).whereType<String>();
 }
 
+class FriendSuggestionsCubit extends Cubit<List<RelationshipModel>> {
+  FriendSuggestionsCubit() : super([]);
+
+  Future<void> buildSuggestions(
+    String authUid,
+    Iterable<String> friendIds,
+  ) async {
+    final friendsOfFriends = <String>[];
+
+    for (final friendId in friendIds) {
+      final friendshipsOfFriend =
+          await relationshipCRUD.readFriendshipsOf(friendId);
+      for (final friendshipOfFriend in friendshipsOfFriend) {
+        final friendOfFriend = friendshipOfFriend.otherUser(friendId);
+        if (friendOfFriend == null) continue;
+        if (friendOfFriend == authUid) continue;
+        if (friendIds.contains(friendOfFriend)) continue;
+        friendsOfFriends.add(friendOfFriend);
+      }
+    }
+
+    final relationsWithFOF = await Future.wait(
+      friendsOfFriends.map(
+        (userId) async {
+          final relationId = relationshipCRUD.getId(userId, authUid);
+          return await relationshipCRUD.read(documentId: relationId) ??
+              RelationshipModel(
+                id: relationId,
+                users: {
+                  authUid: UserInRelationshipStatus.none,
+                  userId: UserInRelationshipStatus.none,
+                },
+              );
+        },
+      ),
+    );
+
+    emit(relationsWithFOF);
+  }
+}
+
 class FriendsPage extends StatelessWidget {
   const FriendsPage({super.key});
 
@@ -92,8 +135,11 @@ class FriendsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => FriendshipsCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => FriendshipsCubit()),
+        BlocProvider(create: (context) => FriendSuggestionsCubit()),
+      ],
       child: Scaffold(
         backgroundColor: context.colorScheme.surfaceVariant,
         appBar: AppBar(actions: getSideRoutesAppBarActions(context)),
@@ -112,6 +158,7 @@ class FriendsFeed extends StatelessWidget {
 
     return CCPadding.allLarge(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           // Search bar
           Card(
@@ -155,6 +202,11 @@ class FriendsFeed extends StatelessWidget {
           ),
           // Friends
           if (!friendshipsCubit.isLoading) FriendsCard(friendshipsCubit),
+          if (friendshipsCubit.state?.isNotEmpty == true)
+            const Padding(
+              padding: EdgeInsets.only(top: CCSize.medium),
+              child: FriendSuggestionsCard(),
+            ),
           // Friendship requests from this user
           StreamBuilder<Iterable<RelationshipModel>>(
             stream: relationshipCRUD.streamRequestsFrom(
@@ -338,6 +390,86 @@ class FriendPreview extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class FriendSuggestionsCard extends StatelessWidget {
+  const FriendSuggestionsCard({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final suggestionsCubit = context.watch<FriendSuggestionsCubit>();
+    final authUid = context.read<UserCubit>().state.id;
+
+    return Card(
+      child: CCPadding.allMedium(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    'Suggestions', // TODO : l10n
+                    style: context.textTheme.titleLarge
+                        ?.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                ),
+                CCGap.small,
+                CompactIconButton(
+                  onPressed: () => suggestionsCubit.buildSuggestions(
+                    authUid,
+                    context.read<FriendshipsCubit>().friendIds,
+                  ),
+                  icon: const Icon(Icons.refresh),
+                ),
+              ],
+            ),
+            CCGap.medium,
+            ...suggestionsCubit.state.map(
+              (relation) {
+                final userId = relation.otherUser(authUid);
+                if (userId == null) return CCGap.zero;
+
+                return StreamBuilder<UserModel?>(
+                  stream: userCRUD.stream(documentId: userId),
+                  builder: (context, snapshot) {
+                    final user = snapshot.data;
+                    if (user == null) return CCGap.zero;
+
+                    return ListTile(
+                      leading: UserPhoto(
+                        photo: user.photo,
+                        isConnected: user.isConnected,
+                        onTap: () => UserRoute.pushId(userId: userId),
+                      ),
+                      title: Text(user.username),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          RelationshipIconButton(
+                            authUid: authUid,
+                            userId: userId,
+                            relationship: relation,
+                          ),
+                          IconButton(
+                            onPressed: () {},
+                            icon: const Icon(Icons.close),
+                          ),
+                        ],
+                      ),
+                      contentPadding: EdgeInsets.zero,
+                    );
+                  },
+                );
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

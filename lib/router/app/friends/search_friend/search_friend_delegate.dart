@@ -104,15 +104,27 @@ class FriendSearchDelegate extends SearchDelegate<String?> {
   @override
   Widget buildResults(BuildContext context) {
     context.read<QueriedUsersCubit>().setQuery(query);
+    final authUid = context.read<UserCubit>().state.id;
 
     return BlocBuilder<QueriedUsersCubit, Iterable<UserModel>>(
       builder: (context, users) {
-        // if (users.isEmpty) return const LinearProgressIndicator();
-        // if (query.isEmpty) return Container();
         return ListView(
           children: users
               .where((user) => user != currentUser)
-              .map<Widget>((user) => getUserTile(context, user))
+              .map<Widget>(
+                (user) => ListTile(
+                  leading: UserPhoto(
+                    photo: user.photo,
+                    isConnected: user.isConnected,
+                  ),
+                  title: Text(user.username),
+                  trailing: RelationshipIconButton.fromId(
+                    authUid: authUid,
+                    userId: user.id,
+                  ),
+                  onTap: () => UserRoute.pushId(userId: user.id),
+                ),
+              )
               .toList(),
         );
       },
@@ -125,85 +137,101 @@ class FriendSearchDelegate extends SearchDelegate<String?> {
   }
 }
 
-Widget getUserTile(BuildContext context, UserModel user) {
-  final authUid = context.read<UserCubit>().state.id;
-  final userId = user.id;
-  final relationshipId = relationshipCRUD.getId(authUid, userId);
+class RelationshipIconButton extends StatelessWidget {
+  const RelationshipIconButton({
+    required this.authUid,
+    required this.userId,
+    required this.relationship,
+    super.key,
+  });
 
-  return StreamBuilder<RelationshipModel?>(
-    stream: relationshipCRUD.stream(documentId: relationshipId),
-    builder: (context, snapshot) {
-      Widget getTrailing() {
-        final relationship = snapshot.data;
-        final sendRequestButton = IconButton(
-          icon: const Icon(Icons.person_add),
-          onPressed: () {
-            relationshipCRUD.sendFriendRequest(
-              fromUserId: authUid,
-              toUserId: userId,
-            );
-            snackBarNotify(context, context.l10n.friendRequestSent);
-          },
-        );
-
-        if (relationship == null) return sendRequestButton;
-
-        switch (relationship.statusOf(authUid)) {
-          case UserInRelationshipStatus.requests:
-            return IconButton(
-              onPressed: () => showCancelFriendRequestDialog(
-                context,
-                userId,
-              ),
-              icon: const Icon(Icons.send),
-            );
-          case UserInRelationshipStatus.isRequested:
-            return SimpleBadge(
-              child: IconButton(
-                onPressed: () => showAnswerFriendRequestDialog(
-                  context,
-                  relationship.requester,
-                ),
-                icon: const Icon(Icons.mail),
-              ),
-            );
-          case UserInRelationshipStatus.open:
-            return const IconButton(
-              icon: Icon(Icons.check), // TODO : change
-              onPressed: null,
-            );
-          case UserInRelationshipStatus.isBlocked:
-            return const IconButton(
-              icon: Icon(Icons.block),
-              onPressed: null,
-            );
-          case UserInRelationshipStatus.blocks:
-            return IconButton(
-              icon: const Icon(Icons.block),
-              onPressed: () => showUnblockUserDialog(context, userId),
-            );
-          case null:
-          case UserInRelationshipStatus.none:
-          case UserInRelationshipStatus.refuses:
-          case UserInRelationshipStatus.isRefused:
-          case UserInRelationshipStatus.cancels:
-          case UserInRelationshipStatus.isCanceled:
-            return relationship.canSendFriendRequest(authUid)
-                ? sendRequestButton
-                : CCGap.zero;
-          case UserInRelationshipStatus.hasDeletedAccount:
-            return CCGap.zero;
+  static Widget fromId({
+    required String authUid,
+    required String userId,
+  }) {
+    return StreamBuilder<RelationshipModel?>(
+      stream: relationshipCRUD.stream(
+        documentId: relationshipCRUD.getId(authUid, userId),
+      ),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.active) {
+          return CCGap.zero;
         }
-      }
+        return RelationshipIconButton(
+          authUid: authUid,
+          userId: userId,
+          relationship: snapshot.data,
+        );
+      },
+    );
+  }
 
-      final trailing = getTrailing();
+  final String authUid;
+  final String userId;
+  final RelationshipModel? relationship;
 
-      return ListTile(
-        leading: UserPhoto(photo: user.photo, isConnected: user.isConnected),
-        title: Text(user.username),
-        trailing: trailing,
-        onTap: () => UserRoute.pushId(userId: user.id),
-      );
-    },
-  );
+  @override
+  Widget build(BuildContext context) {
+    final sendRequestButton = IconButton(
+      icon: const Icon(Icons.person_add),
+      onPressed: () {
+        relationshipCRUD.sendFriendRequest(
+          fromUserId: authUid,
+          toUserId: userId,
+        );
+        snackBarNotify(context, context.l10n.friendRequestSent);
+      },
+    );
+    if (relationship == null) return sendRequestButton;
+    
+    // Just a security
+    if (relationship?.otherUser(authUid) != userId) return CCGap.zero;
+
+    switch (relationship!.statusOf(authUid)) {
+      case UserInRelationshipStatus.requests:
+        return IconButton(
+          onPressed: () => showCancelFriendRequestDialog(
+            context,
+            userId,
+          ),
+          icon: const Icon(Icons.send),
+        );
+      case UserInRelationshipStatus.isRequested:
+        return SimpleBadge(
+          child: IconButton(
+            onPressed: () => showAnswerFriendRequestDialog(
+              context,
+              relationship!.requester,
+            ),
+            icon: const Icon(Icons.mail),
+          ),
+        );
+      case UserInRelationshipStatus.open:
+        return const IconButton(
+          icon: Icon(Icons.check), // TODO : change
+          onPressed: null,
+        );
+      case UserInRelationshipStatus.isBlocked:
+        return const IconButton(
+          icon: Icon(Icons.block),
+          onPressed: null,
+        );
+      case UserInRelationshipStatus.blocks:
+        return IconButton(
+          icon: const Icon(Icons.block),
+          onPressed: () => showUnblockUserDialog(context, userId),
+        );
+      case null:
+      case UserInRelationshipStatus.none:
+      case UserInRelationshipStatus.refuses:
+      case UserInRelationshipStatus.isRefused:
+      case UserInRelationshipStatus.cancels:
+      case UserInRelationshipStatus.isCanceled:
+        return relationship!.canSendFriendRequest(authUid)
+            ? sendRequestButton
+            : CCGap.zero;
+      case UserInRelationshipStatus.hasDeletedAccount:
+        return CCGap.zero;
+    }
+  }
 }

@@ -75,7 +75,7 @@ class UserSectionFriends extends UserSection {
     return SingleChildScrollView(
       child: CCPadding.allMedium(
         child: StreamBuilder<Iterable<RelationshipModel>>(
-          stream: relationshipCRUD.friendshipsOf(userId),
+          stream: relationshipCRUD.streamFriendshipsOf(userId),
           builder: (context, snapshot) {
             final relations = snapshot.data;
             const radius = CCSize.xlarge;
