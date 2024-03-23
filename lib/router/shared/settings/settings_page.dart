@@ -18,6 +18,7 @@ import 'package:crea_chess/router/app/user/user_page.dart';
 import 'package:crea_chess/router/shared/ccroute.dart';
 import 'package:crea_chess/router/shared/settings/preferences/preferences_cubit.dart';
 import 'package:crea_chess/router/shared/settings/preferences/preferences_state.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -42,20 +43,30 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final auth = context.watch<AuthNotVerifiedCubit>().state;
+    final user = context.watch<UserCubit>().state;
+
     return Scaffold(
       appBar: AppBar(title: Text(SettingsRoute.i.getTitle(context.l10n))),
       backgroundColor: context.colorScheme.surfaceVariant,
       body: SingleChildScrollView(
         child: CCPadding.allLarge(
-          child: const Column(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              AccountPreviewCard(),
-              CCGap.medium,
-              PreferencesSettingsCard(),
-              CCGap.medium,
-              BoardSettingsCard(),
-              CCGap.medium,
-              AccountSettingsCard(),
+              if (auth != null) ...[
+                AccountPreviewCard(user),
+                CCGap.medium,
+              ],
+              const PreferencesSettingsCard(),
+              if (user.profileCompleted) ...[
+                CCGap.medium,
+                const BoardSettingsCard(),
+              ],
+              if (auth != null) ...[
+                CCGap.medium,
+                AccountSettingsCard(auth),
+              ],
             ],
           ),
         ),
@@ -65,14 +76,23 @@ class SettingsPage extends StatelessWidget {
 }
 
 class AccountPreviewCard extends StatelessWidget {
-  const AccountPreviewCard({
-    super.key,
-  });
+  const AccountPreviewCard(this.user, {super.key});
+
+  final UserModel user;
 
   @override
   Widget build(BuildContext context) {
-    final user = context.watch<UserCubit>().state;
-    if (user.id.isEmpty) return CCGap.zero;
+    if (!user.profileCompleted) {
+      return Card(
+        child: CCPadding.allMedium(
+          child: Text(
+            context.read<AuthNotVerifiedCubit>().state?.email ?? '',
+            style: context.textTheme.bodySmall?.copyWith(color: Colors.grey),
+            maxLines: 1,
+          ),
+        ),
+      );
+    }
 
     return Card(
       shape: RoundedRectangleBorder(
@@ -288,7 +308,7 @@ class BoardSettingsCard extends StatelessWidget {
                 subtitle: Text(
                   PieceSet.values
                           .firstWhereOrNull(
-                              (set) => set == boardSettings.pieceSet,
+                            (set) => set == boardSettings.pieceSet,
                           )
                           ?.label ??
                       '',
@@ -404,15 +424,12 @@ class BoardSettingsCard extends StatelessWidget {
 }
 
 class AccountSettingsCard extends StatelessWidget {
-  const AccountSettingsCard({
-    super.key,
-  });
+  const AccountSettingsCard(this.auth, {super.key});
+
+  final User auth;
 
   @override
   Widget build(BuildContext context) {
-    final auth = context.watch<AuthNotVerifiedCubit>().state;
-    if (auth == null) return const SizedBox.shrink();
-
     return Card(
       child: CCPadding.verticalMedium(
         child: Column(
