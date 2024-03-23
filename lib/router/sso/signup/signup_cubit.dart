@@ -1,4 +1,3 @@
-import 'package:crea_chess/package/atomic_design/form/input/input_boolean.dart';
 import 'package:crea_chess/package/atomic_design/form/input/input_string.dart';
 import 'package:crea_chess/package/firebase/authentication/authentication_crud.dart';
 import 'package:crea_chess/router/sso/signup/signup_form.dart';
@@ -18,7 +17,6 @@ class SignupCubit extends Cubit<SignupForm> {
               isRequired: true,
               regexPattern: RegexPattern.passwordNormal3,
             ),
-            acceptConditions: const InputBoolean.pure(isRequired: true),
             status: SignupStatus.inProgress,
           ),
         );
@@ -37,15 +35,6 @@ class SignupCubit extends Cubit<SignupForm> {
 
   void passwordChanged(String value) {
     emit(state.copyWith(password: state.password.copyWith(string: value)));
-  }
-
-  // ignore: avoid_positional_boolean_parameters
-  void acceptedConditionsChanged(bool? boolean) {
-    emit(
-      state.copyWith(
-        acceptConditions: state.acceptConditions.copyWith(boolean: boolean),
-      ),
-    );
   }
 
   Future<void> submit() async {

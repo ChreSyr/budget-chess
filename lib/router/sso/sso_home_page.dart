@@ -15,9 +15,11 @@ import 'package:crea_chess/router/shared/settings/preferences/preferences_state.
 import 'package:crea_chess/router/shared/settings/settings_page.dart';
 import 'package:crea_chess/router/sso/signin/signin_page.dart';
 import 'package:crea_chess/router/sso/signup/signup_page.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SSOHomeRoute extends CCRoute {
   const SSOHomeRoute._() : super(name: 'home');
@@ -48,94 +50,98 @@ class SSOHomePage extends StatelessWidget {
 
     // The user is not logged in
     if (auth == null) {
-      body = SizedBox(
-        width: CCWidgetSize.large4,
-        child: Column(
-          children: [
-            AspectRatio(
-              aspectRatio: 1.1,
-              child: ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(CCWidgetSize.xxxlarge),
-                ),
-                child: Stack(
-                  children: [
-                    SizedBox.expand(
-                      child: Image.asset(
-                        'assets/icon/womotaq_icon_v1.png',
-                        // width: CCWidgetSize.large4,
-                        // height: CCWidgetSize.large3,
-                        fit: BoxFit.fitWidth,
-                        alignment: Alignment.topCenter,
-                      ),
+      body = SingleChildScrollView(
+        child: Center(
+          child: SizedBox(
+            width: CCWidgetSize.large4,
+            child: Column(
+              children: [
+                AspectRatio(
+                  aspectRatio: 1.1,
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(CCWidgetSize.xxxlarge),
                     ),
-                    Positioned(
-                      right: 0,
-                      bottom: 0,
-                      child: CCPadding.allMedium(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              'Welcome to', // TODO : l10n
-                              style: context.textTheme.titleLarge?.copyWith(
-                                color: Colors.white,
-                              ),
-                            ),
-                            Text(
-                              'Womotaq',
-                              style: context.textTheme.displaySmall?.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
+                    child: Stack(
+                      children: [
+                        SizedBox.expand(
+                          child: Image.asset(
+                            'assets/icon/womotaq_icon_v1.png',
+                            fit: BoxFit.fitWidth,
+                            alignment: Alignment.topCenter,
+                          ),
                         ),
-                      ),
+                        Positioned(
+                          right: 0,
+                          bottom: 0,
+                          child: CCPadding.allMedium(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                  'Welcome to', // TODO : l10n
+                                  style: context.textTheme.titleLarge?.copyWith(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                Text(
+                                  'Womotaq',
+                                  style:
+                                      context.textTheme.displaySmall?.copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                CCGap.xxxlarge,
+                CCGap.large,
+
+                // google + facebook sign in buttons
+                AuthProviderButton.google(),
+                // CCGap.large,
+                // AuthProviderButton.facebook(),
+
+                CCGap.xxxlarge,
+
+                // or continue with
+                Row(
+                  children: [
+                    Expanded(child: CCDivider.xthin),
+                    CCGap.small,
+                    const Text('Ou avec une adresse mail'), // TODO : l10n
+                    CCGap.small,
+                    Expanded(child: CCDivider.xthin),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // sign in button
+                    TextButton(
+                      onPressed: () => context.pushRoute(SigninRoute.i),
+                      child: Text(context.l10n.signin),
+                    ),
+                    CCGap.medium,
+                    // sign up button
+                    TextButton(
+                      onPressed: () => context.pushRoute(SignupRoute.i),
+                      child: Text(context.l10n.signup),
                     ),
                   ],
                 ),
-              ),
-            ),
-
-            CCGap.xxxlarge,
-            CCGap.xxxlarge,
-            // google + facebook sign in buttons
-            AuthProviderButton.google(),
-            // CCGap.large,
-            // AuthProviderButton.facebook(),
-
-            CCGap.xxxlarge,
-
-            // or continue with
-            Row(
-              children: [
-                Expanded(child: CCDivider.xthin),
-                CCGap.small,
-                const Text('Ou avec une adresse mail'), // TODO : l10n
-                CCGap.small,
-                Expanded(child: CCDivider.xthin),
+                
+                CCGap.large,
               ],
             ),
-
-            // CCGap.xlarge,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // sign in button
-                TextButton(
-                  onPressed: () => context.pushRoute(SigninRoute.i),
-                  child: Text(context.l10n.signin),
-                ),
-                CCGap.medium,
-                // sign up button
-                TextButton(
-                  onPressed: () => context.pushRoute(SignupRoute.i),
-                  child: Text(context.l10n.signup),
-                ),
-              ],
-            ),
-          ],
+          ),
         ),
       );
     } else
@@ -162,6 +168,48 @@ class SSOHomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(actions: getSettingsAppBarActions(context)),
       body: body,
+      bottomNavigationBar: auth != null
+          ? null
+          : CCPadding.allMedium(
+              child: RichText(
+                text: TextSpan(
+                  children: [
+                    // TODO : l10n
+                    const TextSpan(text: 'En continuant, vous acceptez nos '),
+                    TextSpan(
+                      text: 'Conditions générales d’utilisation',
+                      style: const TextStyle(
+                        decoration: TextDecoration.underline,
+                        // color: Colors.blue,
+                      ),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () => launchUrl(
+                              Uri.parse(
+                                'https://sites.google.com/womotaq.com/home/terms-of-use',
+                              ),
+                            ),
+                    ),
+                    const TextSpan(text: ' et notre '),
+                    TextSpan(
+                      text: 'Politique de confidentialité',
+                      style: const TextStyle(
+                        decoration: TextDecoration.underline,
+                        // color: Colors.blue,
+                      ),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () => launchUrl(
+                              Uri.parse(
+                                'https://sites.google.com/womotaq.com/home/privacy-policy',
+                              ),
+                            ),
+                    ),
+                    const TextSpan(text: '.'),
+                  ],
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            
     );
   }
 }

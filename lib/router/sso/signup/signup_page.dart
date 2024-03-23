@@ -1,4 +1,3 @@
-import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/form/field/password_form_field.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/snack_bar.dart';
@@ -96,24 +95,6 @@ class SignupPage extends StatelessWidget {
                   initialValue: form.password.value,
                   onChanged: signupCubit.passwordChanged,
                   onFieldSubmitted: (value) => signupCubit.submit(),
-                ),
-
-                CCGap.medium,
-
-                // conditions
-                CheckboxListTile(
-                  value: form.acceptConditions.value,
-                  onChanged: signupCubit.acceptedConditionsChanged,
-                  title: Text(
-                    context.l10n.iAcceptConditions,
-                    style: form.errorMessage(
-                              form.acceptConditions,
-                              context.l10n,
-                            ) ==
-                            null
-                        ? null
-                        : TextStyle(color: context.colorScheme.error),
-                  ),
                 ),
 
                 CCGap.medium,
