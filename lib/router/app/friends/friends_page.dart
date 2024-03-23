@@ -9,6 +9,7 @@ import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/text_style.dart';
 import 'package:crea_chess/package/atomic_design/widget/button.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
+import 'package:crea_chess/package/atomic_design/widget/user/relationship_button.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
@@ -450,10 +451,11 @@ class FriendSuggestionsCard extends StatelessWidget {
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          RelationshipIconButton(
+                          RelationshipButton(
                             authUid: authUid,
                             userId: userId,
-                            relationship: relation,
+                            relation: relation,
+                            asIcon: true,
                           ),
                           IconButton(
                             onPressed: () {},

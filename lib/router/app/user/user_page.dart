@@ -67,7 +67,10 @@ class UserPage extends StatelessWidget {
                     isConnected: user.isConnected,
                     editable: false,
                   ),
-                  relationshipWidget: RelationshipButton(userId: user.id),
+                  relationshipWidget: RelationshipButton(
+                    authUid: currentUser.id,
+                    userId: user.id,
+                  ),
                   tabSections: UserSection.getSections(currentUser.id, user.id),
                 );
               },
