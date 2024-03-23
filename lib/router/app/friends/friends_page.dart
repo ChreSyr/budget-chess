@@ -56,8 +56,8 @@ class FriendRequestsCubit
 }
 
 class FriendshipsCubit
-    extends AuthUidListenerCubit<Iterable<RelationshipModel>> {
-  FriendshipsCubit() : super([]);
+    extends AuthUidListenerCubit<Iterable<RelationshipModel>?> {
+  FriendshipsCubit() : super(null);
 
   String? _authUid;
   StreamSubscription<Iterable<RelationshipModel>>? _friendshipsStream;
@@ -73,15 +73,16 @@ class FriendshipsCubit
     _friendshipsStream = relationshipCRUD.friendshipsOf(authUid).listen(emit);
   }
 
-  Iterable<String> get friendIds => _authUid == null
-      ? []
-      : state.map((e) => e.otherUser(_authUid!)).whereType<String>();
-
   @override
   Future<void> close() {
     _friendshipsStream?.cancel();
     return super.close();
   }
+
+  bool get isLoading => state == null;
+  Iterable<String> get friendIds => _authUid == null || state == null
+      ? []
+      : state!.map((e) => e.otherUser(_authUid!)).whereType<String>();
 }
 
 class FriendsPage extends StatelessWidget {
@@ -107,6 +108,8 @@ class FriendsFeed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final friendshipsCubit = context.watch<FriendshipsCubit>();
+
     return CCPadding.allLarge(
       child: Column(
         children: [
@@ -131,29 +134,27 @@ class FriendsFeed extends StatelessWidget {
             ),
           ),
           CCGap.medium,
-          // Friendship requests
+          // Friendship requests to this user
           BlocBuilder<FriendRequestsCubit, Iterable<RelationshipModel>>(
             builder: (context, requests) {
               return Column(
                 mainAxisSize: MainAxisSize.min,
-                children: requests
-                    .map(
-                      (request) => Padding(
-                        padding: const EdgeInsets.only(
-                          bottom: CCSize.medium,
-                        ),
-                        child: FriendRequestCard(
-                          request,
-                          context,
-                        ),
-                      ),
-                    )
-                    .toList(),
+                children: requests.map(
+                  (request) {
+                    final requester = request.requester;
+                    if (requester == null) return CCGap.zero;
+
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: CCSize.medium),
+                      child: FriendRequestCard(requester, context),
+                    );
+                  },
+                ).toList(),
               );
             },
           ),
-          // Friend previews
-          const FriendsCard(),
+          // Friends
+          if (!friendshipsCubit.isLoading) FriendsCard(friendshipsCubit),
           // Friendship requests from this user
           StreamBuilder<Iterable<RelationshipModel>>(
             stream: relationshipCRUD.streamRequestsFrom(
@@ -163,7 +164,10 @@ class FriendsFeed extends StatelessWidget {
               final requests = snapshot.data ?? [];
               if (requests.isEmpty) return CCGap.zero;
 
-              return SentFriendRequestsCard(requests: requests);
+              return Padding(
+                padding: const EdgeInsets.only(top: CCSize.medium),
+                child: SentFriendRequestsCard(requests: requests),
+              );
             },
           ),
         ],
@@ -173,9 +177,9 @@ class FriendsFeed extends StatelessWidget {
 }
 
 class FriendRequestCard extends StatelessWidget {
-  const FriendRequestCard(this.request, this.parentContext, {super.key});
+  const FriendRequestCard(this.requester, this.parentContext, {super.key});
 
-  final RelationshipModel request;
+  final String requester;
   // Dirty, isn'it ? It's needed for the snack bars, who need a context even if
   // this card doesn't exist anymore
   final BuildContext parentContext;
@@ -183,13 +187,6 @@ class FriendRequestCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authUid = context.watch<UserCubit>().state.id;
-
-    final requester = request.requester;
-    if (requester == null) return CCGap.zero;
-
-    // if (request.otherUser(requester) != authUid) {
-    //   return CCGap.zero;
-    // }
 
     return Card(
       child: CCPadding.allMedium(
@@ -266,13 +263,12 @@ class FriendRequestCard extends StatelessWidget {
 }
 
 class FriendsCard extends StatelessWidget {
-  const FriendsCard({
-    super.key,
-  });
+  const FriendsCard(this.friendshipsCubit, {super.key});
+
+  final FriendshipsCubit friendshipsCubit;
 
   @override
   Widget build(BuildContext context) {
-    final friendshipsCubit = context.watch<FriendshipsCubit>();
     final friendIds = friendshipsCubit.friendIds;
 
     return Card(
@@ -356,56 +352,52 @@ class SentFriendRequestsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: CCSize.medium),
-      child: Card(
-        child: CCPadding.allMedium(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                // TODO : l10n : plural
-                context.l10n.friendRequestSent,
-                style: context.textTheme.titleLarge
-                    ?.copyWith(fontWeight: FontWeight.bold),
-              ),
-              CCGap.medium,
-              ...requests.map(
-                (request) {
-                  final requester = request.requester;
-                  if (requester == null) return CCGap.zero;
-                  final requestedId = request.otherUser(requester);
-                  if (requestedId == null) return CCGap.zero;
+    return Card(
+      child: CCPadding.allMedium(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              // TODO : l10n : plural
+              context.l10n.friendRequestSent,
+              style: context.textTheme.titleLarge
+                  ?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            CCGap.medium,
+            ...requests.map(
+              (request) {
+                final requester = request.requester;
+                if (requester == null) return CCGap.zero;
+                final requestedId = request.otherUser(requester);
+                if (requestedId == null) return CCGap.zero;
 
-                  return StreamBuilder<UserModel?>(
-                    stream: userCRUD.stream(documentId: requestedId),
-                    builder: (context, snapshot) {
-                      final requested = snapshot.data;
-                      if (requested == null) return CCGap.zero;
-                      return ListTile(
-                        contentPadding:
-                            const EdgeInsets.only(left: CCSize.small),
-                        leading: UserPhoto(
-                          photo: requested.photo,
-                          isConnected: requested.isConnected,
-                          onTap: () => UserRoute.pushId(userId: requestedId),
+                return StreamBuilder<UserModel?>(
+                  stream: userCRUD.stream(documentId: requestedId),
+                  builder: (context, snapshot) {
+                    final requested = snapshot.data;
+                    if (requested == null) return CCGap.zero;
+                    return ListTile(
+                      contentPadding: const EdgeInsets.only(left: CCSize.small),
+                      leading: UserPhoto(
+                        photo: requested.photo,
+                        isConnected: requested.isConnected,
+                        onTap: () => UserRoute.pushId(userId: requestedId),
+                      ),
+                      title: Text(requested.username),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () => showCancelFriendRequestDialog(
+                          context,
+                          requestedId,
                         ),
-                        title: Text(requested.username),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.close),
-                          onPressed: () => showCancelFriendRequestDialog(
-                            context,
-                            requestedId,
-                          ),
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
-            ],
-          ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ],
         ),
       ),
     );

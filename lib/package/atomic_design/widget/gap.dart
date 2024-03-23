@@ -1,11 +1,10 @@
 import 'package:crea_chess/package/atomic_design/size.dart';
-import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 
 class CCGap {
-  /// Gap(2)
-  static const zero = SizedBox.shrink();
+  /// Gap(0)
+  static const zero = Gap(0);
 
   /// Gap(2)
   static const xxsmall = Gap(CCSize.xxsmall);
