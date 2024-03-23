@@ -48,85 +48,94 @@ class SSOHomePage extends StatelessWidget {
 
     // The user is not logged in
     if (auth == null) {
-      body = CCPadding.horizontalLarge(
-        child: SizedBox(
-          width: CCWidgetSize.large4,
-          child: ListView(
-            children: [
-              ClipRRect(
+      body = SizedBox(
+        width: CCWidgetSize.large4,
+        child: Column(
+          children: [
+            AspectRatio(
+              aspectRatio: 1.1,
+              child: ClipRRect(
                 borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(CCSize.xlarge),
-                  topRight: Radius.circular(CCSize.xlarge),
-                  bottomLeft: Radius.circular(CCSize.xlarge),
-                  bottomRight: Radius.circular(CCWidgetSize.xlarge),
+                  bottomLeft: Radius.circular(CCWidgetSize.xxxlarge),
                 ),
                 child: Stack(
                   children: [
-                    Image.asset('assets/images/signin.jpg'),
-                    CCPadding.allMedium(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Welcome to', // TODO : l10n
-                            style: context.textTheme.displaySmall?.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
+                    SizedBox.expand(
+                      child: Image.asset(
+                        'assets/icon/womotaq_icon_v1.png',
+                        // width: CCWidgetSize.large4,
+                        // height: CCWidgetSize.large3,
+                        fit: BoxFit.fitWidth,
+                        alignment: Alignment.topCenter,
+                      ),
+                    ),
+                    Positioned(
+                      right: 0,
+                      bottom: 0,
+                      child: CCPadding.allMedium(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              'Welcome to', // TODO : l10n
+                              style: context.textTheme.titleLarge?.copyWith(
+                                color: Colors.white,
+                              ),
                             ),
-                          ),
-                          Text(
-                            'Budget Chess', // TODO : l10n
-                            style: context.textTheme.titleLarge?.copyWith(
-                              color: Colors.white,
-                              // fontWeight: FontWeight.bold,
+                            Text(
+                              'Womotaq',
+                              style: context.textTheme.displaySmall?.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
+            ),
 
-              CCGap.xxxlarge,
-              CCGap.xxxlarge,
-              // google + facebook sign in buttons
-              AuthProviderButton.google(),
-              // CCGap.large,
-              // AuthProviderButton.facebook(),
+            CCGap.xxxlarge,
+            CCGap.xxxlarge,
+            // google + facebook sign in buttons
+            AuthProviderButton.google(),
+            // CCGap.large,
+            // AuthProviderButton.facebook(),
 
-              CCGap.xxxlarge,
+            CCGap.xxxlarge,
 
-              // or continue with
-              Row(
-                children: [
-                  Expanded(child: CCDivider.xthin),
-                  CCGap.small,
-                  const Text('Ou avec une adresse mail'), // TODO : l10n
-                  CCGap.small,
-                  Expanded(child: CCDivider.xthin),
-                ],
-              ),
+            // or continue with
+            Row(
+              children: [
+                Expanded(child: CCDivider.xthin),
+                CCGap.small,
+                const Text('Ou avec une adresse mail'), // TODO : l10n
+                CCGap.small,
+                Expanded(child: CCDivider.xthin),
+              ],
+            ),
 
-              // CCGap.xlarge,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // sign in button
-                  TextButton(
-                    onPressed: () => context.pushRoute(SigninRoute.i),
-                    child: Text(context.l10n.signin),
-                  ),
-                  CCGap.medium,
-                  // sign up button
-                  TextButton(
-                    onPressed: () => context.pushRoute(SignupRoute.i),
-                    child: Text(context.l10n.signup),
-                  ),
-                ],
-              ),
-            ],
-          ),
+            // CCGap.xlarge,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // sign in button
+                TextButton(
+                  onPressed: () => context.pushRoute(SigninRoute.i),
+                  child: Text(context.l10n.signin),
+                ),
+                CCGap.medium,
+                // sign up button
+                TextButton(
+                  onPressed: () => context.pushRoute(SignupRoute.i),
+                  child: Text(context.l10n.signup),
+                ),
+              ],
+            ),
+          ],
         ),
       );
     } else

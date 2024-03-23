@@ -1,3 +1,6 @@
+import 'package:crea_chess/package/atomic_design/padding.dart';
+import 'package:crea_chess/package/atomic_design/size.dart';
+import 'package:crea_chess/package/atomic_design/text_style.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/authentication/authentication_crud.dart';
 import 'package:crea_chess/package/firebase/firestore/user/user_crud.dart';
@@ -9,6 +12,7 @@ import 'package:crea_chess/router/shared/app_bar_actions.dart';
 import 'package:crea_chess/router/shared/ccroute.dart';
 import 'package:crea_chess/router/shared/settings/settings_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -83,18 +87,54 @@ class _InitHomePage extends StatelessWidget {
     // The user is correctly logged in, but he didn't initialized his
     // account yet (with a username for example)
     if (!user.profileCompleted) {
-      return Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text('Bienvenue sur Budget Chess !'), // TODO : l10n
-            CCGap.medium,
-            FilledButton(
-              onPressed: () => context.pushRoute(InitUsernameRoute.i),
-              child: const Text("C'est parti !"), // TODO : l10n
+      return Column(
+        children: [
+          ClipRRect(
+            borderRadius: const BorderRadius.only(
+              bottomRight: Radius.circular(CCWidgetSize.xlarge),
             ),
-          ],
-        ),
+            child: Stack(
+              children: [
+                Image.asset(
+                  'assets/images/signin.jpg',
+                  width: CCWidgetSize.large4,
+                  height: CCWidgetSize.large2,
+                  fit: BoxFit.cover,
+                ),
+                Positioned(
+                  bottom: 0,
+                  child: CCPadding.allMedium(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Welcome to', // TODO : l10n
+                          style: context.textTheme.titleLarge?.copyWith(
+                            color: Colors.white,
+                            // fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          'Budget Chess', // TODO : l10n
+                          style: context.textTheme.displaySmall?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        CCGap.large,
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          CCGap.xxxlarge,
+          FilledButton(
+            onPressed: () => context.pushRoute(InitUsernameRoute.i),
+            child: const Text("C'est parti !"), // TODO : l10n
+          ),
+        ],
       );
     }
 
