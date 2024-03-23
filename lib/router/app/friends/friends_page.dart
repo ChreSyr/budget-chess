@@ -96,7 +96,7 @@ class FriendSuggestionsCubit extends Cubit<Iterable<RelationshipModel>> {
   // This list helps to keep suggested relations in this cubit even after the
   // user decided to send a friend request, which would make this relation not
   // matching the filters anymore
-  Iterable<String>? suggestionIds;
+  List<String>? suggestionIds;
   StreamSubscription<Iterable<RelationshipModel>>? _existingRelationsStream;
 
   static final suggestableStatus = [
@@ -161,7 +161,7 @@ class FriendSuggestionsCubit extends Cubit<Iterable<RelationshipModel>> {
           },
         ),
       );
-      suggestionIds ??= suggestions.map((e) => e.id);
+      suggestionIds ??= suggestions.map((e) => e.id).toList();
       emit(suggestions);
     });
   }
@@ -504,7 +504,14 @@ class FriendSuggestionsCard extends StatelessWidget {
                           IconButton(
                             onPressed: FriendSuggestionsCubit.suggestableStatus
                                     .contains(relation.statusOf(authUid))
-                                ? () {}
+                                ? () {
+                                    relationshipCRUD.refuseSuggestion(
+                                      refuser: authUid,
+                                      relationship: relation,
+                                    );
+                                    suggestionsCubit.suggestionIds
+                                        ?.remove(relation.id);
+                                  }
                                 : null,
                             icon: const Icon(Icons.close),
                           ),

@@ -204,6 +204,26 @@ class _RelationshipCRUD extends CollectionCRUD<RelationshipModel> {
     );
   }
 
+  Future<void> refuseSuggestion({
+    required String refuser,
+    required RelationshipModel relationship,
+  }) async {
+    final refused = relationship.otherUser(refuser);
+    if (refused == null) return;
+
+    // relation may not exist yet
+    await create(
+      documentId: relationship.id,
+      data: relationship.copyWith(
+        users: {
+          refuser: UserInRelationshipStatus.refuses,
+          refused: UserInRelationshipStatus.isRefused,
+        },
+        lastUserStatusUpdate: DateTime.now(),
+      ),
+    );
+  }
+
   /// Return the relationships waiting for an answer, from or to userId
   Stream<Iterable<RelationshipModel>> streamRequestsFrom(String userId) {
     return streamFiltered(
