@@ -1,16 +1,22 @@
 import 'package:crea_chess/package/chessground/export.dart';
-import 'package:crea_chess/package/unichess/src/board.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 
-class BoardSettingsCubit extends Cubit<BoardSettings> {
+class BoardSettingsCubit extends HydratedCubit<BoardSettings> {
   BoardSettingsCubit() : super(const BoardSettings());
+
+  @override
+  BoardSettings? fromJson(Map<String, dynamic> json) =>
+      BoardSettings.fromJson(json);
+
+  @override
+  Map<String, dynamic>? toJson(BoardSettings state) => state.toJson();
 
   void enableCoordinates(bool enable) =>
       emit(state.copyWith(enableCoordinates: enable));
 
-  void setBoardColorScheme(BoardColorScheme Function(BoardSize) colorScheme) =>
-      emit(state.copyWith(colorScheme: colorScheme));
+  void setBoardTheme(BoardTheme boardTheme) =>
+      emit(state.copyWith(boardTheme: boardTheme));
 
-  void setPieceAssets(PieceAssets assets) =>
-      emit(state.copyWith(pieceAssets: assets));
+  void setPieceSet(PieceSet pieceSet) =>
+      emit(state.copyWith(pieceSet: pieceSet));
 }

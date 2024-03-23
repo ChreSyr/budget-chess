@@ -56,12 +56,10 @@ class SetupCubit extends HydratedCubit<SetupModel> {
   }
 
   @override
-  SetupModel? fromJson(Map<String, dynamic> json) {
-    return SetupModel.fromJson(json);
-  }
+  SetupModel? fromJson(Map<String, dynamic> json) => SetupModel.fromJson(json);
+  
 
   @override
-  Map<String, dynamic>? toJson(SetupModel state) {
-    return state.toJson();
-  }
+  Map<String, dynamic>? toJson(SetupModel state) => state.toJson();
+  
 }

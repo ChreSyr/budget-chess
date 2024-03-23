@@ -119,7 +119,7 @@ class _BoardState extends State<SetupBoard> {
                   child: PieceWidget(
                     piece: entry.value,
                     size: squareSize,
-                    pieceAssets: widget.settings.pieceAssets,
+                    pieceAssets: widget.settings.pieceSet.assets,
                   ),
                 ),
             for (final squareId in dragTargets)
@@ -204,7 +204,7 @@ class _BoardState extends State<SetupBoard> {
   @override
   void initState() {
     super.initState();
-    colorScheme = widget.settings.colorScheme(widget.size);
+    colorScheme = widget.settings.boardTheme.colors(widget.size);
     pieces = readFen(fen: widget.fen, boardSize: widget.size);
     for (var rank = 0; rank < widget.size.ranks; rank++) {
       for (var file = 0; file < widget.size.files; file++) {
@@ -303,7 +303,7 @@ class _BoardState extends State<SetupBoard> {
           child: PieceWidget(
             piece: piece,
             size: feedbackSize,
-            pieceAssets: widget.settings.pieceAssets,
+            pieceAssets: widget.settings.pieceSet.assets,
           ),
         ),
       );

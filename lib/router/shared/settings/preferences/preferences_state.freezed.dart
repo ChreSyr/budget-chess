@@ -21,9 +21,7 @@ PreferencesState _$PreferencesStateFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$PreferencesState {
   Brightness get brightness => throw _privateConstructorUsedError;
-  @JsonKey(name: 'language_code')
   String get languageCode => throw _privateConstructorUsedError;
-  @JsonKey(name: 'seed_color')
   SeedColor get seedColor => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -38,10 +36,7 @@ abstract class $PreferencesStateCopyWith<$Res> {
           PreferencesState value, $Res Function(PreferencesState) then) =
       _$PreferencesStateCopyWithImpl<$Res, PreferencesState>;
   @useResult
-  $Res call(
-      {Brightness brightness,
-      @JsonKey(name: 'language_code') String languageCode,
-      @JsonKey(name: 'seed_color') SeedColor seedColor});
+  $Res call({Brightness brightness, String languageCode, SeedColor seedColor});
 }
 
 /// @nodoc
@@ -86,10 +81,7 @@ abstract class _$$PreferencesStateImplCopyWith<$Res>
       __$$PreferencesStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {Brightness brightness,
-      @JsonKey(name: 'language_code') String languageCode,
-      @JsonKey(name: 'seed_color') SeedColor seedColor});
+  $Res call({Brightness brightness, String languageCode, SeedColor seedColor});
 }
 
 /// @nodoc
@@ -129,8 +121,8 @@ class __$$PreferencesStateImplCopyWithImpl<$Res>
 class _$PreferencesStateImpl extends _PreferencesState {
   _$PreferencesStateImpl(
       {required this.brightness,
-      @JsonKey(name: 'language_code') required this.languageCode,
-      @JsonKey(name: 'seed_color') required this.seedColor})
+      required this.languageCode,
+      required this.seedColor})
       : super._();
 
   factory _$PreferencesStateImpl.fromJson(Map<String, dynamic> json) =>
@@ -139,10 +131,8 @@ class _$PreferencesStateImpl extends _PreferencesState {
   @override
   final Brightness brightness;
   @override
-  @JsonKey(name: 'language_code')
   final String languageCode;
   @override
-  @JsonKey(name: 'seed_color')
   final SeedColor seedColor;
 
   @override
@@ -185,10 +175,9 @@ class _$PreferencesStateImpl extends _PreferencesState {
 
 abstract class _PreferencesState extends PreferencesState {
   factory _PreferencesState(
-          {required final Brightness brightness,
-          @JsonKey(name: 'language_code') required final String languageCode,
-          @JsonKey(name: 'seed_color') required final SeedColor seedColor}) =
-      _$PreferencesStateImpl;
+      {required final Brightness brightness,
+      required final String languageCode,
+      required final SeedColor seedColor}) = _$PreferencesStateImpl;
   _PreferencesState._() : super._();
 
   factory _PreferencesState.fromJson(Map<String, dynamic> json) =
@@ -197,10 +186,8 @@ abstract class _PreferencesState extends PreferencesState {
   @override
   Brightness get brightness;
   @override
-  @JsonKey(name: 'language_code')
   String get languageCode;
   @override
-  @JsonKey(name: 'seed_color')
   SeedColor get seedColor;
   @override
   @JsonKey(ignore: true)

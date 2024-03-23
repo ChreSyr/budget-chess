@@ -40,14 +40,14 @@ class _DrawShapesPageState extends State<DrawShapesPage> {
             BoardWidget(
               size: BoardSize(ranks: 8, files: 8),
               settings: BoardSettings(
-                pieceAssets: pieceSet.assets,
-                colorScheme: boardTheme.colors,
+                pieceSet: pieceSet,
+                boardTheme: boardTheme,
                 drawShape: DrawShapeOptions(
                   enable: drawShapes,
-                  onCompleteShape: _onCompleteShape,
                   newShapeColor: newShapeColor,
                 ),
               ),
+              onCompleteShape: _onCompleteShape,
               data: BoardData(
                 interactableSide: (position.turn == Side.white
                     ? InteractableSide.white

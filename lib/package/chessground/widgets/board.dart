@@ -23,6 +23,7 @@ class BoardWidget extends StatefulWidget {
     this.settings = const BoardSettings(),
     this.onMove,
     this.onPremove,
+    this.onCompleteShape,
   });
 
   /// Number of ranks & files of the board
@@ -41,6 +42,9 @@ class BoardWidget extends StatefulWidget {
   ///
   /// If the callback is null, the board will not allow premoves.
   final void Function(CGMove?)? onPremove;
+
+  /// A callback for when shape drawing gesture is completed.
+  final void Function(Shape shape)? onCompleteShape;
 
   Coord? localOffset2Coord(Offset offset, double squareSize) {
     final x = (offset.dx / squareSize).floor();
@@ -190,7 +194,7 @@ class _BoardState extends State<BoardWidget> {
                   duration: widget.settings.animationDuration,
                   piece: entry.value,
                   size: squareSize,
-                  pieceAssets: widget.settings.pieceAssets,
+                  pieceAssets: widget.settings.pieceSet.assets,
                   blindfoldMode: widget.settings.blindfoldMode,
                   onComplete: () {
                     fadingPieces.remove(entry.key);
@@ -208,7 +212,7 @@ class _BoardState extends State<BoardWidget> {
                   child: PieceWidget(
                     piece: entry.value,
                     size: squareSize,
-                    pieceAssets: widget.settings.pieceAssets,
+                    pieceAssets: widget.settings.pieceSet.assets,
                     blindfoldMode: widget.settings.blindfoldMode,
                   ),
                 ),
@@ -229,7 +233,7 @@ class _BoardState extends State<BoardWidget> {
                   child: PieceWidget(
                     piece: entry.value.$1.piece,
                     size: squareSize,
-                    pieceAssets: widget.settings.pieceAssets,
+                    pieceAssets: widget.settings.pieceSet.assets,
                     blindfoldMode: widget.settings.blindfoldMode,
                   ),
                 ),
@@ -302,7 +306,7 @@ class _BoardState extends State<BoardWidget> {
                 board,
               if (_promotionMove != null && widget.data.sideToMove != null)
                 PromotionSelector(
-                  pieceAssets: widget.settings.pieceAssets,
+                  pieceAssets: widget.settings.pieceSet.assets,
                   move: _promotionMove!,
                   boardSize: widget.size,
                   squareSize: squareSize,
@@ -321,7 +325,7 @@ class _BoardState extends State<BoardWidget> {
   @override
   void initState() {
     super.initState();
-    colorScheme = widget.settings.colorScheme(widget.size);
+    colorScheme = widget.settings.boardTheme.colors(widget.size);
     pieces = readFen(fen: widget.data.fen, boardSize: widget.size);
   }
 
@@ -505,7 +509,7 @@ class _BoardState extends State<BoardWidget> {
           child: PieceWidget(
             piece: piece,
             size: feedbackSize,
-            pieceAssets: widget.settings.pieceAssets,
+            pieceAssets: widget.settings.pieceSet.assets,
             blindfoldMode: widget.settings.blindfoldMode,
           ),
         ),
@@ -623,7 +627,7 @@ class _BoardState extends State<BoardWidget> {
     if (_shapeAvatar == null || widget.settings.drawShape.enable == false) {
       return;
     }
-    widget.settings.drawShape.onCompleteShape?.call(_shapeAvatar!);
+    widget.onCompleteShape?.call(_shapeAvatar!);
     setState(() {
       _shapeAvatar = null;
     });
@@ -642,7 +646,7 @@ class _BoardState extends State<BoardWidget> {
       squareSize,
     );
     if (squareId == null) return;
-    widget.settings.drawShape.onCompleteShape?.call(
+    widget.onCompleteShape?.call(
       Circle(
         color: widget.settings.drawShape.newShapeColor,
         orig: Coord.fromSquareId(squareId, boardSize: widget.size),

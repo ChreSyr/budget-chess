@@ -255,7 +255,9 @@ class BoardSettingsCard extends StatelessWidget {
                 leading: SizedBox.square(
                   dimension: CCSize.large,
                   child: BoardWidget(
-                    key: Key(boardSettings.colorScheme.toString()),
+                    // forces a reload of this widget when the boardTheme
+                    // changes
+                    key: Key(boardSettings.boardTheme.colors.toString()),
                     data: const BoardData(
                       interactableSide: InteractableSide.none,
                       orientation: Side.white,
@@ -263,14 +265,15 @@ class BoardSettingsCard extends StatelessWidget {
                     ),
                     size: BoardSize(files: 2, ranks: 2),
                     settings: BoardSettings(
-                      colorScheme: boardSettings.colorScheme,
+                      boardTheme: boardSettings.boardTheme,
                       enableCoordinates: false,
                     ),
                   ),
                 ),
                 title: const Text("Thème de l'échiquier"), // TODO : l10n
-                subtitle:
-                    Text(boardSettings.colorScheme(BoardSize.standard).name),
+                subtitle: Text(
+                  boardSettings.boardTheme.colors(BoardSize.standard).name,
+                ),
                 onTap: () {
                   _showBoardThemeModal(context, boardSettingsCubit);
                 },
@@ -279,13 +282,13 @@ class BoardSettingsCard extends StatelessWidget {
                 leading: PieceWidget(
                   piece: CGPiece.whiteKnight,
                   size: CCSize.large,
-                  pieceAssets: boardSettings.pieceAssets,
+                  pieceAssets: boardSettings.pieceSet.assets,
                 ),
                 title: const Text('Jeu de pièces'), // TODO : l10n
                 subtitle: Text(
                   PieceSet.values
                           .firstWhereOrNull(
-                            (set) => set.assets == boardSettings.pieceAssets,
+                              (set) => set == boardSettings.pieceSet,
                           )
                           ?.label ??
                       '',
@@ -324,7 +327,7 @@ class BoardSettingsCard extends StatelessWidget {
                   .map(
                     (theme) => Container(
                       // ListTile.color has a strange bug when scrolling
-                      color: theme.colors == cubit.state.colorScheme
+                      color: theme == cubit.state.boardTheme
                           ? context.colorScheme.surfaceVariant
                           : null,
                       child: ListTile(
@@ -336,14 +339,14 @@ class BoardSettingsCard extends StatelessWidget {
                           ),
                           size: BoardSize(files: 8, ranks: 1),
                           settings: BoardSettings(
-                            colorScheme: theme.colors,
+                            boardTheme: theme,
                             enableCoordinates: false,
                           ),
                         ),
                         subtitle: Text(theme.name.titleCase),
                         onTap: () {
                           Navigator.of(context).pop();
-                          cubit.setBoardColorScheme(theme.colors);
+                          cubit.setBoardTheme(theme);
                         },
                       ),
                     ),
@@ -368,7 +371,7 @@ class BoardSettingsCard extends StatelessWidget {
                   .map(
                     (set) => Container(
                       // ListTile.color has a strange bug when scrolling
-                      color: set.assets == cubit.state.pieceAssets
+                      color: set == cubit.state.pieceSet
                           ? context.colorScheme.surfaceVariant
                           : null,
                       child: ListTile(
@@ -380,15 +383,15 @@ class BoardSettingsCard extends StatelessWidget {
                           ),
                           size: BoardSize(files: 6, ranks: 1),
                           settings: BoardSettings(
-                            colorScheme: cubit.state.colorScheme,
-                            pieceAssets: set.assets,
+                            boardTheme: cubit.state.boardTheme,
+                            pieceSet: set,
                             enableCoordinates: false,
                           ),
                         ),
                         subtitle: Text(set.label),
                         onTap: () {
                           context.pop();
-                          cubit.setPieceAssets(set.assets);
+                          cubit.setPieceSet(set);
                         },
                       ),
                     ),

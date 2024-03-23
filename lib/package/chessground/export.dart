@@ -1,9 +1,9 @@
 export 'board_color_scheme.dart';
 export 'board_data.dart';
-export 'board_settings.dart';
 export 'board_theme.dart';
-export 'draw_shape_options.dart';
 export 'fen.dart';
+export 'freezed/board_settings.dart';
+export 'freezed/draw_shape_options.dart';
 export 'models.dart';
 export 'piece_set.dart';
 export 'premove.dart';

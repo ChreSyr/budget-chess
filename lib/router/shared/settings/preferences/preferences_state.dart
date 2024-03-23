@@ -12,8 +12,8 @@ part 'preferences_state.g.dart';
 class PreferencesState with _$PreferencesState {
   factory PreferencesState({
     required Brightness brightness,
-    @JsonKey(name: 'language_code') required String languageCode,
-    @JsonKey(name: 'seed_color') required SeedColor seedColor,
+    required String languageCode,
+    required SeedColor seedColor,
   }) = _PreferencesState;
 
   factory PreferencesState.fromJson(Map<String, dynamic> json) =>

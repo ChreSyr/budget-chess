@@ -10,16 +10,16 @@ _$PreferencesStateImpl _$$PreferencesStateImplFromJson(
         Map<String, dynamic> json) =>
     _$PreferencesStateImpl(
       brightness: $enumDecode(_$BrightnessEnumMap, json['brightness']),
-      languageCode: json['language_code'] as String,
-      seedColor: $enumDecode(_$SeedColorEnumMap, json['seed_color']),
+      languageCode: json['languageCode'] as String,
+      seedColor: $enumDecode(_$SeedColorEnumMap, json['seedColor']),
     );
 
 Map<String, dynamic> _$$PreferencesStateImplToJson(
         _$PreferencesStateImpl instance) =>
     <String, dynamic>{
       'brightness': _$BrightnessEnumMap[instance.brightness]!,
-      'language_code': instance.languageCode,
-      'seed_color': _$SeedColorEnumMap[instance.seedColor]!,
+      'languageCode': instance.languageCode,
+      'seedColor': _$SeedColorEnumMap[instance.seedColor]!,
     };
 
 const _$BrightnessEnumMap = {
