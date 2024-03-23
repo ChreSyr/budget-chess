@@ -214,8 +214,6 @@ class BoardSettingsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final boardSettingsCubit = context.watch<BoardSettingsCubit>();
-    final boardSettings = boardSettingsCubit.state;
     return Card(
       child: CCPadding.verticalMedium(
         child: Column(
@@ -229,61 +227,93 @@ class BoardSettingsCard extends StatelessWidget {
               ),
             ),
             CCGap.small,
-            ListTile(
-              leading: SizedBox.square(
-                dimension: CCSize.large,
-                child: BoardWidget(
-                  key: Key(boardSettings.colorScheme.toString()),
-                  data: const BoardData(
-                    interactableSide: InteractableSide.none,
-                    orientation: Side.white,
-                    fen: '2/2',
-                  ),
-                  size: BoardSize(files: 2, ranks: 2),
-                  settings: BoardSettings(
-                    colorScheme: boardSettings.colorScheme,
-                    enableCoordinates: false,
-                  ),
-                ),
-              ),
-              title: const Text("Thème de l'échiquier"), // TODO : l10n
-              subtitle:
-                  Text(boardSettings.colorScheme(BoardSize.standard).name),
-              onTap: () => showBoardThemeModal(context, boardSettingsCubit),
-            ),
-            ListTile(
-              leading: PieceWidget(
-                piece: CGPiece.whiteKnight,
-                size: CCSize.large,
-                pieceAssets: boardSettings.pieceAssets,
-              ),
-              title: const Text('Jeu de pièces'), // TODO : l10n
-              subtitle: Text(
-                PieceSet.values
-                        .firstWhereOrNull(
-                          (set) => set.assets == boardSettings.pieceAssets,
-                        )
-                        ?.label ??
-                    '',
-              ),
-              onTap: () => showPieceSetModal(context, boardSettingsCubit),
-            ),
-            ListTile(
-              leading: const Icon(Icons.onetwothree),
-              title: const Text('Coordonnées'), // TODO : l10n
-              // subtitle: const Text('a-h, 1-8'),
-              trailing: Switch(
-                value: boardSettings.enableCoordinates,
-                onChanged: boardSettingsCubit.enableCoordinates,
-              ),
-            ),
+            ..._getSections(),
           ],
         ),
       ),
     );
   }
 
-  void showBoardThemeModal(BuildContext context, BoardSettingsCubit cubit) =>
+  static void showAsModal(BuildContext context) => Modal.show(
+        context: context,
+        title: 'Board settings', // TODO : l10n
+        sections: [..._getSections(isModal: true), CCGap.large],
+      );
+
+  static Iterable<Widget> _getSections({
+    bool isModal = false,
+  }) {
+    return [
+      Builder(
+        builder: (context) {
+          final boardSettingsCubit = context.watch<BoardSettingsCubit>();
+          final boardSettings = boardSettingsCubit.state;
+
+          return Column(
+            children: [
+              ListTile(
+                leading: SizedBox.square(
+                  dimension: CCSize.large,
+                  child: BoardWidget(
+                    key: Key(boardSettings.colorScheme.toString()),
+                    data: const BoardData(
+                      interactableSide: InteractableSide.none,
+                      orientation: Side.white,
+                      fen: '2/2',
+                    ),
+                    size: BoardSize(files: 2, ranks: 2),
+                    settings: BoardSettings(
+                      colorScheme: boardSettings.colorScheme,
+                      enableCoordinates: false,
+                    ),
+                  ),
+                ),
+                title: const Text("Thème de l'échiquier"), // TODO : l10n
+                subtitle:
+                    Text(boardSettings.colorScheme(BoardSize.standard).name),
+                onTap: () {
+                  _showBoardThemeModal(context, boardSettingsCubit);
+                },
+              ),
+              ListTile(
+                leading: PieceWidget(
+                  piece: CGPiece.whiteKnight,
+                  size: CCSize.large,
+                  pieceAssets: boardSettings.pieceAssets,
+                ),
+                title: const Text('Jeu de pièces'), // TODO : l10n
+                subtitle: Text(
+                  PieceSet.values
+                          .firstWhereOrNull(
+                            (set) => set.assets == boardSettings.pieceAssets,
+                          )
+                          ?.label ??
+                      '',
+                ),
+                onTap: () {
+                  _showPieceSetModal(context, boardSettingsCubit);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.onetwothree),
+                title: const Text('Coordonnées'), // TODO : l10n
+                // subtitle: const Text('a-h, 1-8'),
+                trailing: Switch(
+                  value: boardSettings.enableCoordinates,
+                  onChanged: boardSettingsCubit.enableCoordinates,
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    ];
+  }
+
+  static void _showBoardThemeModal(
+    BuildContext context,
+    BoardSettingsCubit cubit,
+  ) =>
       Modal.show(
         context: context,
         title: "Thème de l'échiquier",
@@ -312,7 +342,7 @@ class BoardSettingsCard extends StatelessWidget {
                         ),
                         subtitle: Text(theme.name.titleCase),
                         onTap: () {
-                          context.pop();
+                          Navigator.of(context).pop();
                           cubit.setBoardColorScheme(theme.colors);
                         },
                       ),
@@ -324,7 +354,10 @@ class BoardSettingsCard extends StatelessWidget {
         ],
       );
 
-  void showPieceSetModal(BuildContext context, BoardSettingsCubit cubit) =>
+  static void _showPieceSetModal(
+    BuildContext context,
+    BoardSettingsCubit cubit,
+  ) =>
       Modal.show(
         context: context,
         title: 'Jeu de pièces',

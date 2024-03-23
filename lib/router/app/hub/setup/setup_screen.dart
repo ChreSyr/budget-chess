@@ -13,6 +13,7 @@ import 'package:crea_chess/router/app/hub/setup/setup_budget_counter.dart';
 import 'package:crea_chess/router/app/hub/setup/setup_cubit.dart';
 import 'package:crea_chess/router/app/hub/setup/setup_opponent_tile.dart';
 import 'package:crea_chess/router/app/hub/setup/setup_validate_button.dart';
+import 'package:crea_chess/router/shared/settings/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -71,12 +72,18 @@ class _SetupPage extends StatelessWidget {
       child: Column(
         children: [
           SetupOpponentTile(game: game),
-          Align(
-            alignment: Alignment.centerRight,
-            child: IconButton(
-              onPressed: setupCubit.resetFen,
-              icon: const Icon(Icons.cancel), // TODO : l10n
-            ),
+          Row(
+            children: [
+              IconButton(
+                onPressed: setupCubit.resetFen,
+                icon: const Icon(Icons.cancel), // TODO : l10n
+              ),
+              const Expanded(child: CCGap.zero),
+              IconButton(
+                onPressed: () => BoardSettingsCard.showAsModal(context),
+                icon: const Icon(Icons.settings), // TODO : l10n
+              ),
+            ],
           ),
           BlocBuilder<SelectedRoleCubit, Role?>(
             builder: (context, selectedRole) {
