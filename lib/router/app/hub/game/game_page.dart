@@ -1,4 +1,5 @@
 import 'package:crea_chess/package/atomic_design/padding.dart';
+import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/chessground/export.dart';
 import 'package:crea_chess/package/firebase/export.dart';
@@ -6,7 +7,6 @@ import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/package/unichess/unichess.dart';
 import 'package:crea_chess/router/app/app_router.dart';
 import 'package:crea_chess/router/app/chats/chat/chat_page.dart';
-import 'package:crea_chess/router/app/chats/chat/cubit/sending_messages_cubit.dart';
 import 'package:crea_chess/router/app/chats/chat/widget/input/input.dart';
 import 'package:crea_chess/router/app/hub/game/game_cubit.dart';
 import 'package:crea_chess/router/app/hub/game/player_tile.dart';
@@ -16,9 +16,7 @@ import 'package:crea_chess/router/app/hub/setup/setup_screen.dart';
 import 'package:crea_chess/router/shared/app_bar_actions.dart';
 import 'package:crea_chess/router/shared/ccroute.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -156,28 +154,27 @@ class _GamePage extends StatelessWidget {
               backgroundColor: const Color.fromARGB(64, 0, 0, 0),
               isScrollControlled: true,
               builder: (context) {
-                return BlocProvider.value(
-                  value: SendingMessagesCubit.i,
-                  child: Stack(
-                    children: [
-                      ChatScreen(
-                        authUid: authUid,
-                        otherId: game.otherPlayer(authUid) ?? '',
-                      ),
-                      Align(
-                        alignment: Alignment.topCenter,
-                        child: CCPadding.allXxlarge(
-                          child: IconButton.filledTonal(
-                            icon: const Icon(Icons.close),
-                            onPressed: () {
-                              context.pop();
-                              FocusScope.of(context).unfocus();
-                            },
-                          ),
+                return Stack(
+                  children: [
+                    ChatScreen(
+                      authUid: authUid,
+                      otherId: game.otherPlayer(authUid) ?? '',
+                    ),
+                    Align(
+                      alignment: Alignment.topCenter,
+                      child: Padding(
+                        padding:
+                            const EdgeInsets.only(top: CCWidgetSize.xxsmall),
+                        child: IconButton.filledTonal(
+                          icon: const Icon(Icons.close),
+                          onPressed: () {
+                            context.pop();
+                            FocusScope.of(context).unfocus();
+                          },
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 );
               },
             ),

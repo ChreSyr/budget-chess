@@ -51,49 +51,46 @@ class ChatPage extends StatelessWidget {
       return ErrorPage(exception: Exception('Missing argument : usernameOrId'));
     }
 
-    return BlocProvider(
-      create: (context) => SendingMessagesCubit.i,
-      child: StreamBuilder<UserModel?>(
-        stream: usernameOrId!.startsWith('@')
-            ? userCRUD.streamUsername(usernameOrId!.substring(1))
-            : userCRUD.stream(documentId: usernameOrId!),
-        builder: (context, snapshot) {
-          final user = snapshot.data;
-          if (user == null) {
-            return Scaffold(
-              appBar: AppBar(),
-              body: const LinearProgressIndicator(),
-            );
-          }
+    return StreamBuilder<UserModel?>(
+      stream: usernameOrId!.startsWith('@')
+          ? userCRUD.streamUsername(usernameOrId!.substring(1))
+          : userCRUD.stream(documentId: usernameOrId!),
+      builder: (context, snapshot) {
+        final user = snapshot.data;
+        if (user == null) {
           return Scaffold(
-            appBar: AppBar(
-              titleSpacing: 0,
-              title: InkWell(
-                onTap: () => UserRoute.pushId(userId: user.id),
-                child: CCPadding.allSmall(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    // crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      UserPhoto(
-                        photo: user.photo,
-                        isConnected: user.isConnected,
-                        radius: CCSize.medium,
-                      ),
-                      CCGap.small,
-                      Text(user.username),
-                    ],
-                  ),
+            appBar: AppBar(),
+            body: const LinearProgressIndicator(),
+          );
+        }
+        return Scaffold(
+          appBar: AppBar(
+            titleSpacing: 0,
+            title: InkWell(
+              onTap: () => UserRoute.pushId(userId: user.id),
+              child: CCPadding.allSmall(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  // crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    UserPhoto(
+                      photo: user.photo,
+                      isConnected: user.isConnected,
+                      radius: CCSize.medium,
+                    ),
+                    CCGap.small,
+                    Text(user.username),
+                  ],
                 ),
               ),
             ),
-            body: ChatScreen(
-              authUid: context.read<UserCubit>().state.id,
-              otherId: user.id,
-            ),
-          );
-        },
-      ),
+          ),
+          body: ChatScreen(
+            authUid: context.read<UserCubit>().state.id,
+            otherId: user.id,
+          ),
+        );
+      },
     );
   }
 }
@@ -122,91 +119,94 @@ class _ChatScreenState extends State<ChatScreen> {
       widget.otherId,
     );
 
-    final allRelations = context.watch<RelationsCubit>().state;
-    final isBlocked = allRelations
-        .any((r) => r.id == relationshipId && r.blocker == widget.otherId);
-
     String? firstUnreadMessageId;
 
-    return StreamBuilder<Iterable<MessageModel>>(
-      stream: messageCRUD.streamFiltered(
-        parentDocumentId: relationshipId,
-        filter: (collection) => collection.orderBy(
-          'createdAt',
-          descending: true,
+    return BlocProvider(
+      create: (context) => SendingMessagesCubit.i,
+      child: StreamBuilder<Iterable<MessageModel>>(
+        stream: messageCRUD.streamFiltered(
+          parentDocumentId: relationshipId,
+          filter: (collection) => collection.orderBy(
+            'createdAt',
+            descending: true,
+          ),
         ),
-      ),
-      builder: (context, snapshot) {
-        if (snapshot.hasError ||
-            snapshot.connectionState != ConnectionState.active ||
-            snapshot.data == null) {
-          return const SizedBox.shrink();
-        }
+        builder: (context, snapshot) {
+          if (snapshot.hasError ||
+              snapshot.connectionState != ConnectionState.active ||
+              snapshot.data == null) {
+            return const SizedBox.shrink();
+          }
 
-        return BlocConsumer<SendingMessagesCubit, SendingMessages>(
-          listener: (context, state) {
-            if (state.status == SendingStatus.error) {
-              // TODO : l10n
-              snackBarError(context, 'Error while sending message');
-              context.read<SendingMessagesCubit>().clearStatus();
-            }
-          },
-          builder: (context, sendingMessages) {
-            final failedMessages = sendingMessages.messages
-                .where(
-                  (message) => message.relationshipId == relationshipId,
-                )
-                .toList();
-            final messages = snapshot.data?.toList() ?? [];
-            firstUnreadMessageId ??= messages
-                .where(
-                  (m) =>
-                      m.authorId == widget.otherId &&
-                      m.status != MessageStatus.seen,
-                )
-                .lastOrNull
-                ?.id;
-            for (final message in messages) {
-              if (message.authorId == widget.otherId &&
-                  message.status != MessageStatus.seen) {
-                messageCRUD.update(
-                  parentDocumentId: relationshipId,
-                  documentId: message.id,
-                  data: message.copyWith(status: MessageStatus.seen),
-                );
+          final allRelations = context.watch<RelationsCubit>().state;
+          final isBlocked = allRelations.any(
+              (r) => r.id == relationshipId && r.blocker == widget.otherId);
+
+          return BlocConsumer<SendingMessagesCubit, SendingMessages>(
+            listener: (context, state) {
+              if (state.status == SendingStatus.error) {
+                // TODO : l10n
+                snackBarError(context, 'Error while sending message');
+                context.read<SendingMessagesCubit>().clearStatus();
               }
-            }
-            if (failedMessages.isNotEmpty) {
-              messages
-                ..addAll(failedMessages)
-                ..sort(
-                  (a, b) => a.createdAt == null
-                      ? 0
-                      : b.createdAt?.compareTo(a.createdAt!) ?? 0,
-                );
-            }
+            },
+            builder: (context, sendingMessages) {
+              final failedMessages = sendingMessages.messages
+                  .where(
+                    (message) => message.relationshipId == relationshipId,
+                  )
+                  .toList();
+              final messages = snapshot.data?.toList() ?? [];
+              firstUnreadMessageId ??= messages
+                  .where(
+                    (m) =>
+                        m.authorId == widget.otherId &&
+                        m.status != MessageStatus.seen,
+                  )
+                  .lastOrNull
+                  ?.id;
+              for (final message in messages) {
+                if (message.authorId == widget.otherId &&
+                    message.status != MessageStatus.seen) {
+                  messageCRUD.update(
+                    parentDocumentId: relationshipId,
+                    documentId: message.id,
+                    data: message.copyWith(status: MessageStatus.seen),
+                  );
+                }
+              }
+              if (failedMessages.isNotEmpty) {
+                messages
+                  ..addAll(failedMessages)
+                  ..sort(
+                    (a, b) => a.createdAt == null
+                        ? 0
+                        : b.createdAt?.compareTo(a.createdAt!) ?? 0,
+                  );
+              }
 
-            return Chat(
-              messages: messages,
-              onSendPressed: (text) async {
-                await context.read<SendingMessagesCubit>().send(
-                      authorId: widget.authUid,
-                      receiverId: widget.otherId,
-                      text: text,
-                    );
-              },
-              user: context.read<UserCubit>().state,
-              scrollToUnreadOptions: ScrollToUnreadOptions(
-                firstUnreadMessageId: firstUnreadMessageId,
-                scrollOnOpen: true,
-              ),
-              scrollController: widget.scrollController,
-              isBlocked: isBlocked,
-              inputOptions: const InputOptions(autofocus: true),
-            );
-          },
-        );
-      },
+              return Chat(
+                messages: messages,
+                onSendPressed: (text) async {
+                  await context.read<SendingMessagesCubit>().send(
+                        authorId: widget.authUid,
+                        receiverId: widget.otherId,
+                        text: text,
+                      );
+                },
+                user: context.read<UserCubit>().state,
+                scrollToUnreadOptions: ScrollToUnreadOptions(
+                  firstUnreadMessageId: firstUnreadMessageId,
+                  scrollOnOpen: true,
+                ),
+                scrollController: widget.scrollController,
+                isBlocked: isBlocked,
+                inputOptions: const InputOptions(autofocus: true),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 }
