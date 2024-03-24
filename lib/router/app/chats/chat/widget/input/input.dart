@@ -2,6 +2,7 @@ import 'package:crea_chess/package/atomic_design/border.dart';
 import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
+import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/router/app/chats/chat/model/input_clear_mode.dart';
 import 'package:crea_chess/router/app/chats/chat/model/send_button_visibility_mode.dart';
 import 'package:crea_chess/router/app/chats/chat/widget/input/input_text_field_controller.dart';
@@ -16,9 +17,13 @@ class Input extends StatefulWidget {
   /// Creates [Input] widget.
   const Input({
     required this.onSendPressed,
+    this.isBlocked = false,
     super.key,
     this.options = const InputOptions(),
   });
+
+  /// If the other user blocked this user.
+  final bool isBlocked;
 
   /// Will be called on [SendButton] tap. Has [types.PartialText] which can
   /// be transformed to [types.TextMessage] and added to the messages list.
@@ -132,16 +137,18 @@ class _InputState extends State<Input> {
                     color: context.colorScheme.primaryContainer,
                   ),
                   child: TextField(
-                    enabled: widget.options.enabled,
+                    enabled: !widget.isBlocked && widget.options.enabled,
                     autocorrect: widget.options.autocorrect,
                     autofocus: widget.options.autofocus,
                     enableSuggestions: widget.options.enableSuggestions,
                     controller: _textController,
-                    decoration: const InputDecoration(
-                      hintText: 'Message', // TODO : l10n
+                    decoration: InputDecoration(
+                      hintText: widget.isBlocked
+                          ? context.l10n.blockedByUser
+                          : 'Message', // TODO : l10n
                       border: InputBorder.none,
                       isCollapsed: true,
-                      contentPadding: EdgeInsets.symmetric(
+                      contentPadding: const EdgeInsets.symmetric(
                         vertical: 12,
                         horizontal: CCSize.medium,
                       ),
@@ -158,7 +165,9 @@ class _InputState extends State<Input> {
               ),
             ),
             SendButton(
-              onPressed: _sendButtonVisible ? _handleSendPressed : null,
+              onPressed: !widget.isBlocked && _sendButtonVisible
+                  ? _handleSendPressed
+                  : null,
             ),
           ],
         ),

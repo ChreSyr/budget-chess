@@ -5,7 +5,7 @@ import 'package:crea_chess/package/atomic_design/dialog/relationship/unblock_use
 import 'package:crea_chess/package/atomic_design/snack_bar.dart';
 import 'package:crea_chess/package/atomic_design/widget/badge.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
-import 'package:crea_chess/package/atomic_design/widget/user/user_action_button.dart';
+import 'package:crea_chess/package/atomic_design/widget/user/user_action.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:flutter/material.dart';

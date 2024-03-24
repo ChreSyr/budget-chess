@@ -63,6 +63,8 @@ class RelationsCubit extends AuthUidListenerCubit<Iterable<RelationshipModel>> {
   String? _authUid;
   StreamSubscription<Iterable<RelationshipModel>>? _relationsStream;
 
+  static final i = RelationsCubit();
+
   @override
   void authUidChanged(String? authUid) {
     _authUid = authUid;
@@ -107,7 +109,7 @@ class ChatHomePage extends StatelessWidget {
         actions: getSideRoutesAppBarActions(context),
       ),
       body: BlocProvider(
-        create: (context) => RelationsCubit(),
+        create: (context) => RelationsCubit.i,
         child: BlocBuilder<RelationsCubit, Iterable<RelationshipModel>>(
           builder: (context, relations) {
             final otherIds = context.watch<RelationsCubit>().otherIds;

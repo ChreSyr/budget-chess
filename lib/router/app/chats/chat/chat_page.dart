@@ -9,6 +9,7 @@ import 'package:crea_chess/router/app/app_router.dart';
 import 'package:crea_chess/router/app/chats/chat/cubit/sending_messages_cubit.dart';
 import 'package:crea_chess/router/app/chats/chat/widget/chat.dart';
 import 'package:crea_chess/router/app/chats/chat/widget/unread_header.dart';
+import 'package:crea_chess/router/app/chats/chat_home_page.dart';
 import 'package:crea_chess/router/app/user/user_page.dart';
 import 'package:crea_chess/router/shared/ccroute.dart';
 import 'package:flutter/material.dart';
@@ -48,8 +49,11 @@ class ChatPage extends StatelessWidget {
       return ErrorPage(exception: Exception('Missing argument : usernameOrId'));
     }
 
-    return BlocProvider(
-      create: (context) => SendingMessagesCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => SendingMessagesCubit()),
+        BlocProvider.value(value: RelationsCubit.i),
+      ],
       child: StreamBuilder<UserModel?>(
         stream: usernameOrId!.startsWith('@')
             ? userCRUD.streamUsername(usernameOrId!.substring(1))
@@ -112,12 +116,14 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
-    final currentUser = context.read<UserCubit>().state;
-
     final relationshipId = relationshipCRUD.getId(
       widget.authUid,
       widget.otherId,
     );
+
+    final allRelations = context.watch<RelationsCubit>().state;
+    final isBlocked = allRelations
+        .any((r) => r.id == relationshipId && r.blocker == widget.otherId);
 
     String? firstUnreadMessageId;
 
@@ -188,11 +194,12 @@ class _ChatScreenState extends State<ChatScreen> {
                       text: text,
                     );
               },
-              user: currentUser,
+              user: context.read<UserCubit>().state,
               scrollToUnreadOptions: ScrollToUnreadOptions(
                 firstUnreadMessageId: firstUnreadMessageId,
                 scrollOnOpen: true,
               ),
+              isBlocked: isBlocked,
             );
           },
         );

@@ -45,6 +45,7 @@ class Chat extends StatefulWidget {
     this.groupMessagesThreshold = 60000,
     this.hideBackgroundOnEmojiMessages = true,
     this.inputOptions = const InputOptions(),
+    this.isBlocked = false,
     this.isLastPage,
     this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
     this.listBottomWidget,
@@ -121,6 +122,9 @@ class Chat extends StatefulWidget {
 
   /// See [Input.options].
   final InputOptions inputOptions;
+
+  /// If the other user blocked this user.
+  final bool isBlocked;
 
   /// See [ChatList.isLastPage].
   final bool? isLastPage;
@@ -470,6 +474,7 @@ class ChatState extends State<Chat> {
                 Input(
                   onSendPressed: widget.onSendPressed,
                   options: widget.inputOptions,
+                  isBlocked: widget.isBlocked,
                 ),
               ],
             ),
