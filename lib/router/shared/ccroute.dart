@@ -27,11 +27,6 @@ abstract class CCRoute {
   Widget build(BuildContext context, GoRouterState state);
 }
 
-extension GoRouterInitialLoc on GoRouter {
-  void goHome() => go('/');
-}
-
 extension GoRouterSafer on BuildContext {
   void pushRoute(CCRoute route) => GoRouter.of(this).pushNamed(route.name);
-  void goHome() => go('/');
 }

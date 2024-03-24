@@ -428,14 +428,7 @@ class AccountSettingsCard extends StatelessWidget {
             leading: const Icon(Icons.meeting_room),
             title: Text(context.l10n.signout),
             trailing: IconButton(
-              onPressed: () async {
-                final currentRouter = GoRouter.of(context);
-                await authenticationCRUD.signOut();
-                // We need to send the app router to the root location, so
-                // that the next time the user arrives in this router, he
-                // is properly welcomed.
-                currentRouter.goHome();
-              },
+              onPressed: authenticationCRUD.signOut,
               icon: const Icon(Icons.logout),
             ),
           ),

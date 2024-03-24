@@ -2,8 +2,6 @@ import 'package:crea_chess/package/atomic_design/form/form_error.dart';
 import 'package:crea_chess/package/atomic_design/form/input/input_string.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
-import 'package:crea_chess/router/init/init_router.dart';
-import 'package:crea_chess/router/shared/ccroute.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -88,10 +86,6 @@ class PhotoFormCubit extends Cubit<PhotoForm> {
     } catch (e) {
       if (e.toString() ==
           'Bad state: Cannot emit new states after calling close') {
-        // The router has changed, probably because the profile is now complete.
-        // We need to send the current router to the root location, so that the
-        // next time the user arrives in this router, he is properly welcomed.
-        initProfileRouter.goHome();
         return;
       }
       emit(state.copyWith(status: PhotoFormStatus.unexpectedError));

@@ -19,6 +19,11 @@ class RouterProvider extends StatelessWidget {
     final auth = context.watch<AuthNotVerifiedCubit>().state;
 
     if (auth == null || auth.beingDeleted) {
+      // We need to send the init & app routers to the root location, so that
+      // the next time the user arrives in one of these two routers, he is
+      // properly welcomed.
+      initProfileRouter.go('/');
+      appRouter.go('/');
       return builder(ssoRouter);
     }
 

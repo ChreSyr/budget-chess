@@ -29,11 +29,6 @@ Future<AlertDialog?> showDeleteAccountDialog(
             onPressed: () async {
               try {
                 await authenticationCRUD.deleteUserAccount(userId: user.uid);
-                
-                // We need to send the app router to the root location, so that
-                // the next time the user arrives in this router, he is properly
-                // welcomed.
-                appRouter.goHome();
               } catch (_) {
                 try {
                   // ignore: use_build_context_synchronously
