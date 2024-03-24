@@ -1,8 +1,10 @@
+import 'package:crea_chess/package/atomic_design/dialog/yes_no.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/chessground/widgets/setup_board.dart';
 import 'package:crea_chess/package/firebase/export.dart';
+import 'package:crea_chess/package/lichess/lichess_icons.dart';
 import 'package:crea_chess/package/unichess/unichess.dart';
 import 'package:crea_chess/router/app/hub/game/game_cubit.dart';
 import 'package:crea_chess/router/app/hub/setup/board_settings_cubit.dart';
@@ -80,6 +82,14 @@ class _SetupPage extends StatelessWidget {
                 icon: const Icon(Icons.cancel), // TODO : l10n
               ),
               const Expanded(child: CCGap.zero),
+              IconButton(
+                icon: const Icon(LichessIcons.flag),
+                onPressed: () => showYesNoDialog(
+                  pageContext: context,
+                  title: 'Voulez-vous annuler la partie en cours ?',
+                  onYes: () => liveGameCRUD.abort(game: game),
+                ),
+              ),
               IconButton(
                 onPressed: () => BoardSettingsCard.showAsModal(context),
                 icon: const Icon(Icons.settings), // TODO : l10n

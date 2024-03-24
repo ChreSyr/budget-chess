@@ -148,10 +148,10 @@ class _ActionButton extends StatelessWidget {
             const EdgeInsets.symmetric(horizontal: CCSize.small),
           ),
           backgroundColor: MaterialStateColor.resolveWith(
-            (states) => context.colorScheme.surfaceVariant,
+            (states) => context.colorScheme.primary,
           ),
           foregroundColor: MaterialStateColor.resolveWith(
-            (states) => context.colorScheme.onBackground,
+            (states) => context.colorScheme.onPrimary,
           ),
         ),
         child: child,
@@ -167,14 +167,17 @@ class ChallengesTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      itemBuilder: (context, index) => ChallengeTile(challenges[index]),
-      separatorBuilder: (context, index) => Divider(
-        color: context.colorScheme.onBackground,
-        height: 0,
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxHeight: CCWidgetSize.large2),
+      child: ListView.separated(
+        itemBuilder: (context, index) => ChallengeTile(challenges[index]),
+        separatorBuilder: (context, index) => Divider(
+          color: context.colorScheme.onBackground,
+          height: 0,
+        ),
+        itemCount: challenges.length,
+        shrinkWrap: true,
       ),
-      itemCount: challenges.length,
-      shrinkWrap: true,
     );
   }
 }

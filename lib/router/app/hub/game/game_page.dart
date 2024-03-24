@@ -1,3 +1,4 @@
+import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/chessground/export.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
@@ -64,6 +65,15 @@ class _GamePage extends StatelessWidget {
     if (gameState == null) return const SizedBox.shrink();
 
     final game = gameState.game;
+
+    if (game.status == GameStatus.aborted) {
+      return Align(
+        alignment: Alignment.topCenter,
+        child: CCPadding.allLarge(
+          child: const Text('Cette partie a été annulée'),
+        ),
+      );
+    }
 
     final authUid = context.watch<UserCubit>().state.id;
 

@@ -31,6 +31,16 @@ class LiveGameCRUD extends CollectionCRUD<GameModel> {
 
   // ---
 
+  void abort({required GameModel game}) {
+    if (game.status.value >= GameStatus.started.value) return;
+
+    update(
+      documentId: game.id,
+      data: game.copyWith(status: GameStatus.aborted),
+      // TODO : Functions : delete aborted games
+    );
+  }
+
   Future<void> onChallengeAccepted({
     required ChallengeModel challenge,
     required String challengerId,

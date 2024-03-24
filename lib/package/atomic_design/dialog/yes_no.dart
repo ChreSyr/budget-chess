@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 void showYesNoDialog({
   required BuildContext pageContext,
   required String title,
-  required Widget content,
   required void Function() onYes,
+  Widget? content,
 }) {
   showDialog<AlertDialog>(
     context: pageContext,

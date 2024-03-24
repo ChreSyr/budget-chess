@@ -61,8 +61,7 @@ class UserHeader extends StatelessWidget {
                 child: UserPhoto(
                   photo: photo,
                   radius: CCWidgetSize.xxsmall,
-                  isConnected: isConnected == true && editable == false,
-                  backgroundColor: photo == null ? Colors.red[100] : null,
+                  isConnected: isConnected == true,
                   onTap: editable
                       ? () => showMyActionsModal(context, onlyPhotos: true)
                       : null,

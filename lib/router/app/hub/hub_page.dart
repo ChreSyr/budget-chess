@@ -116,14 +116,17 @@ class GamesInProgressCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return FeedCard(
       title: 'Parties en cours', // TODO : l10n
-      child: ListView.separated(
-        itemBuilder: (context, index) => GameChallengeTile(games[index]),
-        separatorBuilder: (context, index) => Divider(
-          color: context.colorScheme.onBackground,
-          height: 0,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxHeight: CCWidgetSize.large2),
+        child: ListView.separated(
+          itemBuilder: (context, index) => GameChallengeTile(games[index]),
+          separatorBuilder: (context, index) => Divider(
+            color: context.colorScheme.onBackground,
+            height: 0,
+          ),
+          itemCount: games.length,
+          shrinkWrap: true,
         ),
-        itemCount: games.length,
-        shrinkWrap: true,
       ),
     );
   }

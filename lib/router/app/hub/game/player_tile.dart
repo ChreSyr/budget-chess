@@ -1,11 +1,12 @@
+import 'package:crea_chess/package/atomic_design/dialog/yes_no.dart';
 import 'package:crea_chess/package/atomic_design/widget/crown.dart';
-import 'package:crea_chess/package/atomic_design/widget/gap.dart';
-import 'package:crea_chess/router/app/user/widget/user_photo.dart';
 import 'package:crea_chess/package/firebase/export.dart';
+import 'package:crea_chess/package/lichess/lichess_icons.dart';
 import 'package:crea_chess/package/unichess/unichess.dart';
 import 'package:crea_chess/router/app/hub/game/game_cubit.dart';
 import 'package:crea_chess/router/app/hub/game/side.dart';
 import 'package:crea_chess/router/app/user/user_page.dart';
+import 'package:crea_chess/router/app/user/widget/user_photo.dart';
 import 'package:crea_chess/router/shared/settings/settings_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -79,10 +80,17 @@ class PlayerTile extends StatelessWidget {
             : Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  CCGap.medium,
                   IconButton(
+                    icon: const Icon(LichessIcons.flag),
+                    onPressed: () => showYesNoDialog(
+                      pageContext: context,
+                      title: 'Voulez-vous abandonner la partie en cours ?',
+                      onYes: () {},
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.settings),
                     onPressed: () => BoardSettingsCard.showAsModal(context),
-                    icon: const Icon(Icons.settings), // TODO : l10n
                   ),
                 ],
               ),
