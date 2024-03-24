@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/text_style.dart';
 import 'package:crea_chess/package/chat/models/bubble_rtl_alignment.dart';
@@ -426,57 +425,54 @@ class ChatState extends State<Chat> {
         user: widget.user,
         child: Stack(
           children: [
-            ColoredBox(
-              color: context.colorScheme.onInverseSurface,
-              child: Column(
-                children: [
-                  Flexible(
-                    child: widget.messages.isEmpty
-                        ? SizedBox.expand(
-                            child: _emptyStateBuilder(),
-                          )
-                        : GestureDetector(
-                            onTap: () {
-                              FocusManager.instance.primaryFocus?.unfocus();
-                              widget.onBackgroundTap?.call();
-                            },
-                            child: LayoutBuilder(
-                              builder: (
-                                BuildContext context,
-                                BoxConstraints constraints,
-                              ) =>
-                                  ChatList(
-                                bottomWidget: widget.listBottomWidget,
-                                bubbleRtlAlignment: widget.bubbleRtlAlignment!,
-                                isLastPage: widget.isLastPage,
-                                itemBuilder: (Object item, int? index) =>
-                                    _messageBuilder(
-                                  item,
-                                  constraints,
-                                  index,
-                                ),
-                                items: _chatMessages,
-                                keyboardDismissBehavior:
-                                    widget.keyboardDismissBehavior,
-                                onEndReached: widget.onEndReached,
-                                onEndReachedThreshold:
-                                    widget.onEndReachedThreshold,
-                                scrollController: _scrollController,
-                                scrollPhysics: widget.scrollPhysics,
-                                typingIndicatorOptions:
-                                    widget.typingIndicatorOptions,
-                                useTopSafeAreaInset:
-                                    widget.useTopSafeAreaInset ?? isMobile,
+            Column(
+              children: [
+                Flexible(
+                  child: widget.messages.isEmpty
+                      ? SizedBox.expand(
+                          child: _emptyStateBuilder(),
+                        )
+                      : GestureDetector(
+                          onTap: () {
+                            FocusManager.instance.primaryFocus?.unfocus();
+                            widget.onBackgroundTap?.call();
+                          },
+                          child: LayoutBuilder(
+                            builder: (
+                              BuildContext context,
+                              BoxConstraints constraints,
+                            ) =>
+                                ChatList(
+                              bottomWidget: widget.listBottomWidget,
+                              bubbleRtlAlignment: widget.bubbleRtlAlignment!,
+                              isLastPage: widget.isLastPage,
+                              itemBuilder: (Object item, int? index) =>
+                                  _messageBuilder(
+                                item,
+                                constraints,
+                                index,
                               ),
+                              items: _chatMessages,
+                              keyboardDismissBehavior:
+                                  widget.keyboardDismissBehavior,
+                              onEndReached: widget.onEndReached,
+                              onEndReachedThreshold:
+                                  widget.onEndReachedThreshold,
+                              scrollController: _scrollController,
+                              scrollPhysics: widget.scrollPhysics,
+                              typingIndicatorOptions:
+                                  widget.typingIndicatorOptions,
+                              useTopSafeAreaInset:
+                                  widget.useTopSafeAreaInset ?? isMobile,
                             ),
                           ),
-                  ),
-                  Input(
-                    onSendPressed: widget.onSendPressed,
-                    options: widget.inputOptions,
-                  ),
-                ],
-              ),
+                        ),
+                ),
+                Input(
+                  onSendPressed: widget.onSendPressed,
+                  options: widget.inputOptions,
+                ),
+              ],
             ),
           ],
         ),

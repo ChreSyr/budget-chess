@@ -30,7 +30,7 @@ class SystemMessage extends StatelessWidget {
           right: CCSize.large,
         ),
         decoration: BoxDecoration(
-          color: context.colorScheme.surface,
+          color: context.colorScheme.onInverseSurface,
           borderRadius: CCBorderRadiusCircular.small,
         ),
         child: CCPadding.allSmall(

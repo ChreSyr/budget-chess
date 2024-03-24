@@ -11,7 +11,7 @@ class UnreadHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
         alignment: Alignment.center,
-        color: context.colorScheme.surface,
+        color: context.colorScheme.onInverseSurface,
         margin: EdgeInsets.only(bottom: 24, top: marginTop ?? 0),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
         child: Text(

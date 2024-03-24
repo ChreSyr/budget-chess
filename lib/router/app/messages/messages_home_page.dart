@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/firebase/authentication/auth_uid_listener_cubit.dart';
@@ -86,7 +85,6 @@ class MessagesHomePage extends StatelessWidget {
         title: Text(MessagesHomeRoute.i.getTitle(context.l10n)),
         actions: getSideRoutesAppBarActions(context),
       ),
-      backgroundColor: context.colorScheme.surfaceVariant,
       body: BlocProvider(
         create: (context) => RelationsCubit(),
         child: BlocBuilder<RelationsCubit, Iterable<RelationshipModel>>(
