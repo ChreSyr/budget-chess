@@ -62,6 +62,7 @@ class _GamePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authUid = context.watch<UserCubit>().state.id;
     final gameCubit = context.watch<GameCubit>();
     final gameState = gameCubit.state;
 
@@ -70,41 +71,38 @@ class _GamePage extends StatelessWidget {
 
     final game = gameState.game;
 
+    final Widget screen;
+
     if (game.status == GameStatus.aborted) {
-      return Align(
+      screen = Align(
         alignment: Alignment.topCenter,
         child: CCPadding.allLarge(
           child: const Text('Cette partie a été annulée'),
         ),
       );
-    }
+    } else {
 
-    final authUid = context.watch<UserCubit>().state.id;
+      final side = game.blackId == authUid
+          ? Side.black
+          : game.whiteId == authUid
+              ? Side.white
+              : null;
 
-    final side = game.blackId == authUid
-        ? Side.black
-        : game.whiteId == authUid
-            ? Side.white
-            : null;
+      if (side != null && game.status == GameStatus.created) {
+        screen = SetupScreen(side: side, challenge: game.challenge);
+      } else {
+        final boardSettings = context.watch<BoardSettingsCubit>().state;
+        final interactableSide = side?.interactable ?? InteractableSide.none;
 
-    if (side != null && game.status == GameStatus.created) {
-      return SetupScreen(side: side, challenge: game.challenge);
-    }
+        // null means the setup is not finished
+        final position = gameState.position;
+        if (position == null) return const SizedBox.shrink();
 
-    final boardSettings = context.watch<BoardSettingsCubit>().state;
-    final interactableSide = side?.interactable ?? InteractableSide.none;
+        final orientation = side ?? Side.white;
 
-    // null means the setup is not finished
-    final position = gameState.position;
-    if (position == null) return const SizedBox.shrink();
+        final lastMove = game.steps.lastOrNull?.sanMove?.move;
 
-    final orientation = side ?? Side.white;
-
-    final lastMove = game.steps.lastOrNull?.sanMove?.move;
-
-    return Stack(
-      children: [
-        ListView(
+        screen = ListView(
           children: [
             PlayerTile(
               userId: orientation == Side.white ? game.blackId : game.whiteId,
@@ -137,7 +135,13 @@ class _GamePage extends StatelessWidget {
             ),
             CCGap.xxxlarge,
           ],
-        ),
+        );
+      }
+    }
+
+    return Stack(
+      children: [
+        screen,
         Align(
           alignment: Alignment.bottomCenter,
           child: InkWell(
