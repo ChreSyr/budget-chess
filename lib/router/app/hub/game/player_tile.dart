@@ -1,10 +1,12 @@
 import 'package:crea_chess/package/atomic_design/widget/crown.dart';
+import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/router/app/user/widget/user_photo.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/unichess/unichess.dart';
 import 'package:crea_chess/router/app/hub/game/game_cubit.dart';
 import 'package:crea_chess/router/app/hub/game/side.dart';
 import 'package:crea_chess/router/app/user/user_page.dart';
+import 'package:crea_chess/router/shared/settings/settings_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,11 +39,10 @@ class PlayerTile extends StatelessWidget {
             : null;
     final sideToMove = position?.turn.toChessground;
 
-    return StreamBuilder<UserModel?>(
-      stream: userCRUD.stream(documentId: userId),
-      builder: (context, snapshot) {
-        final user = snapshot.data;
+    final currentUser = context.watch<UserCubit>().state;
+    final editable = currentUser.id == userId;
 
+    Widget buildWithUser(UserModel? user) {
         final username = Text(user?.username ?? '');
         final won = side != null && side == winner;
 
@@ -49,9 +50,7 @@ class PlayerTile extends StatelessWidget {
           leading: UserPhoto(
             photo: user?.photo,
             isConnected: user?.isConnected,
-            onTap: user == null
-                ? null
-                : () => UserRoute.pushId(userId: user.id),
+          onTap: user == null ? null : () => UserRoute.pushId(userId: user.id),
           ),
           title: won
               ? Stack(
@@ -66,7 +65,7 @@ class PlayerTile extends StatelessWidget {
                   ],
                 )
               : username,
-          trailing: kDebugMode
+        trailing: kDebugMode && !editable
               ? IconButton.outlined(
                   onPressed: sideToMove == side && position != null
                       ? () {
@@ -77,9 +76,25 @@ class PlayerTile extends StatelessWidget {
                       : null,
                   icon: const Icon(Icons.play_arrow),
                 )
-              : null,
+            : Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CCGap.medium,
+                  IconButton(
+                    onPressed: () => BoardSettingsCard.showAsModal(context),
+                    icon: const Icon(Icons.settings), // TODO : l10n
+                  ),
+                ],
+              ),
         );
-      },
+
+    }
+
+    if (editable) return buildWithUser(currentUser);
+
+    return StreamBuilder<UserModel?>(
+      stream: userCRUD.stream(documentId: userId),
+      builder: (context, snapshot) => buildWithUser(snapshot.data),
     );
   }
 

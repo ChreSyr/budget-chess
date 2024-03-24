@@ -1,4 +1,3 @@
-import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/chessground/export.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
@@ -11,7 +10,6 @@ import 'package:crea_chess/router/app/hub/setup/board_settings_cubit.dart';
 import 'package:crea_chess/router/app/hub/setup/setup_screen.dart';
 import 'package:crea_chess/router/shared/app_bar_actions.dart';
 import 'package:crea_chess/router/shared/ccroute.dart';
-import 'package:crea_chess/router/shared/settings/settings_page.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -44,14 +42,7 @@ class GamePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(GameRoute.i.getTitle(context.l10n)),
-        actions: <Widget>[
-              IconButton(
-                onPressed: () => BoardSettingsCard.showAsModal(context),
-                icon: const Icon(Icons.settings), // TODO : l10n
-              ),
-              CCGap.medium,
-            ] +
-            getSideRoutesAppBarActions(context),
+        actions: getSideRoutesAppBarActions(context),
       ),
       body: BlocProvider(
         create: (context) => GameCubit(gameId: gameId),
