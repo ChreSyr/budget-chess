@@ -8,7 +8,7 @@ import 'package:crea_chess/package/firebase/firestore/relationship/relationship_
 import 'package:crea_chess/package/firebase/firestore/user/user_crud.dart';
 import 'package:crea_chess/package/firebase/firestore/user/user_model.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
-import 'package:crea_chess/router/app/messages/messages_page.dart';
+import 'package:crea_chess/router/app/chats/chat/chat_page.dart';
 import 'package:crea_chess/router/app/user/user_page.dart';
 import 'package:crea_chess/router/shared/app_bar_actions.dart';
 import 'package:crea_chess/router/shared/ccroute.dart';
@@ -16,26 +16,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class MessagesHomeRoute extends CCRoute {
-  const MessagesHomeRoute._()
+class ChatHomeRoute extends CCRoute {
+  const ChatHomeRoute._()
       : super(
-          name: 'messagesHome',
-          path: '/messages',
+          name: 'chatHome',
+          path: '/chat',
           icon: Icons.forum,
         );
 
   /// Instance
-  static const i = MessagesHomeRoute._();
+  static const i = ChatHomeRoute._();
 
   @override
   String getTitle(AppLocalizations l10n) => l10n.messages;
 
   @override
   Widget build(BuildContext context, GoRouterState state) =>
-      const MessagesHomePage();
+      const ChatHomePage();
 
   @override
-  List<RouteBase> get routes => [MessagesRoute.i.goRoute];
+  List<RouteBase> get routes => [ChatRoute.i.goRoute];
 }
 
 class RelationsCubit extends AuthUidListenerCubit<Iterable<RelationshipModel>> {
@@ -75,14 +75,14 @@ class RelationsCubit extends AuthUidListenerCubit<Iterable<RelationshipModel>> {
       : state.map((e) => e.otherUser(_authUid!)).whereType<String>();
 }
 
-class MessagesHomePage extends StatelessWidget {
-  const MessagesHomePage({super.key});
+class ChatHomePage extends StatelessWidget {
+  const ChatHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(MessagesHomeRoute.i.getTitle(context.l10n)),
+        title: Text(ChatHomeRoute.i.getTitle(context.l10n)),
         actions: getSideRoutesAppBarActions(context),
       ),
       body: BlocProvider(
@@ -105,7 +105,7 @@ class MessagesHomePage extends StatelessWidget {
                         onTap: () => UserRoute.pushId(userId: userId),
                       ),
                       title: Text(user.username),
-                      onTap: () => MessagesRoute.pushId(userId: userId),
+                      onTap: () => ChatRoute.pushId(userId: userId),
                     );
                   },
                 );

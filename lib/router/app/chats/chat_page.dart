@@ -3,25 +3,25 @@ import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/snack_bar.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
-import 'package:crea_chess/package/chat/widgets/chat.dart';
-import 'package:crea_chess/package/chat/widgets/unread_header.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/router/app/app_router.dart';
-import 'package:crea_chess/router/app/messages/sending_messages/sending_messages_cubit.dart';
+import 'package:crea_chess/router/app/chats/chat/cubit/sending_messages_cubit.dart';
+import 'package:crea_chess/router/app/chats/chat/widget/chat.dart';
+import 'package:crea_chess/router/app/chats/chat/widget/unread_header.dart';
 import 'package:crea_chess/router/app/user/user_page.dart';
 import 'package:crea_chess/router/shared/ccroute.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class MessagesRoute extends CCRoute {
-  const MessagesRoute._() : super(name: 'messages', path: ':usernameOrId');
+class ChatRoute extends CCRoute {
+  const ChatRoute._() : super(name: 'chat', path: ':usernameOrId');
 
   /// Instance
-  static const i = MessagesRoute._();
+  static const i = ChatRoute._();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) => MessagesPage(
+  Widget build(BuildContext context, GoRouterState state) => ChatPage(
         usernameOrId: state.pathParameters['usernameOrId'],
       );
 
@@ -36,8 +36,8 @@ class MessagesRoute extends CCRoute {
       );
 }
 
-class MessagesPage extends StatelessWidget {
-  const MessagesPage({required this.usernameOrId, super.key});
+class ChatPage extends StatelessWidget {
+  const ChatPage({required this.usernameOrId, super.key});
 
   final String? usernameOrId;
 

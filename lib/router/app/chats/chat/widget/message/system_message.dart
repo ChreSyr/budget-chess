@@ -3,7 +3,7 @@ import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/text_style.dart';
-import 'package:crea_chess/package/chat/widgets/message/text_message.dart';
+import 'package:crea_chess/router/app/chats/chat/widget/message/text_message.dart';
 import 'package:flutter/material.dart';
 
 /// A class that represents system message widget.

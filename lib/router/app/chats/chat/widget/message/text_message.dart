@@ -1,12 +1,12 @@
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/text_style.dart';
-import 'package:crea_chess/package/chat/models/emoji_enlargement_behavior.dart';
-import 'package:crea_chess/package/chat/models/matchers.dart';
-import 'package:crea_chess/package/chat/models/pattern_style.dart';
-import 'package:crea_chess/package/chat/util.dart';
-import 'package:crea_chess/package/chat/widgets/message/user_name.dart';
-import 'package:crea_chess/package/chat/widgets/state/inherited_user.dart';
 import 'package:crea_chess/package/firebase/export.dart';
+import 'package:crea_chess/router/app/chats/chat/model/emoji_enlargement_behavior.dart';
+import 'package:crea_chess/router/app/chats/chat/model/matchers.dart';
+import 'package:crea_chess/router/app/chats/chat/model/pattern_style.dart';
+import 'package:crea_chess/router/app/chats/chat/util.dart';
+import 'package:crea_chess/router/app/chats/chat/widget/message/user_name.dart';
+import 'package:crea_chess/router/app/chats/chat/widget/state/inherited_user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parsed_text/flutter_parsed_text.dart';
 

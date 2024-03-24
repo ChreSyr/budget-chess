@@ -2,13 +2,13 @@ import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
-import 'package:crea_chess/package/chat/models/bubble_rtl_alignment.dart';
-import 'package:crea_chess/package/chat/models/emoji_enlargement_behavior.dart';
-import 'package:crea_chess/package/chat/util.dart';
-import 'package:crea_chess/package/chat/widgets/message/message_status_icon.dart';
-import 'package:crea_chess/package/chat/widgets/message/text_message.dart';
-import 'package:crea_chess/package/chat/widgets/state/inherited_user.dart';
 import 'package:crea_chess/package/firebase/export.dart';
+import 'package:crea_chess/router/app/chats/chat/model/bubble_rtl_alignment.dart';
+import 'package:crea_chess/router/app/chats/chat/model/emoji_enlargement_behavior.dart';
+import 'package:crea_chess/router/app/chats/chat/util.dart';
+import 'package:crea_chess/router/app/chats/chat/widget/message/message_status_icon.dart';
+import 'package:crea_chess/router/app/chats/chat/widget/message/text_message.dart';
+import 'package:crea_chess/router/app/chats/chat/widget/state/inherited_user.dart';
 import 'package:flutter/material.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
@@ -252,10 +252,10 @@ class MessageWidget extends StatelessWidget {
           if (currentUserIsAuthor)
             CCPadding.allXsmall(
               child: GestureDetector(
-                      onLongPress: () =>
-                          onMessageStatusLongPress?.call(context, message),
-                      onTap: () => onMessageStatusTap?.call(context, message),
-                      child: MessageStatusIcon(status: message.status),
+                onLongPress: () =>
+                    onMessageStatusLongPress?.call(context, message),
+                onTap: () => onMessageStatusTap?.call(context, message),
+                child: MessageStatusIcon(status: message.status),
               ),
             ),
         ],

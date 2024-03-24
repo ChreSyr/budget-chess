@@ -1,4 +1,4 @@
-import 'package:crea_chess/package/chat/models/pattern_style.dart';
+import 'package:crea_chess/router/app/chats/chat/model/pattern_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_parsed_text/flutter_parsed_text.dart';
 

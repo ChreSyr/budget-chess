@@ -1,8 +1,8 @@
 import 'package:crea_chess/package/atomic_design/color.dart';
-import 'package:crea_chess/package/chat/models/bubble_rtl_alignment.dart';
-import 'package:crea_chess/package/chat/widgets/state/inherited_user.dart';
-import 'package:crea_chess/package/chat/widgets/typing_indicator.dart';
 import 'package:crea_chess/package/firebase/firestore/relationship/message/message_model.dart';
+import 'package:crea_chess/router/app/chats/chat/model/bubble_rtl_alignment.dart';
+import 'package:crea_chess/router/app/chats/chat/widget/state/inherited_user.dart';
+import 'package:crea_chess/router/app/chats/chat/widget/typing_indicator.dart';
 import 'package:diffutil_dart/diffutil.dart';
 import 'package:flutter/material.dart';
 

@@ -7,9 +7,9 @@ import 'package:crea_chess/package/atomic_design/widget/badge.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/atomic_design/widget/nav_bar.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
+import 'package:crea_chess/router/app/chats/chat_home_page.dart';
 import 'package:crea_chess/router/app/friends/friends_page.dart';
 import 'package:crea_chess/router/app/hub/hub_page.dart';
-import 'package:crea_chess/router/app/messages/messages_home_page.dart';
 import 'package:crea_chess/router/app/missions/missions_page.dart';
 import 'package:crea_chess/router/app/nav_notifier.dart';
 import 'package:crea_chess/router/app/side_routes.dart';
@@ -39,7 +39,7 @@ final appRouter = GoRouter(
         // Bottom routes : hub, missions, messages & friends
         StatefulShellBranch(routes: [HubRoute.i.goRoute]),
         StatefulShellBranch(routes: [MissionsRoute.i.goRoute]),
-        StatefulShellBranch(routes: [MessagesHomeRoute.i.goRoute]),
+        StatefulShellBranch(routes: [ChatHomeRoute.i.goRoute]),
         StatefulShellBranch(routes: [FriendsRoute.i.goRoute]),
         // Other routes
         StatefulShellBranch(
@@ -116,7 +116,7 @@ class ScaffoldWithNestedNavigation extends StatelessWidget {
   static final bottomRoutes = [
     HubRoute.i,
     MissionsRoute.i,
-    MessagesHomeRoute.i,
+    ChatHomeRoute.i,
     FriendsRoute.i,
   ];
 

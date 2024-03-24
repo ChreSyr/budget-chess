@@ -1,6 +1,6 @@
 import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/text_style.dart';
-import 'package:crea_chess/package/chat/widgets/state/inherited_user.dart';
+import 'package:crea_chess/router/app/chats/chat/widget/state/inherited_user.dart';
 import 'package:flutter/material.dart';
 
 /// Renders user's name as a message heading according to the theme.

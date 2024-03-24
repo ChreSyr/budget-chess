@@ -1,9 +1,9 @@
 import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/text_style.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
-import 'package:crea_chess/package/chat/models/bubble_rtl_alignment.dart';
-import 'package:crea_chess/package/chat/models/typing_indicator_mode.dart';
 import 'package:crea_chess/package/firebase/export.dart';
+import 'package:crea_chess/router/app/chats/chat/model/bubble_rtl_alignment.dart';
+import 'package:crea_chess/router/app/chats/chat/model/typing_indicator_mode.dart';
 import 'package:flutter/material.dart';
 
 class TypingIndicator extends StatefulWidget {
