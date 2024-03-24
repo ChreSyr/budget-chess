@@ -2,8 +2,8 @@ import 'package:crea_chess/package/atomic_design/snack_bar.dart';
 import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/chat.dart';
 import 'package:crea_chess/package/chat/message/message_model.dart';
 import 'package:crea_chess/package/chat/message/messsage_crud.dart';
+import 'package:crea_chess/package/chat/message/sending_messages_cubit.dart';
 import 'package:crea_chess/package/firebase/export.dart';
-import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/router/app/app_router.dart';
 import 'package:crea_chess/router/shared/ccroute.dart';
 import 'package:flutter/material.dart';
@@ -43,24 +43,27 @@ class MessagesPage extends StatelessWidget {
       return ErrorPage(exception: Exception('Missing argument : usernameOrId'));
     }
 
-    return StreamBuilder<UserModel?>(
-      stream: usernameOrId!.startsWith('@')
-          ? userCRUD.streamUsername(usernameOrId!.substring(1))
-          : userCRUD.stream(documentId: usernameOrId!),
-      builder: (context, snapshot) {
-        final user = snapshot.data;
-        return Scaffold(
-          appBar: AppBar(
-            title: user == null ? null : Text(user.username),
-          ),
-          body: user == null
-              ? const LinearProgressIndicator()
-              : ChatScreen(
-                  authUid: context.read<UserCubit>().state.id,
-                  otherId: user.id,
-                ),
-        );
-      },
+    return BlocProvider(
+      create: (context) => SendingMessagesCubit(),
+      child: StreamBuilder<UserModel?>(
+        stream: usernameOrId!.startsWith('@')
+            ? userCRUD.streamUsername(usernameOrId!.substring(1))
+            : userCRUD.stream(documentId: usernameOrId!),
+        builder: (context, snapshot) {
+          final user = snapshot.data;
+          return Scaffold(
+            appBar: AppBar(
+              title: user == null ? null : Text(user.username),
+            ),
+            body: user == null
+                ? const LinearProgressIndicator()
+                : ChatScreen(
+                    authUid: context.read<UserCubit>().state.id,
+                    otherId: user.id,
+                  ),
+          );
+        },
+      ),
     );
   }
 }
@@ -80,27 +83,6 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  Future<void> _handleSendPressed(String text) async {
-    final relationshipId = relationshipCRUD.getId(
-      widget.authUid,
-      widget.otherId,
-    );
-    final message = MessageModel.fromText(
-      authorId: widget.authUid,
-      text: text,
-    );
-    try {
-      await messageCRUD.create(
-        parentDocumentId: relationshipId,
-        documentId: null,
-        data: message,
-      );
-    } catch (_) {
-      // ignore: use_build_context_synchronously
-      snackBarError(context, context.l10n.errorOccurred);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final currentUser = context.read<UserCubit>().state;
@@ -119,10 +101,32 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
       ),
       builder: (context, snapshot) {
-        return Chat(
-          messages: snapshot.data?.toList() ?? [],
-          onSendPressed: _handleSendPressed,
-          user: currentUser,
+        return BlocConsumer<SendingMessagesCubit, SendingMessages>(
+          listener: (context, state) {
+            if (state.status == SendingStatus.error) {
+              // TODO : l10n
+              snackBarError(context, 'Error while sending message');
+              context.read<SendingMessagesCubit>().clearStatus();
+            }
+          },
+          builder: (context, sendingMesssages) {
+            return Chat(
+              messages: (snapshot.data?.toList() ?? []) +
+                  sendingMesssages.messages
+                      .where(
+                        (message) => message.relationshipId == relationshipId,
+                      )
+                      .toList(),
+              onSendPressed: (text) async {
+                context.read<SendingMessagesCubit>().send(
+                      authorId: widget.authUid,
+                      receiverId: widget.otherId,
+                      text: text,
+                    );
+              },
+              user: currentUser,
+            );
+          },
         );
       },
     );

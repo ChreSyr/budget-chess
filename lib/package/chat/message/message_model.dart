@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:crea_chess/package/firebase/firestore/converter/timestamp_to_datetime.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'message_model.freezed.dart';
@@ -11,9 +9,10 @@ enum MessageStatus { delivered, error, seen, sending, sent }
 @freezed
 class MessageModel with _$MessageModel {
   factory MessageModel({
+    required String relationshipId,
     required String id,
-    @TimestampToDateTimeConverter() DateTime? createdAt,
-    @TimestampToDateTimeConverter() DateTime? updatedAt,
+    DateTime? createdAt,
+    DateTime? updatedAt,
     String? authorId,
     String? text,
     @Default(true) bool showStatus,
@@ -22,16 +21,17 @@ class MessageModel with _$MessageModel {
 
   /// Creates a full text message from a partial one.
   factory MessageModel.fromText({
+    required String relationshipId,
     required String authorId,
     required String text,
   }) =>
       MessageModel(
+        relationshipId: relationshipId,
         id: '',
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
         authorId: authorId,
         text: text,
-        showStatus: true,
         status: MessageStatus.sending,
       );
 

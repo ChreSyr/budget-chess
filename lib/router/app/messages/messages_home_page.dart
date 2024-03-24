@@ -57,7 +57,10 @@ class RelationsCubit extends AuthUidListenerCubit<Iterable<RelationshipModel>> {
                 authUid,
                 isNotEqualTo: null,
               )
-              .orderBy('lastUserStatusUpdate'),
+              .orderBy(
+                'lastUserStatusUpdate',
+                descending: true,
+              ),
         )
         .listen(emit);
   }
@@ -88,8 +91,7 @@ class MessagesHomePage extends StatelessWidget {
         create: (context) => RelationsCubit(),
         child: BlocBuilder<RelationsCubit, Iterable<RelationshipModel>>(
           builder: (context, relations) {
-            final otherIds =
-                context.watch<RelationsCubit>().otherIds.toList().reversed;
+            final otherIds = context.watch<RelationsCubit>().otherIds;
             return ListView(
               children: otherIds.map((userId) {
                 return StreamBuilder<UserModel?>(

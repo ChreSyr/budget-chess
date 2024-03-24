@@ -177,6 +177,7 @@ class _ChatSectionState extends State<ChatSection> {
       widget.otherId,
     );
     final message = MessageModel.fromText(
+      relationshipId: relationshipId,
       authorId: widget.currentUserId,
       text: text,
     );

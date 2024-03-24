@@ -20,10 +20,9 @@ MessageModel _$MessageModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$MessageModel {
+  String get relationshipId => throw _privateConstructorUsedError;
   String get id => throw _privateConstructorUsedError;
-  @TimestampToDateTimeConverter()
   DateTime? get createdAt => throw _privateConstructorUsedError;
-  @TimestampToDateTimeConverter()
   DateTime? get updatedAt => throw _privateConstructorUsedError;
   String? get authorId => throw _privateConstructorUsedError;
   String? get text => throw _privateConstructorUsedError;
@@ -43,9 +42,10 @@ abstract class $MessageModelCopyWith<$Res> {
       _$MessageModelCopyWithImpl<$Res, MessageModel>;
   @useResult
   $Res call(
-      {String id,
-      @TimestampToDateTimeConverter() DateTime? createdAt,
-      @TimestampToDateTimeConverter() DateTime? updatedAt,
+      {String relationshipId,
+      String id,
+      DateTime? createdAt,
+      DateTime? updatedAt,
       String? authorId,
       String? text,
       bool showStatus,
@@ -65,6 +65,7 @@ class _$MessageModelCopyWithImpl<$Res, $Val extends MessageModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? relationshipId = null,
     Object? id = null,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
@@ -74,6 +75,10 @@ class _$MessageModelCopyWithImpl<$Res, $Val extends MessageModel>
     Object? status = freezed,
   }) {
     return _then(_value.copyWith(
+      relationshipId: null == relationshipId
+          ? _value.relationshipId
+          : relationshipId // ignore: cast_nullable_to_non_nullable
+              as String,
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -115,9 +120,10 @@ abstract class _$$MessageModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String id,
-      @TimestampToDateTimeConverter() DateTime? createdAt,
-      @TimestampToDateTimeConverter() DateTime? updatedAt,
+      {String relationshipId,
+      String id,
+      DateTime? createdAt,
+      DateTime? updatedAt,
       String? authorId,
       String? text,
       bool showStatus,
@@ -135,6 +141,7 @@ class __$$MessageModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? relationshipId = null,
     Object? id = null,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
@@ -144,6 +151,10 @@ class __$$MessageModelImplCopyWithImpl<$Res>
     Object? status = freezed,
   }) {
     return _then(_$MessageModelImpl(
+      relationshipId: null == relationshipId
+          ? _value.relationshipId
+          : relationshipId // ignore: cast_nullable_to_non_nullable
+              as String,
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -180,9 +191,10 @@ class __$$MessageModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$MessageModelImpl extends _MessageModel {
   _$MessageModelImpl(
-      {required this.id,
-      @TimestampToDateTimeConverter() this.createdAt,
-      @TimestampToDateTimeConverter() this.updatedAt,
+      {required this.relationshipId,
+      required this.id,
+      this.createdAt,
+      this.updatedAt,
       this.authorId,
       this.text,
       this.showStatus = true,
@@ -193,12 +205,12 @@ class _$MessageModelImpl extends _MessageModel {
       _$$MessageModelImplFromJson(json);
 
   @override
+  final String relationshipId;
+  @override
   final String id;
   @override
-  @TimestampToDateTimeConverter()
   final DateTime? createdAt;
   @override
-  @TimestampToDateTimeConverter()
   final DateTime? updatedAt;
   @override
   final String? authorId;
@@ -212,7 +224,7 @@ class _$MessageModelImpl extends _MessageModel {
 
   @override
   String toString() {
-    return 'MessageModel(id: $id, createdAt: $createdAt, updatedAt: $updatedAt, authorId: $authorId, text: $text, showStatus: $showStatus, status: $status)';
+    return 'MessageModel(relationshipId: $relationshipId, id: $id, createdAt: $createdAt, updatedAt: $updatedAt, authorId: $authorId, text: $text, showStatus: $showStatus, status: $status)';
   }
 
   @override
@@ -220,6 +232,8 @@ class _$MessageModelImpl extends _MessageModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$MessageModelImpl &&
+            (identical(other.relationshipId, relationshipId) ||
+                other.relationshipId == relationshipId) &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
@@ -235,8 +249,8 @@ class _$MessageModelImpl extends _MessageModel {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, createdAt, updatedAt,
-      authorId, text, showStatus, status);
+  int get hashCode => Object.hash(runtimeType, relationshipId, id, createdAt,
+      updatedAt, authorId, text, showStatus, status);
 
   @JsonKey(ignore: true)
   @override
@@ -254,9 +268,10 @@ class _$MessageModelImpl extends _MessageModel {
 
 abstract class _MessageModel extends MessageModel {
   factory _MessageModel(
-      {required final String id,
-      @TimestampToDateTimeConverter() final DateTime? createdAt,
-      @TimestampToDateTimeConverter() final DateTime? updatedAt,
+      {required final String relationshipId,
+      required final String id,
+      final DateTime? createdAt,
+      final DateTime? updatedAt,
       final String? authorId,
       final String? text,
       final bool showStatus,
@@ -267,12 +282,12 @@ abstract class _MessageModel extends MessageModel {
       _$MessageModelImpl.fromJson;
 
   @override
+  String get relationshipId;
+  @override
   String get id;
   @override
-  @TimestampToDateTimeConverter()
   DateTime? get createdAt;
   @override
-  @TimestampToDateTimeConverter()
   DateTime? get updatedAt;
   @override
   String? get authorId;
