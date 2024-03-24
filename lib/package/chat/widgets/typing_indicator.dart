@@ -1,7 +1,8 @@
+import 'package:crea_chess/package/atomic_design/color.dart';
+import 'package:crea_chess/package/atomic_design/text_style.dart';
+import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/chat/models/bubble_rtl_alignment.dart';
 import 'package:crea_chess/package/chat/models/typing_indicator_mode.dart';
-import 'package:crea_chess/package/chat/util.dart';
-import 'package:crea_chess/package/chat/widgets/state/inherited_chat_theme.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:flutter/material.dart';
 
@@ -159,38 +160,19 @@ class _TypingIndicatorState extends State<TypingIndicator>
               margin: widget.bubbleAlignment == BubbleRtlAlignment.right
                   ? const EdgeInsets.fromLTRB(24, 24, 0, 24)
                   : const EdgeInsets.fromLTRB(0, 24, 24, 24),
-              decoration: BoxDecoration(
-                borderRadius: InheritedChatTheme.of(context)
-                    .theme
-                    .typingIndicatorTheme
-                    .bubbleBorder,
-                color: InheritedChatTheme.of(context)
-                    .theme
-                    .typingIndicatorTheme
-                    .bubbleColor,
-              ),
               child: Wrap(
                 spacing: 3,
                 children: <Widget>[
                   AnimatedCircles(
-                    circlesColor: InheritedChatTheme.of(context)
-                        .theme
-                        .typingIndicatorTheme
-                        .animatedCirclesColor,
+                    circlesColor: context.colorScheme.onBackground,
                     animationOffset: _firstCircleOffsetAnimation,
                   ),
                   AnimatedCircles(
-                    circlesColor: InheritedChatTheme.of(context)
-                        .theme
-                        .typingIndicatorTheme
-                        .animatedCirclesColor,
+                    circlesColor: context.colorScheme.onBackground,
                     animationOffset: _secondCircleOffsetAnimation,
                   ),
                   AnimatedCircles(
-                    circlesColor: InheritedChatTheme.of(context)
-                        .theme
-                        .typingIndicatorTheme
-                        .animatedCirclesColor,
+                    circlesColor: context.colorScheme.onBackground,
                     animationOffset: _thirdCircleOffsetAnimation,
                   ),
                 ],
@@ -227,6 +209,7 @@ class TypingWidget extends StatelessWidget {
 
   /// Handler for multi user typing text.
   String _multiUserTextBuilder(List<UserModel> author) {
+    // TODO : l10n
     if (author.isEmpty) {
       return '';
     } else if (author.length == 1) {
@@ -259,10 +242,7 @@ class TypingWidget extends StatelessWidget {
       return SizedBox(
         child: Text(
           _multiUserTextBuilder(widget.options.typingUsers),
-          style: InheritedChatTheme.of(context)
-              .theme
-              .typingIndicatorTheme
-              .multipleUserTextStyle,
+          style: context.textTheme.infoSmall,
         ),
       );
     } else if (mode == TypingIndicatorMode.avatar) {
@@ -286,10 +266,7 @@ class TypingWidget extends StatelessWidget {
           const SizedBox(width: 10),
           Text(
             _multiUserTextBuilder(widget.options.typingUsers),
-            style: InheritedChatTheme.of(context)
-                .theme
-                .typingIndicatorTheme
-                .multipleUserTextStyle,
+            style: context.textTheme.infoSmall,
           ),
         ],
       );
@@ -315,15 +292,15 @@ class AvatarHandler extends StatelessWidget {
     } else if (author.length == 1) {
       return Align(
         alignment: Alignment.centerLeft,
-        child: TypingAvatar(context: context, author: author.first),
+        child: TypingAvatar(author: author.first),
       );
     } else if (author.length == 2) {
       return Stack(
         children: <Widget>[
-          TypingAvatar(context: context, author: author.first),
+          TypingAvatar(author: author.first),
           Positioned(
             left: 16,
-            child: TypingAvatar(context: context, author: author[1]),
+            child: TypingAvatar(author: author[1]),
           ),
         ],
       );
@@ -331,30 +308,22 @@ class AvatarHandler extends StatelessWidget {
       return SizedBox(
         child: Stack(
           children: <Widget>[
-            TypingAvatar(context: context, author: author.first),
+            TypingAvatar(author: author.first),
             Positioned(
               left: 16,
-              child: TypingAvatar(context: context, author: author[1]),
+              child: TypingAvatar(author: author[1]),
             ),
             Positioned(
               left: 32,
               child: CircleAvatar(
                 radius: 13,
-                backgroundColor: InheritedChatTheme.of(context)
-                    .theme
-                    .typingIndicatorTheme
-                    .countAvatarColor,
+                backgroundColor: context.colorScheme.inversePrimary,
                 child: Text(
                   '${author.length - 2}',
-                  style: TextStyle(
-                    color: InheritedChatTheme.of(context)
-                        .theme
-                        .typingIndicatorTheme
-                        .countTextColor,
+                  style: context.textTheme.infoSmall?.copyWith(
+                    color: context.colorScheme.onPrimaryContainer,
                   ),
                   textAlign: TextAlign.center,
-                  // ignore: deprecated_member_use
-                  textScaleFactor: 0.7,
                 ),
               ),
             ),
@@ -368,37 +337,17 @@ class AvatarHandler extends StatelessWidget {
 // Typing avatar Widget.
 class TypingAvatar extends StatelessWidget {
   const TypingAvatar({
-    required this.context,
     required this.author,
     super.key,
   });
 
-  final BuildContext context;
   final UserModel author;
 
   @override
   Widget build(BuildContext context) {
-    final color = getUserAvatarNameColor(
-      author,
-      InheritedChatTheme.of(context).theme.userAvatarNameColors,
-    );
-    final hasImage = author.photo != null;
-    final initials = getUserInitials(author);
-
-    return CircleAvatar(
-      backgroundColor: hasImage
-          ? InheritedChatTheme.of(context).theme.userAvatarImageBackgroundColor
-          : color,
-      backgroundImage: hasImage ? NetworkImage(author.photo!) : null,
+    return UserPhoto(
+      photo: author.photo,
       radius: 13,
-      child: !hasImage
-          ? Text(
-              initials,
-              style: InheritedChatTheme.of(context).theme.userAvatarTextStyle,
-              // ignore: deprecated_member_use
-              textScaleFactor: 0.7,
-            )
-          : null,
     );
   }
 }
@@ -417,14 +366,8 @@ class AnimatedCircles extends StatelessWidget {
   Widget build(BuildContext context) => SlideTransition(
         position: animationOffset,
         child: Container(
-          height: InheritedChatTheme.of(context)
-              .theme
-              .typingIndicatorTheme
-              .animatedCircleSize,
-          width: InheritedChatTheme.of(context)
-              .theme
-              .typingIndicatorTheme
-              .animatedCircleSize,
+          height: 5,
+          width: 5,
           decoration: BoxDecoration(
             color: circlesColor,
             shape: BoxShape.circle,
@@ -437,7 +380,6 @@ class AnimatedCircles extends StatelessWidget {
 class TypingIndicatorOptions {
   const TypingIndicatorOptions({
     this.animationSpeed = const Duration(milliseconds: 500),
-    this.customTypingIndicator,
     this.typingMode = TypingIndicatorMode.name,
     this.typingUsers = const [],
   });
@@ -445,9 +387,6 @@ class TypingIndicatorOptions {
   /// Animation speed for circles.
   /// Defaults to 500 ms.
   final Duration animationSpeed;
-
-  /// Allows to set custom [TypingIndicator].
-  final Widget? customTypingIndicator;
 
   /// Typing mode for [TypingIndicator]. See [TypingIndicatorMode].
   final TypingIndicatorMode typingMode;

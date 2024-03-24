@@ -8,3 +8,10 @@ extension TextStyleExt on TextStyle {
   static const bold = TextStyle(fontWeight: FontWeight.bold);
   static const italic = TextStyle(fontStyle: FontStyle.italic);
 }
+
+extension TextThemeExt on TextTheme {
+  TextStyle? get infoSmall => bodySmall?.copyWith(
+        color: Colors.grey,
+        fontWeight: FontWeight.bold,
+      );
+}

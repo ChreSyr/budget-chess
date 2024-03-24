@@ -1,5 +1,5 @@
+import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/chat/models/bubble_rtl_alignment.dart';
-import 'package:crea_chess/package/chat/widgets/state/inherited_chat_theme.dart';
 import 'package:crea_chess/package/chat/widgets/state/inherited_user.dart';
 import 'package:crea_chess/package/chat/widgets/typing_indicator.dart';
 import 'package:crea_chess/package/firebase/firestore/relationship/message/message_model.dart';
@@ -282,14 +282,13 @@ class _ChatListState extends State<ChatList>
               sliver: SliverToBoxAdapter(
                 child: (widget.typingIndicatorOptions!.typingUsers.isNotEmpty &&
                         !_indicatorOnScrollStatus)
-                    ? widget.typingIndicatorOptions?.customTypingIndicator ??
-                        TypingIndicator(
-                          bubbleAlignment: widget.bubbleRtlAlignment,
-                          options: widget.typingIndicatorOptions!,
-                          showIndicator: widget.typingIndicatorOptions!
-                                  .typingUsers.isNotEmpty &&
-                              !_indicatorOnScrollStatus,
-                        )
+                    ? TypingIndicator(
+                        bubbleAlignment: widget.bubbleRtlAlignment,
+                        options: widget.typingIndicatorOptions!,
+                        showIndicator: widget.typingIndicatorOptions!
+                                .typingUsers.isNotEmpty &&
+                            !_indicatorOnScrollStatus,
+                      )
                     : const SizedBox.shrink(),
               ),
             ),
@@ -337,9 +336,7 @@ class _ChatListState extends State<ChatList>
                                 backgroundColor: Colors.transparent,
                                 strokeWidth: 1.5,
                                 valueColor: AlwaysStoppedAnimation<Color>(
-                                  InheritedChatTheme.of(context)
-                                      .theme
-                                      .primaryColor,
+                                  context.colorScheme.primary,
                                 ),
                               )
                             : null,

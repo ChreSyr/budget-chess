@@ -1,12 +1,16 @@
+import 'package:crea_chess/package/atomic_design/border.dart';
+import 'package:crea_chess/package/atomic_design/color.dart';
+import 'package:crea_chess/package/atomic_design/padding.dart';
+import 'package:crea_chess/package/atomic_design/size.dart';
+import 'package:crea_chess/package/atomic_design/text_style.dart';
 import 'package:crea_chess/package/chat/widgets/message/text_message.dart';
-import 'package:crea_chess/package/chat/widgets/state/inherited_chat_theme.dart';
 import 'package:flutter/material.dart';
 
 /// A class that represents system message widget.
 class SystemMessage extends StatelessWidget {
   const SystemMessage({
     required this.message,
-    this.options = const TextMessageOptions(),
+    this.options = const TextMessageOptions(alignment: TextAlign.center),
     super.key,
   });
 
@@ -19,24 +23,22 @@ class SystemMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
         alignment: Alignment.center,
-        margin: InheritedChatTheme.of(context).theme.systemMessageTheme.margin,
-        child: TextMessageText(
-          bodyLinkTextStyle: InheritedChatTheme.of(context)
-              .theme
-              .systemMessageTheme
-              .linkTextStyle,
-          bodyTextStyle:
-              InheritedChatTheme.of(context).theme.systemMessageTheme.textStyle,
-          boldTextStyle: InheritedChatTheme.of(context)
-              .theme
-              .systemMessageTheme
-              .boldTextStyle,
-          codeTextStyle: InheritedChatTheme.of(context)
-              .theme
-              .systemMessageTheme
-              .codeTextStyle,
-          options: options,
-          text: message,
+        margin: const EdgeInsets.only(
+          bottom: CCSize.large,
+          top: CCSize.small,
+          left: CCSize.large,
+          right: CCSize.large,
+        ),
+        decoration: BoxDecoration(
+          color: context.colorScheme.surface,
+          borderRadius: CCBorderRadiusCircular.small,
+        ),
+        child: CCPadding.allSmall(
+          child: TextMessageText(
+            bodyTextStyle: context.textTheme.infoSmall,
+            options: options,
+            text: message,
+          ),
         ),
       );
 }

@@ -1,5 +1,9 @@
 import 'package:crea_chess/package/atomic_design/snack_bar.dart';
+import 'package:crea_chess/package/chat/chat_theme.dart';
+import 'package:crea_chess/package/chat/models/typing_indicator_mode.dart';
 import 'package:crea_chess/package/chat/widgets/chat.dart';
+import 'package:crea_chess/package/chat/widgets/typing_indicator.dart';
+import 'package:crea_chess/package/chat/widgets/unread_header.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/router/app/app_router.dart';
 import 'package:crea_chess/router/app/messages/sending_messages/sending_messages_cubit.dart';
@@ -108,13 +112,24 @@ class _ChatScreenState extends State<ChatScreen> {
             }
           },
           builder: (context, sendingMesssages) {
+            final failedMessages = sendingMesssages.messages
+                .where(
+                  (message) => message.relationshipId == relationshipId,
+                )
+                .toList();
+            final messages = snapshot.data?.toList() ?? [];
+            if (failedMessages.isNotEmpty) {
+              messages
+                ..addAll(failedMessages)
+                ..sort(
+                  (a, b) => a.createdAt == null
+                      ? 0
+                      : b.createdAt?.compareTo(a.createdAt!) ?? 0,
+                );
+            }
+
             return Chat(
-              messages: (snapshot.data?.toList() ?? []) +
-                  sendingMesssages.messages
-                      .where(
-                        (message) => message.relationshipId == relationshipId,
-                      )
-                      .toList(),
+              messages: messages,
               onSendPressed: (text) async {
                 context.read<SendingMessagesCubit>().send(
                       authorId: widget.authUid,
@@ -123,6 +138,17 @@ class _ChatScreenState extends State<ChatScreen> {
                     );
               },
               user: currentUser,
+              scrollToUnreadOptions: ScrollToUnreadOptions(
+                lastReadMessageId: messages.lastOrNull?.id, // TODO
+                scrollOnOpen: true,
+              ),
+              typingIndicatorOptions: TypingIndicatorOptions(
+                typingMode: TypingIndicatorMode.both,
+                typingUsers: [currentUser, currentUser, currentUser],
+              ),
+              showUserAvatars: true,
+              showUserNames: true,
+              theme: const DarkChatTheme(),
             );
           },
         );

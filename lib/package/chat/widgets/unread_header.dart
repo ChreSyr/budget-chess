@@ -1,7 +1,6 @@
-import 'package:crea_chess/package/chat/widgets/state/inherited_chat_theme.dart';
+import 'package:crea_chess/package/atomic_design/color.dart';
+import 'package:crea_chess/package/atomic_design/text_style.dart';
 import 'package:flutter/material.dart';
-import 'package:scroll_to_index/scroll_to_index.dart'
-    show scrollAnimationDuration;
 
 class UnreadHeader extends StatelessWidget {
   const UnreadHeader({super.key, this.marginTop});
@@ -12,13 +11,12 @@ class UnreadHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
         alignment: Alignment.center,
-        color: InheritedChatTheme.of(context).theme.unreadHeaderTheme.color,
+        color: context.colorScheme.surface,
         margin: EdgeInsets.only(bottom: 24, top: marginTop ?? 0),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
         child: Text(
           'Unread messages', // TODO : l10n
-          style:
-              InheritedChatTheme.of(context).theme.unreadHeaderTheme.textStyle,
+          style: context.textTheme.infoSmall,
           textAlign: TextAlign.center,
         ),
       );
@@ -28,8 +26,8 @@ class UnreadHeader extends StatelessWidget {
 class ScrollToUnreadOptions {
   const ScrollToUnreadOptions({
     this.lastReadMessageId,
-    this.scrollDelay = const Duration(milliseconds: 150),
-    this.scrollDuration = scrollAnimationDuration,
+    this.scrollDelay = Duration.zero,
+    this.scrollDuration = const Duration(milliseconds: 150),
     this.scrollOnOpen = false,
   });
 

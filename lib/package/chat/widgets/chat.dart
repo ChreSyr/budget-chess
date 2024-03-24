@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/chat/chat_theme.dart';
 import 'package:crea_chess/package/chat/models/bubble_rtl_alignment.dart';
 import 'package:crea_chess/package/chat/models/date_header.dart';
@@ -10,6 +11,7 @@ import 'package:crea_chess/package/chat/util.dart';
 import 'package:crea_chess/package/chat/widgets/chat_list.dart';
 import 'package:crea_chess/package/chat/widgets/input/input.dart';
 import 'package:crea_chess/package/chat/widgets/message/message_widget.dart';
+import 'package:crea_chess/package/chat/widgets/message/system_message.dart';
 import 'package:crea_chess/package/chat/widgets/message/text_message.dart';
 import 'package:crea_chess/package/chat/widgets/state/inherited_chat_theme.dart';
 import 'package:crea_chess/package/chat/widgets/state/inherited_user.dart';
@@ -48,7 +50,6 @@ class Chat extends StatefulWidget {
     this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
     this.listBottomWidget,
     this.nameBuilder,
-    this.onAvatarTap,
     this.onBackgroundTap,
     this.onEndReached,
     this.onEndReachedThreshold,
@@ -138,9 +139,6 @@ class Chat extends StatefulWidget {
 
   // See [Message.nameBuilder].
   final Widget Function(UserModel)? nameBuilder;
-
-  // See [Message.onAvatarTap].
-  final void Function(UserModel)? onAvatarTap;
 
   /// Called when user taps on background.
   final VoidCallback? onBackgroundTap;
@@ -345,33 +343,35 @@ class ChatState extends State<Chat> {
 
       final Widget messageWidget;
 
-      final messageWidth =
-          widget.showUserAvatars && message.authorId != widget.user.id
-              ? min(constraints.maxWidth * 0.72, 440).floor()
-              : min(constraints.maxWidth * 0.78, 440).floor();
-      final Widget msgWidget = MessageWidget(
-        bubbleBuilder: widget.bubbleBuilder,
-        bubbleRtlAlignment: widget.bubbleRtlAlignment,
-        emojiEnlargementBehavior: widget.emojiEnlargementBehavior,
-        hideBackgroundOnEmojiMessages: widget.hideBackgroundOnEmojiMessages,
-        message: message,
-        messageWidth: messageWidth,
-        nameBuilder: widget.nameBuilder,
-        onAvatarTap: widget.onAvatarTap,
-        onMessageDoubleTap: widget.onMessageDoubleTap,
-        onMessageLongPress: widget.onMessageLongPress,
-        onMessageStatusLongPress: widget.onMessageStatusLongPress,
-        onMessageStatusTap: widget.onMessageStatusTap,
-        onMessageTap: widget.onMessageTap,
-        onMessageVisibilityChanged: widget.onMessageVisibilityChanged,
-        roundBorder: map['nextMessageInGroup'] == true,
-        showAvatar: map['nextMessageInGroup'] == false,
-        showName: map['showName'] == true,
-        showStatus: map['showStatus'] == true,
-        showUserAvatars: widget.showUserAvatars,
-        textMessageOptions: widget.textMessageOptions,
-      );
-      messageWidget = msgWidget;
+      if (message.authorId == null) {
+        messageWidget = SystemMessage(message: message.text ?? '');
+      } else {
+        final messageWidth =
+            widget.showUserAvatars && message.authorId != widget.user.id
+                ? min(constraints.maxWidth * 0.72, 440).floor()
+                : min(constraints.maxWidth * 0.78, 440).floor();
+        messageWidget = MessageWidget(
+          bubbleBuilder: widget.bubbleBuilder,
+          bubbleRtlAlignment: widget.bubbleRtlAlignment,
+          emojiEnlargementBehavior: widget.emojiEnlargementBehavior,
+          hideBackgroundOnEmojiMessages: widget.hideBackgroundOnEmojiMessages,
+          message: message,
+          messageWidth: messageWidth,
+          nameBuilder: widget.nameBuilder,
+          onMessageDoubleTap: widget.onMessageDoubleTap,
+          onMessageLongPress: widget.onMessageLongPress,
+          onMessageStatusLongPress: widget.onMessageStatusLongPress,
+          onMessageStatusTap: widget.onMessageStatusTap,
+          onMessageTap: widget.onMessageTap,
+          onMessageVisibilityChanged: widget.onMessageVisibilityChanged,
+          roundBorder: map['nextMessageInGroup'] == true,
+          showAvatar: map['nextMessageInGroup'] == false,
+          showName: map['showName'] == true,
+          showStatus: map['showStatus'] == true,
+          showUserAvatars: widget.showUserAvatars,
+          textMessageOptions: widget.textMessageOptions,
+        );
+      }
 
       return AutoScrollTag(
         controller: _scrollController,
@@ -436,7 +436,7 @@ class ChatState extends State<Chat> {
           child: Stack(
             children: [
               ColoredBox(
-                color: widget.theme.backgroundColor,
+                color: context.colorScheme.onInverseSurface,
                 child: Column(
                   children: [
                     Flexible(

@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'dart:ui';
 
 import 'package:crea_chess/package/chat/models/date_header.dart';
 import 'package:crea_chess/package/chat/models/emoji_enlargement_behavior.dart';
@@ -26,20 +25,12 @@ String formatBytes(int size, [int fractionDigits = 2]) {
   ][multiple]}';
 }
 
-/// Returns user avatar and name color based on the ID.
-Color getUserAvatarNameColor(UserModel user, List<Color> colors) =>
-    colors[user.id.hashCode % colors.length];
-
 /// Returns user initials (can have only first letter of firstName/lastName or both).
 String getUserInitials(UserModel user) {
   var initials = '';
 
   if (user.username.isNotEmpty) {
-    initials += user.username[0].toUpperCase();
-  }
-
-  if (user.username.isNotEmpty) {
-    initials += user.username[0].toUpperCase();
+    initials += user.username.substring(0, 2).toUpperCase();
   }
 
   return initials.trim();

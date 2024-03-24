@@ -1,10 +1,13 @@
+import 'package:crea_chess/package/atomic_design/color.dart';
+import 'package:crea_chess/package/atomic_design/padding.dart';
+import 'package:crea_chess/package/atomic_design/size.dart';
+import 'package:crea_chess/package/atomic_design/widget/gap.dart';
+import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/chat/models/bubble_rtl_alignment.dart';
 import 'package:crea_chess/package/chat/models/emoji_enlargement_behavior.dart';
 import 'package:crea_chess/package/chat/util.dart';
 import 'package:crea_chess/package/chat/widgets/message/message_status_icon.dart';
 import 'package:crea_chess/package/chat/widgets/message/text_message.dart';
-import 'package:crea_chess/package/chat/widgets/message/user_avatar.dart';
-import 'package:crea_chess/package/chat/widgets/state/inherited_chat_theme.dart';
 import 'package:crea_chess/package/chat/widgets/state/inherited_user.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +33,6 @@ class MessageWidget extends StatelessWidget {
     this.bubbleBuilder,
     this.bubbleRtlAlignment,
     this.nameBuilder,
-    this.onAvatarTap,
     this.onMessageDoubleTap,
     this.onMessageLongPress,
     this.onMessageStatusLongPress,
@@ -71,9 +73,6 @@ class MessageWidget extends StatelessWidget {
   /// See [TextMessage.nameBuilder].
   final Widget Function(UserModel)? nameBuilder;
 
-  /// See [UserAvatar.onAvatarTap].
-  final void Function(UserModel)? onAvatarTap;
-
   /// Called when user double taps on any message.
   final void Function(BuildContext context, MessageModel)? onMessageDoubleTap;
 
@@ -112,16 +111,17 @@ class MessageWidget extends StatelessWidget {
   /// See [TextMessage.options].
   final TextMessageOptions textMessageOptions;
 
-  Widget _avatarBuilder() => const SizedBox(width: 40);
-  // Widget _avatarBuilder() => showAvatar
-  //     ? avatarBuilder?.call(message.author) ??
-  //         UserAvatar(
-  //           author: message.author,
-  //           bubbleRtlAlignment: bubbleRtlAlignment,
-  //           imageHeaders: imageHeaders,
-  //           onAvatarTap: onAvatarTap,
-  //         )
-  //     : const SizedBox(width: 40);
+  // Widget _avatarBuilder() => const SizedBox(width: 40);
+  Widget _avatarBuilder() => showAvatar
+      ? Container(
+          margin: bubbleRtlAlignment == BubbleRtlAlignment.left
+              ? const EdgeInsetsDirectional.only(end: 8)
+              : const EdgeInsets.only(right: 8),
+          child: UserPhoto.fromId(
+            userId: message.authorId ?? '',
+          ),
+        )
+      : const SizedBox(width: 40);
 
   Widget _bubbleBuilder(
     BuildContext context,
@@ -140,9 +140,9 @@ class MessageWidget extends StatelessWidget {
               : Container(
                   decoration: BoxDecoration(
                     borderRadius: borderRadius,
-                    color: !currentUserIsAuthor
-                        ? InheritedChatTheme.of(context).theme.secondaryColor
-                        : InheritedChatTheme.of(context).theme.primaryColor,
+                    color: currentUserIsAuthor
+                        ? context.colorScheme.inversePrimary
+                        : context.colorScheme.primaryContainer,
                   ),
                   child: ClipRRect(
                     borderRadius: borderRadius,
@@ -151,11 +151,10 @@ class MessageWidget extends StatelessWidget {
                 );
 
   Widget _messageBuilder() {
-    final textMessage = message;
     return TextMessage(
       emojiEnlargementBehavior: emojiEnlargementBehavior,
       hideBackgroundOnEmojiMessages: hideBackgroundOnEmojiMessages,
-      message: textMessage,
+      message: message,
       nameBuilder: nameBuilder,
       options: textMessageOptions,
       showName: showName,
@@ -170,8 +169,7 @@ class MessageWidget extends StatelessWidget {
     final enlargeEmojis =
         emojiEnlargementBehavior != EmojiEnlargementBehavior.never &&
             isConsistsOfEmojis(emojiEnlargementBehavior, message);
-    final messageBorderRadius =
-        InheritedChatTheme.of(context).theme.messageBorderRadius;
+    const messageBorderRadius = CCSize.medium;
     final borderRadius = bubbleRtlAlignment == BubbleRtlAlignment.left
         ? BorderRadiusDirectional.only(
             bottomEnd: Radius.circular(
@@ -180,8 +178,8 @@ class MessageWidget extends StatelessWidget {
             bottomStart: Radius.circular(
               currentUserIsAuthor || roundBorder ? messageBorderRadius : 0,
             ),
-            topEnd: Radius.circular(messageBorderRadius),
-            topStart: Radius.circular(messageBorderRadius),
+            topEnd: const Radius.circular(messageBorderRadius),
+            topStart: const Radius.circular(messageBorderRadius),
           )
         : BorderRadius.only(
             bottomLeft: Radius.circular(
@@ -190,8 +188,8 @@ class MessageWidget extends StatelessWidget {
             bottomRight: Radius.circular(
               !currentUserIsAuthor || roundBorder ? messageBorderRadius : 0,
             ),
-            topLeft: Radius.circular(messageBorderRadius),
-            topRight: Radius.circular(messageBorderRadius),
+            topLeft: const Radius.circular(messageBorderRadius),
+            topRight: const Radius.circular(messageBorderRadius),
           );
 
     return Container(
@@ -258,8 +256,7 @@ class MessageWidget extends StatelessWidget {
             ),
           ),
           if (currentUserIsAuthor)
-            Padding(
-              padding: InheritedChatTheme.of(context).theme.statusIconPadding,
+            CCPadding.allXsmall(
               child: showStatus
                   ? GestureDetector(
                       onLongPress: () =>
@@ -267,7 +264,7 @@ class MessageWidget extends StatelessWidget {
                       onTap: () => onMessageStatusTap?.call(context, message),
                       child: MessageStatusIcon(status: message.status),
                     )
-                  : null,
+                  : CCGap.zero,
             ),
         ],
       ),
