@@ -2,7 +2,7 @@ import 'package:crea_chess/package/firebase/firestore/game/game/converter.dart';
 import 'package:crea_chess/package/firebase/firestore/game/game/enum.dart';
 import 'package:crea_chess/package/firebase/firestore/game/game/player.dart';
 import 'package:crea_chess/package/firebase/firestore/game/live_game/game_indb.dart';
-import 'package:crea_chess/package/game/speed.dart';
+import 'package:crea_chess/package/chessground/speed.dart';
 import 'package:crea_chess/package/unichess/unichess.dart';
 import 'package:crea_chess/router/app/hub/setup/role.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';

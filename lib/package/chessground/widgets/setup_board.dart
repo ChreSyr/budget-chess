@@ -78,6 +78,7 @@ class SetupBoard extends StatefulWidget {
 class _BoardState extends State<SetupBoard> {
   double squareSize = 0;
   Pieces pieces = {};
+  late BoardTheme boardTheme;
   late BoardColorScheme colorScheme;
   _DragAvatar? _dragAvatar;
   SquareId? _dragOrigin;
@@ -87,6 +88,12 @@ class _BoardState extends State<SetupBoard> {
   @override
   Widget build(BuildContext context) {
     const orientation = Side.white;
+
+    // avoids generating background unecessarly
+    if (boardTheme != widget.settings.boardTheme) {
+      boardTheme = widget.settings.boardTheme;
+      colorScheme = boardTheme.colors(widget.size);
+    }
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -204,7 +211,8 @@ class _BoardState extends State<SetupBoard> {
   @override
   void initState() {
     super.initState();
-    colorScheme = widget.settings.boardTheme.colors(widget.size);
+    boardTheme = widget.settings.boardTheme;
+    colorScheme = boardTheme.colors(widget.size);
     pieces = readFen(fen: widget.fen, boardSize: widget.size);
     for (var rank = 0; rank < widget.size.ranks; rank++) {
       for (var file = 0; file < widget.size.files; file++) {

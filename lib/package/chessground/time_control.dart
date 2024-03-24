@@ -1,4 +1,4 @@
-import 'package:crea_chess/package/game/speed.dart';
+import 'package:crea_chess/package/chessground/speed.dart';
 import 'package:flutter/widgets.dart';
 
 /// A pair of time and increment in seconds used as game clock

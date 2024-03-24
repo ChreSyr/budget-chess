@@ -1,5 +1,5 @@
 import 'package:crea_chess/package/firebase/export.dart';
-import 'package:crea_chess/package/game/speed.dart';
+import 'package:crea_chess/package/chessground/speed.dart';
 import 'package:crea_chess/package/unichess/unichess.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 

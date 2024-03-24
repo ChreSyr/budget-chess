@@ -1,7 +1,7 @@
 import 'package:crea_chess/package/atomic_design/form/form_error.dart';
 import 'package:crea_chess/package/atomic_design/form/input/input_int.dart';
 import 'package:crea_chess/package/atomic_design/form/input/input_select.dart';
-import 'package:crea_chess/package/game/time_control.dart';
+import 'package:crea_chess/package/chessground/time_control.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/package/unichess/unichess.dart';
 import 'package:crea_chess/router/app/hub/create_challenge/create_challenge_status.dart';

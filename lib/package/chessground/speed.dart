@@ -1,4 +1,4 @@
-import 'package:crea_chess/package/game/time_control.dart';
+import 'package:crea_chess/package/chessground/time_control.dart';
 import 'package:crea_chess/package/lichess/lichess_icons.dart';
 import 'package:flutter/material.dart';
 

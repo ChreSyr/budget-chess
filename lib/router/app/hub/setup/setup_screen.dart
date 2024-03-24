@@ -72,6 +72,7 @@ class _SetupPage extends StatelessWidget {
       child: Column(
         children: [
           SetupOpponentTile(game: game),
+          const Expanded(child: CCGap.zero),
           Row(
             children: [
               IconButton(
@@ -125,6 +126,7 @@ class _SetupPage extends StatelessWidget {
               ],
             ),
           ),
+          const Expanded(child: CCGap.zero),
         ],
       ),
     );

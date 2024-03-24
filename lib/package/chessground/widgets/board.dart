@@ -74,6 +74,7 @@ class BoardWidget extends StatefulWidget {
 class _BoardState extends State<BoardWidget> {
   double squareSize = 0;
   Pieces pieces = {};
+  late BoardTheme boardTheme;
   late BoardColorScheme colorScheme;
   Map<String, (PositionedPiece, PositionedPiece)> translatingPieces = {};
   Map<String, CGPiece> fadingPieces = {};
@@ -100,6 +101,12 @@ class _BoardState extends State<BoardWidget> {
     final annotations = widget.data.annotations ?? _emptyAnnotations;
     final checkSquare = widget.data.isCheck ?? false ? _getKingSquare() : null;
     final premove = widget.data.premove;
+
+    // avoids generating background unecessarly
+    if (boardTheme != widget.settings.boardTheme) {
+      boardTheme = widget.settings.boardTheme;
+      colorScheme = boardTheme.colors(widget.size);
+    }
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -325,7 +332,8 @@ class _BoardState extends State<BoardWidget> {
   @override
   void initState() {
     super.initState();
-    colorScheme = widget.settings.boardTheme.colors(widget.size);
+    boardTheme = widget.settings.boardTheme;
+    colorScheme = boardTheme.colors(widget.size);
     pieces = readFen(fen: widget.data.fen, boardSize: widget.size);
   }
 
