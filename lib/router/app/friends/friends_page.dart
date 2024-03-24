@@ -305,6 +305,7 @@ class FriendRequestCard extends StatelessWidget {
                       photo: requesterProfile.photo,
                       radius: CCSize.xlarge,
                       isConnected: requesterProfile.isConnected,
+                      backgroundColor: context.colorScheme.onInverseSurface,
                     ),
                     CCGap.medium,
                     Expanded(
@@ -405,9 +406,9 @@ class FriendPreview extends StatelessWidget {
                 children: [
                   UserPhoto(
                     photo: friend.photo,
-                    backgroundColor: CardTheme.of(context).color,
                     radius: CCSize.xlarge,
                     isConnected: friend.isConnected,
+                    backgroundColor: context.colorScheme.onInverseSurface,
                   ),
                   CCGap.small,
                   Text(
@@ -463,6 +464,7 @@ class FriendSuggestionsCard extends StatelessWidget {
                   leading: UserPhoto(
                     photo: user.photo,
                     isConnected: user.isConnected,
+                    backgroundColor: context.colorScheme.onInverseSurface,
                     onTap: () => UserRoute.pushId(userId: userId),
                   ),
                   title: Text(user.username),
@@ -532,6 +534,7 @@ class SentFriendRequestsCard extends StatelessWidget {
                   leading: UserPhoto(
                     photo: requested.photo,
                     isConnected: requested.isConnected,
+                    backgroundColor: context.colorScheme.onInverseSurface,
                     onTap: () => UserRoute.pushId(userId: requestedId),
                   ),
                   title: Text(requested.username),

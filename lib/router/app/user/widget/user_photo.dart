@@ -57,6 +57,7 @@ class UserPhoto extends StatelessWidget {
 
     final stack = isConnected == true
         ? Stack(
+            clipBehavior: Clip.none,
             children: [
               avatar,
               ConnectedIndicator(
