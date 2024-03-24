@@ -4,11 +4,11 @@ import 'package:crea_chess/package/atomic_design/modal/modal.dart';
 import 'package:crea_chess/package/atomic_design/modal/user/photo.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
-import 'package:crea_chess/package/atomic_design/widget/user/user_banner.dart';
-import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/router/app/user/modify_username_page.dart';
+import 'package:crea_chess/router/app/user/widget/user_banner.dart';
+import 'package:crea_chess/router/app/user/widget/user_photo.dart';
 import 'package:crea_chess/router/shared/ccroute.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -170,23 +170,23 @@ class UserHeader extends StatelessWidget {
         ),
         if (!onlyPhotos)
           ListTile(
-          leading: const Icon(Icons.landscape),
-          title: Text(context.l10n.bannerChoose),
-          onTap: () {
-            context.pop();
-            showBannerModal(context);
-          },
-        ),
+            leading: const Icon(Icons.landscape),
+            title: Text(context.l10n.bannerChoose),
+            onTap: () {
+              context.pop();
+              showBannerModal(context);
+            },
+          ),
         if (!onlyPhotos)
           ListTile(
-          leading: const Icon(Icons.edit),
-          title: Text(context.l10n.usernameModify),
-          onTap: () {
-            context
-              ..pop()
-              ..pushRoute(ModifyUsernameRoute.i);
-          },
-        ),
+            leading: const Icon(Icons.edit),
+            title: Text(context.l10n.usernameModify),
+            onTap: () {
+              context
+                ..pop()
+                ..pushRoute(ModifyUsernameRoute.i);
+            },
+          ),
         CCGap.large,
       ],
     );

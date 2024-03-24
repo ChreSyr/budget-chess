@@ -1,7 +1,7 @@
-import 'package:crea_chess/package/atomic_design/widget/user/user_action.dart';
-import 'package:crea_chess/package/atomic_design/widget/user/user_header.dart';
-import 'package:crea_chess/package/atomic_design/widget/user/user_profile.dart';
-import 'package:crea_chess/package/atomic_design/widget/user/user_sections.dart';
+import 'package:crea_chess/router/app/user/widget/user_action.dart';
+import 'package:crea_chess/router/app/user/widget/user_header.dart';
+import 'package:crea_chess/router/app/user/widget/user_profile.dart';
+import 'package:crea_chess/router/app/user/widget/user_sections.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/router/app/app_router.dart';
 import 'package:crea_chess/router/shared/app_bar_actions.dart';

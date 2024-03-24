@@ -5,7 +5,7 @@ import 'package:crea_chess/package/atomic_design/dialog/relationship/unblock_use
 import 'package:crea_chess/package/atomic_design/snack_bar.dart';
 import 'package:crea_chess/package/atomic_design/widget/badge.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
-import 'package:crea_chess/package/atomic_design/widget/user/user_action.dart';
+import 'package:crea_chess/router/app/user/widget/user_action.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:flutter/material.dart';
@@ -87,14 +87,13 @@ class RelationshipButton extends StatelessWidget {
                   onPressed: () =>
                       showAnswerFriendRequestDialog(context, userId),
                 ),
-                )
+              )
             : UserActionButton(
                 icon: const Icon(Icons.mail),
                 text: 'Demande en ami !', // TODO : l10n
-                onTap: () =>
-                      showAnswerFriendRequestDialog(context, userId),
+                onTap: () => showAnswerFriendRequestDialog(context, userId),
                 color: context.colorScheme.primaryContainer,
-        );
+              );
       case UserInRelationshipStatus.blocks:
         return asIcon
             ? IconButton(

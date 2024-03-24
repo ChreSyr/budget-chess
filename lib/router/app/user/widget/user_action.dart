@@ -1,10 +1,9 @@
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/widget/feed_card.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
-import 'package:crea_chess/package/atomic_design/widget/user/relationship_button.dart';
 import 'package:crea_chess/package/firebase/export.dart';
-import 'package:crea_chess/package/firebase/firestore/user/user_model.dart';
 import 'package:crea_chess/router/app/chats/chat/chat_page.dart';
+import 'package:crea_chess/router/app/user/widget/relationship_button.dart';
 import 'package:flutter/material.dart';
 
 class UserActionsRow extends StatelessWidget {

@@ -1,8 +1,8 @@
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/widget/divider.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
-import 'package:crea_chess/package/atomic_design/widget/user/user_header.dart';
-import 'package:crea_chess/package/atomic_design/widget/user/user_sections.dart';
+import 'package:crea_chess/router/app/user/widget/user_header.dart';
+import 'package:crea_chess/router/app/user/widget/user_sections.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
