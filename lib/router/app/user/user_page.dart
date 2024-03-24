@@ -41,9 +41,6 @@ class UserPage extends StatelessWidget {
   /// Can be a user id or usernameLowercase
   final String? usernameOrId;
 
-  static const notifPhotoEmpty = 'photo-empty';
-  static const notifNameEmpty = 'name-empty';
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -41,6 +41,20 @@ class _MessageCRUD extends SubCollectionCRUD<MessageModel> {
       FirebaseFirestore.instance.collection(
         '${relationshipCRUD.collectionName}/$relationshipId/$collectionName',
       );
+  
+  Stream<Iterable<MessageModel>> messagesUnreadBy(String userId) {
+    return streamGroupFiltered(
+      filter: (query) => query.where(
+        Filter.and(
+          Filter('receiverId', isEqualTo: userId),
+          Filter.or(
+            Filter('status', isEqualTo: MessageStatus.sent.name),
+            Filter('status', isEqualTo: MessageStatus.delivered.name),
+          ),
+        ),
+      ),
+    );
+  }
 
   Future<void> updated(String relationshipId) async {
     await _collection(relationshipId)

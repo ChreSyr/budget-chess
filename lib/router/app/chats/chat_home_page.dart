@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:badges/badges.dart' as badges;
 import 'package:collection/collection.dart';
 import 'package:crea_chess/package/atomic_design/text_style.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
@@ -35,6 +36,25 @@ class ChatHomeRoute extends CCRoute {
 
   @override
   List<RouteBase> get routes => [ChatRoute.i.goRoute];
+}
+
+class NewMessagesCubit extends AuthUidListenerCubit<Iterable<MessageModel>> {
+  NewMessagesCubit() : super([]);
+
+  StreamSubscription<Iterable<MessageModel>>? _messagesStream;
+
+  @override
+  void authUidChanged(String? authUid) {
+    _messagesStream?.cancel();
+    if (authUid == null) return emit([]);
+    _messagesStream = messageCRUD.messagesUnreadBy(authUid).listen(emit);
+  }
+
+  @override
+  Future<void> close() {
+    _messagesStream?.cancel();
+    return super.close();
+  }
 }
 
 class RelationsCubit extends AuthUidListenerCubit<Iterable<RelationshipModel>> {
@@ -77,6 +97,8 @@ class RelationsCubit extends AuthUidListenerCubit<Iterable<RelationshipModel>> {
 class ChatHomePage extends StatelessWidget {
   const ChatHomePage({super.key});
 
+  static const notifNewMessages = 'new-messages';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -115,12 +137,15 @@ class ChatTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final newMessages = context.watch<NewMessagesCubit>().state;
+    final newMessagesCount =
+        newMessages.where((e) => e.relationshipId == relation.id).length;
+
     return StreamBuilder<UserModel?>(
       stream: userCRUD.stream(documentId: userId),
       builder: (context, snapshot) {
         final user = snapshot.data;
         if (user == null) return CCGap.zero;
-
         return ListTile(
           leading: UserPhoto(
             photo: user.photo,
@@ -167,6 +192,14 @@ class ChatTile extends StatelessWidget {
               );
             },
           ),
+          trailing: newMessagesCount > 0
+              ? badges.Badge(
+                  badgeContent: Text(
+                    newMessagesCount.toString(),
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                )
+              : null,
           onTap: () => ChatRoute.pushId(userId: userId),
         );
       },

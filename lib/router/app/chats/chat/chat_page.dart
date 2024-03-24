@@ -74,6 +74,7 @@ class ChatPage extends StatelessWidget {
                     children: [
                       UserPhoto(
                         photo: user.photo,
+                        isConnected: user.isConnected,
                         radius: CCSize.medium,
                       ),
                       CCGap.small,

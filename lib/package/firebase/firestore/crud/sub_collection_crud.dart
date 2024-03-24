@@ -26,6 +26,13 @@ abstract class SubCollectionCRUD<T> {
             fromFirestore: jsonToModel,
           );
 
+  Query<T?> get _collectionGroup => FirebaseFirestore.instance
+      .collectionGroup(collectionName)
+      .withConverter<T?>(
+        toFirestore: modelToJson,
+        fromFirestore: jsonToModel,
+      );
+
   Future<void> create({
     required String parentDocumentId,
     required T data,
@@ -70,9 +77,18 @@ abstract class SubCollectionCRUD<T> {
 
   Stream<Iterable<T>> streamFiltered({
     required String parentDocumentId,
-    required Query<T?> Function(CollectionReference<T?>) filter,
+    required Query<T?> Function(CollectionReference<T?> collection) filter,
   }) {
     return filter(_collection(parentDocumentId)).snapshots().map(
+          (query) => query.docs.map((doc) => doc.data()).whereType<T>(),
+        );
+  }
+
+  /// Queries accross all the collections named like this SubCollectionCRUD
+  Stream<Iterable<T>> streamGroupFiltered({
+    required Query<T?> Function(Query<T?> query) filter,
+  }) {
+    return filter(_collectionGroup).snapshots().map(
           (query) => query.docs.map((doc) => doc.data()).whereType<T>(),
         );
   }
