@@ -1,7 +1,6 @@
 import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
-import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/chat/models/bubble_rtl_alignment.dart';
 import 'package:crea_chess/package/chat/models/emoji_enlargement_behavior.dart';

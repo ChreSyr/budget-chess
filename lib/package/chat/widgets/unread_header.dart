@@ -11,12 +11,14 @@ class UnreadHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
         alignment: Alignment.center,
-        color: context.colorScheme.onInverseSurface,
+        color: Colors.grey,
         margin: EdgeInsets.only(bottom: 24, top: marginTop ?? 0),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
         child: Text(
           'Unread messages', // TODO : l10n
-          style: context.textTheme.infoSmall,
+          style: context.textTheme.infoSmall?.copyWith(
+            color: context.colorScheme.background,
+          ),
           textAlign: TextAlign.center,
         ),
       );

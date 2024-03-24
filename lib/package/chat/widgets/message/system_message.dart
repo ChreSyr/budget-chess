@@ -29,13 +29,14 @@ class SystemMessage extends StatelessWidget {
           left: CCSize.large,
           right: CCSize.large,
         ),
-        decoration: BoxDecoration(
-          color: context.colorScheme.onInverseSurface,
+        decoration: const BoxDecoration(
+          color: Colors.grey,
           borderRadius: CCBorderRadiusCircular.small,
         ),
         child: CCPadding.allSmall(
           child: TextMessageText(
-            bodyTextStyle: context.textTheme.infoSmall,
+            bodyTextStyle: context.textTheme.infoSmall
+                ?.copyWith(color: context.colorScheme.background),
             options: options,
             text: message,
           ),
