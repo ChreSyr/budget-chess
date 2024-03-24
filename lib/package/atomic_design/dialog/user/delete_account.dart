@@ -1,8 +1,6 @@
 import 'package:crea_chess/package/atomic_design/snack_bar.dart';
 import 'package:crea_chess/package/firebase/authentication/authentication_crud.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
-import 'package:crea_chess/router/app/app_router.dart';
-import 'package:crea_chess/router/shared/ccroute.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 

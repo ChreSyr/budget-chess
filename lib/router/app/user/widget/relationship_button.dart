@@ -5,9 +5,9 @@ import 'package:crea_chess/package/atomic_design/dialog/relationship/unblock_use
 import 'package:crea_chess/package/atomic_design/snack_bar.dart';
 import 'package:crea_chess/package/atomic_design/widget/badge.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
-import 'package:crea_chess/router/app/user/widget/user_action.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
+import 'package:crea_chess/router/app/user/widget/user_action.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,6 +17,7 @@ class RelationshipButton extends StatelessWidget {
     required this.userId,
     this.relation,
     this.asIcon = false,
+    this.hideIfFriend = false,
     super.key,
   });
 
@@ -24,6 +25,7 @@ class RelationshipButton extends StatelessWidget {
   final String userId;
   final RelationshipModel? relation;
   final bool asIcon;
+  final bool hideIfFriend;
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +59,9 @@ class RelationshipButton extends StatelessWidget {
   ) {
     switch (relation.statusOf(authUid)) {
       case UserInRelationshipStatus.open:
-        return asIcon
+        return hideIfFriend
+            ? CCGap.zero
+            : asIcon
             ? const IconButton(
                 icon: Icon(Icons.check), // TODO : change
                 onPressed: null,

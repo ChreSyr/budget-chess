@@ -6,6 +6,7 @@ import 'package:crea_chess/package/unichess/unichess.dart';
 import 'package:crea_chess/router/app/hub/game/game_cubit.dart';
 import 'package:crea_chess/router/app/hub/game/side.dart';
 import 'package:crea_chess/router/app/user/user_page.dart';
+import 'package:crea_chess/router/app/user/widget/relationship_button.dart';
 import 'package:crea_chess/router/app/user/widget/user_photo.dart';
 import 'package:crea_chess/router/shared/settings/settings_page.dart';
 import 'package:flutter/foundation.dart';
@@ -66,17 +67,29 @@ class PlayerTile extends StatelessWidget {
                   ],
                 )
               : username,
-        trailing: kDebugMode && !editable
-              ? IconButton.outlined(
-                  onPressed: sideToMove == side && position != null
-                      ? () {
-                          final move = _getRandomMove(position);
-                          if (move == null) return;
-                          gameCubit.onMove(move);
-                        }
-                      : null,
-                  icon: const Icon(Icons.play_arrow),
-                )
+        trailing: !editable
+            ? Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (kDebugMode)
+                    IconButton.outlined(
+                      onPressed: sideToMove == side && position != null
+                          ? () {
+                              final move = _getRandomMove(position);
+                              if (move == null) return;
+                              gameCubit.onMove(move);
+                            }
+                          : null,
+                      icon: const Icon(Icons.play_arrow),
+                    ),
+                  RelationshipButton(
+                    authUid: currentUser.id,
+                    userId: userId,
+                    asIcon: true,
+                    hideIfFriend: true,
+                  ),
+                ],
+              )
             : Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
