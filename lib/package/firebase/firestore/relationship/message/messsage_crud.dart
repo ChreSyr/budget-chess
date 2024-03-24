@@ -30,7 +30,8 @@ class _MessageCRUD extends SubCollectionCRUD<MessageModel> {
           ?..removeWhere(
             (key, value) =>
                 key == 'relationshipId' || key == 'id' || value == null,
-          )) ??
+          )
+          ..addAll({'receiverId': data?.receiverId})) ??
         {};
   }
 

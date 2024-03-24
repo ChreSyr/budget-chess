@@ -39,4 +39,6 @@ class MessageModel with _$MessageModel {
 
   factory MessageModel.fromJson(Map<String, dynamic> json) =>
       _$MessageModelFromJson(json);
+
+  String get receiverId => relationshipId.replaceAll(authorId ?? '', '');
 }
