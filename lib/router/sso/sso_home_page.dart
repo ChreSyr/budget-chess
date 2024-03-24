@@ -1,5 +1,6 @@
 import 'package:crea_chess/package/atomic_design/border.dart';
 import 'package:crea_chess/package/atomic_design/color.dart';
+import 'package:crea_chess/package/atomic_design/elevation.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/snack_bar.dart';
@@ -251,15 +252,13 @@ class AuthProviderButton extends StatelessWidget {
         }
 
         return ActionChip(
-          shape: RoundedRectangleBorder(
-            borderRadius: CCBorderRadiusCircular.medium,
-            side: BorderSide(
-              color: context.colorScheme.onBackground,
-              width: .5,
-            ),
+          shape: const RoundedRectangleBorder(
+            borderRadius: CCBorderRadiusCircular.large,
           ),
+          side: BorderSide.none,
+          backgroundColor: context.colorScheme.surfaceVariant,
           padding: EdgeInsets.zero,
-          elevation: 5,
+          elevation: CCElevation.medium,
           shadowColor: Colors.black,
           label: SizedBox(
             width: CCWidgetSize.large2,
