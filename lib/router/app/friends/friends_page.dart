@@ -6,10 +6,12 @@ import 'package:collection/collection.dart';
 import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/dialog/relationship/block_user.dart';
 import 'package:crea_chess/package/atomic_design/dialog/relationship/cancel_friend_request.dart';
+import 'package:crea_chess/package/atomic_design/elevation.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/text_style.dart';
 import 'package:crea_chess/package/atomic_design/widget/button.dart';
+import 'package:crea_chess/package/atomic_design/widget/feed_card.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/relationship_button.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
@@ -186,7 +188,6 @@ class FriendsPage extends StatelessWidget {
         BlocProvider(create: (context) => FriendSuggestionsCubit()),
       ],
       child: Scaffold(
-        backgroundColor: context.colorScheme.surfaceVariant,
         appBar: AppBar(actions: getSideRoutesAppBarActions(context)),
         body: const SingleChildScrollView(child: FriendsFeed()),
       ),
@@ -208,6 +209,8 @@ class FriendsFeed extends StatelessWidget {
           // Search bar
           Card(
             clipBehavior: Clip.hardEdge,
+            color: context.colorScheme.onInverseSurface,
+            elevation: CCElevation.high,
             child: InkWell(
               onTap: () => searchFriend(context),
               child: CCPadding.allMedium(
@@ -285,75 +288,73 @@ class FriendRequestCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final authUid = context.watch<UserCubit>().state.id;
 
-    return Card(
-      child: CCPadding.allMedium(
-        child: Column(
-          children: [
-            GestureDetector(
-              onTap: () => UserRoute.pushId(userId: requester),
-              child: StreamBuilder<UserModel?>(
-                stream: userCRUD.stream(documentId: requester),
-                builder: (context, snapshot) {
-                  final requesterProfile = snapshot.data;
-                  if (requesterProfile == null) return CCGap.zero;
+    return FeedCard(
+      child: Column(
+        children: [
+          GestureDetector(
+            onTap: () => UserRoute.pushId(userId: requester),
+            child: StreamBuilder<UserModel?>(
+              stream: userCRUD.stream(documentId: requester),
+              builder: (context, snapshot) {
+                final requesterProfile = snapshot.data;
+                if (requesterProfile == null) return CCGap.zero;
 
-                  return Row(
-                    children: [
-                      UserPhoto(
-                        photo: requesterProfile.photo,
-                        radius: CCSize.xlarge,
-                        isConnected: requesterProfile.isConnected,
+                return Row(
+                  children: [
+                    UserPhoto(
+                      photo: requesterProfile.photo,
+                      radius: CCSize.xlarge,
+                      isConnected: requesterProfile.isConnected,
+                    ),
+                    CCGap.medium,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            requesterProfile.username,
+                            style: context.textTheme.titleLarge,
+                          ),
+                          CCGap.medium,
+                          const badges.Badge(
+                            child: Text('Vous demande en ami !'),
+                          ), // TODO : l10n
+                        ],
                       ),
-                      CCGap.medium,
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              requesterProfile.username,
-                              style: context.textTheme.titleLarge,
-                            ),
-                            CCGap.medium,
-                            const badges.Badge(
-                              child: Text('Vous demande en ami !'),
-                            ), // TODO : l10n
-                          ],
-                        ),
-                      ),
-                    ],
-                  );
-                },
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+          CCGap.medium,
+          Row(
+            children: [
+              Expanded(
+                child: FilledButton.icon(
+                  onPressed: () {
+                    relationshipCRUD.refuseFriendRequest(
+                      refuserId: authUid,
+                      requesterId: requester,
+                    );
+                    showBlockUserDialog(parentContext, requester);
+                  },
+                  icon: const Icon(Icons.close),
+                  label: Text(context.l10n.decline), // TODO : refuse
+                ),
               ),
-            ),
-            CCGap.medium,
-            Row(
-              children: [
-                Expanded(
-                  child: FilledButton.icon(
-                    onPressed: () {
-                      relationshipCRUD.refuseFriendRequest(
-                        refuserId: authUid,
-                        requesterId: requester,
-                      );
-                      showBlockUserDialog(parentContext, requester);
-                    },
-                    icon: const Icon(Icons.close),
-                    label: Text(context.l10n.decline), // TODO : refuse
-                  ),
+              CCGap.medium,
+              Expanded(
+                child: FilledButton.icon(
+                  onPressed: () =>
+                      relationshipCRUD.makeFriends(requester, authUid),
+                  icon: const Icon(Icons.check),
+                  label: Text(context.l10n.accept),
                 ),
-                CCGap.medium,
-                Expanded(
-                  child: FilledButton.icon(
-                    onPressed: () =>
-                        relationshipCRUD.makeFriends(requester, authUid),
-                    icon: const Icon(Icons.check),
-                    label: Text(context.l10n.accept),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -368,30 +369,16 @@ class FriendsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final friendIds = friendshipsCubit.friendIds;
 
-    return Card(
-      child: CCPadding.allMedium(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              context.l10n.friends,
-              style: context.textTheme.titleLarge
-                  ?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            CCGap.medium,
-            if (friendIds.isEmpty)
-              // TODO : l10n
-              const Text("Vous n'avez pas encore d'ami.")
-            else
-              Center(
-                child: Wrap(
-                  runSpacing: CCSize.medium,
-                  children: friendIds.map(FriendPreview.new).toList(),
-                ),
+    return FeedCard(
+      title: context.l10n.friends,
+      child: friendIds.isEmpty
+          ? const Text("Vous n'avez pas encore d'ami.") // TODO : l10n
+          : Center(
+              child: Wrap(
+                runSpacing: CCSize.medium,
+                children: friendIds.map(FriendPreview.new).toList(),
               ),
-          ],
-        ),
-      ),
+            ),
     );
   }
 }
@@ -449,82 +436,67 @@ class FriendSuggestionsCard extends StatelessWidget {
     final suggestionsCubit = context.watch<FriendSuggestionsCubit>();
     final authUid = context.read<UserCubit>().state.id;
 
-    return Card(
-      child: CCPadding.allMedium(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    'Suggestions', // TODO : l10n
-                    style: context.textTheme.titleLarge
-                        ?.copyWith(fontWeight: FontWeight.bold),
-                  ),
-                ),
-                CCGap.small,
-                CompactIconButton(
-                  onPressed: () => suggestionsCubit.buildSuggestions(
-                    authUid,
-                    context.read<FriendshipsCubit>().friendIds,
-                  ),
-                  icon: const Icon(Icons.refresh),
-                ),
-              ],
-            ),
-            CCGap.medium,
-            ...suggestionsCubit.state.map(
-              (relation) {
-                final userId = relation.otherUser(authUid);
-                if (userId == null) return CCGap.zero;
+    return FeedCard(
+      title: 'Suggestions', // TODO : l10n
+      actions: [
+        CompactIconButton(
+          onPressed: () => suggestionsCubit.buildSuggestions(
+            authUid,
+            context.read<FriendshipsCubit>().friendIds,
+          ),
+          icon: const Icon(Icons.refresh),
+        ),
+      ],
+      child: Column(
+        children: suggestionsCubit.state.map(
+          (relation) {
+            final userId = relation.otherUser(authUid);
+            if (userId == null) return CCGap.zero;
 
-                return StreamBuilder<UserModel?>(
-                  stream: userCRUD.stream(documentId: userId),
-                  builder: (context, snapshot) {
-                    final user = snapshot.data;
-                    if (user == null) return CCGap.zero;
+            return StreamBuilder<UserModel?>(
+              stream: userCRUD.stream(documentId: userId),
+              builder: (context, snapshot) {
+                final user = snapshot.data;
+                if (user == null) return CCGap.zero;
 
-                    return ListTile(
-                      leading: UserPhoto(
-                        photo: user.photo,
-                        isConnected: user.isConnected,
-                        onTap: () => UserRoute.pushId(userId: userId),
+                return ListTile(
+                  leading: UserPhoto(
+                    photo: user.photo,
+                    isConnected: user.isConnected,
+                    onTap: () => UserRoute.pushId(userId: userId),
+                  ),
+                  title: Text(user.username),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      RelationshipButton(
+                        authUid: authUid,
+                        userId: userId,
+                        relation: relation,
+                        asIcon: true,
                       ),
-                      title: Text(user.username),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          RelationshipButton(
-                            authUid: authUid,
-                            userId: userId,
-                            relation: relation,
-                            asIcon: true,
-                          ),
-                          IconButton(
-                            onPressed: FriendSuggestionsCubit.suggestableStatus
-                                    .contains(relation.statusOf(authUid))
-                                ? () {
-                                    relationshipCRUD.refuseSuggestion(
-                                      refuser: authUid,
-                                      relationship: relation,
-                                    );
-                                    suggestionsCubit.suggestionIds
-                                        ?.remove(relation.id);
-                                  }
-                                : null,
-                            icon: const Icon(Icons.close),
-                          ),
-                        ],
+                      IconButton(
+                        onPressed: FriendSuggestionsCubit.suggestableStatus
+                                .contains(relation.statusOf(authUid))
+                            ? () {
+                                relationshipCRUD.refuseSuggestion(
+                                  refuser: authUid,
+                                  relationship: relation,
+                                );
+                                suggestionsCubit.suggestionIds
+                                    ?.remove(relation.id);
+                              }
+                            : null,
+                        icon: const Icon(Icons.close),
                       ),
-                      contentPadding: EdgeInsets.zero,
-                    );
-                  },
+                    ],
+                  ),
+                  contentPadding: EdgeInsets.zero,
                 );
               },
-            ),
-          ],
-        ),
+            );
+          },
+        ).toList(),
       ),
     );
   }
@@ -540,53 +512,41 @@ class SentFriendRequestsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: CCPadding.allMedium(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              // TODO : l10n : plural
-              context.l10n.friendRequestSent,
-              style: context.textTheme.titleLarge
-                  ?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            CCGap.medium,
-            ...requests.map(
-              (request) {
-                final requester = request.requester;
-                if (requester == null) return CCGap.zero;
-                final requestedId = request.otherUser(requester);
-                if (requestedId == null) return CCGap.zero;
+    return FeedCard(
+      title: context.l10n.friendRequestSent, // TODO : l10n : plural
+      child: Column(
+        children: requests.map(
+          (request) {
+            final requester = request.requester;
+            if (requester == null) return CCGap.zero;
+            final requestedId = request.otherUser(requester);
+            if (requestedId == null) return CCGap.zero;
 
-                return StreamBuilder<UserModel?>(
-                  stream: userCRUD.stream(documentId: requestedId),
-                  builder: (context, snapshot) {
-                    final requested = snapshot.data;
-                    if (requested == null) return CCGap.zero;
-                    return ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      leading: UserPhoto(
-                        photo: requested.photo,
-                        isConnected: requested.isConnected,
-                        onTap: () => UserRoute.pushId(userId: requestedId),
-                      ),
-                      title: Text(requested.username),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.close),
-                        onPressed: () => showCancelFriendRequestDialog(
-                          context,
-                          requestedId,
-                        ),
-                      ),
-                    );
-                  },
+            return StreamBuilder<UserModel?>(
+              stream: userCRUD.stream(documentId: requestedId),
+              builder: (context, snapshot) {
+                final requested = snapshot.data;
+                if (requested == null) return CCGap.zero;
+                return ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: UserPhoto(
+                    photo: requested.photo,
+                    isConnected: requested.isConnected,
+                    onTap: () => UserRoute.pushId(userId: requestedId),
+                  ),
+                  title: Text(requested.username),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () => showCancelFriendRequestDialog(
+                      context,
+                      requestedId,
+                    ),
+                  ),
                 );
               },
-            ),
-          ],
-        ),
+            );
+          },
+        ).toList(),
       ),
     );
   }

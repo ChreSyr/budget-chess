@@ -1,7 +1,7 @@
 import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
-import 'package:crea_chess/package/atomic_design/text_style.dart';
+import 'package:crea_chess/package/atomic_design/widget/feed_card.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/firebase/firestore/game/live_game/live_games_cubit.dart';
@@ -55,7 +55,6 @@ class HubPage extends StatelessWidget {
           ...getSideRoutesAppBarActions(context),
         ],
       ),
-      backgroundColor: context.colorScheme.surfaceVariant,
       body: MultiBlocProvider(
         providers: [
           BlocProvider(create: (context) => ChallengeFiltersCubit()),
@@ -115,21 +114,10 @@ class GamesInProgressCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: CCPadding.allMedium(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              // TODO : l10n
-              'Parties en cours',
-              style: context.textTheme.titleLarge
-                  ?.copyWith(fontWeight: FontWeight.bold),
-            ),
-            CCGap.medium,
-            ...games.map(GameChallengeTile.new),
-          ],
-        ),
+    return FeedCard(
+      title: 'Parties en cours', // TODO : l10n
+      child: Column(
+        children: games.map(GameChallengeTile.new).toList(),
       ),
     );
   }

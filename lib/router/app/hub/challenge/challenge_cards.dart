@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crea_chess/package/atomic_design/dialog/ok_dialog.dart';
-import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/text_style.dart';
 import 'package:crea_chess/package/atomic_design/widget/button.dart';
+import 'package:crea_chess/package/atomic_design/widget/feed_card.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
@@ -85,37 +85,22 @@ class MyChallengesCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: CCPadding.allMedium(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    // TODO : l10n
-                    "Recherche d'adversaire",
-                    style: context.textTheme.titleLarge
-                        ?.copyWith(fontWeight: FontWeight.bold),
-                  ),
+    return FeedCard(
+      title: "Recherche d'adversaire",
+      actions: challenges.length > 1
+          ? [
+              CompactIconButton(
+                onPressed: () => showOkDialog(
+                  pageContext: context,
+                  title: null,
+                  content: Text(context.l10n.tipChallengesRemoved),
                 ),
-                CCGap.small,
-                if (challenges.length > 1)
-                  CompactIconButton(
-                    onPressed: () => showOkDialog(
-                      pageContext: context,
-                      title: null,
-                      content: Text(context.l10n.tipChallengesRemoved),
-                    ),
-                    icon: const Icon(Icons.info_outline),
-                  ),
-              ],
-            ),
-            CCGap.medium,
-            ...challenges.map(ChallengeTile.new),
-          ],
-        ),
+                icon: const Icon(Icons.info_outline),
+              ),
+            ]
+          : [],
+      child: Column(
+        children: challenges.map(ChallengeTile.new).toList(),
       ),
     );
   }
@@ -133,48 +118,46 @@ class AvailibleChallengesCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: CCPadding.allMedium(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // const ChallengeSorter(), // TODO : when the time will be right
-            // CCGap.medium,
-            if (friendChallenges.isNotEmpty) ...[
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    // TODO : l10n : enlever les 2 points
-                    context.l10n.challengesFromFriends,
-                    style: context.textTheme.titleLarge
-                        ?.copyWith(fontWeight: FontWeight.bold),
-                  ),
-                  CCGap.medium,
-                  ChallengesTables(challenges: friendChallenges),
-                ],
-              ),
-              if (otherChallenges.isNotEmpty) CCGap.medium,
-            ],
-            if (otherChallenges.isNotEmpty || friendChallenges.isEmpty)
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    // TODO : l10n : enlever les 2 points
-                    context.l10n.challengesFromStrangers,
-                    style: context.textTheme.titleLarge
-                        ?.copyWith(fontWeight: FontWeight.bold),
-                  ),
-                  CCGap.medium,
-                  if (otherChallenges.isEmpty)
-                    const Text("Aucun challenge n'est actuellement disponible.")
-                  else
-                    ChallengesTables(challenges: otherChallenges),
-                ],
-              ),
+    return FeedCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // const ChallengeSorter(), // TODO : when the time will be right
+          // CCGap.medium,
+          if (friendChallenges.isNotEmpty) ...[
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  // TODO : l10n : enlever les 2 points
+                  context.l10n.challengesFromFriends,
+                  style: context.textTheme.titleLarge
+                      ?.copyWith(fontWeight: FontWeight.bold),
+                ),
+                CCGap.medium,
+                ChallengesTables(challenges: friendChallenges),
+              ],
+            ),
+            if (otherChallenges.isNotEmpty) CCGap.medium,
           ],
-        ),
+          if (otherChallenges.isNotEmpty || friendChallenges.isEmpty)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  // TODO : l10n : enlever les 2 points
+                  context.l10n.challengesFromStrangers,
+                  style: context.textTheme.titleLarge
+                      ?.copyWith(fontWeight: FontWeight.bold),
+                ),
+                CCGap.medium,
+                if (otherChallenges.isEmpty)
+                  const Text("Aucun challenge n'est actuellement disponible.")
+                else
+                  ChallengesTables(challenges: otherChallenges),
+              ],
+            ),
+        ],
       ),
     );
   }

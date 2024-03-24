@@ -1,11 +1,13 @@
 import 'package:collection/collection.dart';
 import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/dialog/user/delete_account.dart';
+import 'package:crea_chess/package/atomic_design/elevation.dart';
 import 'package:crea_chess/package/atomic_design/modal/modal.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/text_style.dart';
 import 'package:crea_chess/package/atomic_design/widget/chip/select_chip.dart';
+import 'package:crea_chess/package/atomic_design/widget/feed_card.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/chessground/export.dart';
@@ -48,7 +50,6 @@ class SettingsPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(title: Text(SettingsRoute.i.getTitle(context.l10n))),
-      backgroundColor: context.colorScheme.surfaceVariant,
       body: SingleChildScrollView(
         child: CCPadding.allLarge(
           child: Column(
@@ -84,6 +85,8 @@ class AccountPreviewCard extends StatelessWidget {
   Widget build(BuildContext context) {
     if (!user.profileCompleted) {
       return Card(
+        color: context.colorScheme.onInverseSurface,
+        elevation: CCElevation.high,
         child: CCPadding.allMedium(
           child: Text(
             context.read<AuthNotVerifiedCubit>().state?.email ?? '',
@@ -95,6 +98,8 @@ class AccountPreviewCard extends StatelessWidget {
     }
 
     return Card(
+      color: context.colorScheme.onInverseSurface,
+      elevation: CCElevation.high,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(CCSize.xxxlarge),
       ),
@@ -146,84 +151,77 @@ class PreferencesSettingsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final preferencesCubit = context.read<PreferencesCubit>();
 
-    return Card(
-      child: CCPadding.verticalMedium(
-        child: BlocBuilder<PreferencesCubit, PreferencesState>(
-          builder: (context, preferences) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                CCPadding.horizontalMedium(
-                  child: Text(
-                    'Préférences', // TODO : l10n
-                    style: context.textTheme.titleLarge
-                        ?.copyWith(fontWeight: FontWeight.bold),
-                  ),
+    return FeedCard(
+      title: 'Général', // TODO : l10n
+      child: BlocBuilder<PreferencesCubit, PreferencesState>(
+        builder: (context, preferences) {
+          return Column(
+            children: [
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: const Icon(Icons.fluorescent),
+                title: const Text('Dark mode'), // TODO : l10n
+                trailing: Switch(
+                  value: preferences.isDarkMode,
+                  onChanged: (_) => preferencesCubit.toggleTheme(),
                 ),
-                CCGap.small,
-                ListTile(
-                  leading: const Icon(Icons.fluorescent),
-                  title: const Text('Dark mode'), // TODO : l10n
-                  trailing: Switch(
-                    value: preferences.isDarkMode,
-                    onChanged: (_) => preferencesCubit.toggleTheme(),
-                  ),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.palette),
-                  title: const Text("Couleur de l'app"), // TODO : l10n
-                  trailing: FilledButton(
-                    child: CCGap.zero,
-                    onPressed: () => Modal.show(
-                      context: context,
-                      title: context.l10n.chooseColor,
-                      sections: [
-                        GridView.count(
-                          shrinkWrap: true,
-                          crossAxisCount: 3,
-                          crossAxisSpacing: CCSize.large,
-                          mainAxisSpacing: CCSize.large,
-                          children: SeedColor.values
-                              .map(
-                                (seedColor) => FilledButton(
-                                  style: TextButton.styleFrom(
-                                    minimumSize: Size.zero,
-                                    padding: EdgeInsets.zero,
-                                    backgroundColor: seedColor.color,
-                                  ),
-                                  onPressed: () => context
-                                    ..pop()
-                                    ..read<PreferencesCubit>()
-                                        .setSeedColor(seedColor),
-                                  child: const Text(''),
+              ),
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: const Icon(Icons.palette),
+                title: const Text("Couleur de l'app"), // TODO : l10n
+                trailing: FilledButton(
+                  child: CCGap.zero,
+                  onPressed: () => Modal.show(
+                    context: context,
+                    title: context.l10n.chooseColor,
+                    sections: [
+                      GridView.count(
+                        shrinkWrap: true,
+                        crossAxisCount: 3,
+                        crossAxisSpacing: CCSize.large,
+                        mainAxisSpacing: CCSize.large,
+                        children: SeedColor.values
+                            .map(
+                              (seedColor) => FilledButton(
+                                style: TextButton.styleFrom(
+                                  minimumSize: Size.zero,
+                                  padding: EdgeInsets.zero,
+                                  backgroundColor: seedColor.color,
                                 ),
-                              )
-                              .toList(),
-                        ),
-                        CCGap.large,
-                      ],
-                    ),
+                                onPressed: () => context
+                                  ..pop()
+                                  ..read<PreferencesCubit>()
+                                      .setSeedColor(seedColor),
+                                child: const Text(''),
+                              ),
+                            )
+                            .toList(),
+                      ),
+                      CCGap.large,
+                    ],
                   ),
                 ),
-                ListTile(
-                  leading: const Icon(Icons.flag),
-                  title: const Text('Langue'), // TODO : l10n
-                  trailing: SelectChip<SupportedLocale>.uniqueChoice(
-                    values: SupportedLocale.values,
-                    selectedValue:
-                        SupportedLocale.fromName(context.l10n.localeName),
-                    onSelected: (locale) =>
-                        preferencesCubit.setLocale(locale.name),
-                    valueBuilder: (locale) =>
-                        Text('${locale.emoji} ${locale.localized}'),
-                    previewBuilder: (locale) =>
-                        Text('${locale.emoji} ${locale.localized}'),
-                  ),
+              ),
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: const Icon(Icons.flag),
+                title: const Text('Langue'), // TODO : l10n
+                trailing: SelectChip<SupportedLocale>.uniqueChoice(
+                  values: SupportedLocale.values,
+                  selectedValue:
+                      SupportedLocale.fromName(context.l10n.localeName),
+                  onSelected: (locale) =>
+                      preferencesCubit.setLocale(locale.name),
+                  valueBuilder: (locale) =>
+                      Text('${locale.emoji} ${locale.localized}'),
+                  previewBuilder: (locale) =>
+                      Text('${locale.emoji} ${locale.localized}'),
                 ),
-              ],
-            );
-          },
-        ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -234,22 +232,10 @@ class BoardSettingsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: CCPadding.verticalMedium(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            CCPadding.horizontalMedium(
-              child: Text(
-                'Board', // TODO : l10n
-                style: context.textTheme.titleLarge
-                    ?.copyWith(fontWeight: FontWeight.bold),
-              ),
-            ),
-            CCGap.small,
-            ..._getSections(),
-          ],
-        ),
+    return FeedCard(
+      title: 'Board', // TODO : l10n
+      child: Column(
+        children: _getSections(),
       ),
     );
   }
@@ -260,7 +246,7 @@ class BoardSettingsCard extends StatelessWidget {
         sections: [..._getSections(isModal: true), CCGap.large],
       );
 
-  static Iterable<Widget> _getSections({
+  static List<Widget> _getSections({
     bool isModal = false,
   }) {
     return [
@@ -272,6 +258,7 @@ class BoardSettingsCard extends StatelessWidget {
           return Column(
             children: [
               ListTile(
+                contentPadding: EdgeInsets.zero,
                 leading: SizedBox.square(
                   dimension: CCSize.large,
                   child: BoardWidget(
@@ -299,6 +286,7 @@ class BoardSettingsCard extends StatelessWidget {
                 },
               ),
               ListTile(
+                contentPadding: EdgeInsets.zero,
                 leading: PieceWidget(
                   piece: CGPiece.whiteKnight,
                   size: CCSize.large,
@@ -318,6 +306,7 @@ class BoardSettingsCard extends StatelessWidget {
                 },
               ),
               ListTile(
+                contentPadding: EdgeInsets.zero,
                 leading: const Icon(Icons.onetwothree),
                 title: const Text('Coordonnées'), // TODO : l10n
                 // subtitle: const Text('a-h, 1-8'),
@@ -430,52 +419,44 @@ class AccountSettingsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: CCPadding.verticalMedium(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            CCPadding.horizontalMedium(
-              child: Text(
-                'Compte', // TODO : l10n
-                style: context.textTheme.titleLarge
-                    ?.copyWith(fontWeight: FontWeight.bold),
-              ),
+    return FeedCard(
+      title: 'Compte', // TODO : l10n
+      child: Column(
+        children: [
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            leading: const Icon(Icons.meeting_room),
+            title: Text(context.l10n.signout),
+            trailing: IconButton(
+              onPressed: () async {
+                final currentRouter = GoRouter.of(context);
+                await authenticationCRUD.signOut();
+                // We need to send the app router to the root location, so
+                // that the next time the user arrives in this router, he
+                // is properly welcomed.
+                currentRouter.goHome();
+              },
+              icon: const Icon(Icons.logout),
             ),
-            CCGap.small,
-            ListTile(
-              leading: const Icon(Icons.meeting_room),
-              title: Text(context.l10n.signout),
-              trailing: IconButton(
-                onPressed: () async {
-                  final currentRouter = GoRouter.of(context);
-                  await authenticationCRUD.signOut();
-                  // We need to send the app router to the root location, so
-                  // that the next time the user arrives in this router, he
-                  // is properly welcomed.
-                  currentRouter.goHome();
-                },
-                icon: const Icon(Icons.logout),
-              ),
-            ),
-            ListTile(
-              leading: const Icon(Icons.warning),
-              title: Text(context.l10n.deleteAccount),
-              trailing: IconButton(
-                onPressed: () => showDeleteAccountDialog(context, auth),
-                icon: const Icon(Icons.delete_forever),
-                style: ButtonStyle(
-                  iconColor: MaterialStateColor.resolveWith(
-                    (states) => Colors.red,
-                  ),
-                  foregroundColor: MaterialStateColor.resolveWith(
-                    (states) => Colors.red,
-                  ),
+          ),
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            leading: const Icon(Icons.warning),
+            title: Text(context.l10n.deleteAccount),
+            trailing: IconButton(
+              onPressed: () => showDeleteAccountDialog(context, auth),
+              icon: const Icon(Icons.delete_forever),
+              style: ButtonStyle(
+                iconColor: MaterialStateColor.resolveWith(
+                  (states) => Colors.red,
+                ),
+                foregroundColor: MaterialStateColor.resolveWith(
+                  (states) => Colors.red,
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
