@@ -41,6 +41,18 @@ class LiveGameCRUD extends CollectionCRUD<GameModel> {
     );
   }
 
+  void resign({required GameModel game, required String userId}) {
+    if (game.finished) return;
+
+    update(
+      documentId: game.id,
+      data: game.copyWith(
+        status: GameStatus.resign,
+        winner: game.sideOf(userId)?.opposite,
+      ),
+    );
+  }
+
   Future<void> onChallengeAccepted({
     required ChallengeModel challenge,
     required String challengerId,

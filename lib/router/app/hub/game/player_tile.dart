@@ -85,7 +85,10 @@ class PlayerTile extends StatelessWidget {
                     onPressed: () => showYesNoDialog(
                       pageContext: context,
                       title: 'Voulez-vous abandonner la partie en cours ?',
-                      onYes: () {},
+                      onYes: () => liveGameCRUD.resign(
+                        game: game,
+                        userId: currentUser.id,
+                      ),
                     ),
                   ),
                   IconButton(
