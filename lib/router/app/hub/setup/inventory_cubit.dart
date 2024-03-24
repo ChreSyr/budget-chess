@@ -7,6 +7,11 @@ class InventoryCubit extends Cubit<InventoryModel> {
           const InventoryModel(
             id: 'id',
             ownerId: 'ownerId',
+            queens: 3,
+            rooks: 6,
+            bishops: 8,
+            knights: 8,
+            pawns: 40,
           ),
         );
 }
