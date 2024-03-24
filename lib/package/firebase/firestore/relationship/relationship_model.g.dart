@@ -14,8 +14,12 @@ _$RelationshipModelImpl _$$RelationshipModelImplFromJson(
         (k, e) =>
             MapEntry(k, $enumDecode(_$UserInRelationshipStatusEnumMap, e)),
       ),
-      lastUserStatusUpdate: const TimestampToDateTimeConverter()
-          .fromJson(json['lastUserStatusUpdate'] as Timestamp?),
+      lastUserStatusUpdate: json['lastUserStatusUpdate'] == null
+          ? null
+          : DateTime.parse(json['lastUserStatusUpdate'] as String),
+      lastChatUpdate: json['lastChatUpdate'] == null
+          ? null
+          : DateTime.parse(json['lastChatUpdate'] as String),
     );
 
 Map<String, dynamic> _$$RelationshipModelImplToJson(
@@ -24,8 +28,8 @@ Map<String, dynamic> _$$RelationshipModelImplToJson(
       'id': instance.id,
       'users': instance.users
           .map((k, e) => MapEntry(k, _$UserInRelationshipStatusEnumMap[e]!)),
-      'lastUserStatusUpdate': const TimestampToDateTimeConverter()
-          .toJson(instance.lastUserStatusUpdate),
+      'lastUserStatusUpdate': instance.lastUserStatusUpdate?.toIso8601String(),
+      'lastChatUpdate': instance.lastChatUpdate?.toIso8601String(),
     };
 
 const _$UserInRelationshipStatusEnumMap = {

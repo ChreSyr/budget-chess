@@ -309,6 +309,16 @@ class _RelationshipCRUD extends CollectionCRUD<RelationshipModel> {
       ),
     );
   }
+
+  Future<void> updateChat({required String relationshipId}) async {
+    final relationship = await read(documentId: relationshipId);
+    if (relationship == null) return;
+
+    await update(
+      documentId: relationshipId,
+      data: relationship.copyWith(lastChatUpdate: DateTime.now()),
+    );
+  }
 }
 
 final relationshipCRUD = _RelationshipCRUD();

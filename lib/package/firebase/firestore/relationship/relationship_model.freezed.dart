@@ -27,8 +27,10 @@ mixin _$RelationshipModel {
 
   /// Last time the status of one of the users changes. Used to determine the
   /// duration of a frienship.
-  @TimestampToDateTimeConverter()
   DateTime? get lastUserStatusUpdate => throw _privateConstructorUsedError;
+
+  /// Last time an important thing happened in the chat.
+  DateTime? get lastChatUpdate => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -45,7 +47,8 @@ abstract class $RelationshipModelCopyWith<$Res> {
   $Res call(
       {String id,
       @protected Map<String, UserInRelationshipStatus> users,
-      @TimestampToDateTimeConverter() DateTime? lastUserStatusUpdate});
+      DateTime? lastUserStatusUpdate,
+      DateTime? lastChatUpdate});
 }
 
 /// @nodoc
@@ -64,6 +67,7 @@ class _$RelationshipModelCopyWithImpl<$Res, $Val extends RelationshipModel>
     Object? id = null,
     Object? users = null,
     Object? lastUserStatusUpdate = freezed,
+    Object? lastChatUpdate = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -77,6 +81,10 @@ class _$RelationshipModelCopyWithImpl<$Res, $Val extends RelationshipModel>
       lastUserStatusUpdate: freezed == lastUserStatusUpdate
           ? _value.lastUserStatusUpdate
           : lastUserStatusUpdate // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      lastChatUpdate: freezed == lastChatUpdate
+          ? _value.lastChatUpdate
+          : lastChatUpdate // ignore: cast_nullable_to_non_nullable
               as DateTime?,
     ) as $Val);
   }
@@ -93,7 +101,8 @@ abstract class _$$RelationshipModelImplCopyWith<$Res>
   $Res call(
       {String id,
       @protected Map<String, UserInRelationshipStatus> users,
-      @TimestampToDateTimeConverter() DateTime? lastUserStatusUpdate});
+      DateTime? lastUserStatusUpdate,
+      DateTime? lastChatUpdate});
 }
 
 /// @nodoc
@@ -110,6 +119,7 @@ class __$$RelationshipModelImplCopyWithImpl<$Res>
     Object? id = null,
     Object? users = null,
     Object? lastUserStatusUpdate = freezed,
+    Object? lastChatUpdate = freezed,
   }) {
     return _then(_$RelationshipModelImpl(
       id: null == id
@@ -124,6 +134,10 @@ class __$$RelationshipModelImplCopyWithImpl<$Res>
           ? _value.lastUserStatusUpdate
           : lastUserStatusUpdate // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      lastChatUpdate: freezed == lastChatUpdate
+          ? _value.lastChatUpdate
+          : lastChatUpdate // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
     ));
   }
 }
@@ -134,7 +148,8 @@ class _$RelationshipModelImpl extends _RelationshipModel {
   _$RelationshipModelImpl(
       {required this.id,
       @protected required final Map<String, UserInRelationshipStatus> users,
-      @TimestampToDateTimeConverter() this.lastUserStatusUpdate})
+      this.lastUserStatusUpdate,
+      this.lastChatUpdate})
       : _users = users,
         super._();
 
@@ -155,12 +170,15 @@ class _$RelationshipModelImpl extends _RelationshipModel {
   /// Last time the status of one of the users changes. Used to determine the
   /// duration of a frienship.
   @override
-  @TimestampToDateTimeConverter()
   final DateTime? lastUserStatusUpdate;
+
+  /// Last time an important thing happened in the chat.
+  @override
+  final DateTime? lastChatUpdate;
 
   @override
   String toString() {
-    return 'RelationshipModel(id: $id, users: $users, lastUserStatusUpdate: $lastUserStatusUpdate)';
+    return 'RelationshipModel(id: $id, users: $users, lastUserStatusUpdate: $lastUserStatusUpdate, lastChatUpdate: $lastChatUpdate)';
   }
 
   @override
@@ -171,13 +189,19 @@ class _$RelationshipModelImpl extends _RelationshipModel {
             (identical(other.id, id) || other.id == id) &&
             const DeepCollectionEquality().equals(other._users, _users) &&
             (identical(other.lastUserStatusUpdate, lastUserStatusUpdate) ||
-                other.lastUserStatusUpdate == lastUserStatusUpdate));
+                other.lastUserStatusUpdate == lastUserStatusUpdate) &&
+            (identical(other.lastChatUpdate, lastChatUpdate) ||
+                other.lastChatUpdate == lastChatUpdate));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id,
-      const DeepCollectionEquality().hash(_users), lastUserStatusUpdate);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      const DeepCollectionEquality().hash(_users),
+      lastUserStatusUpdate,
+      lastChatUpdate);
 
   @JsonKey(ignore: true)
   @override
@@ -198,8 +222,8 @@ abstract class _RelationshipModel extends RelationshipModel {
   factory _RelationshipModel(
       {required final String id,
       @protected required final Map<String, UserInRelationshipStatus> users,
-      @TimestampToDateTimeConverter()
-      final DateTime? lastUserStatusUpdate}) = _$RelationshipModelImpl;
+      final DateTime? lastUserStatusUpdate,
+      final DateTime? lastChatUpdate}) = _$RelationshipModelImpl;
   _RelationshipModel._() : super._();
 
   factory _RelationshipModel.fromJson(Map<String, dynamic> json) =
@@ -214,8 +238,11 @@ abstract class _RelationshipModel extends RelationshipModel {
 
   /// Last time the status of one of the users changes. Used to determine the
   /// duration of a frienship.
-  @TimestampToDateTimeConverter()
   DateTime? get lastUserStatusUpdate;
+  @override
+
+  /// Last time an important thing happened in the chat.
+  DateTime? get lastChatUpdate;
   @override
   @JsonKey(ignore: true)
   _$$RelationshipModelImplCopyWith<_$RelationshipModelImpl> get copyWith =>

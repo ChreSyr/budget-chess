@@ -1,7 +1,5 @@
 // ignore_for_file: public_member_api_docs, invalid_annotation_target
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:crea_chess/package/firebase/firestore/converter/timestamp_to_datetime.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'relationship_model.freezed.dart';
@@ -57,7 +55,10 @@ class RelationshipModel with _$RelationshipModel {
 
     /// Last time the status of one of the users changes. Used to determine the
     /// duration of a frienship.
-    @TimestampToDateTimeConverter() DateTime? lastUserStatusUpdate,
+    DateTime? lastUserStatusUpdate,
+
+    /// Last time an important thing happened in the chat.
+    DateTime? lastChatUpdate,
   }) = _RelationshipModel;
 
   /// Required for the override getter

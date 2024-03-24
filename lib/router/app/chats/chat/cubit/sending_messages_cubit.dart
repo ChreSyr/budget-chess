@@ -45,11 +45,11 @@ class SendingMessagesCubit extends HydratedCubit<SendingMessages> {
 
   void clearStatus() => emit(state.copyWith(status: SendingStatus.idle));
 
-  void send({
+  Future<void> send({
     required String authorId,
     required String receiverId,
     required String text,
-  }) {
+  }) async {
     final relationshipId = relationshipCRUD.getId(authorId, receiverId);
     final message = MessageModel.fromText(
       relationshipId: relationshipId,
@@ -66,7 +66,7 @@ class SendingMessagesCubit extends HydratedCubit<SendingMessages> {
     );
 
     try {
-      messageCRUD.create(
+      await messageCRUD.create(
         parentDocumentId: relationshipId,
         data: message.copyWith(status: MessageStatus.sent),
       );
@@ -76,6 +76,8 @@ class SendingMessagesCubit extends HydratedCubit<SendingMessages> {
           status: SendingStatus.idle,
         ),
       );
+
+      await relationshipCRUD.updateChat(relationshipId: relationshipId);
     } catch (_) {
       emit(
         SendingMessages(
