@@ -1,23 +1,20 @@
 import 'dart:math';
 
-import 'package:crea_chess/package/chat/flutter_chat_ui/chat_l10n.dart';
-import 'package:crea_chess/package/chat/flutter_chat_ui/chat_theme.dart';
-import 'package:crea_chess/package/chat/flutter_chat_ui/models/bubble_rtl_alignment.dart';
-import 'package:crea_chess/package/chat/flutter_chat_ui/models/date_header.dart';
-import 'package:crea_chess/package/chat/flutter_chat_ui/models/emoji_enlargement_behavior.dart';
-import 'package:crea_chess/package/chat/flutter_chat_ui/models/message_spacer.dart';
-import 'package:crea_chess/package/chat/flutter_chat_ui/models/unread_header_data.dart';
-import 'package:crea_chess/package/chat/flutter_chat_ui/util.dart';
-import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/chat_list.dart';
-import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/input/input.dart';
-import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/message/message_widget.dart';
-import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/message/text_message.dart';
-import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/state/inherited_chat_theme.dart';
-import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/state/inherited_l10n.dart';
-import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/state/inherited_user.dart';
-import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/typing_indicator.dart';
-import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/unread_header.dart';
-import 'package:crea_chess/package/chat/message/message_model.dart';
+import 'package:crea_chess/package/chat/chat_theme.dart';
+import 'package:crea_chess/package/chat/models/bubble_rtl_alignment.dart';
+import 'package:crea_chess/package/chat/models/date_header.dart';
+import 'package:crea_chess/package/chat/models/emoji_enlargement_behavior.dart';
+import 'package:crea_chess/package/chat/models/message_spacer.dart';
+import 'package:crea_chess/package/chat/models/unread_header_data.dart';
+import 'package:crea_chess/package/chat/util.dart';
+import 'package:crea_chess/package/chat/widgets/chat_list.dart';
+import 'package:crea_chess/package/chat/widgets/input/input.dart';
+import 'package:crea_chess/package/chat/widgets/message/message_widget.dart';
+import 'package:crea_chess/package/chat/widgets/message/text_message.dart';
+import 'package:crea_chess/package/chat/widgets/state/inherited_chat_theme.dart';
+import 'package:crea_chess/package/chat/widgets/state/inherited_user.dart';
+import 'package:crea_chess/package/chat/widgets/typing_indicator.dart';
+import 'package:crea_chess/package/chat/widgets/unread_header.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -49,7 +46,6 @@ class Chat extends StatefulWidget {
     this.inputOptions = const InputOptions(),
     this.isLastPage,
     this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
-    this.l10n = const ChatL10nEn(),
     this.listBottomWidget,
     this.nameBuilder,
     this.onAvatarTap,
@@ -114,8 +110,6 @@ class Chat extends StatefulWidget {
   final EmojiEnlargementBehavior emojiEnlargementBehavior;
 
   /// Allows you to change what the user sees when there are no messages.
-  /// `emptyChatPlaceholder` and `emptyChatPlaceholderTextStyle` are ignored
-  /// in this case.
   final Widget? emptyState;
 
   /// Time (in ms) between two messages when we will visually group them.
@@ -134,11 +128,6 @@ class Chat extends StatefulWidget {
 
   /// See [ChatList.keyboardDismissBehavior].
   final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
-
-  /// Localized copy. Extend [ChatL10n] class to create your own copy or use
-  /// existing one, like the default [ChatL10nEn]. You can customize only
-  /// certain properties, see more here [ChatL10nEn].
-  final ChatL10n l10n;
 
   /// See [ChatList.bottomWidget]. For a custom chat input
   /// use [customBottomWidget] instead.
@@ -296,7 +285,7 @@ class ChatState extends State<Chat> {
           horizontal: 24,
         ),
         child: Text(
-          widget.l10n.emptyChatPlaceholder,
+          'No messages here yet', // TODO : l10n
           style: widget.theme.emptyChatPlaceholderTextStyle,
           textAlign: TextAlign.center,
         ),
@@ -356,34 +345,34 @@ class ChatState extends State<Chat> {
 
       final Widget messageWidget;
 
-        final messageWidth =
-            widget.showUserAvatars && message.authorId != widget.user.id
-                ? min(constraints.maxWidth * 0.72, 440).floor()
-                : min(constraints.maxWidth * 0.78, 440).floor();
+      final messageWidth =
+          widget.showUserAvatars && message.authorId != widget.user.id
+              ? min(constraints.maxWidth * 0.72, 440).floor()
+              : min(constraints.maxWidth * 0.78, 440).floor();
       final Widget msgWidget = MessageWidget(
-          bubbleBuilder: widget.bubbleBuilder,
+        bubbleBuilder: widget.bubbleBuilder,
         bubbleRtlAlignment: widget.bubbleRtlAlignment,
         emojiEnlargementBehavior: widget.emojiEnlargementBehavior,
         hideBackgroundOnEmojiMessages: widget.hideBackgroundOnEmojiMessages,
-          message: message,
-          messageWidth: messageWidth,
-          nameBuilder: widget.nameBuilder,
-          onAvatarTap: widget.onAvatarTap,
-          onMessageDoubleTap: widget.onMessageDoubleTap,
-          onMessageLongPress: widget.onMessageLongPress,
-          onMessageStatusLongPress: widget.onMessageStatusLongPress,
-          onMessageStatusTap: widget.onMessageStatusTap,
+        message: message,
+        messageWidth: messageWidth,
+        nameBuilder: widget.nameBuilder,
+        onAvatarTap: widget.onAvatarTap,
+        onMessageDoubleTap: widget.onMessageDoubleTap,
+        onMessageLongPress: widget.onMessageLongPress,
+        onMessageStatusLongPress: widget.onMessageStatusLongPress,
+        onMessageStatusTap: widget.onMessageStatusTap,
         onMessageTap: widget.onMessageTap,
         onMessageVisibilityChanged: widget.onMessageVisibilityChanged,
-          roundBorder: map['nextMessageInGroup'] == true,
-          showAvatar: map['nextMessageInGroup'] == false,
-          showName: map['showName'] == true,
-          showStatus: map['showStatus'] == true,
+        roundBorder: map['nextMessageInGroup'] == true,
+        showAvatar: map['nextMessageInGroup'] == false,
+        showName: map['showName'] == true,
+        showStatus: map['showStatus'] == true,
         showUserAvatars: widget.showUserAvatars,
         textMessageOptions: widget.textMessageOptions,
-        );
+      );
       messageWidget = msgWidget;
-      
+
       return AutoScrollTag(
         controller: _scrollController,
         index: index ?? -1,
@@ -444,65 +433,62 @@ class ChatState extends State<Chat> {
         user: widget.user,
         child: InheritedChatTheme(
           theme: widget.theme,
-          child: InheritedL10n(
-            l10n: widget.l10n,
-            child: Stack(
-              children: [
-                ColoredBox(
-                  color: widget.theme.backgroundColor,
-                  child: Column(
-                    children: [
-                      Flexible(
-                        child: widget.messages.isEmpty
-                            ? SizedBox.expand(
-                                child: _emptyStateBuilder(),
-                              )
-                            : GestureDetector(
-                                onTap: () {
-                                  FocusManager.instance.primaryFocus?.unfocus();
-                                  widget.onBackgroundTap?.call();
-                                },
-                                child: LayoutBuilder(
-                                  builder: (
-                                    BuildContext context,
-                                    BoxConstraints constraints,
-                                  ) =>
-                                      ChatList(
-                                    bottomWidget: widget.listBottomWidget,
-                                    bubbleRtlAlignment:
-                                        widget.bubbleRtlAlignment!,
-                                    isLastPage: widget.isLastPage,
-                                    itemBuilder: (Object item, int? index) =>
-                                        _messageBuilder(
-                                      item,
-                                      constraints,
-                                      index,
-                                    ),
-                                    items: _chatMessages,
-                                    keyboardDismissBehavior:
-                                        widget.keyboardDismissBehavior,
-                                    onEndReached: widget.onEndReached,
-                                    onEndReachedThreshold:
-                                        widget.onEndReachedThreshold,
-                                    scrollController: _scrollController,
-                                    scrollPhysics: widget.scrollPhysics,
-                                    typingIndicatorOptions:
-                                        widget.typingIndicatorOptions,
-                                    useTopSafeAreaInset:
-                                        widget.useTopSafeAreaInset ?? isMobile,
+          child: Stack(
+            children: [
+              ColoredBox(
+                color: widget.theme.backgroundColor,
+                child: Column(
+                  children: [
+                    Flexible(
+                      child: widget.messages.isEmpty
+                          ? SizedBox.expand(
+                              child: _emptyStateBuilder(),
+                            )
+                          : GestureDetector(
+                              onTap: () {
+                                FocusManager.instance.primaryFocus?.unfocus();
+                                widget.onBackgroundTap?.call();
+                              },
+                              child: LayoutBuilder(
+                                builder: (
+                                  BuildContext context,
+                                  BoxConstraints constraints,
+                                ) =>
+                                    ChatList(
+                                  bottomWidget: widget.listBottomWidget,
+                                  bubbleRtlAlignment:
+                                      widget.bubbleRtlAlignment!,
+                                  isLastPage: widget.isLastPage,
+                                  itemBuilder: (Object item, int? index) =>
+                                      _messageBuilder(
+                                    item,
+                                    constraints,
+                                    index,
                                   ),
+                                  items: _chatMessages,
+                                  keyboardDismissBehavior:
+                                      widget.keyboardDismissBehavior,
+                                  onEndReached: widget.onEndReached,
+                                  onEndReachedThreshold:
+                                      widget.onEndReachedThreshold,
+                                  scrollController: _scrollController,
+                                  scrollPhysics: widget.scrollPhysics,
+                                  typingIndicatorOptions:
+                                      widget.typingIndicatorOptions,
+                                  useTopSafeAreaInset:
+                                      widget.useTopSafeAreaInset ?? isMobile,
                                 ),
                               ),
-                      ),
-                      Input(
-                            onSendPressed: widget.onSendPressed,
-                            options: widget.inputOptions,
-                          ),
-                    ],
-                  ),
+                            ),
+                    ),
+                    Input(
+                      onSendPressed: widget.onSendPressed,
+                      options: widget.inputOptions,
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       );

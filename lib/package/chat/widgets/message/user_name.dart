@@ -1,5 +1,5 @@
-import 'package:crea_chess/package/chat/flutter_chat_ui/util.dart';
-import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/state/inherited_chat_theme.dart';
+import 'package:crea_chess/package/chat/util.dart';
+import 'package:crea_chess/package/chat/widgets/state/inherited_chat_theme.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:flutter/material.dart';
 

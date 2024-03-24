@@ -1,8 +1,8 @@
-import 'package:crea_chess/package/chat/flutter_chat_ui/models/bubble_rtl_alignment.dart';
-import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/state/inherited_chat_theme.dart';
-import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/state/inherited_user.dart';
-import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/typing_indicator.dart';
-import 'package:crea_chess/package/chat/message/message_model.dart';
+import 'package:crea_chess/package/chat/models/bubble_rtl_alignment.dart';
+import 'package:crea_chess/package/chat/widgets/state/inherited_chat_theme.dart';
+import 'package:crea_chess/package/chat/widgets/state/inherited_user.dart';
+import 'package:crea_chess/package/chat/widgets/typing_indicator.dart';
+import 'package:crea_chess/package/firebase/firestore/relationship/message/message_model.dart';
 import 'package:diffutil_dart/diffutil.dart';
 import 'package:flutter/material.dart';
 

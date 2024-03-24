@@ -1,6 +1,6 @@
-import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/message/system_message.dart';
-import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/typing_indicator.dart';
-import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/unread_header.dart';
+import 'package:crea_chess/package/chat/widgets/message/system_message.dart';
+import 'package:crea_chess/package/chat/widgets/typing_indicator.dart';
+import 'package:crea_chess/package/chat/widgets/unread_header.dart';
 import 'package:flutter/material.dart';
 
 // For internal usage only. Use values from theme itself.

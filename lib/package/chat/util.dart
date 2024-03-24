@@ -1,10 +1,9 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:crea_chess/package/chat/flutter_chat_ui/models/date_header.dart';
-import 'package:crea_chess/package/chat/flutter_chat_ui/models/emoji_enlargement_behavior.dart';
-import 'package:crea_chess/package/chat/flutter_chat_ui/models/unread_header_data.dart';
-import 'package:crea_chess/package/chat/message/message_model.dart';
+import 'package:crea_chess/package/chat/models/date_header.dart';
+import 'package:crea_chess/package/chat/models/emoji_enlargement_behavior.dart';
+import 'package:crea_chess/package/chat/models/unread_header_data.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:flutter/foundation.dart'
     show TargetPlatform, defaultTargetPlatform;

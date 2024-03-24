@@ -1,5 +1,4 @@
-import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/state/inherited_chat_theme.dart';
-import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/state/inherited_l10n.dart';
+import 'package:crea_chess/package/chat/widgets/state/inherited_chat_theme.dart';
 import 'package:flutter/material.dart';
 
 /// A class that represents send button widget.
@@ -22,7 +21,7 @@ class SendButton extends StatelessWidget {
         margin: InheritedChatTheme.of(context).theme.sendButtonMargin ??
             const EdgeInsetsDirectional.fromSTEB(0, 0, 8, 0),
         child: Semantics(
-          label: InheritedL10n.of(context).l10n.sendButtonAccessibilityLabel,
+          label: 'Send', // TODO : l10n
           child: IconButton(
             constraints: const BoxConstraints(
               minHeight: 24,
@@ -33,8 +32,7 @@ class SendButton extends StatelessWidget {
             onPressed: onPressed,
             padding: padding,
             splashRadius: 24,
-            tooltip:
-                InheritedL10n.of(context).l10n.sendButtonAccessibilityLabel,
+            tooltip: 'Send', // TODO : l10n
           ),
         ),
       );

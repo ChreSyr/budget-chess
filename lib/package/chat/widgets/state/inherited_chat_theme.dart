@@ -1,4 +1,4 @@
-import 'package:crea_chess/package/chat/flutter_chat_ui/chat_theme.dart';
+import 'package:crea_chess/package/chat/chat_theme.dart';
 import 'package:flutter/widgets.dart';
 
 /// Used to make provided [ChatTheme] class available through the whole package.

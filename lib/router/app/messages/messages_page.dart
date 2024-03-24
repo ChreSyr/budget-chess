@@ -1,10 +1,8 @@
 import 'package:crea_chess/package/atomic_design/snack_bar.dart';
-import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/chat.dart';
-import 'package:crea_chess/package/chat/message/message_model.dart';
-import 'package:crea_chess/package/chat/message/messsage_crud.dart';
-import 'package:crea_chess/package/chat/message/sending_messages_cubit.dart';
+import 'package:crea_chess/package/chat/widgets/chat.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/router/app/app_router.dart';
+import 'package:crea_chess/router/app/messages/sending_messages/sending_messages_cubit.dart';
 import 'package:crea_chess/router/shared/ccroute.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

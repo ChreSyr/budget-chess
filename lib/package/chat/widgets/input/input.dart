@@ -1,10 +1,9 @@
-import 'package:crea_chess/package/chat/flutter_chat_ui/models/input_clear_mode.dart';
-import 'package:crea_chess/package/chat/flutter_chat_ui/models/send_button_visibility_mode.dart';
-import 'package:crea_chess/package/chat/flutter_chat_ui/util.dart';
-import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/input/input_text_field_controller.dart';
-import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/input/send_button.dart';
-import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/state/inherited_chat_theme.dart';
-import 'package:crea_chess/package/chat/flutter_chat_ui/widgets/state/inherited_l10n.dart';
+import 'package:crea_chess/package/chat/models/input_clear_mode.dart';
+import 'package:crea_chess/package/chat/models/send_button_visibility_mode.dart';
+import 'package:crea_chess/package/chat/util.dart';
+import 'package:crea_chess/package/chat/widgets/input/input_text_field_controller.dart';
+import 'package:crea_chess/package/chat/widgets/input/send_button.dart';
+import 'package:crea_chess/package/chat/widgets/state/inherited_chat_theme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -164,8 +163,7 @@ class _InputState extends State<Input> {
                                       .inputTextColor
                                       .withOpacity(0.5),
                                 ),
-                            hintText:
-                                InheritedL10n.of(context).l10n.inputPlaceholder,
+                            hintText: 'Message', // TODO : l10n
                           ),
                       focusNode: _inputFocusNode,
                       keyboardType: widget.options.keyboardType,
