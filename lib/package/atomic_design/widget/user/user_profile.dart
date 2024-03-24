@@ -17,12 +17,12 @@ class UserProfile extends StatelessWidget {
   const UserProfile({
     required this.header,
     required this.tabSections,
-    this.relationshipWidget,
+    this.userActions,
     super.key,
   });
 
   final UserHeader header;
-  final Widget? relationshipWidget;
+  final Widget? userActions;
   final List<UserSection> tabSections;
 
   @override
@@ -36,7 +36,7 @@ class UserProfile extends StatelessWidget {
             child: Column(
               children: [
                 header,
-                if (relationshipWidget != null) relationshipWidget!,
+                if (userActions != null) userActions!,
                 if (tabSections.isNotEmpty) ...[
                   CCGap.medium,
                   DefaultTabController(

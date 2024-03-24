@@ -1,9 +1,12 @@
+import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/relationship_button.dart';
+import 'package:crea_chess/package/atomic_design/widget/user/user_action_button.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_header.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_profile.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_sections.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/router/app/app_router.dart';
+import 'package:crea_chess/router/app/chats/chat/chat_page.dart';
 import 'package:crea_chess/router/shared/app_bar_actions.dart';
 import 'package:crea_chess/router/shared/ccroute.dart';
 import 'package:flutter/material.dart';
@@ -64,9 +67,20 @@ class UserPage extends StatelessWidget {
                     isConnected: user.isConnected,
                     editable: false,
                   ),
-                  relationshipWidget: RelationshipButton(
-                    authUid: currentUser.id,
-                    userId: user.id,
+                  userActions: Row(
+                    children: [
+                      CCGap.small,
+                      RelationshipButton(
+                        authUid: currentUser.id,
+                        userId: user.id,
+                      ),
+                      CCGap.small,
+                      UserActionButton(
+                        onTap: () => ChatRoute.pushId(userId: user.id),
+                        icon: const Icon(Icons.message),
+                        text: 'Envoyer un message',
+                      ),
+                    ],
                   ),
                   tabSections: UserSection.getSections(currentUser.id, user.id),
                 );

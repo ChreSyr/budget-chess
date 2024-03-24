@@ -10,42 +10,50 @@ class FeedCard extends StatelessWidget {
     required this.child,
     this.title,
     this.actions = const [],
+    this.onTap,
+    this.color,
     super.key,
   });
 
   final Widget child;
   final String? title;
   final List<Widget> actions;
+  final VoidCallback? onTap;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: context.colorScheme.onInverseSurface,
+      color: color ?? context.colorScheme.onInverseSurface,
       elevation: CCElevation.medium,
-      child: CCPadding.allMedium(
-        child: title == null && actions.isEmpty
-            ? child
-            : Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          // TODO : l10n
-                          title ?? '',
-                          style: context.textTheme.titleLarge
-                              ?.copyWith(fontWeight: FontWeight.bold),
+      clipBehavior: onTap == null ? null : Clip.hardEdge,
+      child: InkWell(
+        onTap: onTap,
+        child: CCPadding.allMedium(
+          child: title == null && actions.isEmpty
+              ? child
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            // TODO : l10n
+                            title ?? '',
+                            style: context.textTheme.titleLarge
+                                ?.copyWith(fontWeight: FontWeight.bold),
+                          ),
                         ),
-                      ),
-                      CCGap.small,
-                      ...actions,
-                    ],
-                  ),
-                  CCGap.medium,
-                  child,
-                ],
-              ),
+                        CCGap.small,
+                        ...actions,
+                      ],
+                    ),
+                    CCGap.medium,
+                    child,
+                  ],
+                ),
+        ),
       ),
     );
   }

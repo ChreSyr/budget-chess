@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
-import 'package:crea_chess/package/atomic_design/snack_bar.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
-import 'package:crea_chess/router/app/chats/chat/widget/chat.dart';
 import 'package:crea_chess/router/app/friends/search_friend/search_friend_delegate.dart';
 import 'package:crea_chess/router/app/user/user_page.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +24,6 @@ abstract class UserSection extends StatelessWidget {
       ];
     } else {
       return [
-        UserSectionMessages(currentUserId: current, otherId: other),
         UserSectionFriends(userId: other),
         UserSectionGames(userId: other),
       ];
@@ -34,28 +31,6 @@ abstract class UserSection extends StatelessWidget {
   }
 
   String getTitle(AppLocalizations l10n);
-}
-
-class UserSectionMessages extends UserSection {
-  const UserSectionMessages({
-    required this.currentUserId,
-    required this.otherId,
-    super.key,
-  });
-
-  final String currentUserId;
-  final String otherId;
-
-  @override
-  String getTitle(AppLocalizations l10n) {
-    return l10n.messages;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (currentUserId == otherId) return Container(); // should never happen
-    return ChatSection(currentUserId: currentUserId, otherId: otherId);
-  }
 }
 
 class UserSectionFriends extends UserSection {
@@ -114,108 +89,6 @@ class UserSectionFriends extends UserSection {
           },
         ),
       ),
-    );
-  }
-}
-
-class ChatSection extends StatefulWidget {
-  const ChatSection({
-    required this.currentUserId,
-    required this.otherId,
-    super.key,
-  });
-
-  final String currentUserId;
-  final String otherId;
-
-  @override
-  State<ChatSection> createState() => _ChatSectionState();
-}
-
-class _ChatSectionState extends State<ChatSection> {
-  Future<void> _handleMessageTap(BuildContext _, MessageModel message) async {
-    // if (message is types.FileMessage) {
-    //   var localPath = message.uri;
-
-    //   if (message.uri.startsWith('http')) {
-    //     try {
-    //       final updatedMessage = message.copyWith(isLoading: true);
-    //       FirebaseChatCore.instance.updateMessage(
-    //         updatedMessage,
-    //         widget.room.id,
-    //       );
-
-    //       final client = http.Client();
-    //       final request = await client.get(Uri.parse(message.uri));
-    //       final bytes = request.bodyBytes;
-    //       final documentsDir = (await getApplicationDocumentsDirectory())
-    //              .path;
-    //       localPath = '$documentsDir/${message.name}';
-
-    //       if (!File(localPath).existsSync()) {
-    //         final file = File(localPath);
-    //         await file.writeAsBytes(bytes);
-    //       }
-    //     } finally {
-    //       final updatedMessage = message.copyWith(isLoading: false);
-    //       FirebaseChatCore.instance.updateMessage(
-    //         updatedMessage,
-    //         widget.room.id,
-    //       );
-    //     }
-    //   }
-
-    //   await OpenFilex.open(localPath);
-    // }
-  }
-
-  Future<void> _handleSendPressed(String text) async {
-    final relationshipId = relationshipCRUD.getId(
-      widget.currentUserId,
-      widget.otherId,
-    );
-    final message = MessageModel.fromText(
-      relationshipId: relationshipId,
-      authorId: widget.currentUserId,
-      text: text,
-    );
-    try {
-      await messageCRUD.create(
-        parentDocumentId: relationshipId,
-        documentId: null,
-        data: message,
-      );
-    } catch (_) {
-      // ignore: use_build_context_synchronously
-      snackBarError(context, context.l10n.errorOccurred);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final currentUser = context.read<UserCubit>().state;
-
-    final relationshipId = relationshipCRUD.getId(
-      widget.currentUserId,
-      widget.otherId,
-    );
-
-    return StreamBuilder<Iterable<MessageModel>>(
-      stream: messageCRUD.streamFiltered(
-        parentDocumentId: relationshipId,
-        filter: (collection) => collection.orderBy(
-          'createdAt',
-          descending: true,
-        ),
-      ),
-      builder: (context, snapshot) {
-        return Chat(
-          messages: snapshot.data?.toList() ?? [],
-          onMessageTap: _handleMessageTap,
-          onSendPressed: _handleSendPressed,
-          user: currentUser,
-        );
-      },
     );
   }
 }

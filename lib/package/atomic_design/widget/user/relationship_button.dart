@@ -1,9 +1,11 @@
+import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/dialog/relationship/answer_friend_request.dart';
 import 'package:crea_chess/package/atomic_design/dialog/relationship/cancel_friend_request.dart';
 import 'package:crea_chess/package/atomic_design/dialog/relationship/unblock_user.dart';
 import 'package:crea_chess/package/atomic_design/snack_bar.dart';
 import 'package:crea_chess/package/atomic_design/widget/badge.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
+import 'package:crea_chess/package/atomic_design/widget/user/user_action_button.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:flutter/material.dart';
@@ -60,7 +62,10 @@ class RelationshipButton extends StatelessWidget {
                 icon: Icon(Icons.check), // TODO : change
                 onPressed: null,
               )
-            : CCGap.zero;
+            : const UserActionButton(
+                icon: Icon(Icons.check),
+                text: 'Vous êtes amis !', // TODO : l10n
+              );
       case UserInRelationshipStatus.hasDeletedAccount:
         return CCGap.zero;
       case UserInRelationshipStatus.requests:
@@ -69,25 +74,26 @@ class RelationshipButton extends StatelessWidget {
                 icon: const Icon(Icons.send),
                 onPressed: () => showCancelFriendRequestDialog(context, userId),
               )
-            : ElevatedButton.icon(
+            : UserActionButton(
                 icon: const Icon(Icons.send),
-                label: Text(context.l10n.friendRequestSent),
-                onPressed: () => showCancelFriendRequestDialog(context, userId),
+                text: context.l10n.friendRequestSent,
+                onTap: () => showCancelFriendRequestDialog(context, userId),
               );
       case UserInRelationshipStatus.isRequested:
-        return SimpleBadge(
-          child: asIcon
-              ? IconButton(
+        return asIcon
+            ? SimpleBadge(
+                child: IconButton(
                   icon: const Icon(Icons.mail),
-                  onPressed: () =>
-                      showAnswerFriendRequestDialog(context, userId),
-                )
-              : FilledButton.icon(
-                  icon: const Icon(Icons.mail),
-                  label: const Text('Vous demande en ami !'), // TODO : l10n
                   onPressed: () =>
                       showAnswerFriendRequestDialog(context, userId),
                 ),
+                )
+            : UserActionButton(
+                icon: const Icon(Icons.mail),
+                text: 'Demande en ami !', // TODO : l10n
+                onTap: () =>
+                      showAnswerFriendRequestDialog(context, userId),
+                color: context.colorScheme.primaryContainer,
         );
       case UserInRelationshipStatus.blocks:
         return asIcon
@@ -95,10 +101,10 @@ class RelationshipButton extends StatelessWidget {
                 icon: const Icon(Icons.block),
                 onPressed: () => showUnblockUserDialog(context, userId),
               )
-            : ElevatedButton.icon(
+            : UserActionButton(
                 icon: const Icon(Icons.block),
-                label: Text(context.l10n.blockedUserVerbose),
-                onPressed: () => showUnblockUserDialog(context, userId),
+                text: context.l10n.blockedUserVerbose,
+                onTap: () => showUnblockUserDialog(context, userId),
               );
       case UserInRelationshipStatus.isBlocked:
         return asIcon
@@ -106,10 +112,9 @@ class RelationshipButton extends StatelessWidget {
                 icon: Icon(Icons.block),
                 onPressed: null,
               )
-            : ElevatedButton.icon(
+            : UserActionButton(
                 icon: const Icon(Icons.block),
-                label: Text(context.l10n.blockedByUser),
-                onPressed: null,
+                text: context.l10n.blockedByUser,
               );
       case null:
       case UserInRelationshipStatus.none:
@@ -149,16 +154,17 @@ class SendFriendRequestButton extends StatelessWidget {
               snackBarNotify(context, context.l10n.friendRequestSent);
             },
           )
-        : FilledButton.icon(
+        : UserActionButton(
             icon: const Icon(Icons.person_add),
-            label: Text(context.l10n.friendRequestSend),
-            onPressed: () {
+            text: context.l10n.friendRequestSend,
+            onTap: () {
               relationshipCRUD.sendFriendRequest(
                 fromUserId: authUid,
                 toUserId: userId,
               );
               snackBarNotify(context, context.l10n.friendRequestSent);
             },
+            color: context.colorScheme.primaryContainer,
           );
   }
 }
