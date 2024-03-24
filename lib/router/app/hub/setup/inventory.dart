@@ -4,6 +4,7 @@ import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/chessground/export.dart';
 import 'package:crea_chess/package/unichess/unichess.dart';
 import 'package:crea_chess/router/app/hub/game/game_cubit.dart';
+import 'package:crea_chess/router/app/hub/setup/board_settings_cubit.dart';
 import 'package:crea_chess/router/app/hub/setup/inventory_cubit.dart';
 import 'package:crea_chess/router/app/hub/setup/role.dart';
 import 'package:crea_chess/router/app/hub/setup/selected_role_cubit.dart';
@@ -101,6 +102,10 @@ class InventorySlot extends StatelessWidget {
       pieceAssets: assets,
     );
 
+    final boardSettings = context.watch<BoardSettingsCubit>().state;
+    final squareSize = width * 6 / 8;
+    final feedbackSize = squareSize * boardSettings.dragFeedbackSize;
+
     return SizedBox(
       height: width,
       width: width,
@@ -116,7 +121,22 @@ class InventorySlot extends StatelessWidget {
                   : context.colorScheme.secondaryContainer,
               child: Draggable<Role>(
                 data: role,
-                feedback: piece,
+                feedback: Transform.translate(
+                  offset: Offset(
+                    (width - feedbackSize) / 2 +
+                        ((boardSettings.dragFeedbackOffset.dx) * squareSize),
+                    (width - feedbackSize) / 2 +
+                        ((boardSettings.dragFeedbackOffset.dy) * squareSize),
+                  ),
+                  child: PieceWidget(
+                    piece: CGPiece(
+                      color: color,
+                      role: role,
+                    ),
+                    size: feedbackSize,
+                    pieceAssets: assets,
+                  ),
+                ),
                 childWhenDragging: SizedBox(
                   height: width,
                   width: width,
