@@ -26,7 +26,6 @@ class MessageWidget extends StatelessWidget {
     required this.roundBorder,
     required this.showAvatar,
     required this.showName,
-    required this.showStatus,
     required this.showUserAvatars,
     required this.textMessageOptions,
     super.key,
@@ -101,9 +100,6 @@ class MessageWidget extends StatelessWidget {
 
   /// See [TextMessage.showName].
   final bool showName;
-
-  /// Show message's status.
-  final bool showStatus;
 
   /// Show user avatars for received messages. Useful for a group chat.
   final bool showUserAvatars;
@@ -256,14 +252,12 @@ class MessageWidget extends StatelessWidget {
           ),
           if (currentUserIsAuthor)
             CCPadding.allXsmall(
-              child: showStatus
-                  ? GestureDetector(
+              child: GestureDetector(
                       onLongPress: () =>
                           onMessageStatusLongPress?.call(context, message),
                       onTap: () => onMessageStatusTap?.call(context, message),
                       child: MessageStatusIcon(status: message.status),
-                    )
-                  : CCGap.zero,
+              ),
             ),
         ],
       ),

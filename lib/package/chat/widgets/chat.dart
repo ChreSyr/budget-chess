@@ -360,7 +360,6 @@ class ChatState extends State<Chat> {
           roundBorder: map['nextMessageInGroup'] == true,
           showAvatar: map['nextMessageInGroup'] == false,
           showName: map['showName'] == true,
-          showStatus: map['showStatus'] == true,
           showUserAvatars: widget.showUserAvatars,
           textMessageOptions: widget.textMessageOptions,
         );

@@ -180,7 +180,6 @@ List<Object> calculateChatMessages(
       'message': message,
       'nextMessageInGroup': nextMessageInGroup,
       'showName': notMyMessage && showUserNames && showName,
-      'showStatus': message.showStatus,
     });
 
     if (nextMessageDifferentDay || nextMessageDateThreshold) {

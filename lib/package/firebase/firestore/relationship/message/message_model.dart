@@ -15,7 +15,6 @@ class MessageModel with _$MessageModel {
     DateTime? updatedAt,
     String? authorId,
     String? text,
-    @Default(true) bool showStatus,
     MessageStatus? status,
   }) = _MessageModel;
 

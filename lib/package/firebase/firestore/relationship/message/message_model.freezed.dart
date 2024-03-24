@@ -26,7 +26,6 @@ mixin _$MessageModel {
   DateTime? get updatedAt => throw _privateConstructorUsedError;
   String? get authorId => throw _privateConstructorUsedError;
   String? get text => throw _privateConstructorUsedError;
-  bool get showStatus => throw _privateConstructorUsedError;
   MessageStatus? get status => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -48,7 +47,6 @@ abstract class $MessageModelCopyWith<$Res> {
       DateTime? updatedAt,
       String? authorId,
       String? text,
-      bool showStatus,
       MessageStatus? status});
 }
 
@@ -71,7 +69,6 @@ class _$MessageModelCopyWithImpl<$Res, $Val extends MessageModel>
     Object? updatedAt = freezed,
     Object? authorId = freezed,
     Object? text = freezed,
-    Object? showStatus = null,
     Object? status = freezed,
   }) {
     return _then(_value.copyWith(
@@ -99,10 +96,6 @@ class _$MessageModelCopyWithImpl<$Res, $Val extends MessageModel>
           ? _value.text
           : text // ignore: cast_nullable_to_non_nullable
               as String?,
-      showStatus: null == showStatus
-          ? _value.showStatus
-          : showStatus // ignore: cast_nullable_to_non_nullable
-              as bool,
       status: freezed == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
@@ -126,7 +119,6 @@ abstract class _$$MessageModelImplCopyWith<$Res>
       DateTime? updatedAt,
       String? authorId,
       String? text,
-      bool showStatus,
       MessageStatus? status});
 }
 
@@ -147,7 +139,6 @@ class __$$MessageModelImplCopyWithImpl<$Res>
     Object? updatedAt = freezed,
     Object? authorId = freezed,
     Object? text = freezed,
-    Object? showStatus = null,
     Object? status = freezed,
   }) {
     return _then(_$MessageModelImpl(
@@ -175,10 +166,6 @@ class __$$MessageModelImplCopyWithImpl<$Res>
           ? _value.text
           : text // ignore: cast_nullable_to_non_nullable
               as String?,
-      showStatus: null == showStatus
-          ? _value.showStatus
-          : showStatus // ignore: cast_nullable_to_non_nullable
-              as bool,
       status: freezed == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
@@ -197,7 +184,6 @@ class _$MessageModelImpl extends _MessageModel {
       this.updatedAt,
       this.authorId,
       this.text,
-      this.showStatus = true,
       this.status})
       : super._();
 
@@ -217,14 +203,11 @@ class _$MessageModelImpl extends _MessageModel {
   @override
   final String? text;
   @override
-  @JsonKey()
-  final bool showStatus;
-  @override
   final MessageStatus? status;
 
   @override
   String toString() {
-    return 'MessageModel(relationshipId: $relationshipId, id: $id, createdAt: $createdAt, updatedAt: $updatedAt, authorId: $authorId, text: $text, showStatus: $showStatus, status: $status)';
+    return 'MessageModel(relationshipId: $relationshipId, id: $id, createdAt: $createdAt, updatedAt: $updatedAt, authorId: $authorId, text: $text, status: $status)';
   }
 
   @override
@@ -242,15 +225,13 @@ class _$MessageModelImpl extends _MessageModel {
             (identical(other.authorId, authorId) ||
                 other.authorId == authorId) &&
             (identical(other.text, text) || other.text == text) &&
-            (identical(other.showStatus, showStatus) ||
-                other.showStatus == showStatus) &&
             (identical(other.status, status) || other.status == status));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, relationshipId, id, createdAt,
-      updatedAt, authorId, text, showStatus, status);
+      updatedAt, authorId, text, status);
 
   @JsonKey(ignore: true)
   @override
@@ -274,7 +255,6 @@ abstract class _MessageModel extends MessageModel {
       final DateTime? updatedAt,
       final String? authorId,
       final String? text,
-      final bool showStatus,
       final MessageStatus? status}) = _$MessageModelImpl;
   _MessageModel._() : super._();
 
@@ -293,8 +273,6 @@ abstract class _MessageModel extends MessageModel {
   String? get authorId;
   @override
   String? get text;
-  @override
-  bool get showStatus;
   @override
   MessageStatus? get status;
   @override

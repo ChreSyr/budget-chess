@@ -18,7 +18,6 @@ _$MessageModelImpl _$$MessageModelImplFromJson(Map<String, dynamic> json) =>
           : DateTime.parse(json['updatedAt'] as String),
       authorId: json['authorId'] as String?,
       text: json['text'] as String?,
-      showStatus: json['showStatus'] as bool? ?? true,
       status: $enumDecodeNullable(_$MessageStatusEnumMap, json['status']),
     );
 
@@ -30,7 +29,6 @@ Map<String, dynamic> _$$MessageModelImplToJson(_$MessageModelImpl instance) =>
       'updatedAt': instance.updatedAt?.toIso8601String(),
       'authorId': instance.authorId,
       'text': instance.text,
-      'showStatus': instance.showStatus,
       'status': _$MessageStatusEnumMap[instance.status],
     };
 
