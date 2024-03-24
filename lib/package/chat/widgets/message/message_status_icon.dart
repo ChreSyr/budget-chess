@@ -1,4 +1,4 @@
-import 'package:crea_chess/package/chat/widgets/state/inherited_chat_theme.dart';
+import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/firebase/firestore/relationship/message/message_model.dart';
 import 'package:flutter/material.dart';
 
@@ -14,43 +14,39 @@ class MessageStatusIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     switch (status) {
       case MessageStatus.delivered:
+        return Image.asset(
+          'assets/chat/delivered.png',
+          color: context.colorScheme.primary,
+        );
       case MessageStatus.sent:
-        return InheritedChatTheme.of(context).theme.deliveredIcon != null
-            ? InheritedChatTheme.of(context).theme.deliveredIcon!
-            : Image.asset(
-                'assets/chat/delivered.png',
-                color: InheritedChatTheme.of(context).theme.primaryColor,
-              );
+        return Image.asset(
+          'assets/chat/delivered.png',
+          color: Colors.grey,
+        );
       case MessageStatus.error:
-        return InheritedChatTheme.of(context).theme.errorIcon != null
-            ? InheritedChatTheme.of(context).theme.errorIcon!
-            : Image.asset(
-                'assets/chat/error.png',
-                color: InheritedChatTheme.of(context).theme.errorColor,
-              );
+        return Image.asset(
+          'assets/chat/error.png',
+          color: context.colorScheme.error,
+        );
       case MessageStatus.seen:
-        return InheritedChatTheme.of(context).theme.seenIcon != null
-            ? InheritedChatTheme.of(context).theme.seenIcon!
-            : Image.asset(
-                'assets/chat/seen.png',
-                color: InheritedChatTheme.of(context).theme.primaryColor,
-              );
+        return Image.asset(
+          'assets/chat/seen.png',
+          color: context.colorScheme.primary,
+        );
       case MessageStatus.sending:
-        return InheritedChatTheme.of(context).theme.sendingIcon != null
-            ? InheritedChatTheme.of(context).theme.sendingIcon!
-            : Center(
-                child: SizedBox(
-                  height: 10,
-                  width: 10,
-                  child: CircularProgressIndicator(
-                    backgroundColor: Colors.transparent,
-                    strokeWidth: 1.5,
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      InheritedChatTheme.of(context).theme.primaryColor,
-                    ),
-                  ),
-                ),
-              );
+        return SizedBox(
+          height: 10,
+          width: 16,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 3),
+            child: CircularProgressIndicator(
+              strokeWidth: 1.5,
+              valueColor: AlwaysStoppedAnimation<Color>(
+                context.colorScheme.primary,
+              ),
+            ),
+          ),
+        );
       case null:
         return const SizedBox(width: 8);
     }

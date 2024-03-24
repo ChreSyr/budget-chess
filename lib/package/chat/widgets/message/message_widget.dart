@@ -111,7 +111,6 @@ class MessageWidget extends StatelessWidget {
   /// See [TextMessage.options].
   final TextMessageOptions textMessageOptions;
 
-  // Widget _avatarBuilder() => const SizedBox(width: 40);
   Widget _avatarBuilder() => showAvatar
       ? Container(
           margin: bubbleRtlAlignment == BubbleRtlAlignment.left

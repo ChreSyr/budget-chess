@@ -1,5 +1,10 @@
+import 'dart:async';
+
+import 'package:crea_chess/package/atomic_design/padding.dart';
+import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/snack_bar.dart';
-import 'package:crea_chess/package/chat/chat_theme.dart';
+import 'package:crea_chess/package/atomic_design/widget/gap.dart';
+import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/chat/models/typing_indicator_mode.dart';
 import 'package:crea_chess/package/chat/widgets/chat.dart';
 import 'package:crea_chess/package/chat/widgets/typing_indicator.dart';
@@ -7,6 +12,7 @@ import 'package:crea_chess/package/chat/widgets/unread_header.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/router/app/app_router.dart';
 import 'package:crea_chess/router/app/messages/sending_messages/sending_messages_cubit.dart';
+import 'package:crea_chess/router/app/user/user_page.dart';
 import 'package:crea_chess/router/shared/ccroute.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,6 +40,20 @@ class MessagesRoute extends CCRoute {
       );
 }
 
+class ChatPartnerCubit extends Cubit<UserModel?> {
+  ChatPartnerCubit(String partnerId) : super(null) {
+    _parterStream = userCRUD.stream(documentId: partnerId).listen(emit);
+  }
+
+  late StreamSubscription<UserModel?> _parterStream;
+
+  @override
+  Future<void> close() {
+    _parterStream.cancel();
+    return super.close();
+  }
+}
+
 class MessagesPage extends StatelessWidget {
   const MessagesPage({required this.usernameOrId, super.key});
 
@@ -53,16 +73,40 @@ class MessagesPage extends StatelessWidget {
             : userCRUD.stream(documentId: usernameOrId!),
         builder: (context, snapshot) {
           final user = snapshot.data;
-          return Scaffold(
-            appBar: AppBar(
-              title: user == null ? null : Text(user.username),
-            ),
-            body: user == null
-                ? const LinearProgressIndicator()
-                : ChatScreen(
-                    authUid: context.read<UserCubit>().state.id,
-                    otherId: user.id,
+          if (user == null) {
+            return Scaffold(
+              appBar: AppBar(),
+              body: const LinearProgressIndicator(),
+            );
+          }
+          return BlocProvider(
+            create: (context) => ChatPartnerCubit(user.id),
+            child: Scaffold(
+              appBar: AppBar(
+                titleSpacing: 0,
+                title: InkWell(
+                  onTap: () => UserRoute.pushId(userId: user.id),
+                  child: CCPadding.allSmall(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      // crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        UserPhoto(
+                          photo: user.photo,
+                          radius: CCSize.medium,
+                        ),
+                        CCGap.small,
+                        Text(user.username),
+                      ],
+                    ),
                   ),
+                ),
+              ),
+              body: ChatScreen(
+                authUid: context.read<UserCubit>().state.id,
+                otherId: user.id,
+              ),
+            ),
           );
         },
       ),
@@ -146,9 +190,6 @@ class _ChatScreenState extends State<ChatScreen> {
                 typingMode: TypingIndicatorMode.both,
                 typingUsers: [currentUser, currentUser, currentUser],
               ),
-              showUserAvatars: true,
-              showUserNames: true,
-              theme: const DarkChatTheme(),
             );
           },
         );

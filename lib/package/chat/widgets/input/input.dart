@@ -1,9 +1,11 @@
+import 'package:crea_chess/package/atomic_design/border.dart';
+import 'package:crea_chess/package/atomic_design/color.dart';
+import 'package:crea_chess/package/atomic_design/padding.dart';
+import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/chat/models/input_clear_mode.dart';
 import 'package:crea_chess/package/chat/models/send_button_visibility_mode.dart';
-import 'package:crea_chess/package/chat/util.dart';
 import 'package:crea_chess/package/chat/widgets/input/input_text_field_controller.dart';
 import 'package:crea_chess/package/chat/widgets/input/send_button.dart';
-import 'package:crea_chess/package/chat/widgets/state/inherited_chat_theme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -60,8 +62,7 @@ class _InputState extends State<Input> {
   void initState() {
     super.initState();
 
-    _textController =
-        widget.options.textEditingController ?? InputTextFieldController();
+    _textController = InputTextFieldController();
     _handleSendButtonVisibilityModeChange();
   }
 
@@ -99,107 +100,6 @@ class _InputState extends State<Input> {
     });
   }
 
-  Widget _inputBuilder() {
-    final query = MediaQuery.of(context);
-    final buttonPadding = InheritedChatTheme.of(context)
-        .theme
-        .inputPadding
-        .copyWith(left: 16, right: 16);
-    final safeAreaInsets = isMobile
-        ? EdgeInsets.fromLTRB(
-            query.padding.left,
-            0,
-            query.padding.right,
-            query.viewInsets.bottom + query.padding.bottom,
-          )
-        : EdgeInsets.zero;
-    final textPadding = InheritedChatTheme.of(context)
-        .theme
-        .inputPadding
-        .copyWith(left: 0, right: 0)
-        .add(
-          EdgeInsets.fromLTRB(24, 0, _sendButtonVisible ? 0 : 24, 0),
-        );
-
-    return Focus(
-      autofocus: !widget.options.autofocus,
-      child: Padding(
-        padding: InheritedChatTheme.of(context).theme.inputMargin,
-        child: Material(
-          borderRadius: InheritedChatTheme.of(context).theme.inputBorderRadius,
-          color: InheritedChatTheme.of(context).theme.inputBackgroundColor,
-          surfaceTintColor:
-              InheritedChatTheme.of(context).theme.inputSurfaceTintColor,
-          elevation: InheritedChatTheme.of(context).theme.inputElevation,
-          child: Container(
-            decoration:
-                InheritedChatTheme.of(context).theme.inputContainerDecoration,
-            padding: safeAreaInsets,
-            child: Row(
-              textDirection: TextDirection.ltr,
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: textPadding,
-                    child: TextField(
-                      enabled: widget.options.enabled,
-                      autocorrect: widget.options.autocorrect,
-                      autofocus: widget.options.autofocus,
-                      enableSuggestions: widget.options.enableSuggestions,
-                      controller: _textController,
-                      cursorColor: InheritedChatTheme.of(context)
-                          .theme
-                          .inputTextCursorColor,
-                      decoration: InheritedChatTheme.of(context)
-                          .theme
-                          .inputTextDecoration
-                          .copyWith(
-                            hintStyle: InheritedChatTheme.of(context)
-                                .theme
-                                .inputTextStyle
-                                .copyWith(
-                                  color: InheritedChatTheme.of(context)
-                                      .theme
-                                      .inputTextColor
-                                      .withOpacity(0.5),
-                                ),
-                            hintText: 'Message', // TODO : l10n
-                          ),
-                      focusNode: _inputFocusNode,
-                      keyboardType: widget.options.keyboardType,
-                      maxLines: 5,
-                      minLines: 1,
-                      onChanged: widget.options.onTextChanged,
-                      onTap: widget.options.onTextFieldTap,
-                      style: InheritedChatTheme.of(context)
-                          .theme
-                          .inputTextStyle
-                          .copyWith(
-                            color: InheritedChatTheme.of(context)
-                                .theme
-                                .inputTextColor,
-                          ),
-                      textCapitalization: TextCapitalization.sentences,
-                    ),
-                  ),
-                ),
-                ConstrainedBox(
-                  constraints: BoxConstraints(
-                    minHeight: buttonPadding.bottom + buttonPadding.top + 24,
-                  ),
-                  child: SendButton(
-                    onPressed: _sendButtonVisible ? _handleSendPressed : null,
-                    padding: buttonPadding,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   @override
   void didUpdateWidget(covariant Input oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -217,10 +117,54 @@ class _InputState extends State<Input> {
   }
 
   @override
-  Widget build(BuildContext context) => GestureDetector(
-        onTap: () => _inputFocusNode.requestFocus(),
-        child: _inputBuilder(),
-      );
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => _inputFocusNode.requestFocus(),
+      child: Focus(
+        autofocus: !widget.options.autofocus,
+        child: Row(
+          children: [
+            Expanded(
+              child: CCPadding.allSmall(
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    borderRadius: CCBorderRadiusCircular.large,
+                    color: context.colorScheme.primaryContainer,
+                  ),
+                  child: TextField(
+                    enabled: widget.options.enabled,
+                    autocorrect: widget.options.autocorrect,
+                    autofocus: widget.options.autofocus,
+                    enableSuggestions: widget.options.enableSuggestions,
+                    controller: _textController,
+                    decoration: const InputDecoration(
+                      hintText: 'Message', // TODO : l10n
+                      border: InputBorder.none,
+                      isCollapsed: true,
+                      contentPadding: EdgeInsets.symmetric(
+                        vertical: 12,
+                        horizontal: CCSize.medium,
+                      ),
+                    ),
+                    focusNode: _inputFocusNode,
+                    keyboardType: widget.options.keyboardType,
+                    maxLines: 5,
+                    minLines: 1,
+                    onChanged: widget.options.onTextChanged,
+                    onTap: widget.options.onTextFieldTap,
+                    textCapitalization: TextCapitalization.sentences,
+                  ),
+                ),
+              ),
+            ),
+            SendButton(
+              onPressed: _sendButtonVisible ? _handleSendPressed : null,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 @immutable
@@ -228,10 +172,9 @@ class InputOptions {
   const InputOptions({
     this.inputClearMode = InputClearMode.always,
     this.keyboardType = TextInputType.multiline,
+    this.sendButtonVisibilityMode = SendButtonVisibilityMode.editing,
     this.onTextChanged,
     this.onTextFieldTap,
-    this.sendButtonVisibilityMode = SendButtonVisibilityMode.editing,
-    this.textEditingController,
     this.autocorrect = true,
     this.autofocus = false,
     this.enableSuggestions = true,
@@ -254,15 +197,6 @@ class InputOptions {
   /// [TextField] state inside the [Input] widget.
   /// Defaults to [SendButtonVisibilityMode.editing].
   final SendButtonVisibilityMode sendButtonVisibilityMode;
-
-  /// Custom [TextEditingController]. If not provided, defaults to the
-  /// [InputTextFieldController], which extends [TextEditingController] and has
-  /// additional fatures like markdown support. If you want to keep additional
-  /// features but still need some methods from the default
-  /// [TextEditingController], you can create your own
-  /// [InputTextFieldController] (imported from this lib)
-  /// and pass it here.
-  final TextEditingController? textEditingController;
 
   /// Controls the [TextInput] autocorrect behavior. Defaults to [true].
   final bool autocorrect;

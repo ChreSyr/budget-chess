@@ -10,4 +10,7 @@ class CCBorderRadiusCircular {
 
   /// BorderRadius.circular(16)
   static const medium = BorderRadius.all(Radius.circular(CCSize.medium));
+
+  /// BorderRadius.circular(24)
+  static const large = BorderRadius.all(Radius.circular(CCSize.large));
 }

@@ -1,7 +1,8 @@
 import 'dart:math';
 
 import 'package:crea_chess/package/atomic_design/color.dart';
-import 'package:crea_chess/package/chat/chat_theme.dart';
+import 'package:crea_chess/package/atomic_design/size.dart';
+import 'package:crea_chess/package/atomic_design/text_style.dart';
 import 'package:crea_chess/package/chat/models/bubble_rtl_alignment.dart';
 import 'package:crea_chess/package/chat/models/date_header.dart';
 import 'package:crea_chess/package/chat/models/emoji_enlargement_behavior.dart';
@@ -13,7 +14,6 @@ import 'package:crea_chess/package/chat/widgets/input/input.dart';
 import 'package:crea_chess/package/chat/widgets/message/message_widget.dart';
 import 'package:crea_chess/package/chat/widgets/message/system_message.dart';
 import 'package:crea_chess/package/chat/widgets/message/text_message.dart';
-import 'package:crea_chess/package/chat/widgets/state/inherited_chat_theme.dart';
 import 'package:crea_chess/package/chat/widgets/state/inherited_user.dart';
 import 'package:crea_chess/package/chat/widgets/typing_indicator.dart';
 import 'package:crea_chess/package/chat/widgets/unread_header.dart';
@@ -65,7 +65,6 @@ class Chat extends StatefulWidget {
     this.showUserAvatars = false,
     this.showUserNames = false,
     this.textMessageOptions = const TextMessageOptions(),
-    this.theme = const DefaultChatTheme(),
     this.timeFormat,
     this.typingIndicatorOptions = const TypingIndicatorOptions(),
     this.useTopSafeAreaInset,
@@ -192,11 +191,6 @@ class Chat extends StatefulWidget {
   // See [Message.textMessageOptions].
   final TextMessageOptions textMessageOptions;
 
-  /// Chat theme. Extend [ChatTheme] class to create your own theme or use
-  /// existing one, like the [DefaultChatTheme]. You can customize only certain
-  /// properties, see more here [DefaultChatTheme].
-  final ChatTheme theme;
-
   /// Allows you to customize the time format. IMPORTANT: only for the time, do
   /// not return date here. See [dateFormat] to customize the date format.
   /// [dateLocale] will be ignored if you use this, so if you want a localized
@@ -284,7 +278,7 @@ class ChatState extends State<Chat> {
         ),
         child: Text(
           'No messages here yet', // TODO : l10n
-          style: widget.theme.emptyChatPlaceholderTextStyle,
+          style: context.textTheme.infoSmall?.copyWith(fontSize: CCSize.medium),
           textAlign: TextAlign.center,
         ),
       );
@@ -318,10 +312,10 @@ class ChatState extends State<Chat> {
       return widget.dateHeaderBuilder?.call(object) ??
           Container(
             alignment: Alignment.center,
-            margin: widget.theme.dateDividerMargin,
+            margin: const EdgeInsets.only(bottom: 32, top: 16),
             child: Text(
               object.text,
-              style: widget.theme.dateDividerTextStyle,
+              style: context.textTheme.infoSmall,
             ),
           );
     } else if (object is MessageSpacer) {
@@ -377,7 +371,6 @@ class ChatState extends State<Chat> {
         controller: _scrollController,
         index: index ?? -1,
         key: Key('scroll-${message.id}'),
-        highlightColor: widget.theme.highlightMessageColor,
         child: messageWidget,
       );
     }
@@ -431,65 +424,61 @@ class ChatState extends State<Chat> {
   @override
   Widget build(BuildContext context) => InheritedUser(
         user: widget.user,
-        child: InheritedChatTheme(
-          theme: widget.theme,
-          child: Stack(
-            children: [
-              ColoredBox(
-                color: context.colorScheme.onInverseSurface,
-                child: Column(
-                  children: [
-                    Flexible(
-                      child: widget.messages.isEmpty
-                          ? SizedBox.expand(
-                              child: _emptyStateBuilder(),
-                            )
-                          : GestureDetector(
-                              onTap: () {
-                                FocusManager.instance.primaryFocus?.unfocus();
-                                widget.onBackgroundTap?.call();
-                              },
-                              child: LayoutBuilder(
-                                builder: (
-                                  BuildContext context,
-                                  BoxConstraints constraints,
-                                ) =>
-                                    ChatList(
-                                  bottomWidget: widget.listBottomWidget,
-                                  bubbleRtlAlignment:
-                                      widget.bubbleRtlAlignment!,
-                                  isLastPage: widget.isLastPage,
-                                  itemBuilder: (Object item, int? index) =>
-                                      _messageBuilder(
-                                    item,
-                                    constraints,
-                                    index,
-                                  ),
-                                  items: _chatMessages,
-                                  keyboardDismissBehavior:
-                                      widget.keyboardDismissBehavior,
-                                  onEndReached: widget.onEndReached,
-                                  onEndReachedThreshold:
-                                      widget.onEndReachedThreshold,
-                                  scrollController: _scrollController,
-                                  scrollPhysics: widget.scrollPhysics,
-                                  typingIndicatorOptions:
-                                      widget.typingIndicatorOptions,
-                                  useTopSafeAreaInset:
-                                      widget.useTopSafeAreaInset ?? isMobile,
+        child: Stack(
+          children: [
+            ColoredBox(
+              color: context.colorScheme.onInverseSurface,
+              child: Column(
+                children: [
+                  Flexible(
+                    child: widget.messages.isEmpty
+                        ? SizedBox.expand(
+                            child: _emptyStateBuilder(),
+                          )
+                        : GestureDetector(
+                            onTap: () {
+                              FocusManager.instance.primaryFocus?.unfocus();
+                              widget.onBackgroundTap?.call();
+                            },
+                            child: LayoutBuilder(
+                              builder: (
+                                BuildContext context,
+                                BoxConstraints constraints,
+                              ) =>
+                                  ChatList(
+                                bottomWidget: widget.listBottomWidget,
+                                bubbleRtlAlignment: widget.bubbleRtlAlignment!,
+                                isLastPage: widget.isLastPage,
+                                itemBuilder: (Object item, int? index) =>
+                                    _messageBuilder(
+                                  item,
+                                  constraints,
+                                  index,
                                 ),
+                                items: _chatMessages,
+                                keyboardDismissBehavior:
+                                    widget.keyboardDismissBehavior,
+                                onEndReached: widget.onEndReached,
+                                onEndReachedThreshold:
+                                    widget.onEndReachedThreshold,
+                                scrollController: _scrollController,
+                                scrollPhysics: widget.scrollPhysics,
+                                typingIndicatorOptions:
+                                    widget.typingIndicatorOptions,
+                                useTopSafeAreaInset:
+                                    widget.useTopSafeAreaInset ?? isMobile,
                               ),
                             ),
-                    ),
-                    Input(
-                      onSendPressed: widget.onSendPressed,
-                      options: widget.inputOptions,
-                    ),
-                  ],
-                ),
+                          ),
+                  ),
+                  Input(
+                    onSendPressed: widget.onSendPressed,
+                    options: widget.inputOptions,
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       );
 }
