@@ -43,6 +43,8 @@ class SendingMessagesCubit extends HydratedCubit<SendingMessages> {
   SendingMessages fromJson(Map<String, dynamic> json) =>
       SendingMessages.fromJson(json);
 
+  static final i = SendingMessagesCubit();
+
   void clearStatus() => emit(state.copyWith(status: SendingStatus.idle));
 
   Future<void> send({

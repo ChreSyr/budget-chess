@@ -7,6 +7,7 @@ import 'package:crea_chess/package/firebase/firestore/export.dart';
 import 'package:crea_chess/router/app/app_router.dart';
 import 'package:crea_chess/router/app/chats/chat/cubit/sending_messages_cubit.dart';
 import 'package:crea_chess/router/app/chats/chat/widget/chat.dart';
+import 'package:crea_chess/router/app/chats/chat/widget/input/input.dart';
 import 'package:crea_chess/router/app/chats/chat/widget/unread_header.dart';
 import 'package:crea_chess/router/app/chats/chat_home_page.dart';
 import 'package:crea_chess/router/app/user/user_page.dart';
@@ -15,6 +16,7 @@ import 'package:crea_chess/router/shared/ccroute.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 
 class ChatRoute extends CCRoute {
   const ChatRoute._() : super(name: 'chat', path: ':usernameOrId');
@@ -49,11 +51,8 @@ class ChatPage extends StatelessWidget {
       return ErrorPage(exception: Exception('Missing argument : usernameOrId'));
     }
 
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (context) => SendingMessagesCubit()),
-        BlocProvider.value(value: RelationsCubit.i),
-      ],
+    return BlocProvider(
+      create: (context) => SendingMessagesCubit.i,
       child: StreamBuilder<UserModel?>(
         stream: usernameOrId!.startsWith('@')
             ? userCRUD.streamUsername(usernameOrId!.substring(1))
@@ -103,11 +102,13 @@ class ChatScreen extends StatefulWidget {
   const ChatScreen({
     required this.authUid,
     required this.otherId,
+    this.scrollController,
     super.key,
   });
 
   final String authUid;
   final String otherId;
+  final AutoScrollController? scrollController;
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -199,7 +200,9 @@ class _ChatScreenState extends State<ChatScreen> {
                 firstUnreadMessageId: firstUnreadMessageId,
                 scrollOnOpen: true,
               ),
+              scrollController: widget.scrollController,
               isBlocked: isBlocked,
+              inputOptions: const InputOptions(autofocus: true),
             );
           },
         );

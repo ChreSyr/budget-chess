@@ -69,6 +69,7 @@ class _BudgetChessState extends State<BudgetChess> {
         BlocProvider(create: (context) => SignupCubit()),
         BlocProvider(create: (context) => SideRoutesCubit()),
         BlocProvider(create: (context) => NavNotifCubit()),
+        BlocProvider(create: (context) => RelationsCubit()),
         BlocProvider(create: (context) => NewMessagesCubit()),
         BlocProvider(create: (context) => FriendRequestsCubit()),
         BlocProvider(create: (context) => QueriedUsersCubit()),

@@ -13,12 +13,12 @@ import 'package:crea_chess/package/atomic_design/text_style.dart';
 import 'package:crea_chess/package/atomic_design/widget/button.dart';
 import 'package:crea_chess/package/atomic_design/widget/feed_card.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
-import 'package:crea_chess/router/app/user/widget/relationship_button.dart';
-import 'package:crea_chess/router/app/user/widget/user_photo.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/router/app/friends/search_friend/search_friend_delegate.dart';
 import 'package:crea_chess/router/app/user/user_page.dart';
+import 'package:crea_chess/router/app/user/widget/relationship_button.dart';
+import 'package:crea_chess/router/app/user/widget/user_photo.dart';
 import 'package:crea_chess/router/shared/app_bar_actions.dart';
 import 'package:crea_chess/router/shared/ccroute.dart';
 import 'package:flutter/material.dart';
@@ -39,6 +39,7 @@ class FriendsRoute extends CCRoute {
       const FriendsPage();
 }
 
+// TODO : use RelationsCubit instead
 class FriendRequestsCubit
     extends AuthUidListenerCubit<Iterable<RelationshipModel>> {
   FriendRequestsCubit() : super([]);

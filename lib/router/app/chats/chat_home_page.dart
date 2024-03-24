@@ -94,6 +94,11 @@ class RelationsCubit extends AuthUidListenerCubit<Iterable<RelationshipModel>> {
   Iterable<String> get otherIds => _authUid == null
       ? []
       : state.map((e) => e.otherUser(_authUid!)).whereType<String>();
+
+  RelationshipModel? getRelationWith(String userId) {
+    if (_authUid == null) return null;
+    return state.firstWhereOrNull((r) => r.otherUser(_authUid!) == userId);
+  }
 }
 
 class ChatHomePage extends StatelessWidget {
@@ -108,20 +113,17 @@ class ChatHomePage extends StatelessWidget {
         title: Text(ChatHomeRoute.i.getTitle(context.l10n)),
         actions: getSideRoutesAppBarActions(context),
       ),
-      body: BlocProvider(
-        create: (context) => RelationsCubit.i,
-        child: BlocBuilder<RelationsCubit, Iterable<RelationshipModel>>(
-          builder: (context, relations) {
-            final otherIds = context.watch<RelationsCubit>().otherIds;
-            return ListView(
-              children: otherIds.map((userId) {
-                final relation =
-                    relations.firstWhere((r) => r.userIds.contains(userId));
-                return ChatTile(userId: userId, relation: relation);
-              }).toList(),
-            );
-          },
-        ),
+      body: BlocBuilder<RelationsCubit, Iterable<RelationshipModel>>(
+        builder: (context, relations) {
+          final otherIds = context.watch<RelationsCubit>().otherIds;
+          return ListView(
+            children: otherIds.map((userId) {
+              final relation =
+                  relations.firstWhere((r) => r.userIds.contains(userId));
+              return ChatTile(userId: userId, relation: relation);
+            }).toList(),
+          );
+        },
       ),
     );
   }

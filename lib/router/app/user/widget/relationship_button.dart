@@ -7,6 +7,7 @@ import 'package:crea_chess/package/atomic_design/widget/badge.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
+import 'package:crea_chess/router/app/chats/chat_home_page.dart';
 import 'package:crea_chess/router/app/user/widget/user_action.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,25 +32,16 @@ class RelationshipButton extends StatelessWidget {
   Widget build(BuildContext context) {
     if (authUid == userId) return CCGap.zero;
 
-    return relation != null
-        ? _getButton(context, relation!, asIcon)
-        : StreamBuilder<RelationshipModel?>(
-            stream: relationshipCRUD.stream(
-              documentId: relationshipCRUD.getId(authUid, userId),
-            ),
-            builder: (context, snapshot) {
-              final relation = snapshot.data;
+    final r =
+        relation ?? context.watch<RelationsCubit>().getRelationWith(userId);
+    if (r == null) {
+      return SendFriendRequestButton(
+        userId: userId,
+        asIcon: asIcon,
+      );
+    }
 
-              if (relation == null) {
-                return SendFriendRequestButton(
-                  userId: userId,
-                  asIcon: asIcon,
-                );
-              }
-
-              return _getButton(context, relation, asIcon);
-            },
-          );
+    return _getButton(context, r, asIcon);
   }
 
   Widget _getButton(
@@ -62,14 +54,14 @@ class RelationshipButton extends StatelessWidget {
         return hideIfFriend
             ? CCGap.zero
             : asIcon
-            ? const IconButton(
-                icon: Icon(Icons.check), // TODO : change
-                onPressed: null,
-              )
-            : const UserActionButton(
-                icon: Icon(Icons.check),
-                text: 'Vous êtes amis !', // TODO : l10n
-              );
+                ? const IconButton(
+                    icon: Icon(Icons.check), // TODO : change
+                    onPressed: null,
+                  )
+                : const UserActionButton(
+                    icon: Icon(Icons.check),
+                    text: 'Vous êtes amis !', // TODO : l10n
+                  );
       case UserInRelationshipStatus.hasDeletedAccount:
         return CCGap.zero;
       case UserInRelationshipStatus.requests:
