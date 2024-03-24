@@ -403,7 +403,7 @@ class ChatState extends State<Chat> {
         dateIsUtc: widget.dateIsUtc,
         dateLocale: widget.dateLocale,
         groupMessagesThreshold: widget.groupMessagesThreshold,
-        lastReadMessageId: widget.scrollToUnreadOptions.lastReadMessageId,
+        firstUnreadMessageId: widget.scrollToUnreadOptions.firstUnreadMessageId,
         showUserNames: widget.showUserNames,
         timeFormat: widget.timeFormat,
       );

@@ -4,6 +4,7 @@ import 'package:crea_chess/package/atomic_design/snack_bar.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/atomic_design/widget/user/user_photo.dart';
 import 'package:crea_chess/package/firebase/export.dart';
+import 'package:crea_chess/package/firebase/firestore/export.dart';
 import 'package:crea_chess/router/app/app_router.dart';
 import 'package:crea_chess/router/app/chats/chat/cubit/sending_messages_cubit.dart';
 import 'package:crea_chess/router/app/chats/chat/widget/chat.dart';
@@ -117,6 +118,8 @@ class _ChatScreenState extends State<ChatScreen> {
       widget.otherId,
     );
 
+    String? firstUnreadMessageId;
+
     return StreamBuilder<Iterable<MessageModel>>(
       stream: messageCRUD.streamFiltered(
         parentDocumentId: relationshipId,
@@ -126,6 +129,12 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
       ),
       builder: (context, snapshot) {
+        if (snapshot.hasError ||
+            snapshot.connectionState != ConnectionState.active ||
+            snapshot.data == null) {
+          return const SizedBox.shrink();
+        }
+
         return BlocConsumer<SendingMessagesCubit, SendingMessages>(
           listener: (context, state) {
             if (state.status == SendingStatus.error) {
@@ -134,13 +143,31 @@ class _ChatScreenState extends State<ChatScreen> {
               context.read<SendingMessagesCubit>().clearStatus();
             }
           },
-          builder: (context, sendingMesssages) {
-            final failedMessages = sendingMesssages.messages
+          builder: (context, sendingMessages) {
+            final failedMessages = sendingMessages.messages
                 .where(
                   (message) => message.relationshipId == relationshipId,
                 )
                 .toList();
             final messages = snapshot.data?.toList() ?? [];
+            firstUnreadMessageId ??= messages
+                .where(
+                  (m) =>
+                      m.authorId == widget.otherId &&
+                      m.status != MessageStatus.seen,
+                )
+                .lastOrNull
+                ?.id;
+            for (final message in messages) {
+              if (message.authorId == widget.otherId &&
+                  message.status != MessageStatus.seen) {
+                messageCRUD.update(
+                  parentDocumentId: relationshipId,
+                  documentId: message.id,
+                  data: message.copyWith(status: MessageStatus.seen),
+                );
+              }
+            }
             if (failedMessages.isNotEmpty) {
               messages
                 ..addAll(failedMessages)
@@ -154,7 +181,7 @@ class _ChatScreenState extends State<ChatScreen> {
             return Chat(
               messages: messages,
               onSendPressed: (text) async {
-                context.read<SendingMessagesCubit>().send(
+                await context.read<SendingMessagesCubit>().send(
                       authorId: widget.authUid,
                       receiverId: widget.otherId,
                       text: text,
@@ -162,15 +189,7 @@ class _ChatScreenState extends State<ChatScreen> {
               },
               user: currentUser,
               scrollToUnreadOptions: ScrollToUnreadOptions(
-                lastReadMessageId: messages
-                    .where(
-                      (m) =>
-                          m.authorId == widget.authUid ||
-                          (m.authorId != widget.authUid &&
-                              m.status == MessageStatus.seen),
-                    )
-                    .firstOrNull
-                    ?.id, // TODO
+                firstUnreadMessageId: firstUnreadMessageId,
                 scrollOnOpen: true,
               ),
             );

@@ -27,16 +27,15 @@ class UnreadHeader extends StatelessWidget {
 @immutable
 class ScrollToUnreadOptions {
   const ScrollToUnreadOptions({
-    this.lastReadMessageId,
+    this.firstUnreadMessageId,
     this.scrollDelay = Duration.zero,
     this.scrollDuration = const Duration(milliseconds: 150),
     this.scrollOnOpen = false,
   });
 
-  /// Will show an unread messages header after this message if there are more
-  /// messages to come and will scroll to this header on
-  /// [ChatState.scrollToUnreadHeader].
-  final String? lastReadMessageId;
+  /// Will show an unread messages header before this message and will scroll 
+  /// to this header on [ChatState.scrollToUnreadHeader].
+  final String? firstUnreadMessageId;
 
   /// Duration to wait after open until the scrolling starts.
   final Duration scrollDelay;

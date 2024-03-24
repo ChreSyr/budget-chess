@@ -260,6 +260,7 @@ class AuthProviderButton extends StatelessWidget {
           padding: EdgeInsets.zero,
           elevation: CCElevation.medium,
           shadowColor: Colors.black,
+          clipBehavior: Clip.hardEdge,
           label: SizedBox(
             width: CCWidgetSize.large2,
             child: Stack(

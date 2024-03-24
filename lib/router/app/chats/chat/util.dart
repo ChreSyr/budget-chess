@@ -95,7 +95,7 @@ List<Object> calculateChatMessages(
   DateFormat? dateFormat,
   bool dateIsUtc = false,
   String? dateLocale,
-  String? lastReadMessageId,
+  String? firstUnreadMessageId,
   DateFormat? timeFormat,
 }) {
   final chatMessages = <Object>[];
@@ -156,9 +156,13 @@ List<Object> calculateChatMessages(
       //     ).day;
 
       nextMessageInGroup = nextMessageSameAuthor &&
-          message.id != lastReadMessageId &&
+          message.id != firstUnreadMessageId &&
           nextMessage.createdAt!.difference(message.createdAt!) <=
               Duration(milliseconds: groupMessagesThreshold);
+    }
+
+    if (message.id == firstUnreadMessageId) {
+      chatMessages.insert(0, const UnreadHeaderData());
     }
 
     if (isFirst && messageHasCreatedAt) {
@@ -193,16 +197,6 @@ List<Object> calculateChatMessages(
             dateLocale: dateLocale,
             timeFormat: timeFormat,
           ),
-        ),
-      );
-    }
-
-    if (message.id == lastReadMessageId && !isLast) {
-      chatMessages.insert(
-        0,
-        UnreadHeaderData(
-          marginTop:
-              nextMessageDifferentDay || nextMessageDateThreshold ? 0 : 8,
         ),
       );
     }
