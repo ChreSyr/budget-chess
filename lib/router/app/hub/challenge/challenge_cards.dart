@@ -81,7 +81,7 @@ class ChallengeCards extends StatelessWidget {
 class MyChallengesCard extends StatelessWidget {
   const MyChallengesCard({required this.challenges, super.key});
 
-  final Iterable<ChallengeModel> challenges;
+  final List<ChallengeModel> challenges;
 
   @override
   Widget build(BuildContext context) {
@@ -99,9 +99,7 @@ class MyChallengesCard extends StatelessWidget {
               ),
             ]
           : [],
-      child: Column(
-        children: challenges.map(ChallengeTile.new).toList(),
-      ),
+      child: ChallengesTable(challenges: challenges),
     );
   }
 }
@@ -135,7 +133,7 @@ class AvailibleChallengesCard extends StatelessWidget {
                       ?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 CCGap.medium,
-                ChallengesTables(challenges: friendChallenges),
+                ChallengesTable(challenges: friendChallenges),
               ],
             ),
             if (otherChallenges.isNotEmpty) CCGap.medium,
@@ -154,7 +152,7 @@ class AvailibleChallengesCard extends StatelessWidget {
                 if (otherChallenges.isEmpty)
                   const Text("Aucun challenge n'est actuellement disponible.")
                 else
-                  ChallengesTables(challenges: otherChallenges),
+                  ChallengesTable(challenges: otherChallenges),
               ],
             ),
         ],

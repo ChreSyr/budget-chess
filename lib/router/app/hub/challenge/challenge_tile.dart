@@ -1,12 +1,11 @@
-import 'package:crea_chess/package/atomic_design/border.dart';
 import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
-import 'package:crea_chess/router/app/user/widget/user_photo.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/router/app/hub/game/game_page.dart';
 import 'package:crea_chess/router/app/user/user_page.dart';
+import 'package:crea_chess/router/app/user/widget/user_photo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -83,60 +82,45 @@ class _ChallengeTileTemplate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: CCWidgetSize.xxsmall,
-      child: _CardTile(
-        child: Row(
-          children: [
-            CCGap.small,
-            UserPhoto.fromId(
-              userId: userId,
-              radius: CCSize.medium,
-              onTap: () => UserRoute.pushId(userId: userId),
-              showConnectedIndicator: true,
-            ),
-            CCGap.small,
-            const SizedBox(height: CCSize.large, child: VerticalDivider()),
-            // CCGap.xsmall,
-            // challenge.rule.icon,
-            // CCGap.small,
-            // const SizedBox(height: CCSize.large, child: VerticalDivider()),
-            CCGap.xsmall,
-            const Icon(Icons.attach_money),
-            CCGap.small,
-            Text(challenge.budget.toString()),
-            CCGap.small,
-            // const SizedBox(height: CCSize.large, child: VerticalDivider()),
-            // CCGap.xsmall,
-            // Icon(challenge.timeControl.speed.icon),
-            // CCGap.small,
-            // Text(challenge.timeControl.toString()),
-            // CCGap.xsmall,
-            // const SizedBox(height: CCSize.large, child: VerticalDivider()),
-            const Expanded(child: CCGap.small),
-            action,
-            CCGap.small,
-          ],
-        ),
+      height: CCWidgetSize.xxxsmall,
+      child: Row(
+        children: [
+          CCGap.small,
+          UserPhoto.fromId(
+            userId: userId,
+            radius: CCSize.medium,
+            onTap: () => UserRoute.pushId(userId: userId),
+            showConnectedIndicator: true,
+          ),
+          CCGap.small,
+          SizedBox(
+            height: CCSize.xxlarge,
+            child: VerticalDivider(color: context.colorScheme.onBackground),
+          ),
+          // CCGap.xsmall,
+          // challenge.rule.icon,
+          // CCGap.small,
+          // const SizedBox(height: CCSize.large, child: VerticalDivider()),
+          CCGap.xsmall,
+          const Icon(Icons.attach_money),
+          CCGap.small,
+          Text(challenge.budget.toString()),
+          CCGap.small,
+          SizedBox(
+            height: CCSize.xxlarge,
+            child: VerticalDivider(color: context.colorScheme.onBackground),
+          ),
+          CCGap.small,
+          // Icon(challenge.timeControl.speed.icon),
+          // CCGap.small,
+          // Text(challenge.timeControl.toString()),
+          // CCGap.xsmall,
+          // const SizedBox(height: CCSize.large, child: VerticalDivider()),
+          const Expanded(child: CCGap.small),
+          action,
+          CCGap.small,
+        ],
       ),
-    );
-  }
-}
-
-class _CardTile extends StatelessWidget {
-  const _CardTile({required this.child});
-
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 4,
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(
-        borderRadius: CCBorderRadiusCircular.medium,
-        side: BorderSide(color: CCColor.cardBorder(context)),
-      ),
-      child: child,
     );
   }
 }
@@ -173,15 +157,21 @@ class _ActionButton extends StatelessWidget {
   }
 }
 
-class ChallengesTables extends StatelessWidget {
-  const ChallengesTables({required this.challenges, super.key});
+class ChallengesTable extends StatelessWidget {
+  const ChallengesTable({required this.challenges, super.key});
 
-  final Iterable<ChallengeModel> challenges;
+  final List<ChallengeModel> challenges;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: challenges.map(ChallengeTile.new).toList(),
+    return ListView.separated(
+      itemBuilder: (context, index) => ChallengeTile(challenges[index]),
+      separatorBuilder: (context, index) => Divider(
+        color: context.colorScheme.onBackground,
+        height: 0,
+      ),
+      itemCount: challenges.length,
+      shrinkWrap: true,
     );
   }
 }
