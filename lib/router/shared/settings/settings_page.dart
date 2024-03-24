@@ -86,7 +86,7 @@ class AccountPreviewCard extends StatelessWidget {
     if (!user.profileCompleted) {
       return Card(
         color: context.colorScheme.onInverseSurface,
-        elevation: CCElevation.high,
+        elevation: CCElevation.medium,
         child: CCPadding.allMedium(
           child: Text(
             context.read<AuthNotVerifiedCubit>().state?.email ?? '',
@@ -99,7 +99,7 @@ class AccountPreviewCard extends StatelessWidget {
 
     return Card(
       color: context.colorScheme.onInverseSurface,
-      elevation: CCElevation.high,
+      elevation: CCElevation.medium,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(CCSize.xxxlarge),
       ),

@@ -21,7 +21,7 @@ class FeedCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       color: context.colorScheme.onInverseSurface,
-      elevation: CCElevation.high,
+      elevation: CCElevation.medium,
       child: CCPadding.allMedium(
         child: title == null && actions.isEmpty
             ? child

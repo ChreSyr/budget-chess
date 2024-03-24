@@ -23,7 +23,7 @@ class QueriedUsersCubit extends Cubit<Iterable<UserModel>> {
 
     if (_query.isEmpty) return emit([]);
 
-    // The character \uf8ff used in the query is a very high code point in
+    // The character \uf8ff used in the query is a very medium code point in
     //the Unicode range (it is a Private Usage Area [PUA] code).
     // Because it is after most regular characters in Unicode, the query
     // matches all values that start with queryText.

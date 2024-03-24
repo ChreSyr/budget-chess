@@ -210,7 +210,7 @@ class FriendsFeed extends StatelessWidget {
           Card(
             clipBehavior: Clip.hardEdge,
             color: context.colorScheme.onInverseSurface,
-            elevation: CCElevation.high,
+            elevation: CCElevation.medium,
             child: InkWell(
               onTap: () => searchFriend(context),
               child: CCPadding.allMedium(

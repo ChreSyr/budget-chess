@@ -1,4 +1,4 @@
 class CCElevation {
-  /// 10
-  static const high = 10.0;
+  /// 6
+  static const medium = 6.0;
 }
