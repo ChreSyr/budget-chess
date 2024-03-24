@@ -32,10 +32,13 @@ class ChallengeTile extends StatelessWidget {
               child: Text(
                 context.l10n.play.toLowerCase(),
               ),
-              onPressed: () => liveGameCRUD.onChallengeAccepted(
-                challenge: challenge,
-                challengerId: authUid,
-              ),
+              onPressed: () {
+                liveGameCRUD.onChallengeAccepted(
+                  challenge: challenge,
+                  challengerId: authUid,
+                );
+                GameRoute.push(gameId: challenge.id);
+              },
             ),
     );
   }
@@ -92,25 +95,25 @@ class _ChallengeTileTemplate extends StatelessWidget {
             onTap: () => UserRoute.pushId(userId: userId),
             showConnectedIndicator: true,
           ),
-          CCGap.small,
-          SizedBox(
-            height: CCSize.xxlarge,
-            child: VerticalDivider(color: context.colorScheme.onBackground),
-          ),
+          // CCGap.small,
+          // SizedBox(
+          //   height: CCSize.xxlarge,
+          //   child: VerticalDivider(color: context.colorScheme.onBackground),
+          // ),
           // CCGap.xsmall,
           // challenge.rule.icon,
           // CCGap.small,
           // const SizedBox(height: CCSize.large, child: VerticalDivider()),
-          CCGap.xsmall,
+          CCGap.medium,
           const Icon(Icons.attach_money),
           CCGap.small,
           Text(challenge.budget.toString()),
-          CCGap.small,
-          SizedBox(
-            height: CCSize.xxlarge,
-            child: VerticalDivider(color: context.colorScheme.onBackground),
-          ),
-          CCGap.small,
+          // CCGap.small,
+          // SizedBox(
+          //   height: CCSize.xxlarge,
+          //   child: VerticalDivider(color: context.colorScheme.onBackground),
+          // ),
+          // CCGap.small,
           // Icon(challenge.timeControl.speed.icon),
           // CCGap.small,
           // Text(challenge.timeControl.toString()),

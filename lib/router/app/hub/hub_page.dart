@@ -96,7 +96,7 @@ class HubFeed extends StatelessWidget {
                       bottom: CCSize.medium,
                     ),
                     child: GamesInProgressCard(
-                      games: gamesInProgress,
+                      games: gamesInProgress.toList(),
                     ),
                   );
           },
@@ -110,14 +110,20 @@ class HubFeed extends StatelessWidget {
 class GamesInProgressCard extends StatelessWidget {
   const GamesInProgressCard({required this.games, super.key});
 
-  final Iterable<GameModel> games;
+  final List<GameModel> games;
 
   @override
   Widget build(BuildContext context) {
     return FeedCard(
       title: 'Parties en cours', // TODO : l10n
-      child: Column(
-        children: games.map(GameChallengeTile.new).toList(),
+      child: ListView.separated(
+        itemBuilder: (context, index) => GameChallengeTile(games[index]),
+        separatorBuilder: (context, index) => Divider(
+          color: context.colorScheme.onBackground,
+          height: 0,
+        ),
+        itemCount: games.length,
+        shrinkWrap: true,
       ),
     );
   }
