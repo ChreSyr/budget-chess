@@ -20,6 +20,7 @@ class Input extends StatefulWidget {
     this.isBlocked = false,
     super.key,
     this.options = const InputOptions(),
+    this.newMessages = 0,
   });
 
   /// If the other user blocked this user.
@@ -31,6 +32,8 @@ class Input extends StatefulWidget {
 
   /// Customisation options for the [Input].
   final InputOptions options;
+
+  final int newMessages;
 
   @override
   State<Input> createState() => _InputState();
@@ -145,7 +148,9 @@ class _InputState extends State<Input> {
                     decoration: InputDecoration(
                       hintText: widget.isBlocked
                           ? context.l10n.blockedByUser
-                          : 'Message', // TODO : l10n
+                          : widget.newMessages > 0
+                              ? '${widget.newMessages} nouveaux messages !'
+                              : 'Message', // TODO : l10n
                       border: InputBorder.none,
                       isCollapsed: true,
                       contentPadding: const EdgeInsets.symmetric(

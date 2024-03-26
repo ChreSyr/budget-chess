@@ -3,6 +3,7 @@ import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
+import 'package:crea_chess/router/app/chats/chat_home_page.dart';
 import 'package:crea_chess/router/app/hub/game/game_page.dart';
 import 'package:crea_chess/router/app/user/user_page.dart';
 import 'package:crea_chess/router/app/user/widget/user_photo.dart';
@@ -25,7 +26,7 @@ class ChallengeTile extends StatelessWidget {
       challenge: challenge,
       action: (authUid == authorId)
           ? IconButton(
-              icon: Icon(Icons.close),
+              icon: const Icon(Icons.close),
               onPressed: () => challengeCRUD.delete(documentId: challenge.id),
             )
           : _ActionButton(
@@ -57,11 +58,16 @@ class GameChallengeTile extends StatelessWidget {
 
     void enterGame() => GameRoute.push(gameId: game.challenge.id);
 
-    return GestureDetector(
+    final opponentSentNewMessages = context.select<NewMessagesCubit, bool>(
+      (cubit) => cubit.state.any((message) => message.authorId == opponentId),
+    );
+
+    return InkWell(
       onTap: enterGame,
       child: _ChallengeTileTemplate(
         userId: opponentId,
         challenge: game.challenge,
+        notif: opponentSentNewMessages ? const Icon(Icons.forum) : null,
         action: _ActionButton(
           onPressed: enterGame,
           child: const Text('rejoindre'), // TODO : l10n
@@ -76,10 +82,12 @@ class _ChallengeTileTemplate extends StatelessWidget {
     required this.userId,
     required this.challenge,
     required this.action,
+    this.notif,
   });
 
   final String userId;
   final ChallengeModel challenge;
+  final Widget? notif;
   final Widget action;
 
   @override
@@ -120,6 +128,10 @@ class _ChallengeTileTemplate extends StatelessWidget {
           // CCGap.xsmall,
           // const SizedBox(height: CCSize.large, child: VerticalDivider()),
           const Expanded(child: CCGap.small),
+          if (notif != null) ...[
+            notif!,
+            CCGap.small,
+          ],
           action,
           CCGap.small,
         ],

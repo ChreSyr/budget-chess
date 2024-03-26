@@ -8,6 +8,7 @@ import 'package:crea_chess/package/unichess/unichess.dart';
 import 'package:crea_chess/router/app/app_router.dart';
 import 'package:crea_chess/router/app/chats/chat/chat_page.dart';
 import 'package:crea_chess/router/app/chats/chat/widget/input/input.dart';
+import 'package:crea_chess/router/app/chats/chat_home_page.dart';
 import 'package:crea_chess/router/app/hub/game/game_cubit.dart';
 import 'package:crea_chess/router/app/hub/game/player_tile.dart';
 import 'package:crea_chess/router/app/hub/game/side.dart';
@@ -70,6 +71,7 @@ class _GamePage extends StatelessWidget {
     if (gameState == null) return const SizedBox.shrink();
 
     final game = gameState.game;
+    final opponentId = game.otherPlayer(authUid);
 
     final Widget screen;
 
@@ -81,7 +83,6 @@ class _GamePage extends StatelessWidget {
         ),
       );
     } else {
-
       final side = game.blackId == authUid
           ? Side.black
           : game.whiteId == authUid
@@ -139,51 +140,58 @@ class _GamePage extends StatelessWidget {
       }
     }
 
+    final newMessages = context.select<NewMessagesCubit, int>(
+      (cubit) =>
+          cubit.state.where((message) => message.authorId == opponentId).length,
+    );
+
     return Stack(
       children: [
         screen,
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: InkWell(
-            focusColor: Colors.transparent,
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-            child: IgnorePointer(
-              child: Input(
-                onSendPressed: (_) {},
+        if (opponentId != null)
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: InkWell(
+              focusColor: Colors.transparent,
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              child: IgnorePointer(
+                child: Input(
+                  onSendPressed: (_) {},
+                  newMessages: newMessages,
+                ),
               ),
-            ),
-            onTap: () => showModalBottomSheet<String>(
-              context: context,
-              backgroundColor: const Color.fromARGB(64, 0, 0, 0),
-              isScrollControlled: true,
-              builder: (context) {
-                return Stack(
-                  children: [
-                    ChatScreen(
-                      authUid: authUid,
-                      otherId: game.otherPlayer(authUid) ?? '',
-                    ),
-                    Align(
-                      alignment: Alignment.topCenter,
-                      child: Padding(
-                        padding:
-                            const EdgeInsets.only(top: CCWidgetSize.xxsmall),
-                        child: IconButton.filledTonal(
-                          icon: const Icon(Icons.close),
-                          onPressed: () {
-                            context.pop();
-                            FocusScope.of(context).unfocus();
-                          },
+              onTap: () => showModalBottomSheet<String>(
+                context: context,
+                backgroundColor: const Color.fromARGB(64, 0, 0, 0),
+                isScrollControlled: true,
+                builder: (context) {
+                  return Stack(
+                    children: [
+                      ChatScreen(
+                        authUid: authUid,
+                        otherId: game.otherPlayer(authUid) ?? '',
+                      ),
+                      Align(
+                        alignment: Alignment.topCenter,
+                        child: Padding(
+                          padding:
+                              const EdgeInsets.only(top: CCWidgetSize.xxsmall),
+                          child: IconButton.filledTonal(
+                            icon: const Icon(Icons.close),
+                            onPressed: () {
+                              context.pop();
+                              FocusScope.of(context).unfocus();
+                            },
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                );
-              },
+                    ],
+                  );
+                },
+              ),
             ),
           ),
-        ),
       ],
     );
   }
