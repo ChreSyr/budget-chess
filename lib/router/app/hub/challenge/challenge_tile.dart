@@ -22,11 +22,11 @@ class ChallengesTable extends StatelessWidget {
       builder: (context, constraints) {
         final cardsPerRow =
             constraints.maxWidth ~/ _ChallengeCardTemplate.minWidth;
-        // final width = constraints.maxWidth / cardsPerRow;
-        // final aspectRatio = _ChallengeCardTemplate.height / width;
+        final width = constraints.maxWidth / cardsPerRow;
+        final aspectRatio = width / _ChallengeCardTemplate.height;
         return GridView.count(
           crossAxisCount: cardsPerRow,
-          childAspectRatio: 1.25,
+          childAspectRatio: aspectRatio,
           clipBehavior: Clip.none,
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
@@ -93,7 +93,7 @@ class _ChallengeCardTemplate extends StatelessWidget {
   final Widget action;
 
   static const minWidth = CCWidgetSize.medium;
-  static const height = CCWidgetSize.xsmall;
+  static const height = CCWidgetSize.small;
 
   @override
   Widget build(BuildContext context) {
@@ -104,6 +104,7 @@ class _ChallengeCardTemplate extends StatelessWidget {
         child: Column(
           children: [
             Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 UserPhoto.fromId(
                   userId: userId,
