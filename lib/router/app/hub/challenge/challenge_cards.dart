@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:collection/collection.dart';
 import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/dialog/ok_dialog.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
@@ -34,7 +32,6 @@ class ChallengeCards extends StatelessWidget {
     return StreamBuilder<Iterable<ChallengeModel>>(
       stream: challengeCRUD.streamFiltered(
         filter: (collection) => collection
-            .where(Filter('acceptedAt', isNull: true))
             .orderBy('createdAt', descending: true)
             .limit(50),
       ),

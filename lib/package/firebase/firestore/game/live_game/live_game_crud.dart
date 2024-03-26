@@ -72,15 +72,9 @@ class LiveGameCRUD extends CollectionCRUD<GameModel> {
       status: GameStatus.created,
     );
 
-    await create(
-      data: game,
-      documentId: game.id,
-    );
+    await create(data: game, documentId: game.id);
 
-    await challengeCRUD.update(
-      documentId: acceptedChallenge.id,
-      data: acceptedChallenge,
-    );
+    await challengeCRUD.delete(documentId: acceptedChallenge.id);
   }
 }
 
