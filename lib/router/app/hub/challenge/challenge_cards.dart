@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/collection.dart';
 import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/dialog/ok_dialog.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
@@ -8,6 +9,7 @@ import 'package:crea_chess/package/atomic_design/widget/feed_card.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
+import 'package:crea_chess/router/app/chats/chat_home_page.dart';
 import 'package:crea_chess/router/app/hub/challenge/challenge_tile.dart';
 import 'package:crea_chess/router/app/user/user_page.dart';
 import 'package:crea_chess/router/app/user/widget/user_photo.dart';
@@ -21,61 +23,58 @@ class ChallengeCards extends StatelessWidget {
   Widget build(BuildContext context) {
     final authUid = context.watch<UserCubit>().state.id;
 
-    return StreamBuilder<Iterable<RelationshipModel>>(
-      stream: relationshipCRUD.streamFriendshipsOf(authUid),
+    final friendships =
+        context.select<RelationsCubit, Iterable<RelationshipModel>>(
+      (cubit) => cubit.state.where((relation) => relation.isFriendship),
+    );
+    final friendIds = friendships
+        .map((friendship) => friendship.otherUser(authUid))
+        .whereType<String>();
+
+    return StreamBuilder<Iterable<ChallengeModel>>(
+      stream: challengeCRUD.streamFiltered(
+        filter: (collection) => collection
+            .where(Filter('acceptedAt', isNull: true))
+            .orderBy('createdAt', descending: true)
+            .limit(50),
+      ),
       builder: (context, snapshot) {
-        final friendships = snapshot.data;
-        final friendIds = (friendships == null)
-            ? <String>[]
-            : friendships
-                .map((friendship) => friendship.otherUser(authUid))
-                .whereType<String>();
+        final allChallenges = snapshot.data;
+        if (allChallenges == null) return CCGap.zero;
 
-        return StreamBuilder<Iterable<ChallengeModel>>(
-          stream: challengeCRUD.streamFiltered(
-            filter: (collection) => collection.where(
-              Filter('acceptedAt', isNull: true),
-            ),
-          ),
-          builder: (context, snapshot) {
-            final allChallenges = snapshot.data;
-            if (allChallenges == null) return CCGap.zero;
+        final myChallenges = <ChallengeModel>[];
+        final friendChallenges = <ChallengeModel>[];
+        final otherChallenges = <ChallengeModel>[];
 
-            final myChallenges = <ChallengeModel>[];
-            final friendChallenges = <ChallengeModel>[];
-            final otherChallenges = <ChallengeModel>[];
+        final filter = context.watch<ChallengeFilterCubit>().state;
 
-            final filter = context.watch<ChallengeFilterCubit>().state;
-
-            for (final c in allChallenges) {
-              if (c.authorId == authUid) {
-                myChallenges.add(c);
-              } else if (friendIds.contains(c.authorId)) {
-                if (filter == null || filter.accept(c)) {
-                  friendChallenges.add(c);
-                }
-              } else if (filter == null || filter.accept(c)) {
-                otherChallenges.add(c);
-              }
+        for (final c in allChallenges) {
+          if (c.authorId == authUid) {
+            myChallenges.add(c);
+          } else if (friendIds.contains(c.authorId)) {
+            if (filter == null || filter.accept(c)) {
+              friendChallenges.add(c);
             }
-            final sorter = filter ?? ChallengeFilterModel.sorter;
-            myChallenges.sort(sorter.compare);
-            friendChallenges.sort(sorter.compare);
-            otherChallenges.sort(sorter.compare);
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                if (myChallenges.isNotEmpty) ...[
-                  MyChallengesCard(challenges: myChallenges),
-                  CCGap.medium,
-                ],
-                AvailibleChallengesCard(
-                  friendChallenges: friendChallenges,
-                  otherChallenges: otherChallenges,
-                ),
-              ],
-            );
-          },
+          } else if (filter == null || filter.accept(c)) {
+            otherChallenges.add(c);
+          }
+        }
+        final sorter = filter ?? ChallengeFilterModel.sorter;
+        myChallenges.sort(sorter.compare);
+        friendChallenges.sort(sorter.compare);
+        otherChallenges.sort(sorter.compare);
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            if (myChallenges.isNotEmpty) ...[
+              MyChallengesCard(challenges: myChallenges),
+              CCGap.medium,
+            ],
+            AvailibleChallengesCard(
+              friendChallenges: friendChallenges,
+              otherChallenges: otherChallenges,
+            ),
+          ],
         );
       },
     );

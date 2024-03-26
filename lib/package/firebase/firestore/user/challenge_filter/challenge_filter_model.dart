@@ -1,7 +1,7 @@
 // ignore_for_file: invalid_annotation_target
 
-import 'package:crea_chess/package/firebase/firestore/game/challenge/challenge_model.dart';
 import 'package:crea_chess/package/chessground/speed.dart';
+import 'package:crea_chess/package/firebase/firestore/game/challenge/challenge_model.dart';
 import 'package:crea_chess/package/unichess/unichess.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -63,6 +63,12 @@ class ChallengeFilterModel with _$ChallengeFilterModel {
   }
 
   int compare(ChallengeModel a, ChallengeModel b) {
+    
+    // TODO : ChallengeSorter ? currently, sorted by creation date
+    final createdAtCompared =
+        a.createdAt == null ? 1 : b.createdAt?.compareTo(a.createdAt!) ?? -1;
+    if (createdAtCompared != 0) return createdAtCompared;
+
     final timeControlA = a.timeControl;
     final timeControlB = b.timeControl;
 

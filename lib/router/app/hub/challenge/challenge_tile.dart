@@ -22,6 +22,8 @@ class ChallengesTable extends StatelessWidget {
       builder: (context, constraints) {
         final cardsPerRow =
             constraints.maxWidth ~/ _ChallengeCardTemplate.minWidth;
+        // final width = constraints.maxWidth / cardsPerRow;
+        // final aspectRatio = _ChallengeCardTemplate.height / width;
         return GridView.count(
           crossAxisCount: cardsPerRow,
           childAspectRatio: 1.25,
@@ -91,6 +93,7 @@ class _ChallengeCardTemplate extends StatelessWidget {
   final Widget action;
 
   static const minWidth = CCWidgetSize.medium;
+  static const height = CCWidgetSize.xsmall;
 
   @override
   Widget build(BuildContext context) {

@@ -71,6 +71,9 @@ class RelationshipModel with _$RelationshipModel {
 
   RelationshipUsers get copyOfUsers => RelationshipUsers.from(users);
   Iterable<String> get userIds => users.keys;
+  bool get isFriendship =>
+      !users.values.any((status) => status != UserInRelationshipStatus.open);
+
   UserInRelationshipStatus? statusOf(String userId) => users[userId];
 
   String? get blocker {
