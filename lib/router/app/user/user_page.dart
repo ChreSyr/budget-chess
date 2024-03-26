@@ -1,3 +1,4 @@
+import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/router/app/app_router.dart';
 import 'package:crea_chess/router/app/user/widget/user_action.dart';
@@ -45,48 +46,49 @@ class UserPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(actions: getSideRoutesAppBarActions(context)),
-      body: BlocBuilder<UserCubit, UserModel?>(
-        builder: (context, currentUser) {
-          if (currentUser == null) return const LinearProgressIndicator();
+      body: SingleChildScrollView(
+        child: BlocBuilder<UserCubit, UserModel?>(
+          builder: (context, currentUser) {
+            if (currentUser == null) return const LinearProgressIndicator();
 
-          if (usernameOrId != null &&
-              usernameOrId != currentUser.id &&
-              usernameOrId?.toLowerCase() != currentUser.usernameLowercase) {
-            return UserStreamBuilder(
-              userId: usernameOrId!,
-              builder: (BuildContext context, UserModel user) {
-                return UserProfile(
-                  header: UserHeader(
-                    userId: user.id,
-                    banner: user.banner,
-                    photo: user.photo,
-                    username: user.username,
-                    isConnected: user.isConnected,
-                    editable: false,
-                  ),
-                  userActions: UserActionsRow(
-                    currentUser: currentUser,
-                    otherUser: user,
-                  ),
-                  tabSections: UserSection.getSections(currentUser.id, user.id),
-                );
-              },
+            if (usernameOrId != null &&
+                usernameOrId != currentUser.id &&
+                usernameOrId?.toLowerCase() != currentUser.usernameLowercase) {
+              return UserStreamBuilder(
+                userId: usernameOrId!,
+                builder: (BuildContext context, UserModel user) {
+                  return UserProfile(
+                    header: UserHeader(
+                      userId: user.id,
+                      banner: user.banner,
+                      photo: user.photo,
+                      username: user.username,
+                      isConnected: user.isConnected,
+                      editable: false,
+                    ),
+                    userActions: UserActionsRow(
+                      currentUser: currentUser,
+                      otherUser: user,
+                    ),
+                    tabSections: UserSection.getSections(currentUser.id, user),
+                  );
+                },
+              );
+            }
+
+            return UserProfile(
+              header: UserHeader(
+                userId: currentUser.id,
+                banner: currentUser.banner,
+                photo: currentUser.photo,
+                username: currentUser.username,
+                isConnected: currentUser.isConnected,
+                editable: true,
+              ),
+              tabSections: UserSection.getSections(currentUser.id, currentUser),
             );
-          }
-
-          return UserProfile(
-            header: UserHeader(
-              userId: currentUser.id,
-              banner: currentUser.banner,
-              photo: currentUser.photo,
-              username: currentUser.username,
-              isConnected: currentUser.isConnected,
-              editable: true,
-            ),
-            tabSections:
-                UserSection.getSections(currentUser.id, currentUser.id),
-          );
-        },
+          },
+        ),
       ),
     );
   }
@@ -97,11 +99,13 @@ class UserStreamBuilder extends StatelessWidget {
   const UserStreamBuilder({
     required this.userId,
     required this.builder,
+    this.indicateLoad = true,
     super.key,
   });
 
   final String userId;
   final Widget Function(BuildContext context, UserModel user) builder;
+  final bool indicateLoad;
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +120,7 @@ class UserStreamBuilder extends StatelessWidget {
           return ErrorBody(exception: Exception('An error occurred'));
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const LinearProgressIndicator();
+          return indicateLoad ? const LinearProgressIndicator() : CCGap.zero;
         }
 
         final user = snapshot.data;

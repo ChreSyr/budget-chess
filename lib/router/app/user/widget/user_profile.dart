@@ -1,9 +1,9 @@
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/widget/divider.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
+import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/router/app/user/widget/user_header.dart';
 import 'package:crea_chess/router/app/user/widget/user_sections.dart';
-import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -51,16 +51,14 @@ class UserProfile extends StatelessWidget {
                     ),
                   ),
                   CCDivider.xthin,
-                  Flexible(
-                    child: BlocBuilder<_TabIndexCubit, int>(
-                      builder: (context, index) {
-                        return IndexedStack(
-                          alignment: Alignment.topCenter,
-                          index: index,
-                          children: tabSections.toList(),
-                        );
-                      },
-                    ),
+                  BlocBuilder<_TabIndexCubit, int>(
+                    builder: (context, index) {
+                      return IndexedStack(
+                        alignment: Alignment.topCenter,
+                        index: index,
+                        children: tabSections.toList(),
+                      );
+                    },
                   ),
                 ],
               ],
