@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crea_chess/package/firebase/export.dart';
+import 'package:crea_chess/router/app/chats/chat/cubit/messages_cubit.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
@@ -34,7 +36,7 @@ class SendingMessages with _$SendingMessages {
 }
 
 class SendingMessagesCubit extends HydratedCubit<SendingMessages> {
-  SendingMessagesCubit() : super(SendingMessages());
+  SendingMessagesCubit._() : super(SendingMessages());
 
   @override
   Map<String, dynamic>? toJson(SendingMessages state) => state.toJson();
@@ -43,7 +45,7 @@ class SendingMessagesCubit extends HydratedCubit<SendingMessages> {
   SendingMessages fromJson(Map<String, dynamic> json) =>
       SendingMessages.fromJson(json);
 
-  static final i = SendingMessagesCubit();
+  static final i = SendingMessagesCubit._();
 
   void clearStatus() => emit(state.copyWith(status: SendingStatus.idle));
 
@@ -67,20 +69,51 @@ class SendingMessagesCubit extends HydratedCubit<SendingMessages> {
       ),
     );
 
-    try {
+    Future<void> send() async {
       await messageCRUD.create(
         parentDocumentId: relationshipId,
+        documentId: message.id,
         data: message.copyWith(status: MessageStatus.sent),
       );
+
+      await relationshipCRUD.updateChat(relationshipId: relationshipId);
+
       emit(
         state.copyWith(
           messages: oldMessages,
           status: SendingStatus.idle,
         ),
       );
+    }
 
-      await relationshipCRUD.updateChat(relationshipId: relationshipId);
-    } catch (_) {
+    try {
+      try {
+        await send();
+      } on FirebaseException catch (e) {
+        if (e.code == 'permission-denied') {
+          // Probably because the relationship doesn't exist yet
+          await relationshipCRUD.create(
+            documentId: relationshipId,
+            data: RelationshipModel(
+              id: relationshipId,
+              users: {
+                authorId: UserInRelationshipStatus.none,
+                receiverId: UserInRelationshipStatus.none,
+              },
+              lastUserStatusUpdate: DateTime.now(),
+            ),
+          );
+
+          // The MessagesCubit was closed due to permission denied. Now that the
+          // relationship exists, we need to restart the stream.
+          MessagesCubit.i.relationshipIdChanged(relationshipId);
+
+          await send();
+        } else {
+          rethrow;
+        }
+      }
+    } catch (e) {
       emit(
         SendingMessages(
           messages: oldMessages

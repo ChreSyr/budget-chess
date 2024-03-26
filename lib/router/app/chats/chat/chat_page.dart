@@ -5,6 +5,7 @@ import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/firebase/firestore/export.dart';
 import 'package:crea_chess/router/app/app_router.dart';
+import 'package:crea_chess/router/app/chats/chat/cubit/messages_cubit.dart';
 import 'package:crea_chess/router/app/chats/chat/cubit/sending_messages_cubit.dart';
 import 'package:crea_chess/router/app/chats/chat/widget/chat.dart';
 import 'package:crea_chess/router/app/chats/chat/widget/input/input.dart';
@@ -16,7 +17,6 @@ import 'package:crea_chess/router/shared/ccroute.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:scroll_to_index/scroll_to_index.dart';
 
 class ChatRoute extends CCRoute {
   const ChatRoute._() : super(name: 'chat', path: ':usernameOrId');
@@ -99,13 +99,11 @@ class ChatScreen extends StatefulWidget {
   const ChatScreen({
     required this.authUid,
     required this.otherId,
-    this.scrollController,
     super.key,
   });
 
   final String authUid;
   final String otherId;
-  final AutoScrollController? scrollController;
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -118,29 +116,21 @@ class _ChatScreenState extends State<ChatScreen> {
       widget.authUid,
       widget.otherId,
     );
+    MessagesCubit.i.relationshipIdChanged(relationshipId);
 
     String? firstUnreadMessageId;
 
-    return BlocProvider(
-      create: (context) => SendingMessagesCubit.i,
-      child: StreamBuilder<Iterable<MessageModel>>(
-        stream: messageCRUD.streamFiltered(
-          parentDocumentId: relationshipId,
-          filter: (collection) => collection.orderBy(
-            'createdAt',
-            descending: true,
-          ),
-        ),
-        builder: (context, snapshot) {
-          if (snapshot.hasError ||
-              snapshot.connectionState != ConnectionState.active ||
-              snapshot.data == null) {
-            return const SizedBox.shrink();
-          }
-
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider.value(value: MessagesCubit.i),
+        BlocProvider.value(value: SendingMessagesCubit.i),
+      ],
+      child: Builder(
+        builder: (context) {
           final allRelations = context.watch<RelationsCubit>().state;
           final isBlocked = allRelations.any(
-              (r) => r.id == relationshipId && r.blocker == widget.otherId);
+            (r) => r.id == relationshipId && r.blocker == widget.otherId,
+          );
 
           return BlocConsumer<SendingMessagesCubit, SendingMessages>(
             listener: (context, state) {
@@ -151,12 +141,12 @@ class _ChatScreenState extends State<ChatScreen> {
               }
             },
             builder: (context, sendingMessages) {
+              final messages = context.watch<MessagesCubit>().state.toList();
+              final messageIds = messages.map((e) => e.id);
               final failedMessages = sendingMessages.messages
-                  .where(
-                    (message) => message.relationshipId == relationshipId,
-                  )
+                  .where((message) => message.relationshipId == relationshipId)
+                  .where((message) => !messageIds.contains(message.id))
                   .toList();
-              final messages = snapshot.data?.toList() ?? [];
               firstUnreadMessageId ??= messages
                   .where(
                     (m) =>
@@ -199,7 +189,6 @@ class _ChatScreenState extends State<ChatScreen> {
                   firstUnreadMessageId: firstUnreadMessageId,
                   scrollOnOpen: true,
                 ),
-                scrollController: widget.scrollController,
                 isBlocked: isBlocked,
                 inputOptions: const InputOptions(autofocus: true),
               );

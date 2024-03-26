@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:uuid/uuid.dart';
 
 part 'message_model.freezed.dart';
 part 'message_model.g.dart';
@@ -26,7 +27,7 @@ class MessageModel with _$MessageModel {
   }) =>
       MessageModel(
         relationshipId: relationshipId,
-        id: '',
+        id: const Uuid().v1(),
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
         authorId: authorId,
