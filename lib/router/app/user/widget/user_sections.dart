@@ -4,9 +4,9 @@ import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/router/app/friends/search_friend/search_friend_delegate.dart';
+import 'package:crea_chess/router/app/history/history_table.dart';
 import 'package:crea_chess/router/app/user/user_page.dart';
 import 'package:crea_chess/router/app/user/widget/user_photo.dart';
-import 'package:crea_chess/router/app/user/widget/user_section_games.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -88,5 +88,21 @@ class UserSectionFriends extends UserSection {
         },
       ),
     );
+  }
+}
+
+class UserSectionGames extends UserSection {
+  const UserSectionGames({required this.user, super.key});
+
+  final UserModel user;
+
+  @override
+  String getTitle(AppLocalizations l10n) {
+    return 'Games'; // TODO : l10n
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(child: HistoryTable(user: user));
   }
 }

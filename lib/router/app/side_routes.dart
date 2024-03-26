@@ -4,11 +4,12 @@ import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/widget/badge.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
-import 'package:crea_chess/router/app/user/widget/user_photo.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
+import 'package:crea_chess/router/app/history/history_page.dart';
 import 'package:crea_chess/router/app/nav_notifier.dart';
 import 'package:crea_chess/router/app/user/user_page.dart';
+import 'package:crea_chess/router/app/user/widget/user_photo.dart';
 import 'package:crea_chess/router/shared/ccroute.dart';
 import 'package:crea_chess/router/shared/settings/settings_page.dart';
 import 'package:flutter/material.dart';
@@ -69,6 +70,7 @@ class SideRoutes extends StatelessWidget {
   static final allSideRoutes = [
     UserRoute.i,
     SettingsRoute.i,
+    HistoryRoute.i,
   ];
   static final allSideRouteNames = allSideRoutes.map((route) => route.name);
 
@@ -127,9 +129,10 @@ class SideRoutes extends StatelessWidget {
                             child: const ProfileButton(),
                             offset: const Offset(-10, -10),
                           ),
-                          const Divider(height: 0),
+                          const Divider(height: CCSize.large),
                           ...[
                             SettingsRoute.i,
+                            HistoryRoute.i,
                           ].map(
                             (route) => CountBadge(
                               count: navNotifs.count(routeName: route.name),

@@ -7,11 +7,9 @@ import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/export.dart';
-import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/package/unichess/src/models.dart';
 import 'package:crea_chess/router/app/hub/game/game_page.dart';
 import 'package:crea_chess/router/app/user/user_page.dart';
-import 'package:crea_chess/router/app/user/widget/user_sections.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -44,83 +42,76 @@ class HistoryCubit extends Cubit<Iterable<GameModel>> {
   }
 }
 
-class UserSectionGames extends UserSection {
-  const UserSectionGames({required this.user, super.key});
+class HistoryTable extends StatelessWidget {
+  const HistoryTable({required this.user, super.key});
 
   final UserModel user;
 
   @override
-  String getTitle(AppLocalizations l10n) {
-    return 'Games'; // TODO : l10n
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: BlocProvider(
-        create: (context) => HistoryCubit(userId: user.id),
-        child: BlocBuilder<HistoryCubit, Iterable<GameModel>>(
-          builder: (context, games) {
-            return SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: DataTable(
-                border: const TableBorder(
-                  horizontalInside: BorderSide(
-                    width: .1,
-                    color: Colors.grey,
+    return BlocProvider(
+      create: (context) => HistoryCubit(userId: user.id),
+      child: BlocBuilder<HistoryCubit, Iterable<GameModel>>(
+        builder: (context, games) {
+          return SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: DataTable(
+              border: const TableBorder(
+                horizontalInside: BorderSide(
+                  width: .1,
+                  color: Colors.grey,
+                ),
+              ),
+              headingRowHeight: CCWidgetSize.xxxsmall,
+              dataRowMinHeight: CCWidgetSize.xxsmall,
+              dataRowMaxHeight: CCWidgetSize.xxsmall,
+              columnSpacing: CCSize.large,
+              horizontalMargin: CCSize.small,
+              showCheckboxColumn: false,
+              columns: const [
+                DataColumn(label: Text('Résultat'), numeric: true),
+                DataColumn(label: Text('Joueurs')),
+                DataColumn(
+                  label: Padding(
+                    padding: EdgeInsets.all(CCSize.small),
+                    child: Icon(Icons.attach_money),
                   ),
                 ),
-                headingRowHeight: CCWidgetSize.xxxsmall,
-                dataRowMinHeight: CCWidgetSize.xxsmall,
-                dataRowMaxHeight: CCWidgetSize.xxsmall,
-                columnSpacing: CCSize.large,
-                horizontalMargin: CCSize.small,
-                showCheckboxColumn: false,
-                columns: const [
-                  DataColumn(label: Text('Résultat'), numeric: true),
-                  DataColumn(label: Text('Joueurs')),
-                  DataColumn(
-                    label: Padding(
-                      padding: EdgeInsets.all(CCSize.small),
-                      child: Icon(Icons.attach_money),
-                    ),
-                  ),
-                  DataColumn(label: Center(child: Text('Date'))),
-                ],
-                rows: games.map(
-                  (game) {
-                    final userSide = game.sideOf(user.id);
-                    return DataRow(
-                      onSelectChanged: (_) => GameRoute.push(gameId: game.id),
-                      cells: [
-                        DataCell(_ResultCell(game: game, userSide: userSide)),
-                        DataCell(_PlayersCell(game: game, user: user)),
+                DataColumn(label: Center(child: Text('Date'))),
+              ],
+              rows: games.map(
+                (game) {
+                  final userSide = game.sideOf(user.id);
+                  return DataRow(
+                    onSelectChanged: (_) => GameRoute.push(gameId: game.id),
+                    cells: [
+                      DataCell(_ResultCell(game: game, userSide: userSide)),
+                      DataCell(_PlayersCell(game: game, user: user)),
+                      DataCell(
+                        Center(
+                          child: CCPadding.allSmall(
+                            child: Text(game.challenge.budget.toString()),
+                          ),
+                        ),
+                      ),
+                      if (game.challenge.acceptedAt == null)
+                        const DataCell(CCGap.zero)
+                      else
                         DataCell(
-                          Center(
-                            child: CCPadding.allSmall(
-                              child: Text(game.challenge.budget.toString()),
+                          CCPadding.allSmall(
+                            child: Text(
+                              '${DateFormat(DateFormat.DAY, 'fr').format(game.challenge.acceptedAt!).padLeft(2, '0')} ${DateFormat(DateFormat.ABBR_MONTH + '\n' + DateFormat.YEAR, 'fr').format(game.challenge.acceptedAt!)}',
+                              textAlign: TextAlign.center,
                             ),
                           ),
                         ),
-                        if (game.challenge.acceptedAt == null)
-                          const DataCell(CCGap.zero)
-                        else
-                          DataCell(
-                            CCPadding.allSmall(
-                              child: Text(
-                                '${DateFormat(DateFormat.DAY, 'fr').format(game.challenge.acceptedAt!).padLeft(2, '0')} ${DateFormat(DateFormat.ABBR_MONTH + '\n' + DateFormat.YEAR, 'fr').format(game.challenge.acceptedAt!)}',
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ),
-                      ],
-                    );
-                  },
-                ).toList(),
-              ),
-            );
-          },
-        ),
+                    ],
+                  );
+                },
+              ).toList(),
+            ),
+          );
+        },
       ),
     );
   }

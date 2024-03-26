@@ -9,6 +9,7 @@ import 'package:crea_chess/package/atomic_design/widget/nav_bar.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/router/app/chats/chat_home_page.dart';
 import 'package:crea_chess/router/app/friends/friends_page.dart';
+import 'package:crea_chess/router/app/history/history_page.dart';
 import 'package:crea_chess/router/app/hub/hub_page.dart';
 import 'package:crea_chess/router/app/missions/missions_page.dart';
 import 'package:crea_chess/router/app/nav_notifier.dart';
@@ -49,6 +50,7 @@ final appRouter = GoRouter(
               builder: (context, state) => const ErrorPage(exception: null),
               routes: [
                 SettingsRoute.i.goRoute,
+                HistoryRoute.i.goRoute,
                 GoRoute(
                   name: 'userHome',
                   path: 'user',
