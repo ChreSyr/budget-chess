@@ -34,6 +34,7 @@ class UserProfile extends StatelessWidget {
           return SizedBox(
             width: CCWidgetSize.large4,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 header,
                 if (userActions != null) userActions!,

@@ -27,7 +27,7 @@ class HistoryCubit extends Cubit<Iterable<GameModel>> {
                   Filter('blackId', isEqualTo: userId),
                 ),
               )
-              .orderBy('challenge.acceptedAt', descending: false)
+              .orderBy('challenge.acceptedAt', descending: true)
               .limit(50),
         )
         .listen(emit);
@@ -60,64 +60,61 @@ class UserSectionGames extends UserSection {
         create: (context) => HistoryCubit(userId: user.id),
         child: BlocBuilder<HistoryCubit, Iterable<GameModel>>(
           builder: (context, games) {
-            return Table(
-              border: const TableBorder(
-                horizontalInside: BorderSide(
-                  width: .2,
-                  color: Colors.grey,
+            return SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: DataTable(
+                border: const TableBorder(
+                  horizontalInside: BorderSide(
+                    width: .1,
+                    color: Colors.grey,
+                  ),
                 ),
-              ),
-              columnWidths: const {
-                0: FixedColumnWidth(CCSize.xxxlarge),
-                1: FlexColumnWidth(),
-                2: FixedColumnWidth(CCSize.xxlarge),
-                3: FixedColumnWidth(CCWidgetSize.xsmall),
-              },
-              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-              children: [
-                const TableRow(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(right: CCSize.small),
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: Text('Résultat'),
-                      ),
-                    ),
-                    Text('Joueurs'),
-                    Padding(
+                headingRowHeight: CCWidgetSize.xxxsmall,
+                dataRowMinHeight: CCWidgetSize.xxsmall,
+                dataRowMaxHeight: CCWidgetSize.xxsmall,
+                columnSpacing: CCSize.large,
+                horizontalMargin: CCSize.small,
+                columns: const [
+                  DataColumn(label: Text('Résultat'), numeric: true),
+                  DataColumn(label: Text('Joueurs')),
+                  DataColumn(
+                    label: Padding(
                       padding: EdgeInsets.all(CCSize.small),
-                      child: Center(child: Icon(Icons.attach_money)),
+                      child: Icon(Icons.attach_money),
                     ),
-                    Center(child: Text('Date')),
-                  ],
-                ),
-                ...games.map(
+                  ),
+                  DataColumn(label: Center(child: Text('Date'))),
+                ],
+                rows: games.map(
                   (game) {
                     final userSide = game.sideOf(user.id);
-                    return TableRow(
-                      children: [
-                        _ResultCell(game: game, userSide: userSide),
-                        _PlayersCell(game: game, user: user),
-                        Center(
-                          child: CCPadding.allSmall(
-                            child: Text(game.challenge.budget.toString()),
+                    return DataRow(
+                      cells: [
+                        DataCell(_ResultCell(game: game, userSide: userSide)),
+                        DataCell(_PlayersCell(game: game, user: user)),
+                        DataCell(
+                          Center(
+                            child: CCPadding.allSmall(
+                              child: Text(game.challenge.budget.toString()),
+                            ),
                           ),
                         ),
                         if (game.challenge.acceptedAt == null)
-                          CCGap.zero
+                          const DataCell(CCGap.zero)
                         else
-                          CCPadding.allSmall(
-                            child: Text(
-                              '${DateFormat(DateFormat.DAY, 'fr').format(game.challenge.acceptedAt!).padLeft(2, '0')} ${DateFormat(DateFormat.ABBR_MONTH + '\n' + DateFormat.YEAR, 'fr').format(game.challenge.acceptedAt!)}',
-                              textAlign: TextAlign.center,
+                          DataCell(
+                            CCPadding.allSmall(
+                              child: Text(
+                                '${DateFormat(DateFormat.DAY, 'fr').format(game.challenge.acceptedAt!).padLeft(2, '0')} ${DateFormat(DateFormat.ABBR_MONTH + '\n' + DateFormat.YEAR, 'fr').format(game.challenge.acceptedAt!)}',
+                                textAlign: TextAlign.center,
+                              ),
                             ),
                           ),
                       ],
                     );
                   },
-                ),
-              ],
+                ).toList(),
+              ),
             );
           },
         ),
@@ -140,6 +137,7 @@ class _PlayersCell extends StatelessWidget {
 
     return SizedBox(
       height: CCWidgetSize.xxsmall,
+      width: CCWidgetSize.large,
       child: UserStreamBuilder(
         userId: opponentId,
         indicateLoad: false,
@@ -205,53 +203,57 @@ class _ResultCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CCPadding.horizontalMedium(
-      child: Align(
-        alignment: Alignment.centerRight,
-        child: Builder(
-          builder: (context) {
-            if (userSide == null) {
-              return CCGap.zero;
-            } else if (game.winner == null) {
-              if (game.finished) {
-                return Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.grey,
-                    borderRadius: CCBorderRadiusCircular.xsmall,
-                  ),
-                  child: Icon(
-                    CupertinoIcons.equal,
-                    color: context.colorScheme.background,
-                  ),
-                );
-              }
-              return CCGap.zero;
-            } else if (game.winner == userSide) {
-              return Container(
-                decoration: const BoxDecoration(
-                  color: Colors.green,
-                  borderRadius: CCBorderRadiusCircular.xsmall,
-                ),
-                child: Icon(
-                  Icons.add,
-                  color: context.colorScheme.background,
-                ),
-              );
-            } else {
-              return Container(
-                decoration: const BoxDecoration(
-                  color: Colors.red,
-                  borderRadius: CCBorderRadiusCircular.xsmall,
-                ),
-                child: Icon(
-                  Icons.remove,
-                  color: context.colorScheme.background,
-                ),
-              );
-            }
-          },
-        ),
-      ),
+    return Builder(
+      builder: (context) {
+        if (userSide == null) {
+          return CCGap.zero;
+        } else if (game.winner == null) {
+          if (game.finished) {
+            return Container(
+              decoration: const BoxDecoration(
+                color: Colors.grey,
+                borderRadius: CCBorderRadiusCircular.xsmall,
+              ),
+              child: Icon(
+                CupertinoIcons.equal,
+                color: context.colorScheme.background,
+              ),
+            );
+          } else {
+            return Container(
+              decoration: const BoxDecoration(
+                borderRadius: CCBorderRadiusCircular.xsmall,
+              ),
+              child: const Icon(
+                Icons.more_horiz,
+                color: Colors.grey,
+              ),
+            );
+          }
+        } else if (game.winner == userSide) {
+          return Container(
+            decoration: const BoxDecoration(
+              color: Colors.green,
+              borderRadius: CCBorderRadiusCircular.xsmall,
+            ),
+            child: Icon(
+              Icons.add,
+              color: context.colorScheme.background,
+            ),
+          );
+        } else {
+          return Container(
+            decoration: const BoxDecoration(
+              color: Colors.red,
+              borderRadius: CCBorderRadiusCircular.xsmall,
+            ),
+            child: Icon(
+              Icons.remove,
+              color: context.colorScheme.background,
+            ),
+          );
+        }
+      },
     );
   }
 }
