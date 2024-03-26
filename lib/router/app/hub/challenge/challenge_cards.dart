@@ -83,39 +83,24 @@ class AvailibleChallengesCard extends StatelessWidget {
       children: [
         // const ChallengeSorter(), // TODO : when the time will be right
         // CCGap.medium,
+        CCGap.medium,
+        if (otherChallenges.isEmpty && friendChallenges.isEmpty)
+          // TODO : l10n
+          const Text("Aucun challenge n'est actuellement disponible."),
         if (friendChallenges.isNotEmpty) ...[
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                // TODO : l10n : enlever les 2 points
-                context.l10n.challengesFromFriends,
-                style: context.textTheme.titleLarge
-                    ?.copyWith(fontWeight: FontWeight.bold),
-              ),
-              CCGap.medium,
-              ChallengesTable(challenges: friendChallenges),
-            ],
+          Text(
+            // TODO : l10n : enlever les 2 points
+            context.l10n.challengesFromFriends,
+            style: context.textTheme.titleLarge
+                ?.copyWith(fontWeight: FontWeight.bold),
           ),
-          if (otherChallenges.isNotEmpty) CCGap.medium,
+          CCGap.medium,
+          ChallengesTable(challenges: friendChallenges),
         ],
-        if (otherChallenges.isNotEmpty || friendChallenges.isEmpty)
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                // TODO : l10n : enlever les 2 points
-                context.l10n.challengesFromStrangers,
-                style: context.textTheme.titleLarge
-                    ?.copyWith(fontWeight: FontWeight.bold),
-              ),
-              CCGap.medium,
-              if (otherChallenges.isEmpty)
-                const Text("Aucun challenge n'est actuellement disponible.")
-              else
-                ChallengesTable(challenges: otherChallenges),
-            ],
-          ),
+        if (otherChallenges.isNotEmpty) ...[
+          CCGap.medium,
+          ChallengesTable(challenges: otherChallenges),
+        ],
       ],
     );
   }
