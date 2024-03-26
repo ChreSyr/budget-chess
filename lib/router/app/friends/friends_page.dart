@@ -15,6 +15,7 @@ import 'package:crea_chess/package/atomic_design/widget/feed_card.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
+import 'package:crea_chess/router/app/chats/chat_home_page.dart';
 import 'package:crea_chess/router/app/friends/search_friend/search_friend_delegate.dart';
 import 'package:crea_chess/router/app/user/user_page.dart';
 import 'package:crea_chess/router/app/user/widget/relationship_button.dart';
@@ -37,29 +38,6 @@ class FriendsRoute extends CCRoute {
   @override
   Widget build(BuildContext context, GoRouterState state) =>
       const FriendsPage();
-}
-
-// TODO : use RelationsCubit instead
-class FriendRequestsCubit
-    extends AuthUidListenerCubit<Iterable<RelationshipModel>> {
-  FriendRequestsCubit() : super([]);
-
-  @override
-  void authUidChanged(String? authUid) {
-    _relationsStream?.cancel();
-
-    if (authUid == null) return emit([]);
-
-    _relationsStream = relationshipCRUD.streamRequestsTo(authUid).listen(emit);
-  }
-
-  StreamSubscription<Iterable<RelationshipModel>>? _relationsStream;
-
-  @override
-  Future<void> close() {
-    _relationsStream?.cancel();
-    return super.close();
-  }
 }
 
 class FriendshipsCubit
@@ -231,24 +209,7 @@ class FriendsFeed extends StatelessWidget {
           ),
           CCGap.medium,
           // Friendship requests to this user
-          BlocBuilder<FriendRequestsCubit, Iterable<RelationshipModel>>(
-            builder: (context, requests) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: requests.map(
-                  (request) {
-                    final requester = request.requester;
-                    if (requester == null) return CCGap.zero;
-
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: CCSize.medium),
-                      child: FriendRequestCard(requester, context),
-                    );
-                  },
-                ).toList(),
-              );
-            },
-          ),
+          const FriendRequestCards(),
           // Friends
           if (!friendshipsCubit.isLoading) FriendsCard(friendshipsCubit),
           if (friendshipsCubit.state?.isNotEmpty == true)
@@ -273,6 +234,38 @@ class FriendsFeed extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class FriendRequestCards extends StatelessWidget {
+  const FriendRequestCards({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final authUid = context.read<UserCubit>().state.id;
+    final friendRequests =
+        context.select<RelationsCubit, Iterable<RelationshipModel>>(
+      (cubit) => cubit.state.where(
+        (r) => r.statusOf(authUid) == UserInRelationshipStatus.isRequested,
+      ),
+    );
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: friendRequests.map(
+        (request) {
+          final requester = request.requester;
+          if (requester == null) return CCGap.zero;
+
+          return Padding(
+            padding: const EdgeInsets.only(bottom: CCSize.medium),
+            child: FriendRequestCard(requester, context),
+          );
+        },
+      ).toList(),
     );
   }
 }

@@ -2,7 +2,6 @@ import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/firebase/firestore/game/live_game/live_games_cubit.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/router/app/chats/chat_home_page.dart';
-import 'package:crea_chess/router/app/friends/friends_page.dart';
 import 'package:crea_chess/router/app/friends/search_friend/search_friend_delegate.dart';
 import 'package:crea_chess/router/app/hub/game/game_prefs_cubit.dart';
 import 'package:crea_chess/router/app/hub/setup/board_settings_cubit.dart';
@@ -71,7 +70,6 @@ class _BudgetChessState extends State<BudgetChess> {
         BlocProvider(create: (context) => NavNotifCubit()),
         BlocProvider(create: (context) => RelationsCubit()),
         BlocProvider(create: (context) => NewMessagesCubit()),
-        BlocProvider(create: (context) => FriendRequestsCubit()),
         BlocProvider(create: (context) => QueriedUsersCubit()),
         BlocProvider(create: (context) => BoardSettingsCubit()),
         BlocProvider(create: (context) => GamePrefsCubit()),

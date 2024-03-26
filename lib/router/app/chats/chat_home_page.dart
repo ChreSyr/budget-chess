@@ -63,8 +63,6 @@ class RelationsCubit extends AuthUidListenerCubit<Iterable<RelationshipModel>> {
   String? _authUid;
   StreamSubscription<Iterable<RelationshipModel>>? _relationsStream;
 
-  static final i = RelationsCubit();
-
   @override
   void authUidChanged(String? authUid) {
     _authUid = authUid;

@@ -48,6 +48,8 @@ class NavNotifier extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authUid = context.read<UserCubit>().state.id;
+
     return BlocListener<NewMessagesCubit, Iterable<MessageModel>>(
       listener: (context, newMessages) {
         context.read<NavNotifCubit>().set(
@@ -56,12 +58,18 @@ class NavNotifier extends StatelessWidget {
               count: newMessages.length,
             );
       },
-      child: BlocListener<FriendRequestsCubit, Iterable<RelationshipModel>>(
-        listener: (context, requests) {
+      child: BlocListener<RelationsCubit, Iterable<RelationshipModel>>(
+        listener: (context, relations) {
           context.read<NavNotifCubit>().set(
                 routeName: FriendsRoute.i.name,
                 notifId: FriendsPage.notifFriendRequests,
-                count: requests.length,
+                count: relations
+                    .where(
+                      (r) =>
+                          r.statusOf(authUid) ==
+                          UserInRelationshipStatus.isRequested,
+                    )
+                    .length,
               );
         },
         child: child,
