@@ -1,6 +1,8 @@
 import 'package:crea_chess/package/atomic_design/color.dart';
+import 'package:crea_chess/package/atomic_design/dialog/ok_dialog.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
+import 'package:crea_chess/package/atomic_design/widget/button.dart';
 import 'package:crea_chess/package/atomic_design/widget/feed_card.dart';
 import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/export.dart';
@@ -63,18 +65,11 @@ class HubPage extends StatelessWidget {
           BlocProvider(create: (context) => ChallengeFiltersCubit()),
           BlocProvider(create: (context) => ChallengeFilterCubit()),
         ],
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                clipBehavior: Clip.none,
-                child: CCPadding.allLarge(
-                  child: const HubFeed(),
-                ),
-              ),
-            ),
-            const BigPlayButton(),
-          ],
+        child: SingleChildScrollView(
+          clipBehavior: Clip.none,
+          child: CCPadding.allLarge(
+            child: const HubFeed(),
+          ),
         ),
       ),
     );
@@ -104,6 +99,8 @@ class HubFeed extends StatelessWidget {
                   );
           },
         ),
+        const MyChallengesCard(),
+        CCGap.medium,
         const ChallengeCards(),
       ],
     );
@@ -184,35 +181,87 @@ class GameChallengeTile extends StatelessWidget {
   }
 }
 
-class BigPlayButton extends StatelessWidget {
-  const BigPlayButton({super.key});
+class MyChallengesCard extends StatelessWidget {
+  const MyChallengesCard({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.grey, //New
-            blurRadius: 25,
-            offset: Offset(0, -10),
+    final authUid = context.read<UserCubit>().state.id;
+
+    return StreamBuilder<Iterable<ChallengeModel>>(
+      stream: challengeCRUD.streamFiltered(
+        filter: (collection) =>
+            collection.where('authorId', isEqualTo: authUid),
+      ),
+      builder: (context, snapshot) {
+        final myChallenges = snapshot.data?.toList() ?? [];
+        return FeedCard(
+          title: myChallenges.isEmpty
+              ? 'Prêt à lancer un défi ?'
+              : "Recherche d'adversaire", // TODO : l10n
+          actions: myChallenges.length > 1
+              ? [
+                  CompactIconButton(
+                    onPressed: () => showOkDialog(
+                      pageContext: context,
+                      title: null,
+                      content: Text(context.l10n.tipChallengesRemoved),
+                    ),
+                    icon: const Icon(Icons.info_outline),
+                  ),
+                ]
+              : [],
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              ListView.separated(
+                itemBuilder: (context, index) {
+                  final challenge = myChallenges[index];
+                  return SizedBox(
+                    height: CCWidgetSize.xxxsmall,
+                    child: Row(
+                      children: [
+                        CCGap.small,
+                        UserPhoto.fromId(
+                          userId: challenge.authorId ?? '',
+                          radius: CCSize.medium,
+                          onTap: () => UserRoute.pushId(
+                              userId: challenge.authorId ?? ''),
+                          showConnectedIndicator: true,
+                        ),
+                        CCGap.medium,
+                        const Icon(Icons.attach_money),
+                        CCGap.small,
+                        Text(challenge.budget.toString()),
+                        const Expanded(child: CCGap.small),
+                        IconButton(
+                          icon: const Icon(Icons.close),
+                          onPressed: () =>
+                              challengeCRUD.delete(documentId: challenge.id),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+                separatorBuilder: (context, index) => Divider(
+                  color: context.colorScheme.onBackground,
+                  height: 0,
+                ),
+                itemCount: myChallenges.length,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+              ),
+              CCGap.medium,
+              FilledButton(
+                onPressed: myChallenges.length > 7
+                    ? null
+                    : () => context.pushNamed(CreateChallengeRoute.i.name),
+                child: const Text('Créer une partie'),
+              ),
+            ],
           ),
-        ],
-        color: context.colorScheme.background,
-      ),
-      child: CCPadding.horizontalLarge(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            CCGap.large,
-            FilledButton.tonal(
-              onPressed: () => context.pushRoute(CreateChallengeRoute.i),
-              child: Text(context.l10n.play),
-            ),
-            CCGap.large,
-          ],
-        ),
-      ),
+        );
+      },
     );
   }
 }
