@@ -9,6 +9,7 @@ import 'package:crea_chess/package/atomic_design/widget/gap.dart';
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/package/unichess/src/models.dart';
+import 'package:crea_chess/router/app/hub/game/game_page.dart';
 import 'package:crea_chess/router/app/user/user_page.dart';
 import 'package:crea_chess/router/app/user/widget/user_sections.dart';
 import 'package:flutter/cupertino.dart';
@@ -74,6 +75,7 @@ class UserSectionGames extends UserSection {
                 dataRowMaxHeight: CCWidgetSize.xxsmall,
                 columnSpacing: CCSize.large,
                 horizontalMargin: CCSize.small,
+                showCheckboxColumn: false,
                 columns: const [
                   DataColumn(label: Text('Résultat'), numeric: true),
                   DataColumn(label: Text('Joueurs')),
@@ -89,6 +91,7 @@ class UserSectionGames extends UserSection {
                   (game) {
                     final userSide = game.sideOf(user.id);
                     return DataRow(
+                      onSelectChanged: (_) => GameRoute.push(gameId: game.id),
                       cells: [
                         DataCell(_ResultCell(game: game, userSide: userSide)),
                         DataCell(_PlayersCell(game: game, user: user)),
