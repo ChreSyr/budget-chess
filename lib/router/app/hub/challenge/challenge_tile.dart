@@ -24,9 +24,9 @@ class ChallengeTile extends StatelessWidget {
       userId: authorId,
       challenge: challenge,
       action: (authUid == authorId)
-          ? _ActionButton(
+          ? IconButton(
+              icon: Icon(Icons.close),
               onPressed: () => challengeCRUD.delete(documentId: challenge.id),
-              child: Text(context.l10n.cancel.toLowerCase()),
             )
           : _ActionButton(
               child: Text(
