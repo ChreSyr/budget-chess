@@ -11,6 +11,37 @@ import 'package:crea_chess/router/app/user/widget/user_photo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+class ChallengesTable extends StatelessWidget {
+  const ChallengesTable({required this.challenges, super.key});
+
+  final List<ChallengeModel> challenges;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final cardsPerRow =
+            constraints.maxWidth ~/ _ChallengeCardTemplate.minWidth;
+        return GridView.count(
+          crossAxisCount: cardsPerRow,
+          childAspectRatio: 1.25,
+          clipBehavior: Clip.none,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          children: challenges
+              .map(
+                (challenge) => SizedBox(
+                  // width: CCWidgetSize.large2,
+                  child: ChallengeCard(challenge),
+                ),
+              )
+              .toList(),
+        );
+      },
+    );
+  }
+}
+
 class ChallengeCard extends StatelessWidget {
   const ChallengeCard(this.challenge, {super.key});
 
@@ -26,8 +57,10 @@ class ChallengeCard extends StatelessWidget {
       userId: authorId,
       challenge: challenge,
       action: (authUid == authorId)
-          ? IconButton(
-              icon: const Icon(Icons.close),
+          ? SmallActionButton(
+              child: Text(
+                context.l10n.cancel.toLowerCase(),
+              ),
               onPressed: () => challengeCRUD.delete(documentId: challenge.id),
             )
           : SmallActionButton(
@@ -57,53 +90,51 @@ class _ChallengeCardTemplate extends StatelessWidget {
   final ChallengeModel challenge;
   final Widget action;
 
+  static const minWidth = CCWidgetSize.medium;
+
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: CCWidgetSize.small,
-      width: CCWidgetSize.large,
-      child: Card(
-        elevation: CCElevation.medium,
-        color: context.colorScheme.onInverseSurface,
-        child: CCPadding.allSmall(
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  UserPhoto.fromId(
-                    userId: userId,
-                    radius: CCSize.medium,
-                    onTap: () => UserRoute.pushId(userId: userId),
-                    showConnectedIndicator: true,
-                  ),
-                  // CCGap.small,
-                  // SizedBox(
-                  //   height: CCSize.xxlarge,
-                  //   child: VerticalDivider(color: context.colorScheme.onBackground),
-                  // ),
-                  // CCGap.xsmall,
-                  // challenge.rule.icon,
-                  // CCGap.small,
-                  // const SizedBox(height: CCSize.large, child: VerticalDivider()),
-                  CCGap.small,
-                  const Icon(Icons.attach_money),
-                  CCGap.xsmall,
-                  Text(challenge.budget.toString()),
-                  // CCGap.small,
-                  // SizedBox(
-                  //   height: CCSize.xxlarge,
-                  //   child: VerticalDivider(color: context.colorScheme.onBackground),
-                  // ),
-                  // CCGap.small,
-                  // Icon(challenge.timeControl.speed.icon),
-                  // CCGap.small,
-                  // Text(challenge.timeControl.toString()),
-                ],
-              ),
-              const Expanded(child: CCGap.small),
-              action,
-            ],
-          ),
+    return Card(
+      elevation: CCElevation.medium,
+      color: context.colorScheme.onInverseSurface,
+      child: CCPadding.allSmall(
+        child: Column(
+          children: [
+            Row(
+              children: [
+                UserPhoto.fromId(
+                  userId: userId,
+                  radius: CCSize.medium,
+                  onTap: () => UserRoute.pushId(userId: userId),
+                  showConnectedIndicator: true,
+                ),
+                // CCGap.small,
+                // SizedBox(
+                //   height: CCSize.xxlarge,
+                //   child: VerticalDivider(color: context.colorScheme.onBackground),
+                // ),
+                // CCGap.xsmall,
+                // challenge.rule.icon,
+                // CCGap.small,
+                // const SizedBox(height: CCSize.large, child: VerticalDivider()),
+                CCGap.small,
+                const Icon(Icons.attach_money),
+                CCGap.xsmall,
+                Text(challenge.budget.toString()),
+                // CCGap.small,
+                // SizedBox(
+                //   height: CCSize.xxlarge,
+                //   child: VerticalDivider(color: context.colorScheme.onBackground),
+                // ),
+                // CCGap.small,
+                // Icon(challenge.timeControl.speed.icon),
+                // CCGap.small,
+                // Text(challenge.timeControl.toString()),
+              ],
+            ),
+            const Expanded(child: CCGap.small),
+            action,
+          ],
         ),
       ),
     );
@@ -138,31 +169,6 @@ class SmallActionButton extends StatelessWidget {
         ),
         child: child,
       ),
-    );
-  }
-}
-
-class ChallengesTable extends StatelessWidget {
-  const ChallengesTable({required this.challenges, super.key});
-
-  final List<ChallengeModel> challenges;
-
-  @override
-  Widget build(BuildContext context) {
-    return GridView.count(
-      crossAxisCount: 3,
-      childAspectRatio: 1.25,
-      clipBehavior: Clip.none,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      children: challenges
-          .map(
-            (challenge) => SizedBox(
-              width: CCWidgetSize.large2,
-              child: ChallengeCard(challenge),
-            ),
-          )
-          .toList(),
     );
   }
 }
