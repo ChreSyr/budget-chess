@@ -74,7 +74,8 @@ class LiveGameCRUD extends CollectionCRUD<GameModel> {
 
     await create(data: game, documentId: game.id);
 
-    await challengeCRUD.delete(documentId: acceptedChallenge.id);
+    await challengeCRUD.deleteAllFrom(authorId);
+    await challengeCRUD.deleteAllFrom(challengerId);
   }
 }
 

@@ -24,6 +24,18 @@ class ChallengeCRUD extends CollectionCRUD<ChallengeModel> {
     return (data?.toJson()?..removeWhere((key, value) => key == 'id')) ?? {};
   }
 
+  // --
+
+  Future<void> deleteAllFrom(String userId) async {
+    final challenges = await readFiltered(
+      filter: (collection) => collection.where('authorId', isEqualTo: userId),
+    );
+
+    for (final challenge in challenges) {
+      await delete(documentId: challenge.id);
+    }
+  }
+
   /// Delete the relationships of this user
   Future<void> onAccountDeletion({required String? userId}) async {
     final challenges = await readFiltered(
