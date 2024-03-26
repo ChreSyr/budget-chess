@@ -53,6 +53,13 @@ class HistoryTable extends StatelessWidget {
       create: (context) => HistoryCubit(userId: user.id),
       child: BlocBuilder<HistoryCubit, Iterable<GameModel>>(
         builder: (context, games) {
+          final finishedGames = games.where((g) => g.finished);
+          if (finishedGames.isEmpty) {
+            return CCPadding.allMedium(
+              child: const Text('There is no game in history'),
+            ); // TODO : l10n
+          }
+
           return SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: DataTable(
@@ -79,7 +86,7 @@ class HistoryTable extends StatelessWidget {
                 ),
                 DataColumn(label: Center(child: Text('Date'))),
               ],
-              rows: games.map(
+              rows: finishedGames.map(
                 (game) {
                   final userSide = game.sideOf(user.id);
                   return DataRow(
@@ -214,15 +221,7 @@ class _ResultCell extends StatelessWidget {
               ),
             );
           } else {
-            return Container(
-              decoration: const BoxDecoration(
-                borderRadius: CCBorderRadiusCircular.xsmall,
-              ),
-              child: const Icon(
-                Icons.more_horiz,
-                color: Colors.grey,
-              ),
-            );
+            return CCGap.zero;
           }
         } else if (game.winner == userSide) {
           return Container(
