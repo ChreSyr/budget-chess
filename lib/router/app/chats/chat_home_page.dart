@@ -58,21 +58,31 @@ class NewMessagesCubit extends AuthUidListenerCubit<Iterable<MessageModel>> {
 }
 
 class RelationsCubit extends AuthUidListenerCubit<Iterable<RelationshipModel>> {
-  RelationsCubit() : super([]);
+  RelationsCubit()
+      : _friendIds = const [],
+        super([]);
 
   String? _authUid;
   StreamSubscription<Iterable<RelationshipModel>>? _relationsStream;
+  Iterable<String> _friendIds;
 
   @override
   void authUidChanged(String? authUid) {
     _authUid = authUid;
     _relationsStream?.cancel();
-    if (authUid == null) return emit([]);
+    if (authUid == null) {
+      _friendIds = [];
+      return emit([]);
+    }
     _relationsStream = relationshipCRUD
         .streamFiltered(
       filter: (collection) => collection.where('users.$authUid', isNull: false),
     )
         .listen((relations) {
+      _friendIds = relations
+          .where((r) => r.isFriendship)
+          .map((r) => r.otherUser(authUid))
+          .whereType<String>();
       emit(
         relations.sorted(
           (a, b) => a.lastChatUpdate == null
@@ -89,6 +99,7 @@ class RelationsCubit extends AuthUidListenerCubit<Iterable<RelationshipModel>> {
     return super.close();
   }
 
+  Iterable<String> get friendIds => _friendIds;
   Iterable<String> get otherIds => _authUid == null
       ? []
       : state.map((e) => e.otherUser(_authUid!)).whereType<String>();

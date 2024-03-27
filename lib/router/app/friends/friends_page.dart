@@ -40,37 +40,6 @@ class FriendsRoute extends CCRoute {
       const FriendsPage();
 }
 
-class FriendshipsCubit
-    extends AuthUidListenerCubit<Iterable<RelationshipModel>?> {
-  FriendshipsCubit() : super(null);
-
-  String? _authUid;
-  StreamSubscription<Iterable<RelationshipModel>>? _friendshipsStream;
-
-  @override
-  void authUidChanged(String? authUid) {
-    _authUid = authUid;
-
-    _friendshipsStream?.cancel();
-
-    if (authUid == null) return emit([]);
-
-    _friendshipsStream =
-        relationshipCRUD.streamFriendshipsOf(authUid).listen(emit);
-  }
-
-  @override
-  Future<void> close() {
-    _friendshipsStream?.cancel();
-    return super.close();
-  }
-
-  bool get isLoading => state == null;
-  Iterable<String> get friendIds => _authUid == null || state == null
-      ? []
-      : state!.map((e) => e.otherUser(_authUid!)).whereType<String>();
-}
-
 class FriendSuggestionsCubit extends Cubit<Iterable<RelationshipModel>> {
   FriendSuggestionsCubit() : super([]);
 
@@ -91,6 +60,8 @@ class FriendSuggestionsCubit extends Cubit<Iterable<RelationshipModel>> {
     String authUid,
     Iterable<String> friendIds,
   ) async {
+    if (friendIds.isEmpty) return;
+
     final friendsOfFriends = <String>[];
 
     for (final friendId in friendIds) {
@@ -107,6 +78,7 @@ class FriendSuggestionsCubit extends Cubit<Iterable<RelationshipModel>> {
 
     final suggestedRelationIds =
         friendsOfFriends.map((e) => relationshipCRUD.getId(e, authUid));
+    if (suggestedRelationIds.isEmpty) return;
 
     suggestionIds = null;
     await _existingRelationsStream?.cancel();
@@ -163,7 +135,6 @@ class FriendsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => FriendshipsCubit()),
         BlocProvider(create: (context) => FriendSuggestionsCubit()),
       ],
       child: Scaffold(
@@ -179,8 +150,6 @@ class FriendsFeed extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final friendshipsCubit = context.watch<FriendshipsCubit>();
-
     return CCPadding.allLarge(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -211,8 +180,10 @@ class FriendsFeed extends StatelessWidget {
           // Friendship requests to this user
           const FriendRequestCards(),
           // Friends
-          if (!friendshipsCubit.isLoading) FriendsCard(friendshipsCubit),
-          if (friendshipsCubit.state?.isNotEmpty == true)
+          const FriendsCard(),
+          if (context.select<RelationsCubit, bool>(
+            (cubit) => cubit.friendIds.isNotEmpty,
+          ))
             const Padding(
               padding: EdgeInsets.only(top: CCSize.medium),
               child: FriendSuggestionsCard(),
@@ -355,13 +326,12 @@ class FriendRequestCard extends StatelessWidget {
 }
 
 class FriendsCard extends StatelessWidget {
-  const FriendsCard(this.friendshipsCubit, {super.key});
-
-  final FriendshipsCubit friendshipsCubit;
+  const FriendsCard({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final friendIds = friendshipsCubit.friendIds;
+    final friendIds = context
+        .select<RelationsCubit, Iterable<String>>((cubit) => cubit.friendIds);
 
     return FeedCard(
       title: context.l10n.friends,
@@ -435,7 +405,7 @@ class FriendSuggestionsCard extends StatelessWidget {
         CompactIconButton(
           onPressed: () => suggestionsCubit.buildSuggestions(
             authUid,
-            context.read<FriendshipsCubit>().friendIds,
+            context.read<RelationsCubit>().friendIds,
           ),
           icon: const Icon(Icons.refresh),
         ),
