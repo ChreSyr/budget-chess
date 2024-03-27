@@ -3,6 +3,7 @@ import 'package:crea_chess/package/atomic_design/color.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/text_style.dart';
+import 'package:crea_chess/package/l10n/l10n.dart';
 import 'package:crea_chess/router/app/chats/chat/widget/message/text_message.dart';
 import 'package:flutter/material.dart';
 
@@ -35,10 +36,12 @@ class SystemMessageWidget extends StatelessWidget {
         ),
         child: CCPadding.allSmall(
           child: TextMessageText(
-            bodyTextStyle: context.textTheme.infoSmall
-                ?.copyWith(color: context.colorScheme.background),
+            bodyTextStyle: context.textTheme.bodyMedium?.copyWith(
+              color: context.colorScheme.background,
+              fontWeight: FontWeight.bold,
+            ),
             options: options,
-            text: message,
+            text: context.l10n.messageFromSystem(message),
           ),
         ),
       );

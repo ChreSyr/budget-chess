@@ -149,7 +149,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   .where((message) => !messageIds.contains(message.id))
                   .toList();
               firstUnreadMessageId ??= messages
-                  .lastWhereOrNull((m) => m.notSeenBy(widget.otherId))
+                  .lastWhereOrNull((m) => m.notSeenBy(widget.authUid))
                   ?.id;
               for (final message in messages) {
                 if (message.notSeenBy(widget.authUid)) {

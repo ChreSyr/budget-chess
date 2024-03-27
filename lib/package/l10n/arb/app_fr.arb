@@ -50,6 +50,12 @@
   "friends": "Amis",
   "hub": "Hub",
   "iAcceptConditions": "Je n'ai lu ni les Conditions d'utilisation, ni la Politique de confidentialité.",
+  "messageFromSystem": "{code, select, other{Message inconnu.} friendshipStart{C'est le début de votre amitié !\nPréparez-vous à des parties de folie...\nQue le fun commence !\n♟️🎉}}",
+  "@messageFromSystem": {
+    "placeholders": {
+      "code": {}
+    }
+  },
   "messages": "Messages",
   "needAccount": "Besoin d'un compte ?",
   "never": "Jamais",

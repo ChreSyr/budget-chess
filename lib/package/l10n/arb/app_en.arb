@@ -50,6 +50,12 @@
   "friends": "Friends",
   "hub": "Hub",
   "iAcceptConditions": "I have not read the Terms of Use or the Privacy Policy.",
+  "messageFromSystem": "{code, select, other{Unknown message.} friendshipStart{Welcome to your new friendship !\nGet ready to have fun on the chessboard together.\nLet the games begin !\n♟️🎉}}",
+  "@messageFromSystem": {
+    "placeholders": {
+      "code": {}
+    }
+  },
   "messages": "Messages",
   "needAccount": "Need an account ?",
   "never": "Never",

@@ -32,10 +32,7 @@ class MessageModel with _$MessageModel {
 
   // --
 
-  bool notSeenBy(String userId) =>
-      sentTo.contains(userId) || deliveredTo.contains(userId);
-  // MessageSeenStatus? seenStatusOf(String userId) =>
-  //     statuses[userId]?.seenStatus;
+  bool notSeenBy(String userId) => !seenBy.contains(userId);
   MessageSeenStatus get globalSeenStatus {
     return sentTo.isNotEmpty
         ? MessageSeenStatus.sentTo
@@ -44,7 +41,7 @@ class MessageModel with _$MessageModel {
             : MessageSeenStatus.seen;
   }
 
-  bool get isFromSystem => id == SystemMessage.id;
+  bool get isFromSystem => authorId == SystemMessage.id;
 
   MessageModel copyWithSeenStatus({
     required String userId,
