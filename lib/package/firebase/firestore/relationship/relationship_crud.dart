@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/package/firebase/firestore/crud/collection_crud.dart';
-import 'package:crea_chess/package/firebase/firestore/relationship/relationship_model.dart';
 
 class _RelationshipCRUD extends CollectionCRUD<RelationshipModel> {
   _RelationshipCRUD() : super(collectionName: 'relationship');
@@ -143,16 +143,19 @@ class _RelationshipCRUD extends CollectionCRUD<RelationshipModel> {
     // A friendship starts with a friend request
     if (relation == null || relation.requester == null) return;
 
+    final friendship = relation.copyWith(
+      users: {
+        user1: UserInRelationshipStatus.open,
+        user2: UserInRelationshipStatus.open,
+      },
+      lastUserStatusUpdate: DateTime.now(),
+    );
     await update(
       documentId: relationshipId,
-      data: relation.copyWith(
-        users: {
-          user1: UserInRelationshipStatus.open,
-          user2: UserInRelationshipStatus.open,
-        },
-        lastUserStatusUpdate: DateTime.now(),
-      ),
+      data: friendship,
     );
+
+    await messageCRUD.onFriendshipStart(friendship: friendship);
   }
 
   /// Close the relationships of this user

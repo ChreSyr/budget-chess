@@ -54,17 +54,17 @@ class TextMessage extends StatelessWidget {
         if (enlargeEmojis)
           if (options.isTextSelectable)
             SelectableText(
-              message.text ?? '',
+              message.text,
               style: const TextStyle(fontSize: 40),
             )
           else
             Text(
-              message.text ?? '',
+              message.text,
               style: const TextStyle(fontSize: 40),
             )
         else
           TextMessageText(
-            text: message.text ?? '',
+            text: message.text,
             options: options,
             bodyTextStyle: context.textTheme.bodyLarge,
           ),

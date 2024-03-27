@@ -30,8 +30,7 @@ class _MessageCRUD extends SubCollectionCRUD<MessageModel> {
           ?..removeWhere(
             (key, value) =>
                 key == 'relationshipId' || key == 'id' || value == null,
-          )
-          ..addAll({'receiverId': data?.receiverId})) ??
+          )) ??
         {};
   }
 
@@ -41,25 +40,47 @@ class _MessageCRUD extends SubCollectionCRUD<MessageModel> {
       FirebaseFirestore.instance.collection(
         '${relationshipCRUD.collectionName}/$relationshipId/$collectionName',
       );
-  
+
   Stream<Iterable<MessageModel>> messagesUnreadBy(String userId) {
     return streamGroupFiltered(
       filter: (query) => query.where(
-        Filter.and(
-          Filter('receiverId', isEqualTo: userId),
-          Filter.or(
-            Filter('status', isEqualTo: MessageStatus.sent.name),
-            Filter('status', isEqualTo: MessageStatus.delivered.name),
-          ),
-        ),
+        'statuses.$userId.seenStatus',
+        isEqualTo: MessageSeenStatus.sentTo.name,
       ),
     );
   }
+
+  Future<void> onFriendshipStart({required RelationshipModel friendship}) =>
+      create(
+        parentDocumentId: friendship.id,
+        data: SystemMessage.atFriendshipStart(friendship: friendship),
+      );
 
   Future<void> updated(String relationshipId) async {
     await _collection(relationshipId)
         .doc(relationshipId)
         .update({'updatedAt': Timestamp.now()});
+  }
+
+  Future<void> updateSeenStatus({
+    required MessageModel message,
+    required String userId,
+    required MessageSeenStatus seenStatus,
+  }) async {
+    final oldSeenStatus = message.seenStatusOf(userId);
+    if (oldSeenStatus == null) return;
+
+    final statuses = message.copyOfStatuses;
+    statuses[userId] = MessageToUserStatus(
+      updatedAt: DateTime.now(),
+      seenStatus: seenStatus,
+    );
+
+    await update(
+      parentDocumentId: message.relationshipId,
+      documentId: message.id,
+      data: message.copyWith(statuses: statuses),
+    );
   }
 }
 

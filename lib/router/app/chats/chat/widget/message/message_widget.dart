@@ -111,9 +111,7 @@ class MessageWidget extends StatelessWidget {
           margin: bubbleRtlAlignment == BubbleRtlAlignment.left
               ? const EdgeInsetsDirectional.only(end: 8)
               : const EdgeInsets.only(right: 8),
-          child: UserPhoto.fromId(
-            userId: message.authorId ?? '',
-          ),
+          child: UserPhoto.fromId(userId: message.authorId),
         )
       : const SizedBox(width: 40);
 
@@ -255,7 +253,7 @@ class MessageWidget extends StatelessWidget {
                 onLongPress: () =>
                     onMessageStatusLongPress?.call(context, message),
                 onTap: () => onMessageStatusTap?.call(context, message),
-                child: MessageStatusIcon(status: message.status),
+                child: MessageStatusIcon(message: message),
               ),
             ),
         ],

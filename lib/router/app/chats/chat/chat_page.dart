@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:crea_chess/package/atomic_design/padding.dart';
 import 'package:crea_chess/package/atomic_design/size.dart';
 import 'package:crea_chess/package/atomic_design/snack_bar.dart';
@@ -148,20 +149,14 @@ class _ChatScreenState extends State<ChatScreen> {
                   .where((message) => !messageIds.contains(message.id))
                   .toList();
               firstUnreadMessageId ??= messages
-                  .where(
-                    (m) =>
-                        m.authorId == widget.otherId &&
-                        m.status != MessageStatus.seen,
-                  )
-                  .lastOrNull
+                  .lastWhereOrNull((m) => m.notSeenBy(widget.otherId))
                   ?.id;
               for (final message in messages) {
-                if (message.authorId == widget.otherId &&
-                    message.status != MessageStatus.seen) {
-                  messageCRUD.update(
-                    parentDocumentId: relationshipId,
-                    documentId: message.id,
-                    data: message.copyWith(status: MessageStatus.seen),
+                if (message.notSeenBy(widget.authUid)) {
+                  messageCRUD.updateSeenStatus(
+                    message: message,
+                    userId: widget.authUid,
+                    seenStatus: MessageSeenStatus.seen,
                   );
                 }
               }
@@ -169,9 +164,9 @@ class _ChatScreenState extends State<ChatScreen> {
                 messages
                   ..addAll(failedMessages)
                   ..sort(
-                    (a, b) => a.createdAt == null
+                    (a, b) => a.sentAt == null
                         ? 0
-                        : b.createdAt?.compareTo(a.createdAt!) ?? 0,
+                        : b.sentAt?.compareTo(a.sentAt!) ?? 0,
                   );
               }
 

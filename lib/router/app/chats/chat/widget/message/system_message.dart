@@ -7,8 +7,8 @@ import 'package:crea_chess/router/app/chats/chat/widget/message/text_message.dar
 import 'package:flutter/material.dart';
 
 /// A class that represents system message widget.
-class SystemMessage extends StatelessWidget {
-  const SystemMessage({
+class SystemMessageWidget extends StatelessWidget {
+  const SystemMessageWidget({
     required this.message,
     this.options = const TextMessageOptions(alignment: TextAlign.center),
     super.key,

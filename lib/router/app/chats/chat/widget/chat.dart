@@ -340,8 +340,8 @@ class ChatState extends State<Chat> {
 
       final Widget messageWidget;
 
-      if (message.authorId == null) {
-        messageWidget = SystemMessage(message: message.text ?? '');
+      if (message.isFromSystem) {
+        messageWidget = SystemMessageWidget(message: message.text);
       } else {
         final messageWidth =
             widget.showUserAvatars && message.authorId != widget.user.id

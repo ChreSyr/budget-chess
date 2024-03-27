@@ -3,6 +3,7 @@ import 'package:crea_chess/package/firebase/export.dart';
 import 'package:crea_chess/router/app/chats/chat/cubit/messages_cubit.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:uuid/uuid.dart';
 
 part 'sending_messages_cubit.freezed.dart';
 part 'sending_messages_cubit.g.dart';
@@ -55,11 +56,18 @@ class SendingMessagesCubit extends HydratedCubit<SendingMessages> {
     required String text,
   }) async {
     final relationshipId = relationshipCRUD.getId(authorId, receiverId);
-    final message = MessageModel.fromText(
+    final message = MessageModel(
       relationshipId: relationshipId,
+      id: const Uuid().v1(),
+      sentAt: DateTime.now(),
       authorId: authorId,
       text: text,
+      sendStatus: MessageSendStatus.sending,
+      statuses: {
+        receiverId: MessageToUserStatus(updatedAt: DateTime.now()),
+      },
     );
+
     final oldMessages = List<MessageModel>.from(state.messages);
 
     emit(
@@ -73,7 +81,9 @@ class SendingMessagesCubit extends HydratedCubit<SendingMessages> {
       await messageCRUD.create(
         parentDocumentId: relationshipId,
         documentId: message.id,
-        data: message.copyWith(status: MessageStatus.sent),
+        data: message.copyWith(
+          sendStatus: MessageSendStatus.sent,
+        ),
       );
 
       await relationshipCRUD.updateChat(relationshipId: relationshipId);
@@ -117,7 +127,7 @@ class SendingMessagesCubit extends HydratedCubit<SendingMessages> {
       emit(
         SendingMessages(
           messages: oldMessages
-            ..add(message.copyWith(status: MessageStatus.error)),
+            ..add(message.copyWith(sendStatus: MessageSendStatus.error)),
           status: SendingStatus.error,
         ),
       );

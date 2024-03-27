@@ -75,10 +75,10 @@ bool isConsistsOfEmojis(
       RegExp(multiEmojiRegExp.pattern.replaceFirst(r'+$', r'$'));
 
   if (emojiEnlargementBehavior == EmojiEnlargementBehavior.single) {
-    return singleEmojiRegExp.hasMatch(message.text ?? '');
+    return singleEmojiRegExp.hasMatch(message.text);
   }
 
-  return multiEmojiRegExp.hasMatch(message.text ?? '');
+  return multiEmojiRegExp.hasMatch(message.text);
 }
 
 final isMobile = defaultTargetPlatform == TargetPlatform.android ||
@@ -106,9 +106,9 @@ List<Object> calculateChatMessages(
     final isFirst = i == messages.length - 1;
     final isLast = i == 0;
     final message = messages[i];
-    final messageHasCreatedAt = message.createdAt != null;
+    final messageHasSentAt = message.sentAt != null;
     final nextMessage = isLast ? null : messages[i - 1];
-    final nextMessageHasCreatedAt = nextMessage?.createdAt != null;
+    final nextMessageHasSentAt = nextMessage?.sentAt != null;
     final nextMessageSameAuthor = message.authorId == nextMessage?.authorId;
     final notMyMessage = message.authorId != user.id;
 
@@ -122,9 +122,9 @@ List<Object> calculateChatMessages(
 
       final isFirstInGroup = notMyMessage &&
           ((message.authorId != previousMessage?.authorId) ||
-              (messageHasCreatedAt &&
-                  previousMessage?.createdAt != null &&
-                  message.createdAt!.difference(previousMessage!.createdAt!) >
+              (messageHasSentAt &&
+                  previousMessage?.sentAt != null &&
+                  message.sentAt!.difference(previousMessage!.sentAt!) >
                       Duration(milliseconds: groupMessagesThreshold)));
 
       if (isFirstInGroup) {
@@ -138,13 +138,13 @@ List<Object> calculateChatMessages(
       }
     }
 
-    if (messageHasCreatedAt && nextMessageHasCreatedAt) {
+    if (messageHasSentAt && nextMessageHasSentAt) {
       nextMessageDateThreshold =
-          nextMessage!.createdAt!.difference(message.createdAt!) >=
+          nextMessage!.sentAt!.difference(message.sentAt!) >=
               Duration(milliseconds: dateHeaderThreshold);
 
       nextMessageDifferentDay =
-          message.createdAt!.day != nextMessage.createdAt!.day;
+          message.sentAt!.day != nextMessage.sentAt!.day;
 
       // nextMessageDifferentDay = DateTime.fromMillisecondsSinceEpoch(
       //       message.createdAt!,
@@ -157,7 +157,7 @@ List<Object> calculateChatMessages(
 
       nextMessageInGroup = nextMessageSameAuthor &&
           message.id != firstUnreadMessageId &&
-          nextMessage.createdAt!.difference(message.createdAt!) <=
+          nextMessage.sentAt!.difference(message.sentAt!) <=
               Duration(milliseconds: groupMessagesThreshold);
     }
 
@@ -165,13 +165,13 @@ List<Object> calculateChatMessages(
       chatMessages.insert(0, const UnreadHeaderData());
     }
 
-    if (isFirst && messageHasCreatedAt) {
+    if (isFirst && messageHasSentAt) {
       chatMessages.insert(
         0,
         DateHeader(
-          dateTime: message.createdAt!,
+          dateTime: message.sentAt!,
           text: getVerboseDateTimeRepresentation(
-            message.createdAt!,
+            message.sentAt!,
             dateFormat: dateFormat,
             dateLocale: dateLocale,
             timeFormat: timeFormat,
@@ -190,9 +190,9 @@ List<Object> calculateChatMessages(
       chatMessages.insert(
         0,
         DateHeader(
-          dateTime: nextMessage!.createdAt!,
+          dateTime: nextMessage!.sentAt!,
           text: getVerboseDateTimeRepresentation(
-            nextMessage.createdAt!,
+            nextMessage.sentAt!,
             dateFormat: dateFormat,
             dateLocale: dateLocale,
             timeFormat: timeFormat,
