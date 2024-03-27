@@ -63,9 +63,7 @@ class SendingMessagesCubit extends HydratedCubit<SendingMessages> {
       authorId: authorId,
       text: text,
       sendStatus: MessageSendStatus.sending,
-      statuses: {
-        receiverId: MessageToUserStatus(updatedAt: DateTime.now()),
-      },
+      sentTo: {receiverId},
     );
 
     final oldMessages = List<MessageModel>.from(state.messages);

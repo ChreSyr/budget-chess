@@ -15,8 +15,6 @@ class MessagesCubit extends Cubit<Iterable<MessageModel>> {
     if (_relationshipId == relationshipId) return;
     _relationshipId = relationshipId;
 
-    print('NEW RELATIONSHIP ID : $relationshipId');
-
     _messagesStream?.cancel();
 
     emit([]);
@@ -26,7 +24,7 @@ class MessagesCubit extends Cubit<Iterable<MessageModel>> {
         .streamFiltered(
           parentDocumentId: relationshipId,
           filter: (collection) => collection.orderBy(
-            'createdAt',
+            'sentAt',
             descending: true,
           ),
         )

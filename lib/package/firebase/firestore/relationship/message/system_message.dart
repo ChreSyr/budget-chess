@@ -14,11 +14,6 @@ enum SystemMessage {
         authorId: id,
         text: SystemMessage.friendshipStart.name,
         sentAt: DateTime.now(),
-        statuses: friendship.copyOfUsers.map(
-          (userId, _) => MapEntry(
-            userId,
-            MessageToUserStatus(updatedAt: DateTime.now()),
-          ),
-        ),
+        sentTo: friendship.userIds.toSet(),
       );
 }

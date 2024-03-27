@@ -1,3 +1,4 @@
+
 import 'package:crea_chess/package/firebase/export.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -7,37 +8,7 @@ part 'message_model.g.dart';
 /// All possible statuses message can have.
 enum MessageSendStatus { error, sending, sent }
 
-enum MessageSeenStatus {
-  sentTo,
-  delivered,
-  seen;
-
-  bool get unseen => this != seen;
-}
-
-@freezed
-class MessageToUserStatus with _$MessageToUserStatus {
-  factory MessageToUserStatus({
-    DateTime? updatedAt,
-    @Default(MessageSeenStatus.sentTo) MessageSeenStatus seenStatus,
-  }) = _MessageToUserStatus;
-
-  factory MessageToUserStatus.fromJson(Map<String, dynamic> json) =>
-      _$MessageToUserStatusFromJson(json);
-}
-
-class MessageToUserStatusConverter
-    implements JsonConverter<MessageToUserStatus, Map<String, dynamic>> {
-  const MessageToUserStatusConverter();
-
-  @override
-  MessageToUserStatus fromJson(Map<String, dynamic> json) {
-    return MessageToUserStatus.fromJson(json);
-  }
-
-  @override
-  Map<String, dynamic> toJson(MessageToUserStatus data) => data.toJson();
-}
+enum MessageSeenStatus { sentTo, delivered, seen }
 
 @freezed
 class MessageModel with _$MessageModel {
@@ -48,9 +19,9 @@ class MessageModel with _$MessageModel {
     required String text,
     @Default(MessageSendStatus.sent) MessageSendStatus sendStatus,
     DateTime? sentAt,
-    @Default([]) List<String> sentTo,
-    @Default([]) List<String> deliveredTo,
-    @Default([]) List<String> seenBy,
+    @Default({}) Set<String> sentTo,
+    @Default({}) Set<String> deliveredTo,
+    @Default({}) Set<String> seenBy,
   }) = _MessageModel;
 
   /// Required for the override getter
@@ -61,24 +32,16 @@ class MessageModel with _$MessageModel {
 
   // --
 
-  Map<String, MessageToUserStatus> get copyOfStatuses =>
-      Map<String, MessageToUserStatus>.from(statuses);
-  bool notSeenBy(String userId) => statuses[userId]?.seenStatus.unseen == true;
-  MessageSeenStatus? seenStatusOf(String userId) =>
-      statuses[userId]?.seenStatus;
+  bool notSeenBy(String userId) =>
+      sentTo.contains(userId) || deliveredTo.contains(userId);
+  // MessageSeenStatus? seenStatusOf(String userId) =>
+  //     statuses[userId]?.seenStatus;
   MessageSeenStatus get globalSeenStatus {
-    MessageSeenStatus? globalStatus;
-    for (final seenStatus in statuses.values.map((e) => e.seenStatus)) {
-      switch (seenStatus) {
-        case MessageSeenStatus.sentTo:
-          return MessageSeenStatus.sentTo;
-        case MessageSeenStatus.delivered:
-          globalStatus = MessageSeenStatus.delivered;
-        case MessageSeenStatus.seen:
-          continue;
-      }
-    }
-    return globalStatus ?? MessageSeenStatus.seen;
+    return sentTo.isNotEmpty
+        ? MessageSeenStatus.sentTo
+        : deliveredTo.isNotEmpty
+            ? MessageSeenStatus.delivered
+            : MessageSeenStatus.seen;
   }
 
   bool get isFromSystem => id == SystemMessage.id;
@@ -88,11 +51,15 @@ class MessageModel with _$MessageModel {
     required MessageSeenStatus seenStatus,
   }) {
     return copyWith(
-      statuses: copyOfStatuses
-        ..[userId] = MessageToUserStatus(
-          updatedAt: DateTime.now(),
-          seenStatus: seenStatus,
-        ),
+      sentTo: seenStatus == MessageSeenStatus.sentTo
+          ? (Set<String>.from(sentTo)..add(userId))
+          : (Set<String>.from(sentTo)..remove(userId)),
+      deliveredTo: seenStatus == MessageSeenStatus.delivered
+          ? (Set<String>.from(deliveredTo)..add(userId))
+          : (Set<String>.from(deliveredTo)..remove(userId)),
+      seenBy: seenStatus == MessageSeenStatus.seen
+          ? (Set<String>.from(seenBy)..add(userId))
+          : (Set<String>.from(seenBy)..remove(userId)),
     );
   }
 }

@@ -44,8 +44,10 @@ class _MessageCRUD extends SubCollectionCRUD<MessageModel> {
   Stream<Iterable<MessageModel>> messagesUnreadBy(String userId) {
     return streamGroupFiltered(
       filter: (query) => query.where(
-        'statuses.$userId.seenStatus',
-        isEqualTo: MessageSeenStatus.sentTo.name,
+        Filter.or(
+          Filter(MessageSeenStatus.sentTo.name, arrayContains: userId),
+          Filter(MessageSeenStatus.delivered.name, arrayContains: userId),
+        ),
       ),
     );
   }
@@ -66,22 +68,15 @@ class _MessageCRUD extends SubCollectionCRUD<MessageModel> {
     required MessageModel message,
     required String userId,
     required MessageSeenStatus seenStatus,
-  }) async {
-    final oldSeenStatus = message.seenStatusOf(userId);
-    if (oldSeenStatus == null) return;
-
-    final statuses = message.copyOfStatuses;
-    statuses[userId] = MessageToUserStatus(
-      updatedAt: DateTime.now(),
-      seenStatus: seenStatus,
-    );
-
-    await update(
+  }) =>
+      update(
       parentDocumentId: message.relationshipId,
       documentId: message.id,
-      data: message.copyWith(statuses: statuses),
-    );
-  }
+        data: message.copyWithSeenStatus(
+          userId: userId,
+          seenStatus: seenStatus,
+        ),
+      );
 }
 
 final messageCRUD = _MessageCRUD();
