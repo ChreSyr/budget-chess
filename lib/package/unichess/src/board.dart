@@ -119,6 +119,7 @@ class BoardSize extends SquareMapSize {
 
   @override
   String toString() => 'BoardSize(files:$files, ranks:$ranks)';
+  String get shortString => '${files}x$ranks';
 
   /// Empty board part in the FEN format.
   String get emptyFen => List.generate(ranks, (_) => files).join('/');
@@ -421,10 +422,10 @@ class Board {
       bySide(attacker) &
       ((size.attacks.ofRook(square, occupied ?? this.occupied) &
               rooksAndQueens) |
-      (size.attacks.ofBishop(square, occupied ?? this.occupied) &
-          bishopsAndQueens) |
-      (size.attacks.ofKnight(square) & knights) |
-      (size.attacks.ofKing(square) & kings) |
+          (size.attacks.ofBishop(square, occupied ?? this.occupied) &
+              bishopsAndQueens) |
+          (size.attacks.ofKnight(square) & knights) |
+          (size.attacks.ofKing(square) & kings) |
           (size.attacks.ofPawn(attacker.opposite, square) & pawns));
 
   /// Puts a [Piece] on a [Square] overriding the existing one, if any.

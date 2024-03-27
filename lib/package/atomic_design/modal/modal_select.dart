@@ -29,6 +29,7 @@ class ModalSelect {
     Modal.show(
       context: context,
       title: title,
+      isScrollControlled: true,
       sections: choices
               .map<Widget>(
                 (e) => _ModalSelectRow<T>(

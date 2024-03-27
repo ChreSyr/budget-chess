@@ -182,38 +182,61 @@ class _CreateChallengePage extends StatelessWidget {
                   _TitledRow(
                     title: 'Taille du plateau', // TODO : l10n
                     child: OutlinedButton(
-                      onPressed: null,
-                      // () => ModalSelect.show(
-                      //   context: context,
-                      //   title: 'Taille du plateau', // TODO : l10n
-                      //   choices: [
-                      //     ModalSelectRowData(
-                      //       title: 'Petit', // TODO : l10n
-                      //       choices: const [
-                      //         BoardSize(5, 5),
-                      //         BoardSize(6, 6),
-                      //         BoardSize(7, 7),
-                      //       ],
-                      //     ),
-                      //     ModalSelectRowData(
-                      //       title: 'Grand', // TODO : l10n
-                      //       choices: const [
-                      //         BoardSize(8, 8),
-                      //         BoardSize(9, 9),
-                      //         BoardSize(10, 10),
-                      //       ],
-                      //     ),
-                      //   ],
-                      //   selected: form.boardSize.value,
-                      //   onSelected: (BoardSize choice) {
-                      //     createChallengeCubit.setBoardSize(choice);
-                      //     context.pop();
-                      //   },
-                      // ),
-                      child: Text(
-                        // ignore: lines_longer_than_80_chars
-                        '${form.boardSize.value.ranks} x ${form.boardSize.value.files}',
+                      onPressed: //null,
+                          () => ModalSelect.show(
+                        context: context,
+                        title: 'Taille du plateau', // TODO : l10n
+                        choices: [
+                          ModalSelectRowData(
+                            title: '4 rangées', // TODO : l10n
+                            choices: [
+                              BoardSize(files: 2, ranks: 4),
+                              BoardSize(files: 4, ranks: 4),
+                              BoardSize(files: 6, ranks: 4),
+                            ],
+                            choiceBuilder: (size) => Text(size.shortString),
+                          ),
+                          // ModalSelectRowData(
+                          //   title: '5 rangées', // TODO : l10n
+                          //   choices: [
+                          //     BoardSize(files: 3, ranks: 5),
+                          //     BoardSize(files: 5, ranks: 5),
+                          //     BoardSize(files: 7, ranks: 5),
+                          //   ],
+                          //   choiceBuilder: (size) => Text(size.shortString),
+                          // ),
+                          ModalSelectRowData(
+                            title: '6 rangées', // TODO : l10n
+                            choices: [
+                              BoardSize(files: 4, ranks: 6),
+                              BoardSize(files: 6, ranks: 6),
+                              BoardSize(files: 8, ranks: 6),
+                            ],
+                            choiceBuilder: (size) => Text(size.shortString),
+                          ),
+                          // ModalSelectRowData(
+                          //   title: '7 rangées', // TODO : l10n
+                          //   choices: [
+                          //     BoardSize(files: 5, ranks: 7),
+                          //     BoardSize(files: 7, ranks: 7),
+                          //     BoardSize(files: 9, ranks: 7),
+                          //   ],
+                          //   choiceBuilder: (size) => Text(size.shortString),
+                          // ),
+                          ModalSelectRowData(
+                            title: '8 rangées', // TODO : l10n
+                            choices: [
+                              BoardSize(files: 6, ranks: 8),
+                              BoardSize(files: 8, ranks: 8),
+                              BoardSize(files: 10, ranks: 8),
+                            ],
+                            choiceBuilder: (size) => Text(size.shortString),
+                          ),
+                        ],
+                        selected: form.boardSize.value,
+                        onSelected: createChallengeCubit.setBoardSize,
                       ),
+                      child: Text(form.boardSize.value.shortString),
                     ),
                   ),
                   CCGap.large,

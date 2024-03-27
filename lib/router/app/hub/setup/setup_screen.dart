@@ -71,10 +71,9 @@ class _SetupPage extends StatelessWidget {
 
     return SizedBox(
       width: CCSize.boardSizeOf(context),
-      child: Column(
+      child: ListView(
         children: [
           SetupOpponentTile(game: game),
-          const Expanded(child: CCGap.zero),
           Row(
             children: [
               IconButton(
@@ -136,7 +135,7 @@ class _SetupPage extends StatelessWidget {
               ],
             ),
           ),
-          const Expanded(child: CCGap.zero),
+          CCGap.xxxlarge,
         ],
       ),
     );

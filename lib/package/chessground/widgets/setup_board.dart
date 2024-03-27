@@ -97,8 +97,7 @@ class _BoardState extends State<SetupBoard> {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final boardWidth = constraints.maxWidth;
-        squareSize = boardWidth / widget.size.files;
+        squareSize = constraints.maxWidth / widget.size.files;
 
         final Widget board = Stack(
           children: [
@@ -186,7 +185,7 @@ class _BoardState extends State<SetupBoard> {
         );
 
         return SizedBox(
-          width: boardWidth,
+          width: squareSize * widget.size.files,
           height: squareSize * widget.size.ranks,
           child: Stack(
             children: [
