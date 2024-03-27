@@ -10,7 +10,7 @@ import 'package:crea_chess/router/app/chats/chat/cubit/sending_messages_cubit.da
 import 'package:crea_chess/router/app/chats/chat/widget/chat.dart';
 import 'package:crea_chess/router/app/chats/chat/widget/input/input.dart';
 import 'package:crea_chess/router/app/chats/chat/widget/unread_header.dart';
-import 'package:crea_chess/router/app/chats/chat_home_page.dart';
+import 'package:crea_chess/router/app/shared_cubit/relations_cubit.dart';
 import 'package:crea_chess/router/app/user/user_page.dart';
 import 'package:crea_chess/router/app/user/widget/user_photo.dart';
 import 'package:crea_chess/router/shared/ccroute.dart';

@@ -1,8 +1,8 @@
 // ignore_for_file: public_member_api_docs, invalid_annotation_target
 
-import 'package:crea_chess/package/firebase/firestore/game/board_size_converter.dart';
 import 'package:crea_chess/package/chessground/speed.dart';
 import 'package:crea_chess/package/chessground/time_control.dart';
+import 'package:crea_chess/package/firebase/firestore/game/board_size_converter.dart';
 import 'package:crea_chess/package/unichess/unichess.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 

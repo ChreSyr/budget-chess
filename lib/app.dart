@@ -6,6 +6,7 @@ import 'package:crea_chess/router/app/friends/search_friend/search_friend_delega
 import 'package:crea_chess/router/app/hub/game/game_prefs_cubit.dart';
 import 'package:crea_chess/router/app/hub/setup/board_settings_cubit.dart';
 import 'package:crea_chess/router/app/nav_notifier.dart';
+import 'package:crea_chess/router/app/shared_cubit/relations_cubit.dart';
 import 'package:crea_chess/router/app/side_routes.dart';
 import 'package:crea_chess/router/rooter_provider.dart';
 import 'package:crea_chess/router/shared/settings/preferences/preferences_cubit.dart';
